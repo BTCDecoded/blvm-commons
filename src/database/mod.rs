@@ -198,13 +198,97 @@ impl Database {
 
     pub async fn add_signature(
         &self,
-        _repo_name: &str,
-        _pr_number: i32,
-        _signer: &str,
-        _signature: &str,
+        repo_name: &str,
+        pr_number: i32,
+        signer: &str,
+        signature: &str,
+        reasoning: Option<&str>,
     ) -> Result<(), GovernanceError> {
-        // Add signature to the pull request
-        // This would involve updating the signatures JSONB field
+        use crate::database::models::Signature;
+        use chrono::Utc;
+        use serde_json::Value;
+
+        // Create new signature with reasoning
+        let new_signature = Signature {
+            signer: signer.to_string(),
+            signature: signature.to_string(),
+            timestamp: Utc::now(),
+            reasoning: reasoning.map(|s| s.to_string()),
+        };
+
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                // Get current signatures
+                let signatures_json: Option<String> = sqlx::query_scalar(
+                    "SELECT signatures FROM pull_requests WHERE repo_name = ? AND pr_number = ?"
+                )
+                .bind(repo_name)
+                .bind(pr_number)
+                .fetch_optional(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                // Parse existing signatures or create empty array
+                let mut signatures: Vec<Value> = if let Some(json_str) = signatures_json {
+                    serde_json::from_str(&json_str)
+                        .unwrap_or_else(|_| vec![])
+                } else {
+                    vec![]
+                };
+
+                // Add new signature
+                signatures.push(serde_json::to_value(&new_signature)
+                    .map_err(|e| GovernanceError::DatabaseError(format!("Failed to serialize signature: {}", e)))?);
+
+                // Update signatures in database
+                let updated_json = serde_json::to_string(&signatures)
+                    .map_err(|e| GovernanceError::DatabaseError(format!("Failed to serialize signatures: {}", e)))?;
+
+                sqlx::query(
+                    "UPDATE pull_requests SET signatures = ?, updated_at = CURRENT_TIMESTAMP WHERE repo_name = ? AND pr_number = ?"
+                )
+                .bind(&updated_json)
+                .bind(repo_name)
+                .bind(pr_number)
+                .execute(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+            }
+            DatabaseBackend::Postgres(pool) => {
+                // Get current signatures
+                let signatures_json: Option<serde_json::Value> = sqlx::query_scalar(
+                    "SELECT signatures FROM pull_requests WHERE repo_name = $1 AND pr_number = $2"
+                )
+                .bind(repo_name)
+                .bind(pr_number)
+                .fetch_optional(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                // Parse existing signatures or create empty array
+                let mut signatures: Vec<Value> = signatures_json
+                    .and_then(|v| serde_json::from_value(v).ok())
+                    .unwrap_or_else(|| vec![]);
+
+                // Add new signature
+                signatures.push(serde_json::to_value(&new_signature)
+                    .map_err(|e| GovernanceError::DatabaseError(format!("Failed to serialize signature: {}", e)))?);
+
+                // Update signatures in database
+                let updated_json = serde_json::to_value(&signatures)
+                    .map_err(|e| GovernanceError::DatabaseError(format!("Failed to serialize signatures: {}", e)))?;
+
+                sqlx::query(
+                    "UPDATE pull_requests SET signatures = $1, updated_at = CURRENT_TIMESTAMP WHERE repo_name = $2 AND pr_number = $3"
+                )
+                .bind(&updated_json)
+                .bind(repo_name)
+                .bind(pr_number)
+                .execute(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+            }
+        }
         Ok(())
     }
 
@@ -270,6 +354,126 @@ impl Database {
         // This would retrieve governance events from the database
         // For now, return empty vector as a placeholder
         Ok(vec![])
+    }
+
+    /// Add or update a tier override for a PR
+    pub async fn set_tier_override(
+        &self,
+        repo_name: &str,
+        pr_number: i32,
+        override_tier: u32,
+        justification: &str,
+        overridden_by: &str,
+    ) -> Result<(), GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                // SQLite doesn't support ON CONFLICT with named columns in older versions
+                // Use REPLACE INTO instead (works with UNIQUE constraint)
+                sqlx::query(
+                    r#"
+                    INSERT OR REPLACE INTO tier_overrides (repo_name, pr_number, override_tier, justification, overridden_by, created_at)
+                    VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+                    "#
+                )
+                .bind(repo_name)
+                .bind(pr_number)
+                .bind(override_tier as i32)
+                .bind(justification)
+                .bind(overridden_by)
+                .execute(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+            }
+            DatabaseBackend::Postgres(pool) => {
+                sqlx::query(
+                    r#"
+                    INSERT INTO tier_overrides (repo_name, pr_number, override_tier, justification, overridden_by, created_at)
+                    VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)
+                    ON CONFLICT (repo_name, pr_number) DO UPDATE SET
+                        override_tier = EXCLUDED.override_tier,
+                        justification = EXCLUDED.justification,
+                        overridden_by = EXCLUDED.overridden_by,
+                        created_at = CURRENT_TIMESTAMP
+                    "#
+                )
+                .bind(repo_name)
+                .bind(pr_number)
+                .bind(override_tier as i32)
+                .bind(justification)
+                .bind(overridden_by)
+                .execute(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+            }
+        }
+        Ok(())
+    }
+
+    /// Get tier override for a PR if it exists
+    pub async fn get_tier_override(
+        &self,
+        repo_name: &str,
+        pr_number: i32,
+    ) -> Result<Option<crate::database::models::TierOverride>, GovernanceError> {
+        use sqlx::Row;
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                let row = sqlx::query(
+                    r#"
+                    SELECT id, repo_name, pr_number, override_tier, justification, overridden_by, created_at
+                    FROM tier_overrides
+                    WHERE repo_name = ? AND pr_number = ?
+                    "#
+                )
+                .bind(repo_name)
+                .bind(pr_number)
+                .fetch_optional(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                if let Some(row) = row {
+                    Ok(Some(crate::database::models::TierOverride {
+                        id: row.get(0),
+                        repo_name: row.get(1),
+                        pr_number: row.get(2),
+                        override_tier: row.get::<i32, _>(3) as u32,
+                        justification: row.get(4),
+                        overridden_by: row.get(5),
+                        created_at: row.get(6),
+                    }))
+                } else {
+                    Ok(None)
+                }
+            }
+            DatabaseBackend::Postgres(pool) => {
+                let row = sqlx::query(
+                    r#"
+                    SELECT id, repo_name, pr_number, override_tier, justification, overridden_by, created_at
+                    FROM tier_overrides
+                    WHERE repo_name = $1 AND pr_number = $2
+                    "#
+                )
+                .bind(repo_name)
+                .bind(pr_number)
+                .fetch_optional(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                if let Some(row) = row {
+                    Ok(Some(crate::database::models::TierOverride {
+                        id: row.get(0),
+                        repo_name: row.get(1),
+                        pr_number: row.get(2),
+                        override_tier: row.get::<i32, _>(3) as u32,
+                        justification: row.get(4),
+                        overridden_by: row.get(5),
+                        created_at: row.get(6),
+                    }))
+                } else {
+                    Ok(None)
+                }
+            }
+        }
     }
 
     pub async fn get_maintainer_by_username(

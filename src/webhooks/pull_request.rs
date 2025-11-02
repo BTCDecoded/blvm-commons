@@ -43,8 +43,13 @@ pub async fn handle_pull_request_event(
         }
     };
 
-    // Classify PR tier based on file changes
-    let tier = tier_classification::classify_pr_tier(payload).await;
+    // Classify PR tier based on file changes (check for override first)
+    let tier = tier_classification::classify_pr_tier_with_db(
+        database,
+        payload,
+        repo_name,
+        pr_number as i32,
+    ).await;
     info!("PR #{} classified as Tier {}", pr_number, tier);
 
     // Store PR in database

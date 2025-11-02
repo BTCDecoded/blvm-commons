@@ -164,6 +164,35 @@ pub async fn classify_pr_tier(payload: &Value) -> u32 {
     result.tier
 }
 
+/// Classify PR tier with database override checking
+/// Checks for tier override first, then falls back to automated classification
+pub async fn classify_pr_tier_with_db(
+    database: &crate::database::Database,
+    payload: &Value,
+    repo_name: &str,
+    pr_number: i32,
+) -> u32 {
+    // Check for tier override first
+    match database.get_tier_override(repo_name, pr_number).await {
+        Ok(Some(override_record)) => {
+            info!(
+                "Using tier override for PR #{} in {}: Tier {} (justification: {})",
+                pr_number, repo_name, override_record.override_tier, override_record.justification
+            );
+            return override_record.override_tier;
+        }
+        Ok(None) => {
+            // No override, proceed with automated classification
+        }
+        Err(e) => {
+            warn!("Failed to check for tier override: {}, using automated classification", e);
+        }
+    }
+    
+    // Fall back to automated classification
+    classify_pr_tier(payload).await
+}
+
 /// Classify PR tier with detailed results
 pub async fn classify_pr_tier_detailed(
     payload: &Value,

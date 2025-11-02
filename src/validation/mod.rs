@@ -3,6 +3,7 @@ pub mod cross_layer;
 pub mod emergency;
 pub mod equivalence_proof;
 pub mod review_period;
+pub mod security_controls;
 pub mod signatures;
 pub mod threshold;
 pub mod tier_classification;

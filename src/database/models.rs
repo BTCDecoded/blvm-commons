@@ -22,6 +22,8 @@ pub struct Signature {
     pub signer: String,
     pub signature: String,
     pub timestamp: DateTime<Utc>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reasoning: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -52,4 +54,15 @@ pub struct GovernanceEvent {
     pub maintainer: Option<String>,
     pub details: serde_json::Value,
     pub timestamp: DateTime<Utc>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TierOverride {
+    pub id: i32,
+    pub repo_name: String,
+    pub pr_number: i32,
+    pub override_tier: u32,
+    pub justification: String,
+    pub overridden_by: String,
+    pub created_at: DateTime<Utc>,
 }

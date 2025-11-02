@@ -1103,6 +1103,7 @@ dependencies = [
  "octocrab",
  "opentimestamps",
  "rand 0.8.5",
+ "regex 1.12.2",
  "reqwest 0.12.24",
  "secp256k1 0.28.2",
  "serde",
