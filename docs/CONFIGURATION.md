@@ -265,7 +265,8 @@ max_files = 10
 
 [security]
 require_https = true
-allowed_origins = ["https://governance.btcdecoded.org"]
+# Note: governance.btcdecoded.org subdomain not yet deployed
+allowed_origins = ["https://github.com/BTCDecoded"]
 rate_limit_requests = 1000
 rate_limit_window = 60
 

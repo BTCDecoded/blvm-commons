@@ -333,11 +333,11 @@ async fn verify_audit_log_merkle(log_path: &str, claimed_root: &str) -> Result<b
 
 **Download Latest Registry**:
 ```bash
-# Download registry
-curl -o registry.json https://btcdecoded.org/governance/registries/2024-01.json
+# Download registry (from GitHub releases - btcdecoded.org/governance paths not yet deployed)
+curl -o registry.json https://github.com/BTCDecoded/governance/releases/download/v0.1.0/registry-2024-01.json
 
-# Download proof
-curl -o registry.json.ots https://btcdecoded.org/governance/ots-proofs/2024-01.json.ots
+# Download proof (from GitHub releases)
+curl -o registry.json.ots https://github.com/BTCDecoded/governance/releases/download/v0.1.0/registry-2024-01.json.ots
 
 # Verify proof
 ots verify registry.json.ots
@@ -348,8 +348,9 @@ ots verify registry.json.ots
 use reqwest;
 
 async fn download_and_verify_registry(month: &str) -> Result<(), Error> {
-    let registry_url = format!("https://btcdecoded.org/governance/registries/{}.json", month);
-    let proof_url = format!("https://btcdecoded.org/governance/ots-proofs/{}.json.ots", month);
+    // Note: btcdecoded.org/governance paths not yet deployed - use GitHub releases
+    let registry_url = format!("https://github.com/BTCDecoded/governance/releases/download/v0.1.0/registry-{}.json", month);
+    let proof_url = format!("https://github.com/BTCDecoded/governance/releases/download/v0.1.0/registry-{}.json.ots", month);
     
     // Download registry
     let registry_response = reqwest::get(&registry_url).await?;
@@ -383,8 +384,9 @@ async fn download_and_verify_registry(month: &str) -> Result<(), Error> {
 set -e
 
 MONTH=${1:-$(date +%Y-%m)}
-REGISTRY_URL="https://btcdecoded.org/governance/registries"
-PROOF_URL="https://btcdecoded.org/governance/ots-proofs"
+# Note: btcdecoded.org/governance paths not yet deployed - use GitHub releases
+REGISTRY_URL="https://github.com/BTCDecoded/governance/releases"
+PROOF_URL="https://github.com/BTCDecoded/governance/releases"
 
 echo "Verifying governance registry for $MONTH..."
 

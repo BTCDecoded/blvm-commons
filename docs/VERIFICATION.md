@@ -128,8 +128,9 @@ async fn verify_ots_proof(proof_path: &str, data_path: &str) -> Result<bool, Err
 
 **Download and Verify Registry**:
 ```bash
-# Download latest registry
-curl -o registry.json https://btcdecoded.org/governance/registries/2024-01.json
+# Download latest registry (from GitHub releases or governance repository)
+# Note: btcdecoded.org/governance paths not yet deployed - use GitHub releases
+curl -o registry.json https://github.com/BTCDecoded/governance/releases/download/v0.1.0/registry-2024-01.json
 
 # Verify registry signature
 governance-app registry verify --registry registry.json
@@ -330,7 +331,8 @@ set -e
 echo "Verifying BTCDecoded Governance System..."
 
 # Configuration
-GOVERNANCE_URL="https://btcdecoded.org/governance"
+# Note: btcdecoded.org/governance paths not yet deployed - use GitHub releases
+GOVERNANCE_URL="https://github.com/BTCDecoded/governance/releases"
 REGISTRY_URL="$GOVERNANCE_URL/registries"
 AUDIT_LOG_URL="$GOVERNANCE_URL/audit-logs"
 NOSTR_RELAY="wss://relay.damus.io"

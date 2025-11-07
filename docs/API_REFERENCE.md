@@ -9,7 +9,7 @@ The governance application provides a REST API for managing governance operation
 ### Base URL
 
 - **Development**: `http://localhost:3000`
-- **Production**: `https://governance.btcdecoded.org`
+- **Production**: `https://governance.btcdecoded.org` (Note: Not yet deployed - use GitHub API for now)
 
 ### Authentication
 
@@ -245,7 +245,7 @@ Export governance configuration.
   "ruleset_id": "mainnet-v1.0.0",
   "config_hash": "hash123",
   "exported_at": "2025-01-01T00:00:00Z",
-  "download_url": "https://governance.btcdecoded.org/exports/export_123"
+  "download_url": "https://github.com/BTCDecoded/governance/releases/download/v0.1.0/export_123"
 }
 ```
 
