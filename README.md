@@ -6,6 +6,8 @@ Rust-based GitHub App for enforcing cryptographic governance rules across all Bi
 
 **This application is currently UNRELEASED and UNTESTED in production.**
 
+> **For verified system status**: See [SYSTEM_STATUS.md](https://github.com/BTCDecoded/.github/blob/main/SYSTEM_STATUS.md) in the BTCDecoded organization repository.
+
 ### Current Status: Phase 1 (Infrastructure Building)
 
 - ✅ **Core Infrastructure**: All major components implemented
