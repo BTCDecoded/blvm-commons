@@ -1,0 +1,13 @@
+﻿2025-11-10T00:05:28.5772278Z Post job cleanup.
+2025-11-10T00:05:28.6967908Z [command]/usr/bin/git version
+2025-11-10T00:05:28.7017472Z git version 2.43.0
+2025-11-10T00:05:28.7065014Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/f1c509da-23ca-4f15-960f-026e81f0c3ac/.gitconfig'
+2025-11-10T00:05:28.7082259Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/f1c509da-23ca-4f15-960f-026e81f0c3ac' before making global git config changes
+2025-11-10T00:05:28.7083790Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-10T00:05:28.7097817Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node
+2025-11-10T00:05:28.7140525Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-10T00:05:28.7181168Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-10T00:05:28.7463214Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-10T00:05:28.7494929Z http.https://github.com/.extraheader
+2025-11-10T00:05:28.7509643Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-11-10T00:05:28.7550562Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"

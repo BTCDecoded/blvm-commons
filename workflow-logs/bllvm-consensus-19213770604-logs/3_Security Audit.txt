@@ -1,0 +1,466 @@
+﻿2025-11-09T20:08:00.3643947Z Current runner version: '2.329.0'
+2025-11-09T20:08:00.3650717Z Runner name: 'linode-runner-02'
+2025-11-09T20:08:00.3653141Z Runner group name: 'default'
+2025-11-09T20:08:00.3654098Z Machine name: 'localhost'
+2025-11-09T20:08:00.3657584Z ##[group]GITHUB_TOKEN Permissions
+2025-11-09T20:08:00.3659895Z Contents: read
+2025-11-09T20:08:00.3660532Z Metadata: read
+2025-11-09T20:08:00.3661208Z Packages: read
+2025-11-09T20:08:00.3661790Z ##[endgroup]
+2025-11-09T20:08:00.3664078Z Secret source: Actions
+2025-11-09T20:08:00.3665234Z Prepare workflow directory
+2025-11-09T20:08:00.4340895Z Prepare all required actions
+2025-11-09T20:08:00.4385449Z Getting action download info
+2025-11-09T20:08:00.7113888Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-09T20:08:01.1281806Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:6d653acede28d24f02e3cd41383119e8b1b35921)
+2025-11-09T20:08:01.4817438Z Complete job name: Security Audit
+2025-11-09T20:08:01.5441193Z A job started hook has been configured by the self-hosted runner administrator
+2025-11-09T20:08:01.5601393Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-started.sh'
+2025-11-09T20:08:01.5634011Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:01.5635599Z ##[endgroup]
+2025-11-09T20:08:01.5817921Z Job started: Sun Nov  9 08:08:01 PM UTC 2025
+2025-11-09T20:08:01.5835257Z Available disk space: 11G
+2025-11-09T20:08:01.5870526Z Disk usage is 79% - no cleanup needed
+2025-11-09T20:08:01.6135026Z ##[group]Run actions/checkout@v4
+2025-11-09T20:08:01.6136074Z with:
+2025-11-09T20:08:01.6136585Z   repository: BTCDecoded/bllvm-consensus
+2025-11-09T20:08:01.6137423Z   token: ***
+2025-11-09T20:08:01.6137918Z   ssh-strict: true
+2025-11-09T20:08:01.6138420Z   ssh-user: git
+2025-11-09T20:08:01.6138943Z   persist-credentials: true
+2025-11-09T20:08:01.6139520Z   clean: true
+2025-11-09T20:08:01.6140029Z   sparse-checkout-cone-mode: true
+2025-11-09T20:08:01.6142426Z   fetch-depth: 1
+2025-11-09T20:08:01.6142982Z   fetch-tags: false
+2025-11-09T20:08:01.6143497Z   show-progress: true
+2025-11-09T20:08:01.6144017Z   lfs: false
+2025-11-09T20:08:01.6144656Z   submodules: false
+2025-11-09T20:08:01.6145180Z   set-safe-directory: true
+2025-11-09T20:08:01.6145769Z env:
+2025-11-09T20:08:01.6146216Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:01.6146760Z ##[endgroup]
+2025-11-09T20:08:01.7440345Z Syncing repository: BTCDecoded/bllvm-consensus
+2025-11-09T20:08:01.7442763Z ##[group]Getting Git version info
+2025-11-09T20:08:01.7443842Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus'
+2025-11-09T20:08:01.7445638Z [command]/usr/bin/git version
+2025-11-09T20:08:01.7446435Z git version 2.43.0
+2025-11-09T20:08:01.7450911Z ##[endgroup]
+2025-11-09T20:08:01.7462195Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/a8845aa4-210c-48fc-aa6d-227898c83fc0/.gitconfig'
+2025-11-09T20:08:01.7475980Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/a8845aa4-210c-48fc-aa6d-227898c83fc0' before making global git config changes
+2025-11-09T20:08:01.7477984Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T20:08:01.7490088Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus
+2025-11-09T20:08:01.7532004Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-09T20:08:01.7553088Z https://github.com/BTCDecoded/bllvm-consensus
+2025-11-09T20:08:01.7571536Z ##[group]Removing previously created refs, to avoid conflicts
+2025-11-09T20:08:01.7575561Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2025-11-09T20:08:01.7598157Z refs/heads/main
+2025-11-09T20:08:01.7610044Z [command]/usr/bin/git checkout --detach
+2025-11-09T20:08:01.8903197Z HEAD is now at c28a36e fix: Resolve all compiler warnings
+2025-11-09T20:08:01.8907031Z M	Cargo.lock
+2025-11-09T20:08:01.8908366Z M	target/.rustc_info.json
+2025-11-09T20:08:01.8959381Z [command]/usr/bin/git branch --delete --force main
+2025-11-09T20:08:01.8997644Z Deleted branch main (was c28a36e).
+2025-11-09T20:08:01.9045257Z ##[endgroup]
+2025-11-09T20:08:01.9047528Z [command]/usr/bin/git submodule status
+2025-11-09T20:08:01.9323922Z ##[group]Cleaning the repository
+2025-11-09T20:08:01.9329275Z [command]/usr/bin/git clean -ffdx
+2025-11-09T20:08:01.9619404Z Removing target/.rustdoc_fingerprint.json
+2025-11-09T20:08:01.9621017Z Removing target/debug/.fingerprint/anyhow-059da4f0d7c55a8b/
+2025-11-09T20:08:01.9622378Z Removing target/debug/.fingerprint/anyhow-9d430c1379eea21c/
+2025-11-09T20:08:01.9623709Z Removing target/debug/.fingerprint/anyhow-e6cbf2b1ef9f5a17/
+2025-11-09T20:08:01.9625878Z Removing target/debug/.fingerprint/bincode-f1324220296ae161/
+2025-11-09T20:08:01.9627315Z Removing target/debug/.fingerprint/bitcoin_hashes-eaa237cf5b3503ad/
+2025-11-09T20:08:01.9628575Z Removing target/debug/.fingerprint/bllvm-consensus-70aacefa34263b70/
+2025-11-09T20:08:01.9629696Z Removing target/debug/.fingerprint/bllvm-consensus-9809b76fea622d79/
+2025-11-09T20:08:01.9630774Z Removing target/debug/.fingerprint/block-buffer-237124e17683fddb/
+2025-11-09T20:08:01.9633109Z Removing target/debug/.fingerprint/cc-7d5b8c3e1f4cbfcd/
+2025-11-09T20:08:01.9634008Z Removing target/debug/.fingerprint/cfg-if-fc0dab425a2b74c4/
+2025-11-09T20:08:01.9635186Z Removing target/debug/.fingerprint/cpufeatures-0f8ee1944988dae8/
+2025-11-09T20:08:01.9636646Z Removing target/debug/.fingerprint/crypto-common-6f50393ddbff5a83/
+2025-11-09T20:08:01.9637683Z Removing target/debug/.fingerprint/digest-915fde4393040a15/
+2025-11-09T20:08:01.9638682Z Removing target/debug/.fingerprint/find-msvc-tools-e0c11e7e4ca96379/
+2025-11-09T20:08:01.9640198Z Removing target/debug/.fingerprint/generic-array-036ebdaa4415d02c/
+2025-11-09T20:08:01.9641212Z Removing target/debug/.fingerprint/generic-array-0e8a2772e7ae3a96/
+2025-11-09T20:08:01.9642215Z Removing target/debug/.fingerprint/generic-array-27e0812fe9f1c82e/
+2025-11-09T20:08:01.9644920Z Removing target/debug/.fingerprint/hex-39f5f8bc1bd9aca4/
+2025-11-09T20:08:01.9645807Z Removing target/debug/.fingerprint/itoa-08c0ac77a7f9c5e1/
+2025-11-09T20:08:01.9646745Z Removing target/debug/.fingerprint/proc-macro2-013e91bf61085fba/
+2025-11-09T20:08:01.9647726Z Removing target/debug/.fingerprint/proc-macro2-0c90074a995b0125/
+2025-11-09T20:08:01.9648707Z Removing target/debug/.fingerprint/proc-macro2-a923716fdc1423c7/
+2025-11-09T20:08:01.9649645Z Removing target/debug/.fingerprint/quote-1fd57a8d49f3e414/
+2025-11-09T20:08:01.9650520Z Removing target/debug/.fingerprint/ripemd-f61d2a11e38c01dd/
+2025-11-09T20:08:01.9651374Z Removing target/debug/.fingerprint/ryu-1d74fbb8396b52fe/
+2025-11-09T20:08:01.9652257Z Removing target/debug/.fingerprint/secp256k1-a7db9034d9c45ea0/
+2025-11-09T20:08:01.9653219Z Removing target/debug/.fingerprint/secp256k1-sys-18fc324a2f93c70b/
+2025-11-09T20:08:01.9654184Z Removing target/debug/.fingerprint/secp256k1-sys-708e464d25e2f9a2/
+2025-11-09T20:08:01.9655312Z Removing target/debug/.fingerprint/secp256k1-sys-cbc42ff488488692/
+2025-11-09T20:08:01.9656464Z Removing target/debug/.fingerprint/serde-1f6df97ca8e777f3/
+2025-11-09T20:08:01.9658275Z Removing target/debug/.fingerprint/serde-79bd1dc91f22d7e2/
+2025-11-09T20:08:01.9659136Z Removing target/debug/.fingerprint/serde-a3217f5e798b0a0e/
+2025-11-09T20:08:01.9660044Z Removing target/debug/.fingerprint/serde_derive-f7022334ed5675a3/
+2025-11-09T20:08:01.9661173Z Removing target/debug/.fingerprint/serde_json-0dc48a5bcf535a0b/
+2025-11-09T20:08:01.9662161Z Removing target/debug/.fingerprint/serde_json-4b2f7e519a4c7e92/
+2025-11-09T20:08:01.9663084Z Removing target/debug/.fingerprint/serde_json-f87e09600e685d33/
+2025-11-09T20:08:01.9663967Z Removing target/debug/.fingerprint/sha2-a6f830be70788546/
+2025-11-09T20:08:01.9664982Z Removing target/debug/.fingerprint/sha2-asm-5fc243991633aa35/
+2025-11-09T20:08:01.9665883Z Removing target/debug/.fingerprint/sha2-asm-b2e38aa444311777/
+2025-11-09T20:08:01.9666780Z Removing target/debug/.fingerprint/sha2-asm-d08d40e52f733493/
+2025-11-09T20:08:01.9668136Z Removing target/debug/.fingerprint/shlex-83c7e0da01d13271/
+2025-11-09T20:08:01.9668990Z Removing target/debug/.fingerprint/syn-34d04d1461fb490a/
+2025-11-09T20:08:01.9669856Z Removing target/debug/.fingerprint/thiserror-0ab41f997ece6c55/
+2025-11-09T20:08:01.9670931Z Removing target/debug/.fingerprint/thiserror-5c7e835cbcf3ecb5/
+2025-11-09T20:08:01.9671893Z Removing target/debug/.fingerprint/thiserror-7a6e0ed1eb395f20/
+2025-11-09T20:08:01.9672864Z Removing target/debug/.fingerprint/thiserror-impl-74aca0240a9ecf0d/
+2025-11-09T20:08:01.9673834Z Removing target/debug/.fingerprint/typenum-911c3e43dcb6b56a/
+2025-11-09T20:08:01.9674892Z Removing target/debug/.fingerprint/typenum-93ec83b436bf1eae/
+2025-11-09T20:08:01.9675773Z Removing target/debug/.fingerprint/typenum-95c161620aaca3ae/
+2025-11-09T20:08:01.9676703Z Removing target/debug/.fingerprint/unicode-ident-796da7d7beff3c43/
+2025-11-09T20:08:01.9677676Z Removing target/debug/.fingerprint/version_check-a216429c4cbdde93/
+2025-11-09T20:08:01.9678550Z Removing target/debug/build/anyhow-9d430c1379eea21c/
+2025-11-09T20:08:01.9679333Z Removing target/debug/build/anyhow-e6cbf2b1ef9f5a17/
+2025-11-09T20:08:01.9680169Z Removing target/debug/build/generic-array-036ebdaa4415d02c/
+2025-11-09T20:08:01.9681046Z Removing target/debug/build/generic-array-27e0812fe9f1c82e/
+2025-11-09T20:08:01.9681924Z Removing target/debug/build/proc-macro2-0c90074a995b0125/
+2025-11-09T20:08:01.9682932Z Removing target/debug/build/proc-macro2-a923716fdc1423c7/
+2025-11-09T20:08:01.9683808Z Removing target/debug/build/secp256k1-sys-708e464d25e2f9a2/
+2025-11-09T20:08:01.9684827Z Removing target/debug/build/secp256k1-sys-cbc42ff488488692/
+2025-11-09T20:08:01.9685655Z Removing target/debug/build/serde-1f6df97ca8e777f3/
+2025-11-09T20:08:01.9686776Z Removing target/debug/build/serde-79bd1dc91f22d7e2/
+2025-11-09T20:08:01.9687590Z Removing target/debug/build/serde_json-0dc48a5bcf535a0b/
+2025-11-09T20:08:01.9688423Z Removing target/debug/build/serde_json-f87e09600e685d33/
+2025-11-09T20:08:01.9689250Z Removing target/debug/build/sha2-asm-b2e38aa444311777/
+2025-11-09T20:08:01.9690043Z Removing target/debug/build/sha2-asm-d08d40e52f733493/
+2025-11-09T20:08:01.9764240Z Removing target/debug/build/thiserror-0ab41f997ece6c55/
+2025-11-09T20:08:01.9765611Z Removing target/debug/build/thiserror-5c7e835cbcf3ecb5/
+2025-11-09T20:08:01.9766454Z Removing target/debug/build/typenum-911c3e43dcb6b56a/
+2025-11-09T20:08:01.9767287Z Removing target/debug/build/typenum-93ec83b436bf1eae/
+2025-11-09T20:08:01.9768088Z Removing target/debug/deps/anyhow-059da4f0d7c55a8b.d
+2025-11-09T20:08:01.9768896Z Removing target/debug/deps/bincode-f1324220296ae161.d
+2025-11-09T20:08:01.9769747Z Removing target/debug/deps/bitcoin_hashes-eaa237cf5b3503ad.d
+2025-11-09T20:08:01.9770666Z Removing target/debug/deps/bllvm_consensus-70aacefa34263b70.d
+2025-11-09T20:08:01.9771566Z Removing target/debug/deps/block_buffer-237124e17683fddb.d
+2025-11-09T20:08:01.9772370Z Removing target/debug/deps/cc-7d5b8c3e1f4cbfcd.d
+2025-11-09T20:08:01.9773144Z Removing target/debug/deps/cfg_if-fc0dab425a2b74c4.d
+2025-11-09T20:08:01.9773973Z Removing target/debug/deps/cpufeatures-0f8ee1944988dae8.d
+2025-11-09T20:08:01.9775176Z Removing target/debug/deps/crypto_common-6f50393ddbff5a83.d
+2025-11-09T20:08:01.9776041Z Removing target/debug/deps/digest-915fde4393040a15.d
+2025-11-09T20:08:01.9776898Z Removing target/debug/deps/find_msvc_tools-e0c11e7e4ca96379.d
+2025-11-09T20:08:01.9777822Z Removing target/debug/deps/generic_array-0e8a2772e7ae3a96.d
+2025-11-09T20:08:01.9778613Z Removing target/debug/deps/hex-39f5f8bc1bd9aca4.d
+2025-11-09T20:08:01.9779368Z Removing target/debug/deps/itoa-08c0ac77a7f9c5e1.d
+2025-11-09T20:08:01.9780179Z Removing target/debug/deps/libanyhow-059da4f0d7c55a8b.rmeta
+2025-11-09T20:08:01.9781048Z Removing target/debug/deps/libbincode-f1324220296ae161.rmeta
+2025-11-09T20:08:01.9781987Z Removing target/debug/deps/libbitcoin_hashes-eaa237cf5b3503ad.rmeta
+2025-11-09T20:08:01.9782958Z Removing target/debug/deps/libblock_buffer-237124e17683fddb.rmeta
+2025-11-09T20:08:01.9784088Z Removing target/debug/deps/libcc-7d5b8c3e1f4cbfcd.rlib
+2025-11-09T20:08:01.9785058Z Removing target/debug/deps/libcc-7d5b8c3e1f4cbfcd.rmeta
+2025-11-09T20:08:01.9785903Z Removing target/debug/deps/libcfg_if-fc0dab425a2b74c4.rmeta
+2025-11-09T20:08:01.9786808Z Removing target/debug/deps/libcpufeatures-0f8ee1944988dae8.rmeta
+2025-11-09T20:08:01.9787761Z Removing target/debug/deps/libcrypto_common-6f50393ddbff5a83.rmeta
+2025-11-09T20:08:01.9788677Z Removing target/debug/deps/libdigest-915fde4393040a15.rmeta
+2025-11-09T20:08:01.9789602Z Removing target/debug/deps/libfind_msvc_tools-e0c11e7e4ca96379.rlib
+2025-11-09T20:08:01.9790578Z Removing target/debug/deps/libfind_msvc_tools-e0c11e7e4ca96379.rmeta
+2025-11-09T20:08:01.9791558Z Removing target/debug/deps/libgeneric_array-0e8a2772e7ae3a96.rmeta
+2025-11-09T20:08:01.9792451Z Removing target/debug/deps/libhex-39f5f8bc1bd9aca4.rmeta
+2025-11-09T20:08:01.9793275Z Removing target/debug/deps/libitoa-08c0ac77a7f9c5e1.rmeta
+2025-11-09T20:08:01.9794163Z Removing target/debug/deps/libproc_macro2-013e91bf61085fba.rlib
+2025-11-09T20:08:01.9795330Z Removing target/debug/deps/libproc_macro2-013e91bf61085fba.rmeta
+2025-11-09T20:08:01.9796222Z Removing target/debug/deps/libquote-1fd57a8d49f3e414.rlib
+2025-11-09T20:08:01.9797062Z Removing target/debug/deps/libquote-1fd57a8d49f3e414.rmeta
+2025-11-09T20:08:01.9798337Z Removing target/debug/deps/libripemd-f61d2a11e38c01dd.rmeta
+2025-11-09T20:08:01.9799386Z Removing target/debug/deps/libryu-1d74fbb8396b52fe.rmeta
+2025-11-09T20:08:01.9800262Z Removing target/debug/deps/libsecp256k1-a7db9034d9c45ea0.rmeta
+2025-11-09T20:08:01.9801190Z Removing target/debug/deps/libsecp256k1_sys-18fc324a2f93c70b.rmeta
+2025-11-09T20:08:01.9802084Z Removing target/debug/deps/libserde-a3217f5e798b0a0e.rmeta
+2025-11-09T20:08:01.9802957Z Removing target/debug/deps/libserde_derive-f7022334ed5675a3.so
+2025-11-09T20:08:01.9803862Z Removing target/debug/deps/libserde_json-4b2f7e519a4c7e92.rmeta
+2025-11-09T20:08:01.9804884Z Removing target/debug/deps/libsha2-a6f830be70788546.rmeta
+2025-11-09T20:08:01.9805737Z Removing target/debug/deps/libsha2_asm-5fc243991633aa35.rmeta
+2025-11-09T20:08:01.9806589Z Removing target/debug/deps/libshlex-83c7e0da01d13271.rlib
+2025-11-09T20:08:01.9807427Z Removing target/debug/deps/libshlex-83c7e0da01d13271.rmeta
+2025-11-09T20:08:01.9808244Z Removing target/debug/deps/libsyn-34d04d1461fb490a.rlib
+2025-11-09T20:08:01.9809062Z Removing target/debug/deps/libsyn-34d04d1461fb490a.rmeta
+2025-11-09T20:08:01.9809913Z Removing target/debug/deps/libthiserror-7a6e0ed1eb395f20.rmeta
+2025-11-09T20:08:01.9810819Z Removing target/debug/deps/libthiserror_impl-74aca0240a9ecf0d.so
+2025-11-09T20:08:01.9811715Z Removing target/debug/deps/libtypenum-95c161620aaca3ae.rmeta
+2025-11-09T20:08:01.9812618Z Removing target/debug/deps/libunicode_ident-796da7d7beff3c43.rlib
+2025-11-09T20:08:01.9813559Z Removing target/debug/deps/libunicode_ident-796da7d7beff3c43.rmeta
+2025-11-09T20:08:01.9814799Z Removing target/debug/deps/libversion_check-a216429c4cbdde93.rlib
+2025-11-09T20:08:01.9815809Z Removing target/debug/deps/libversion_check-a216429c4cbdde93.rmeta
+2025-11-09T20:08:01.9816702Z Removing target/debug/deps/proc_macro2-013e91bf61085fba.d
+2025-11-09T20:08:01.9817496Z Removing target/debug/deps/quote-1fd57a8d49f3e414.d
+2025-11-09T20:08:01.9818245Z Removing target/debug/deps/ripemd-f61d2a11e38c01dd.d
+2025-11-09T20:08:01.9818992Z Removing target/debug/deps/ryu-1d74fbb8396b52fe.d
+2025-11-09T20:08:01.9819768Z Removing target/debug/deps/secp256k1-a7db9034d9c45ea0.d
+2025-11-09T20:08:01.9820666Z Removing target/debug/deps/secp256k1_sys-18fc324a2f93c70b.d
+2025-11-09T20:08:01.9821471Z Removing target/debug/deps/serde-a3217f5e798b0a0e.d
+2025-11-09T20:08:01.9822273Z Removing target/debug/deps/serde_derive-f7022334ed5675a3.d
+2025-11-09T20:08:01.9823107Z Removing target/debug/deps/serde_json-4b2f7e519a4c7e92.d
+2025-11-09T20:08:01.9823882Z Removing target/debug/deps/sha2-a6f830be70788546.d
+2025-11-09T20:08:01.9825251Z Removing target/debug/deps/sha2_asm-5fc243991633aa35.d
+2025-11-09T20:08:01.9826009Z Removing target/debug/deps/shlex-83c7e0da01d13271.d
+2025-11-09T20:08:01.9826754Z Removing target/debug/deps/syn-34d04d1461fb490a.d
+2025-11-09T20:08:01.9884632Z Removing target/debug/deps/thiserror-7a6e0ed1eb395f20.d
+2025-11-09T20:08:01.9886289Z Removing target/debug/deps/thiserror_impl-74aca0240a9ecf0d.d
+2025-11-09T20:08:01.9887356Z Removing target/debug/deps/typenum-95c161620aaca3ae.d
+2025-11-09T20:08:01.9888218Z Removing target/debug/deps/unicode_ident-796da7d7beff3c43.d
+2025-11-09T20:08:01.9889090Z Removing target/debug/deps/version_check-a216429c4cbdde93.d
+2025-11-09T20:08:01.9890525Z Removing target/debug/examples/
+2025-11-09T20:08:01.9891654Z Removing target/debug/incremental/
+2025-11-09T20:08:01.9892291Z Removing target/doc/
+2025-11-09T20:08:01.9897622Z [command]/usr/bin/git reset --hard HEAD
+2025-11-09T20:08:02.0000389Z HEAD is now at c28a36e fix: Resolve all compiler warnings
+2025-11-09T20:08:02.0007959Z ##[endgroup]
+2025-11-09T20:08:02.0009449Z ##[group]Disabling automatic garbage collection
+2025-11-09T20:08:02.0014925Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T20:08:02.0056941Z ##[endgroup]
+2025-11-09T20:08:02.0058210Z ##[group]Setting up auth
+2025-11-09T20:08:02.0063746Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T20:08:02.0101205Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T20:08:02.0369552Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T20:08:02.0405526Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T20:08:02.0692747Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T20:08:02.0738877Z ##[endgroup]
+2025-11-09T20:08:02.0739921Z ##[group]Fetching the repository
+2025-11-09T20:08:02.0747694Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +c28a36e7b60be4e32a38f72b272322cd66a3f71d:refs/remotes/origin/main
+2025-11-09T20:08:02.2899706Z ##[endgroup]
+2025-11-09T20:08:02.2901642Z ##[group]Determining the checkout info
+2025-11-09T20:08:02.2903858Z ##[endgroup]
+2025-11-09T20:08:02.2905452Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T20:08:02.2970381Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T20:08:02.3004814Z ##[group]Checking out the ref
+2025-11-09T20:08:02.3009206Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T20:08:02.3085332Z Switched to a new branch 'main'
+2025-11-09T20:08:02.3087958Z branch 'main' set up to track 'origin/main'.
+2025-11-09T20:08:02.3096019Z ##[endgroup]
+2025-11-09T20:08:02.3139722Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T20:08:02.3171695Z c28a36e7b60be4e32a38f72b272322cd66a3f71d
+2025-11-09T20:08:02.3694035Z ##[group]Run dtolnay/rust-toolchain@master
+2025-11-09T20:08:02.3695686Z with:
+2025-11-09T20:08:02.3696717Z   toolchain: 1.88.0
+2025-11-09T20:08:02.3697637Z env:
+2025-11-09T20:08:02.3698456Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:02.3699448Z ##[endgroup]
+2025-11-09T20:08:02.3890523Z ##[group]Run : parse toolchain version
+2025-11-09T20:08:02.3891869Z [36;1m: parse toolchain version[0m
+2025-11-09T20:08:02.3892976Z [36;1mif [[ -z $toolchain ]]; then[0m
+2025-11-09T20:08:02.3895561Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2025-11-09T20:08:02.3897640Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2025-11-09T20:08:02.3899320Z [36;1m  exit 1[0m
+2025-11-09T20:08:02.3900609Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2025-11-09T20:08:02.3902547Z [36;1m  if [[ Linux == macOS ]]; then[0m
+2025-11-09T20:08:02.3904832Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:08:02.3906749Z [36;1m  else[0m
+2025-11-09T20:08:02.3908578Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:08:02.3910366Z [36;1m  fi[0m
+2025-11-09T20:08:02.3911536Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2025-11-09T20:08:02.3913582Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:08:02.3915594Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2025-11-09T20:08:02.3917856Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:08:02.3919759Z [36;1melse[0m
+2025-11-09T20:08:02.3920737Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:08:02.3921953Z [36;1mfi[0m
+2025-11-09T20:08:02.3958696Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:02.3960016Z env:
+2025-11-09T20:08:02.3960795Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:02.3961727Z   toolchain: 1.88.0
+2025-11-09T20:08:02.3962552Z ##[endgroup]
+2025-11-09T20:08:02.4152301Z ##[group]Run : construct rustup command line
+2025-11-09T20:08:02.4155310Z [36;1m: construct rustup command line[0m
+2025-11-09T20:08:02.4157000Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:08:02.4159361Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:08:02.4161239Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:08:02.4198868Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:02.4200970Z env:
+2025-11-09T20:08:02.4202218Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:02.4203795Z   targets: 
+2025-11-09T20:08:02.4205750Z   components: 
+2025-11-09T20:08:02.4207134Z ##[endgroup]
+2025-11-09T20:08:02.4346120Z ##[group]Run : set $CARGO_HOME
+2025-11-09T20:08:02.4347123Z [36;1m: set $CARGO_HOME[0m
+2025-11-09T20:08:02.4348385Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+2025-11-09T20:08:02.4378897Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:02.4380201Z env:
+2025-11-09T20:08:02.4380985Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:02.4381927Z ##[endgroup]
+2025-11-09T20:08:02.4519210Z ##[group]Run : install rustup if needed
+2025-11-09T20:08:02.4520375Z [36;1m: install rustup if needed[0m
+2025-11-09T20:08:02.4523314Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2025-11-09T20:08:02.4526437Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+2025-11-09T20:08:02.4529136Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+2025-11-09T20:08:02.4530514Z [36;1mfi[0m
+2025-11-09T20:08:02.4567432Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:02.4568717Z env:
+2025-11-09T20:08:02.4569476Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:02.4570450Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:08:02.4571431Z ##[endgroup]
+2025-11-09T20:08:02.5136440Z info: downloading installer
+2025-11-09T20:08:02.8141419Z warn: It looks like you have an existing rustup settings file at:
+2025-11-09T20:08:02.8144139Z warn: /home/jswift/.rustup/settings.toml
+2025-11-09T20:08:02.8147336Z warn: Rustup will install the default toolchain as specified in the settings file,
+2025-11-09T20:08:02.8152467Z warn: instead of the one inferred from the default host triple.
+2025-11-09T20:08:02.8430362Z info: profile set to 'default'
+2025-11-09T20:08:02.8431584Z 
+2025-11-09T20:08:02.8431611Z 
+2025-11-09T20:08:02.8432705Z Rust is installed now. Great!
+2025-11-09T20:08:02.8433825Z 
+2025-11-09T20:08:02.8435031Z To get started you may need to restart your current shell.
+2025-11-09T20:08:02.8437716Z This would reload your PATH environment variable to include
+2025-11-09T20:08:02.8440162Z Cargo's bin directory ($HOME/.cargo/bin).
+2025-11-09T20:08:02.8441475Z 
+2025-11-09T20:08:02.8442414Z To configure your current shell, you need to source
+2025-11-09T20:08:02.8445059Z the corresponding env file under $HOME/.cargo.
+2025-11-09T20:08:02.8446434Z 
+2025-11-09T20:08:02.8447729Z This is usually done by running one of the following (note the leading DOT):
+2025-11-09T20:08:02.8450602Z . "$HOME/.cargo/env"            # For sh/bash/zsh/ash/dash/pdksh
+2025-11-09T20:08:02.8452915Z source "$HOME/.cargo/env.fish"  # For fish
+2025-11-09T20:08:02.8455267Z source $"($nu.home-path)/.cargo/env.nu"  # For nushell
+2025-11-09T20:08:02.8457675Z info: default host triple is x86_64-unknown-linux-gnu
+2025-11-09T20:08:02.8459869Z info: skipping toolchain installation
+2025-11-09T20:08:02.8603046Z ##[group]Run rustup toolchain install 1.88.0 --profile minimal --no-self-update
+2025-11-09T20:08:02.8605289Z [36;1mrustup toolchain install 1.88.0 --profile minimal --no-self-update[0m
+2025-11-09T20:08:02.8643372Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:02.8645146Z env:
+2025-11-09T20:08:02.8645913Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:02.8646862Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:08:02.8647822Z ##[endgroup]
+2025-11-09T20:08:02.9580555Z info: syncing channel updates for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T20:08:02.9743794Z 
+2025-11-09T20:08:02.9864602Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T20:08:02.9866552Z 
+2025-11-09T20:08:02.9961703Z ##[group]Run rustup default 1.88.0
+2025-11-09T20:08:02.9962769Z [36;1mrustup default 1.88.0[0m
+2025-11-09T20:08:02.9996173Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:02.9997408Z env:
+2025-11-09T20:08:02.9998131Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:02.9999059Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:08:03.0000016Z ##[endgroup]
+2025-11-09T20:08:03.0132278Z info: using existing install for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T20:08:03.0481906Z info: default toolchain set to '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T20:08:03.0483642Z 
+2025-11-09T20:08:03.0594125Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T20:08:03.0599875Z info: note that the toolchain '1.88.0-x86_64-unknown-linux-gnu' is currently in use (overridden by '/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus/rust-toolchain.toml')
+2025-11-09T20:08:03.0602393Z 
+2025-11-09T20:08:03.0671561Z ##[group]Run : create cachekey
+2025-11-09T20:08:03.0672548Z [36;1m: create cachekey[0m
+2025-11-09T20:08:03.0674209Z [36;1mDATE=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2025-11-09T20:08:03.0676820Z [36;1mHASH=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2025-11-09T20:08:03.0678803Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:08:03.0712812Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:03.0714022Z env:
+2025-11-09T20:08:03.0715127Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:03.0716060Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:08:03.0717001Z ##[endgroup]
+2025-11-09T20:08:03.1245742Z ##[group]Run : disable incremental compilation
+2025-11-09T20:08:03.1246948Z [36;1m: disable incremental compilation[0m
+2025-11-09T20:08:03.1248130Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2025-11-09T20:08:03.1249342Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2025-11-09T20:08:03.1250408Z [36;1mfi[0m
+2025-11-09T20:08:03.1290935Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:03.1292150Z env:
+2025-11-09T20:08:03.1293085Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:03.1294007Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:08:03.1295210Z ##[endgroup]
+2025-11-09T20:08:03.1417117Z ##[group]Run : enable colors in Cargo output
+2025-11-09T20:08:03.1418254Z [36;1m: enable colors in Cargo output[0m
+2025-11-09T20:08:03.1419607Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2025-11-09T20:08:03.1420850Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2025-11-09T20:08:03.1423743Z [36;1mfi[0m
+2025-11-09T20:08:03.1457320Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:03.1458536Z env:
+2025-11-09T20:08:03.1459263Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:03.1460184Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:08:03.1461133Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:08:03.1461940Z ##[endgroup]
+2025-11-09T20:08:03.1586428Z ##[group]Run : enable Cargo sparse registry
+2025-11-09T20:08:03.1587576Z [36;1m: enable Cargo sparse registry[0m
+2025-11-09T20:08:03.1589057Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2025-11-09T20:08:03.1592626Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2025-11-09T20:08:03.1595504Z [36;1m  if rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2025-11-09T20:08:03.1597751Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-09T20:08:03.1599956Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2025-11-09T20:08:03.1601702Z [36;1m  elif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2025-11-09T20:08:03.1603959Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-09T20:08:03.1606406Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2025-11-09T20:08:03.1607849Z [36;1m  fi[0m
+2025-11-09T20:08:03.1608593Z [36;1mfi[0m
+2025-11-09T20:08:03.1640767Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:03.1641989Z env:
+2025-11-09T20:08:03.1642716Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:03.1643638Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:08:03.1645818Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:08:03.1646636Z ##[endgroup]
+2025-11-09T20:08:03.2199552Z ##[group]Run : work around spurious network errors in curl 8.0
+2025-11-09T20:08:03.2201018Z [36;1m: work around spurious network errors in curl 8.0[0m
+2025-11-09T20:08:03.2202928Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2025-11-09T20:08:03.2205785Z [36;1mif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2025-11-09T20:08:03.2207396Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2025-11-09T20:08:03.2208704Z [36;1mfi[0m
+2025-11-09T20:08:03.2246448Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:03.2247682Z env:
+2025-11-09T20:08:03.2248403Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:03.2249570Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:08:03.2250529Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:08:03.2251343Z ##[endgroup]
+2025-11-09T20:08:03.2669816Z ##[group]Run rustc +1.88.0 --version --verbose
+2025-11-09T20:08:03.2671812Z [36;1mrustc +1.88.0 --version --verbose[0m
+2025-11-09T20:08:03.2726394Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:03.2728539Z env:
+2025-11-09T20:08:03.2729796Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:03.2733106Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:08:03.2735007Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:08:03.2736456Z ##[endgroup]
+2025-11-09T20:08:03.3023605Z rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T20:08:03.3025715Z binary: rustc
+2025-11-09T20:08:03.3027260Z commit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc
+2025-11-09T20:08:03.3028687Z commit-date: 2025-06-23
+2025-11-09T20:08:03.3029959Z host: x86_64-unknown-linux-gnu
+2025-11-09T20:08:03.3030863Z release: 1.88.0
+2025-11-09T20:08:03.3033657Z LLVM version: 20.1.5
+2025-11-09T20:08:03.3172206Z ##[group]Run cargo install cargo-audit --version 0.20.0
+2025-11-09T20:08:03.3173566Z [36;1mcargo install cargo-audit --version 0.20.0[0m
+2025-11-09T20:08:03.3213782Z shell: /usr/bin/bash -e {0}
+2025-11-09T20:08:03.3214886Z env:
+2025-11-09T20:08:03.3215620Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:03.3216544Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:08:03.3217502Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:08:03.3218311Z ##[endgroup]
+2025-11-09T20:08:03.4181904Z [1m[32m     Ignored[0m package `cargo-audit v0.20.0` is already installed, use --force to override
+2025-11-09T20:08:03.4263853Z ##[group]Run cargo audit
+2025-11-09T20:08:03.4265388Z [36;1mcargo audit[0m
+2025-11-09T20:08:03.4300011Z shell: /usr/bin/bash -e {0}
+2025-11-09T20:08:03.4300897Z env:
+2025-11-09T20:08:03.4301615Z   CARGO_TERM_COLOR: always
+2025-11-09T20:08:03.4302550Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:08:03.4303500Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:08:03.4304532Z ##[endgroup]
+2025-11-09T20:08:03.4999735Z     Fetching advisory database from `https://github.com/RustSec/advisory-db.git`
+2025-11-09T20:08:03.7291218Z       Loaded 862 security advisories (from /home/jswift/.cargo/advisory-db)
+2025-11-09T20:08:03.7293795Z     Updating crates.io index
+2025-11-09T20:08:03.7450407Z error: not found: Couldn't load Cargo.lock
+2025-11-09T20:08:03.7452346Z Caused by:
+2025-11-09T20:08:03.7454665Z   -> I/O operation failed: parse error: parse error: invalid Cargo.lock format version: `4`
+2025-11-09T20:08:03.7456894Z 
+2025-11-09T20:08:03.7482259Z ##[error]Process completed with exit code 2.
+2025-11-09T20:08:03.7673981Z Post job cleanup.
+2025-11-09T20:08:03.8886006Z [command]/usr/bin/git version
+2025-11-09T20:08:03.8929304Z git version 2.43.0
+2025-11-09T20:08:03.8980414Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/b45784e7-6c1f-47ef-a0ae-609c30a688fd/.gitconfig'
+2025-11-09T20:08:03.8994584Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/b45784e7-6c1f-47ef-a0ae-609c30a688fd' before making global git config changes
+2025-11-09T20:08:03.8999086Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T20:08:03.9002278Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus
+2025-11-09T20:08:03.9039749Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T20:08:03.9075282Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T20:08:03.9357969Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T20:08:03.9382987Z http.https://github.com/.extraheader
+2025-11-09T20:08:03.9398112Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-11-09T20:08:03.9443131Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T20:08:03.9852301Z A job completed hook has been configured by the self-hosted runner administrator
+2025-11-09T20:08:03.9917322Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-completed.sh'
+2025-11-09T20:08:03.9953720Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:08:03.9955347Z ##[endgroup]
+2025-11-09T20:08:04.0065477Z Job completed: Sun Nov  9 08:08:04 PM UTC 2025
+2025-11-09T20:08:04.0095996Z Available disk space: 11G
+2025-11-09T20:08:04.0097646Z Cleaning up after job completion...
+2025-11-09T20:08:04.0939704Z Cleanup completed. Available disk space: 11G
+2025-11-09T20:08:04.1016307Z Cleaning up orphan processes

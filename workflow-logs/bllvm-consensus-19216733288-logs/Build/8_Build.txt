@@ -1,0 +1,10 @@
+﻿2025-11-10T00:24:28.7344613Z ##[group]Run cargo build --release
+2025-11-10T00:24:28.7345226Z [36;1mcargo build --release[0m
+2025-11-10T00:24:28.7375769Z shell: /usr/bin/bash -e {0}
+2025-11-10T00:24:28.7376473Z env:
+2025-11-10T00:24:28.7376721Z   CARGO_TERM_COLOR: always
+2025-11-10T00:24:28.7377036Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:24:28.7377361Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:24:28.7377637Z ##[endgroup]
+2025-11-10T00:24:28.8714579Z [1m[32m   Compiling[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus)
+2025-11-10T00:24:40.5383846Z [1m[32m    Finished[0m `release` profile [optimized] target(s) in 11.74s

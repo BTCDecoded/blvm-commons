@@ -1,0 +1,16 @@
+﻿2025-11-10T00:23:04.4638903Z Current runner version: '2.329.0'
+2025-11-10T00:23:04.4646831Z Runner name: 'linode-runner-02'
+2025-11-10T00:23:04.4647714Z Runner group name: 'default'
+2025-11-10T00:23:04.4648662Z Machine name: 'localhost'
+2025-11-10T00:23:04.4651847Z ##[group]GITHUB_TOKEN Permissions
+2025-11-10T00:23:04.4654101Z Contents: read
+2025-11-10T00:23:04.4654973Z Metadata: read
+2025-11-10T00:23:04.4655631Z Packages: read
+2025-11-10T00:23:04.4656302Z ##[endgroup]
+2025-11-10T00:23:04.4658639Z Secret source: Actions
+2025-11-10T00:23:04.4659546Z Prepare workflow directory
+2025-11-10T00:23:04.5325625Z Prepare all required actions
+2025-11-10T00:23:04.5368618Z Getting action download info
+2025-11-10T00:23:04.8339567Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-10T00:23:05.3034842Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:6d653acede28d24f02e3cd41383119e8b1b35921)
+2025-11-10T00:23:05.7376527Z Complete job name: Security Audit

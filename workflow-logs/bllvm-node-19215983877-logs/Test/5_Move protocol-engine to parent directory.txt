@@ -1,0 +1,7 @@
+﻿2025-11-09T23:20:51.4989520Z ##[group]Run if [ -d "../protocol-engine" ]; then rm -rf ../protocol-engine; fi
+2025-11-09T23:20:51.4990193Z [36;1mif [ -d "../protocol-engine" ]; then rm -rf ../protocol-engine; fi[0m
+2025-11-09T23:20:51.4990831Z [36;1mmv _temp-protocol-engine ../protocol-engine[0m
+2025-11-09T23:20:51.5025032Z shell: /usr/bin/bash -e {0}
+2025-11-09T23:20:51.5025287Z env:
+2025-11-09T23:20:51.5025480Z   CARGO_TERM_COLOR: always
+2025-11-09T23:20:51.5025697Z ##[endgroup]

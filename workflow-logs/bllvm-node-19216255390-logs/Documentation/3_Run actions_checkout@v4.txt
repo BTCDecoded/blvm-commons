@@ -1,0 +1,92 @@
+﻿2025-11-09T23:44:36.5027485Z ##[group]Run actions/checkout@v4
+2025-11-09T23:44:36.5028468Z with:
+2025-11-09T23:44:36.5029153Z   repository: BTCDecoded/bllvm-node
+2025-11-09T23:44:36.5030398Z   token: ***
+2025-11-09T23:44:36.5031104Z   ssh-strict: true
+2025-11-09T23:44:36.5031823Z   ssh-user: git
+2025-11-09T23:44:36.5032548Z   persist-credentials: true
+2025-11-09T23:44:36.5033344Z   clean: true
+2025-11-09T23:44:36.5034069Z   sparse-checkout-cone-mode: true
+2025-11-09T23:44:36.5035313Z   fetch-depth: 1
+2025-11-09T23:44:36.5036042Z   fetch-tags: false
+2025-11-09T23:44:36.5036744Z   show-progress: true
+2025-11-09T23:44:36.5039567Z   lfs: false
+2025-11-09T23:44:36.5040226Z   submodules: false
+2025-11-09T23:44:36.5041007Z   set-safe-directory: true
+2025-11-09T23:44:36.5041817Z env:
+2025-11-09T23:44:36.5042434Z   CARGO_TERM_COLOR: always
+2025-11-09T23:44:36.5043192Z ##[endgroup]
+2025-11-09T23:44:36.6408606Z Syncing repository: BTCDecoded/bllvm-node
+2025-11-09T23:44:36.6412640Z ##[group]Getting Git version info
+2025-11-09T23:44:36.6417558Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node'
+2025-11-09T23:44:36.6421231Z [command]/usr/bin/git version
+2025-11-09T23:44:36.6426591Z git version 2.43.0
+2025-11-09T23:44:36.6456906Z ##[endgroup]
+2025-11-09T23:44:36.6471517Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/4a27e30e-d341-4bae-819b-cc99c43d60dc/.gitconfig'
+2025-11-09T23:44:36.6485552Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/4a27e30e-d341-4bae-819b-cc99c43d60dc' before making global git config changes
+2025-11-09T23:44:36.6490507Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T23:44:36.6500671Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node
+2025-11-09T23:44:36.6547394Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-09T23:44:36.6590363Z ##[error]fatal: --local can only be used inside a git repository
+2025-11-09T23:44:36.6603716Z Deleting the contents of '/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node'
+2025-11-09T23:44:36.6993543Z ##[group]Initializing the repository
+2025-11-09T23:44:36.6997531Z [command]/usr/bin/git init /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node
+2025-11-09T23:44:36.7048862Z Initialized empty Git repository in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/.git/
+2025-11-09T23:44:36.7068821Z [command]/usr/bin/git remote add origin https://github.com/BTCDecoded/bllvm-node
+2025-11-09T23:44:36.7118776Z ##[endgroup]
+2025-11-09T23:44:36.7121059Z ##[group]Disabling automatic garbage collection
+2025-11-09T23:44:36.7123034Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T23:44:36.7157656Z ##[endgroup]
+2025-11-09T23:44:36.7159681Z ##[group]Setting up auth
+2025-11-09T23:44:36.7166243Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:44:36.7207122Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:44:36.7498664Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:44:36.7539417Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:44:36.7795210Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T23:44:36.7840207Z ##[endgroup]
+2025-11-09T23:44:36.7841554Z ##[group]Fetching the repository
+2025-11-09T23:44:36.7849039Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +59f97d736ed79bcffc2396622927997c743a87ed:refs/remotes/origin/main
+2025-11-09T23:44:41.6550336Z From https://github.com/BTCDecoded/bllvm-node
+2025-11-09T23:44:41.6552579Z  * [new ref]         59f97d736ed79bcffc2396622927997c743a87ed -> origin/main
+2025-11-09T23:44:41.6575127Z ##[endgroup]
+2025-11-09T23:44:41.6575759Z ##[group]Determining the checkout info
+2025-11-09T23:44:41.6578216Z ##[endgroup]
+2025-11-09T23:44:41.6581863Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T23:44:41.6629046Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T23:44:41.6661527Z ##[group]Checking out the ref
+2025-11-09T23:44:41.6665569Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T23:44:42.7727711Z Updating files:  73% (901/1233)
+2025-11-09T23:44:42.7890327Z Updating files:  74% (913/1233)
+2025-11-09T23:44:42.8483061Z Updating files:  75% (925/1233)
+2025-11-09T23:44:42.9634726Z Updating files:  76% (938/1233)
+2025-11-09T23:44:43.0864518Z Updating files:  77% (950/1233)
+2025-11-09T23:44:43.3244161Z Updating files:  78% (962/1233)
+2025-11-09T23:44:43.4441896Z Updating files:  79% (975/1233)
+2025-11-09T23:44:43.6361496Z Updating files:  80% (987/1233)
+2025-11-09T23:44:43.6553627Z Updating files:  81% (999/1233)
+2025-11-09T23:44:43.8229476Z Updating files:  82% (1012/1233)
+2025-11-09T23:44:43.8234816Z Updating files:  82% (1018/1233)
+2025-11-09T23:44:43.8240004Z Updating files:  83% (1024/1233)
+2025-11-09T23:44:43.8247738Z Updating files:  84% (1036/1233)
+2025-11-09T23:44:43.9923199Z Updating files:  85% (1049/1233)
+2025-11-09T23:44:43.9965158Z Updating files:  86% (1061/1233)
+2025-11-09T23:44:43.9965657Z Updating files:  87% (1073/1233)
+2025-11-09T23:44:43.9966076Z Updating files:  88% (1086/1233)
+2025-11-09T23:44:43.9966466Z Updating files:  89% (1098/1233)
+2025-11-09T23:44:43.9972416Z Updating files:  90% (1110/1233)
+2025-11-09T23:44:43.9982890Z Updating files:  91% (1123/1233)
+2025-11-09T23:44:43.9994080Z Updating files:  92% (1135/1233)
+2025-11-09T23:44:44.0010575Z Updating files:  93% (1147/1233)
+2025-11-09T23:44:44.0020141Z Updating files:  94% (1160/1233)
+2025-11-09T23:44:44.0027171Z Updating files:  95% (1172/1233)
+2025-11-09T23:44:44.0034243Z Updating files:  96% (1184/1233)
+2025-11-09T23:44:44.0042889Z Updating files:  97% (1197/1233)
+2025-11-09T23:44:44.0051411Z Updating files:  98% (1209/1233)
+2025-11-09T23:44:44.0060377Z Updating files:  99% (1221/1233)
+2025-11-09T23:44:44.0062502Z Updating files: 100% (1233/1233)
+2025-11-09T23:44:44.0063022Z Updating files: 100% (1233/1233), done.
+2025-11-09T23:44:44.0097879Z Reset branch 'main'
+2025-11-09T23:44:44.0098367Z branch 'main' set up to track 'origin/main'.
+2025-11-09T23:44:44.0269700Z ##[endgroup]
+2025-11-09T23:44:44.0334605Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T23:44:44.0367700Z 59f97d736ed79bcffc2396622927997c743a87ed

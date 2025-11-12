@@ -1,0 +1,13 @@
+﻿2025-11-09T23:20:32.3656520Z ##[group]Run actions/cache@v3
+2025-11-09T23:20:32.3656978Z with:
+2025-11-09T23:20:32.3657284Z   path: ~/.cargo/git
+2025-11-09T23:20:32.3658225Z   key: Linux-cargo-index-
+2025-11-09T23:20:32.3658620Z   enableCrossOsArchive: false
+2025-11-09T23:20:32.3659020Z   fail-on-cache-miss: false
+2025-11-09T23:20:32.3659388Z   lookup-only: false
+2025-11-09T23:20:32.3659703Z env:
+2025-11-09T23:20:32.3660012Z   CARGO_TERM_COLOR: always
+2025-11-09T23:20:32.3660393Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:20:32.3660791Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:20:32.3661122Z ##[endgroup]
+2025-11-09T23:20:32.9229274Z Cache not found for input keys: Linux-cargo-index-

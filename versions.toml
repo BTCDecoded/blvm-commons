@@ -1,0 +1,15 @@
+# Org-wide version map (Phase 1 - manual enforcement)
+
+[release_set]
+id = "set-2025-01A"
+
+[versions]
+consensus-proof = "v0.1.0-locked"
+protocol-engine  = "v0.1.0"
+reference-node   = "v0.1.0"
+developer-sdk    = "v0.1.0"
+governance-app   = "v0.1.0"
+
+# Notes:
+# - protocol-engine and reference-node must depend on the exact consensus-proof version above
+# - Releases should only be cut when all three versions form a consistent set

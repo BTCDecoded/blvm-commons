@@ -1,0 +1,80 @@
+﻿2025-11-10T00:21:11.4817346Z ##[group]Run actions/checkout@v4
+2025-11-10T00:21:11.4818405Z with:
+2025-11-10T00:21:11.4819233Z   repository: BTCDecoded/bllvm-consensus
+2025-11-10T00:21:11.4820532Z   token: ***
+2025-11-10T00:21:11.4821297Z   ssh-strict: true
+2025-11-10T00:21:11.4822077Z   ssh-user: git
+2025-11-10T00:21:11.4822892Z   persist-credentials: true
+2025-11-10T00:21:11.4823783Z   clean: true
+2025-11-10T00:21:11.4826653Z   sparse-checkout-cone-mode: true
+2025-11-10T00:21:11.4827616Z   fetch-depth: 1
+2025-11-10T00:21:11.4828394Z   fetch-tags: false
+2025-11-10T00:21:11.4829194Z   show-progress: true
+2025-11-10T00:21:11.4830194Z   lfs: false
+2025-11-10T00:21:11.4830963Z   submodules: false
+2025-11-10T00:21:11.4831794Z   set-safe-directory: true
+2025-11-10T00:21:11.4832674Z env:
+2025-11-10T00:21:11.4833410Z   CARGO_TERM_COLOR: always
+2025-11-10T00:21:11.4836083Z ##[endgroup]
+2025-11-10T00:21:11.6204866Z Syncing repository: BTCDecoded/bllvm-consensus
+2025-11-10T00:21:11.6207735Z ##[group]Getting Git version info
+2025-11-10T00:21:11.6211895Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus'
+2025-11-10T00:21:11.6214634Z [command]/usr/bin/git version
+2025-11-10T00:21:11.6219736Z git version 2.43.0
+2025-11-10T00:21:11.6253911Z ##[endgroup]
+2025-11-10T00:21:11.6270700Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/4ed9d178-ade1-46ab-a154-5ec77f4dac54/.gitconfig'
+2025-11-10T00:21:11.6286286Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/4ed9d178-ade1-46ab-a154-5ec77f4dac54' before making global git config changes
+2025-11-10T00:21:11.6293835Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-10T00:21:11.6303945Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus
+2025-11-10T00:21:11.6356187Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-10T00:21:11.6385897Z https://github.com/BTCDecoded/bllvm-consensus
+2025-11-10T00:21:11.6408936Z ##[group]Removing previously created refs, to avoid conflicts
+2025-11-10T00:21:11.6411805Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2025-11-10T00:21:11.6438668Z refs/heads/main
+2025-11-10T00:21:11.6454588Z [command]/usr/bin/git checkout --detach
+2025-11-10T00:21:11.6532781Z HEAD is now at f1ff386 fix: Update test imports from consensus_proof to bllvm_consensus
+2025-11-10T00:21:11.6586913Z [command]/usr/bin/git branch --delete --force main
+2025-11-10T00:21:11.6623084Z Deleted branch main (was f1ff386).
+2025-11-10T00:21:11.6673778Z ##[endgroup]
+2025-11-10T00:21:11.6675527Z [command]/usr/bin/git submodule status
+2025-11-10T00:21:11.6963787Z ##[group]Cleaning the repository
+2025-11-10T00:21:11.6967707Z [command]/usr/bin/git clean -ffdx
+2025-11-10T00:21:11.7040767Z [command]/usr/bin/git reset --hard HEAD
+2025-11-10T00:21:11.7141375Z HEAD is now at f1ff386 fix: Update test imports from consensus_proof to bllvm_consensus
+2025-11-10T00:21:11.7151004Z ##[endgroup]
+2025-11-10T00:21:11.7152908Z ##[group]Disabling automatic garbage collection
+2025-11-10T00:21:11.7157653Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-10T00:21:11.7194249Z ##[endgroup]
+2025-11-10T00:21:11.7196780Z ##[group]Setting up auth
+2025-11-10T00:21:11.7199948Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-10T00:21:11.7242747Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-10T00:21:11.7532799Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-10T00:21:11.7570464Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-10T00:21:11.7860795Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-10T00:21:11.7907257Z ##[endgroup]
+2025-11-10T00:21:11.7909754Z ##[group]Fetching the repository
+2025-11-10T00:21:11.7920359Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +8117c9d24fda06c4c3e65467c5c4ca10025375da:refs/remotes/origin/main
+2025-11-10T00:21:12.0522720Z From https://github.com/BTCDecoded/bllvm-consensus
+2025-11-10T00:21:12.0526688Z  + f1ff386...8117c9d 8117c9d24fda06c4c3e65467c5c4ca10025375da -> origin/main  (forced update)
+2025-11-10T00:21:12.0551983Z ##[endgroup]
+2025-11-10T00:21:12.0553489Z ##[group]Determining the checkout info
+2025-11-10T00:21:12.0555469Z ##[endgroup]
+2025-11-10T00:21:12.0558396Z [command]/usr/bin/git sparse-checkout disable
+2025-11-10T00:21:12.0621339Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-10T00:21:12.0660246Z ##[group]Checking out the ref
+2025-11-10T00:21:12.0665020Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-10T00:21:12.0840938Z Warning: you are leaving 1 commit behind, not connected to
+2025-11-10T00:21:12.0844203Z any of your branches:
+2025-11-10T00:21:12.0845495Z 
+2025-11-10T00:21:12.0846564Z   f1ff386 fix: Update test imports from consensus_proof to bllvm_consensus
+2025-11-10T00:21:12.0849055Z 
+2025-11-10T00:21:12.0850428Z If you want to keep it by creating a new branch, this may be a good time
+2025-11-10T00:21:12.0853410Z to do so with:
+2025-11-10T00:21:12.0854585Z 
+2025-11-10T00:21:12.0855418Z  git branch <new-branch-name> f1ff386
+2025-11-10T00:21:12.0856740Z 
+2025-11-10T00:21:12.0857937Z Switched to a new branch 'main'
+2025-11-10T00:21:12.0860124Z branch 'main' set up to track 'origin/main'.
+2025-11-10T00:21:12.0864923Z ##[endgroup]
+2025-11-10T00:21:12.0900410Z [command]/usr/bin/git log -1 --format=%H
+2025-11-10T00:21:12.0930082Z 8117c9d24fda06c4c3e65467c5c4ca10025375da

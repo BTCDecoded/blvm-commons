@@ -1,0 +1,18 @@
+﻿2025-11-10T00:21:08.9442081Z Current runner version: '2.329.0'
+2025-11-10T00:21:08.9451723Z Runner name: 'linode-runner-02'
+2025-11-10T00:21:08.9452553Z Runner group name: 'default'
+2025-11-10T00:21:08.9453565Z Machine name: 'localhost'
+2025-11-10T00:21:08.9456791Z ##[group]GITHUB_TOKEN Permissions
+2025-11-10T00:21:08.9460538Z Contents: read
+2025-11-10T00:21:08.9461384Z Metadata: read
+2025-11-10T00:21:08.9462379Z Packages: read
+2025-11-10T00:21:08.9463162Z ##[endgroup]
+2025-11-10T00:21:08.9469136Z Secret source: Actions
+2025-11-10T00:21:08.9470040Z Prepare workflow directory
+2025-11-10T00:21:09.0126338Z Prepare all required actions
+2025-11-10T00:21:09.0194184Z Getting action download info
+2025-11-10T00:21:09.4482251Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-10T00:21:09.8664804Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:6d653acede28d24f02e3cd41383119e8b1b35921)
+2025-11-10T00:21:10.0898181Z Download action repository 'actions/cache@v3' (SHA:6f8efc29b200d32929f49075959781ed54ec270c)
+2025-11-10T00:21:10.6041643Z Download action repository 'codecov/codecov-action@v3' (SHA:ab904c41d6ece82784817410c45d8b8c02684457)
+2025-11-10T00:21:11.2208625Z Complete job name: Test

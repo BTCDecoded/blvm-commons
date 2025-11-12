@@ -1,0 +1,71 @@
+﻿2025-11-09T23:52:42.8558480Z ##[group]Run cargo build --release
+2025-11-09T23:52:42.8558890Z [36;1mcargo build --release[0m
+2025-11-09T23:52:42.8589355Z shell: /usr/bin/bash -e {0}
+2025-11-09T23:52:42.8589624Z env:
+2025-11-09T23:52:42.8589827Z   CARGO_TERM_COLOR: always
+2025-11-09T23:52:42.8590079Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:52:42.8590351Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:52:42.8602224Z ##[endgroup]
+2025-11-09T23:52:43.1705563Z [1m[32m   Compiling[0m proc-macro2 v1.0.101
+2025-11-09T23:52:43.1708482Z [1m[32m   Compiling[0m shlex v1.3.0
+2025-11-09T23:52:43.1709310Z [1m[32m   Compiling[0m unicode-ident v1.0.19
+2025-11-09T23:52:43.1710027Z [1m[32m   Compiling[0m quote v1.0.41
+2025-11-09T23:52:43.2486335Z [1m[32m   Compiling[0m find-msvc-tools v0.1.4
+2025-11-09T23:52:43.3427886Z [1m[32m   Compiling[0m version_check v0.9.5
+2025-11-09T23:52:43.4176541Z [1m[32m   Compiling[0m cc v1.2.41
+2025-11-09T23:52:43.4848047Z [1m[32m   Compiling[0m typenum v1.19.0
+2025-11-09T23:52:43.6563554Z [1m[32m   Compiling[0m generic-array v0.14.9
+2025-11-09T23:52:43.8800481Z [1m[32m   Compiling[0m serde v1.0.193
+2025-11-09T23:52:44.4119706Z [1m[32m   Compiling[0m syn v2.0.106
+2025-11-09T23:52:44.4455313Z [1m[32m   Compiling[0m serde_json v1.0.108
+2025-11-09T23:52:44.6260473Z [1m[32m   Compiling[0m thiserror v1.0.69
+2025-11-09T23:52:44.8922492Z [1m[32m   Compiling[0m anyhow v1.0.93
+2025-11-09T23:52:45.1676391Z [1m[32m   Compiling[0m secp256k1-sys v0.9.2
+2025-11-09T23:52:45.1913968Z [1m[32m   Compiling[0m sha2-asm v0.6.4
+2025-11-09T23:52:45.3831444Z [1m[32m   Compiling[0m block-buffer v0.10.4
+2025-11-09T23:52:45.4560098Z [1m[32m   Compiling[0m crypto-common v0.1.6
+2025-11-09T23:52:45.5543422Z [1m[32m   Compiling[0m digest v0.10.7
+2025-11-09T23:52:45.7533359Z [1m[32m   Compiling[0m ryu v1.0.20
+2025-11-09T23:52:45.7566927Z [1m[32m   Compiling[0m itoa v1.0.15
+2025-11-09T23:52:45.8588946Z [1m[32m   Compiling[0m cfg-if v1.0.4
+2025-11-09T23:52:45.8949870Z [1m[32m   Compiling[0m cpufeatures v0.2.17
+2025-11-09T23:52:45.9397775Z [1m[32m   Compiling[0m sha2 v0.10.9
+2025-11-09T23:52:46.1323390Z [1m[32m   Compiling[0m ripemd v0.1.3
+2025-11-09T23:52:47.3090077Z [1m[32m   Compiling[0m hex v0.4.3
+2025-11-09T23:52:47.4540623Z [1m[32m   Compiling[0m serde_derive v1.0.193
+2025-11-09T23:52:47.6471726Z [1m[32m   Compiling[0m thiserror-impl v1.0.69
+2025-11-09T23:52:47.7235728Z [1m[32m   Compiling[0m bitcoin_hashes v0.11.0
+2025-11-09T23:52:49.2301694Z [1m[32m   Compiling[0m bech32 v0.9.1
+2025-11-09T23:52:52.1789629Z [1m[32m   Compiling[0m secp256k1 v0.28.2
+2025-11-09T23:52:53.1256106Z [1m[32m   Compiling[0m bincode v1.3.3
+2025-11-09T23:52:53.8659600Z [1m[32m   Compiling[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-consensus)
+2025-11-09T23:52:55.2510088Z [1m[32m   Compiling[0m bllvm-protocol v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol)
+2025-11-09T23:52:55.4026397Z [0m[1m[33mwarning[0m[0m[1m: unused imports: `OutPoint` and `UTXO`[0m
+2025-11-09T23:52:55.4027323Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network.rs:9:30[0m
+2025-11-09T23:52:55.4027909Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:55.4036520Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::types::{OutPoint, UTXO, UtxoSet};[0m
+2025-11-09T23:52:55.4037959Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[33m^^^^^^^^[0m[0m  [0m[0m[1m[33m^^^^[0m
+2025-11-09T23:52:55.4038690Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:55.4039495Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-09T23:52:55.4044776Z 
+2025-11-09T23:52:55.8239840Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `peer_state`[0m
+2025-11-09T23:52:55.8240787Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network.rs:450:5[0m
+2025-11-09T23:52:55.8241448Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:55.8242226Z [0m[1m[38;5;12m450[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    peer_state: &mut PeerState,[0m
+2025-11-09T23:52:55.8245144Z [0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_peer_state`[0m
+2025-11-09T23:52:55.8246119Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:55.8246875Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-09T23:52:55.8247378Z 
+2025-11-09T23:52:56.1953104Z [0m[1m[33mwarning[0m[0m[1m: method `bit_offset` is never used[0m
+2025-11-09T23:52:56.1954011Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/bip158.rs:156:8[0m
+2025-11-09T23:52:56.1954803Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:56.1955541Z [0m[1m[38;5;12m122[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a> BitReader<'a> {[0m
+2025-11-09T23:52:56.1956698Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+2025-11-09T23:52:56.1957509Z [0m[1m[38;5;12m...[0m
+2025-11-09T23:52:56.1958229Z [0m[1m[38;5;12m156[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn bit_offset(&self) -> usize {[0m
+2025-11-09T23:52:56.1959052Z [0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^[0m
+2025-11-09T23:52:56.1959661Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:56.1960367Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+2025-11-09T23:52:56.1960817Z 
+2025-11-09T23:52:57.3598530Z [1m[33mwarning[0m[1m:[0m `bllvm-protocol` (lib) generated 3 warnings (run `cargo fix --lib -p bllvm-protocol` to apply 1 suggestion)
+2025-11-09T23:53:08.3703692Z [1m[32m    Finished[0m `release` profile [optimized] target(s) in 25.44s

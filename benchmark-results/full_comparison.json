@@ -1,0 +1,32 @@
+{
+  "bitcoin_core": {
+    "timestamp": 1762240183.1251087,
+    "system": "Bitcoin Core",
+    "benchmarks": {
+      "transaction_validation": {
+        "error": "Failed to generate blocks"
+      },
+      "block_validation": {
+        "error": "No valid measurements"
+      },
+      "hash_operations": {
+        "error": "No valid measurements"
+      }
+    }
+  },
+  "btdecoded": {
+    "transaction_validation": {
+      "simple_ns": 60.6,
+      "complex_ns": 222.75,
+      "simple_throughput_tx_per_sec": 16500000,
+      "complex_throughput_tx_per_sec": 4500000
+    },
+    "hash_operations": {
+      "sha256_1kb_us": 12.19,
+      "double_sha256_1kb_us": 15.29,
+      "sha256_throughput_ops_per_sec": 82000,
+      "double_sha256_throughput_ops_per_sec": 65400
+    }
+  },
+  "comparison": {}
+}

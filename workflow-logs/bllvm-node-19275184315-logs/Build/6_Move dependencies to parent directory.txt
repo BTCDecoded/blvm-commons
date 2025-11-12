@@ -1,0 +1,9 @@
+﻿2025-11-11T18:39:31.6844923Z ##[group]Run if [ -d "../bllvm-protocol" ]; then rm -rf ../bllvm-protocol; fi
+2025-11-11T18:39:31.6845573Z [36;1mif [ -d "../bllvm-protocol" ]; then rm -rf ../bllvm-protocol; fi[0m
+2025-11-11T18:39:31.6846104Z [36;1mif [ -d "../bllvm-consensus" ]; then rm -rf ../bllvm-consensus; fi[0m
+2025-11-11T18:39:31.6846556Z [36;1mmv _temp-protocol-engine ../bllvm-protocol[0m
+2025-11-11T18:39:31.6846955Z [36;1mmv _temp-consensus-proof ../bllvm-consensus[0m
+2025-11-11T18:39:31.6881409Z shell: /usr/bin/bash -e {0}
+2025-11-11T18:39:31.6881660Z env:
+2025-11-11T18:39:31.6881844Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:31.6882079Z ##[endgroup]

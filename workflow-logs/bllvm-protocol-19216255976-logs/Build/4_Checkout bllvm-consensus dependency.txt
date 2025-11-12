@@ -1,0 +1,100 @@
+﻿2025-11-09T23:52:17.7690108Z ##[group]Run actions/checkout@v4
+2025-11-09T23:52:17.7692113Z with:
+2025-11-09T23:52:17.7692356Z   repository: BTCDecoded/bllvm-consensus
+2025-11-09T23:52:17.7692674Z   path: _temp-consensus-proof
+2025-11-09T23:52:17.7693091Z   token: ***
+2025-11-09T23:52:17.7693326Z   ssh-strict: true
+2025-11-09T23:52:17.7693554Z   ssh-user: git
+2025-11-09T23:52:17.7693796Z   persist-credentials: true
+2025-11-09T23:52:17.7694051Z   clean: true
+2025-11-09T23:52:17.7694578Z   sparse-checkout-cone-mode: true
+2025-11-09T23:52:17.7694997Z   fetch-depth: 1
+2025-11-09T23:52:17.7695243Z   fetch-tags: false
+2025-11-09T23:52:17.7696129Z   show-progress: true
+2025-11-09T23:52:17.7696606Z   lfs: false
+2025-11-09T23:52:17.7696829Z   submodules: false
+2025-11-09T23:52:17.7697065Z   set-safe-directory: true
+2025-11-09T23:52:17.7697320Z env:
+2025-11-09T23:52:17.7697522Z   CARGO_TERM_COLOR: always
+2025-11-09T23:52:17.7697945Z ##[endgroup]
+2025-11-09T23:52:17.8882415Z Syncing repository: BTCDecoded/bllvm-consensus
+2025-11-09T23:52:17.8889268Z ##[group]Getting Git version info
+2025-11-09T23:52:17.8891762Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/_temp-consensus-proof'
+2025-11-09T23:52:17.8940250Z [command]/usr/bin/git version
+2025-11-09T23:52:17.8988900Z git version 2.43.0
+2025-11-09T23:52:17.9017154Z ##[endgroup]
+2025-11-09T23:52:17.9029099Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/9871d415-8d71-4119-a3d0-cc16c58dbd2a/.gitconfig'
+2025-11-09T23:52:17.9045161Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/9871d415-8d71-4119-a3d0-cc16c58dbd2a' before making global git config changes
+2025-11-09T23:52:17.9046715Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T23:52:17.9059623Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/_temp-consensus-proof
+2025-11-09T23:52:17.9095101Z ##[group]Initializing the repository
+2025-11-09T23:52:17.9099395Z [command]/usr/bin/git init /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/_temp-consensus-proof
+2025-11-09T23:52:17.9142450Z Initialized empty Git repository in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/_temp-consensus-proof/.git/
+2025-11-09T23:52:17.9154901Z [command]/usr/bin/git remote add origin https://github.com/BTCDecoded/bllvm-consensus
+2025-11-09T23:52:17.9194055Z ##[endgroup]
+2025-11-09T23:52:17.9194921Z ##[group]Disabling automatic garbage collection
+2025-11-09T23:52:17.9198723Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T23:52:17.9236369Z ##[endgroup]
+2025-11-09T23:52:17.9236903Z ##[group]Setting up auth
+2025-11-09T23:52:17.9247220Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:52:17.9288205Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:52:17.9580581Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:52:17.9625261Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:52:17.9947094Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T23:52:18.0005836Z ##[endgroup]
+2025-11-09T23:52:18.0008058Z ##[group]Determining the default branch
+2025-11-09T23:52:18.0010863Z Retrieving the default branch name
+2025-11-09T23:52:18.2568808Z Default branch 'main'
+2025-11-09T23:52:18.2570146Z ##[endgroup]
+2025-11-09T23:52:18.2571247Z ##[group]Fetching the repository
+2025-11-09T23:52:18.2578864Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+2025-11-09T23:52:22.7432013Z From https://github.com/BTCDecoded/bllvm-consensus
+2025-11-09T23:52:22.7432972Z  * [new branch]      main       -> origin/main
+2025-11-09T23:52:22.7456366Z ##[endgroup]
+2025-11-09T23:52:22.7457029Z ##[group]Determining the checkout info
+2025-11-09T23:52:22.7459207Z ##[endgroup]
+2025-11-09T23:52:22.7464972Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T23:52:22.7516720Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T23:52:22.7549983Z ##[group]Checking out the ref
+2025-11-09T23:52:22.7553905Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T23:52:23.7875998Z Updating files:  67% (801/1180)
+2025-11-09T23:52:23.8138349Z Updating files:  68% (803/1180)
+2025-11-09T23:52:23.9528663Z Updating files:  69% (815/1180)
+2025-11-09T23:52:24.3304934Z Updating files:  70% (826/1180)
+2025-11-09T23:52:24.4294178Z Updating files:  71% (838/1180)
+2025-11-09T23:52:24.5117066Z Updating files:  72% (850/1180)
+2025-11-09T23:52:24.7557927Z Updating files:  73% (862/1180)
+2025-11-09T23:52:24.8135571Z Updating files:  74% (874/1180)
+2025-11-09T23:52:25.0512050Z Updating files:  74% (875/1180)
+2025-11-09T23:52:25.0527027Z Updating files:  75% (885/1180)
+2025-11-09T23:52:25.0537567Z Updating files:  76% (897/1180)
+2025-11-09T23:52:25.0560230Z Updating files:  77% (909/1180)
+2025-11-09T23:52:25.0579636Z Updating files:  78% (921/1180)
+2025-11-09T23:52:25.0592307Z Updating files:  79% (933/1180)
+2025-11-09T23:52:25.0598869Z Updating files:  80% (944/1180)
+2025-11-09T23:52:25.0605596Z Updating files:  81% (956/1180)
+2025-11-09T23:52:25.0611202Z Updating files:  82% (968/1180)
+2025-11-09T23:52:25.0617235Z Updating files:  83% (980/1180)
+2025-11-09T23:52:25.0622557Z Updating files:  84% (992/1180)
+2025-11-09T23:52:25.0975447Z Updating files:  85% (1003/1180)
+2025-11-09T23:52:25.1275403Z Updating files:  86% (1015/1180)
+2025-11-09T23:52:25.1543633Z Updating files:  87% (1027/1180)
+2025-11-09T23:52:25.2037005Z Updating files:  88% (1039/1180)
+2025-11-09T23:52:25.2210541Z Updating files:  89% (1051/1180)
+2025-11-09T23:52:25.2218834Z Updating files:  90% (1062/1180)
+2025-11-09T23:52:25.2230456Z Updating files:  91% (1074/1180)
+2025-11-09T23:52:25.2242197Z Updating files:  92% (1086/1180)
+2025-11-09T23:52:25.2254925Z Updating files:  93% (1098/1180)
+2025-11-09T23:52:25.2266610Z Updating files:  94% (1110/1180)
+2025-11-09T23:52:25.2277189Z Updating files:  95% (1121/1180)
+2025-11-09T23:52:25.2291558Z Updating files:  96% (1133/1180)
+2025-11-09T23:52:25.2297584Z Updating files:  97% (1145/1180)
+2025-11-09T23:52:25.2307473Z Updating files:  98% (1157/1180)
+2025-11-09T23:52:25.2316721Z Updating files:  99% (1169/1180)
+2025-11-09T23:52:25.2318168Z Updating files: 100% (1180/1180)
+2025-11-09T23:52:25.2319961Z Updating files: 100% (1180/1180), done.
+2025-11-09T23:52:25.2343504Z Reset branch 'main'
+2025-11-09T23:52:25.2345462Z branch 'main' set up to track 'origin/main'.
+2025-11-09T23:52:25.2538939Z ##[endgroup]
+2025-11-09T23:52:25.2592660Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T23:52:25.2627914Z f1ff38664dd5deaaa46fc9d342df1d4aa6559aca

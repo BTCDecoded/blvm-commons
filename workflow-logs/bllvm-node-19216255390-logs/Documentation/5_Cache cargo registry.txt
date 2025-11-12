@@ -1,0 +1,22 @@
+﻿2025-11-09T23:44:45.1668420Z ##[group]Run actions/cache@v3
+2025-11-09T23:44:45.1668684Z with:
+2025-11-09T23:44:45.1668873Z   path: ~/.cargo/registry
+2025-11-09T23:44:45.1669103Z   key: Linux-cargo-registry-
+2025-11-09T23:44:45.1669349Z   enableCrossOsArchive: false
+2025-11-09T23:44:45.1669592Z   fail-on-cache-miss: false
+2025-11-09T23:44:45.1669811Z   lookup-only: false
+2025-11-09T23:44:45.1670005Z env:
+2025-11-09T23:44:45.1670174Z   CARGO_TERM_COLOR: always
+2025-11-09T23:44:45.1670403Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:44:45.1670656Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:44:45.1670861Z ##[endgroup]
+2025-11-09T23:44:45.4840468Z Cache hit for: Linux-cargo-registry-
+2025-11-09T23:44:46.7284951Z Received 134217728 of 797369674 (16.8%), 116.2 MBs/sec
+2025-11-09T23:44:47.7393202Z Received 314572800 of 797369674 (39.5%), 142.0 MBs/sec
+2025-11-09T23:44:48.7394026Z Received 503316480 of 797369674 (63.1%), 154.2 MBs/sec
+2025-11-09T23:44:49.7535443Z Received 671088640 of 797369674 (84.2%), 155.1 MBs/sec
+2025-11-09T23:44:50.4823410Z Received 797369674 of 797369674 (100.0%), 156.6 MBs/sec
+2025-11-09T23:44:50.4826909Z Cache Size: ~760 MB (797369674 B)
+2025-11-09T23:44:50.4981049Z [command]/usr/bin/tar -xf /home/jswift/actions-runner-org2/_work/_temp/6acb4f2a-58ab-43d3-b3bb-b35e0145507d/cache.tzst -P -C /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node --use-compress-program unzstd
+2025-11-09T23:44:58.4092816Z Cache restored successfully
+2025-11-09T23:44:58.5285568Z Cache restored from key: Linux-cargo-registry-

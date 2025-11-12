@@ -1,0 +1,17 @@
+﻿2025-11-09T23:50:22.9958206Z Current runner version: '2.329.0'
+2025-11-09T23:50:22.9968522Z Runner name: 'linode-runner-02'
+2025-11-09T23:50:22.9969367Z Runner group name: 'default'
+2025-11-09T23:50:22.9970228Z Machine name: 'localhost'
+2025-11-09T23:50:22.9975473Z ##[group]GITHUB_TOKEN Permissions
+2025-11-09T23:50:22.9978834Z Contents: read
+2025-11-09T23:50:22.9980024Z Metadata: read
+2025-11-09T23:50:22.9980573Z Packages: read
+2025-11-09T23:50:22.9981309Z ##[endgroup]
+2025-11-09T23:50:22.9984742Z Secret source: Actions
+2025-11-09T23:50:22.9985583Z Prepare workflow directory
+2025-11-09T23:50:23.0639491Z Prepare all required actions
+2025-11-09T23:50:23.0706512Z Getting action download info
+2025-11-09T23:50:23.3914982Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-09T23:50:23.7613431Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:6d653acede28d24f02e3cd41383119e8b1b35921)
+2025-11-09T23:50:23.9855728Z Download action repository 'actions/cache@v3' (SHA:6f8efc29b200d32929f49075959781ed54ec270c)
+2025-11-09T23:50:24.6305220Z Complete job name: Documentation

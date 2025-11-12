@@ -1,0 +1,182 @@
+﻿2025-11-09T23:38:06.3784926Z ##[group]Run dtolnay/rust-toolchain@master
+2025-11-09T23:38:06.3786110Z with:
+2025-11-09T23:38:06.3786828Z   toolchain: 1.88.0
+2025-11-09T23:38:06.3787593Z env:
+2025-11-09T23:38:06.3788307Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:06.3789159Z ##[endgroup]
+2025-11-09T23:38:06.3968113Z ##[group]Run : parse toolchain version
+2025-11-09T23:38:06.3969248Z [36;1m: parse toolchain version[0m
+2025-11-09T23:38:06.3970255Z [36;1mif [[ -z $toolchain ]]; then[0m
+2025-11-09T23:38:06.3972058Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2025-11-09T23:38:06.3973961Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2025-11-09T23:38:06.3977087Z [36;1m  exit 1[0m
+2025-11-09T23:38:06.3978253Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2025-11-09T23:38:06.3979681Z [36;1m  if [[ Linux == macOS ]]; then[0m
+2025-11-09T23:38:06.3981435Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:38:06.3983497Z [36;1m  else[0m
+2025-11-09T23:38:06.3985009Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:38:06.3988243Z [36;1m  fi[0m
+2025-11-09T23:38:06.3989319Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2025-11-09T23:38:06.3991212Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:38:06.3992844Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2025-11-09T23:38:06.3994961Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:38:06.3998312Z [36;1melse[0m
+2025-11-09T23:38:06.3999195Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:38:06.4000293Z [36;1mfi[0m
+2025-11-09T23:38:06.4031975Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:06.4033816Z env:
+2025-11-09T23:38:06.4034955Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:06.4035876Z   toolchain: 1.88.0
+2025-11-09T23:38:06.4036611Z ##[endgroup]
+2025-11-09T23:38:06.4202688Z ##[group]Run : construct rustup command line
+2025-11-09T23:38:06.4203850Z [36;1m: construct rustup command line[0m
+2025-11-09T23:38:06.4207825Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:38:06.4210054Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:38:06.4211791Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:38:06.4245739Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:06.4246941Z env:
+2025-11-09T23:38:06.4247622Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:06.4248453Z   targets: 
+2025-11-09T23:38:06.4249134Z   components: 
+2025-11-09T23:38:06.4249876Z ##[endgroup]
+2025-11-09T23:38:06.4372889Z ##[group]Run : set $CARGO_HOME
+2025-11-09T23:38:06.4374050Z [36;1m: set $CARGO_HOME[0m
+2025-11-09T23:38:06.4375689Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+2025-11-09T23:38:06.4408036Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:06.4409218Z env:
+2025-11-09T23:38:06.4409893Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:06.4410694Z ##[endgroup]
+2025-11-09T23:38:06.4534578Z ##[group]Run : install rustup if needed
+2025-11-09T23:38:06.4535638Z [36;1m: install rustup if needed[0m
+2025-11-09T23:38:06.4536664Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2025-11-09T23:38:06.4539660Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+2025-11-09T23:38:06.4542094Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+2025-11-09T23:38:06.4543078Z [36;1mfi[0m
+2025-11-09T23:38:06.4574712Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:06.4575993Z env:
+2025-11-09T23:38:06.4576692Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:06.4577533Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:38:06.4578387Z ##[endgroup]
+2025-11-09T23:38:06.5247144Z info: downloading installer
+2025-11-09T23:38:06.7663347Z warn: It looks like you have an existing rustup settings file at:
+2025-11-09T23:38:06.7665683Z warn: /home/jswift/.rustup/settings.toml
+2025-11-09T23:38:06.7667836Z warn: Rustup will install the default toolchain as specified in the settings file,
+2025-11-09T23:38:06.7670334Z warn: instead of the one inferred from the default host triple.
+2025-11-09T23:38:06.7919080Z info: profile set to 'default'
+2025-11-09T23:38:06.7920535Z 
+2025-11-09T23:38:06.7921615Z info: default host triple is x86_64-unknown-linux-gnu
+2025-11-09T23:38:06.7923973Z info: skipping toolchain installation
+2025-11-09T23:38:06.7925270Z 
+2025-11-09T23:38:06.7925787Z Rust is installed now. Great!
+2025-11-09T23:38:06.7927326Z 
+2025-11-09T23:38:06.7928029Z To get started you may need to restart your current shell.
+2025-11-09T23:38:06.7930010Z This would reload your PATH environment variable to include
+2025-11-09T23:38:06.7932113Z Cargo's bin directory ($HOME/.cargo/bin).
+2025-11-09T23:38:06.7933281Z 
+2025-11-09T23:38:06.7934009Z To configure your current shell, you need to source
+2025-11-09T23:38:06.7936225Z the corresponding env file under $HOME/.cargo.
+2025-11-09T23:38:06.7937449Z 
+2025-11-09T23:38:06.7938569Z This is usually done by running one of the following (note the leading DOT):
+2025-11-09T23:38:06.7941149Z . "$HOME/.cargo/env"            # For sh/bash/zsh/ash/dash/pdksh
+2025-11-09T23:38:06.7943162Z source "$HOME/.cargo/env.fish"  # For fish
+2025-11-09T23:38:06.7945332Z source $"($nu.home-path)/.cargo/env.nu"  # For nushell
+2025-11-09T23:38:06.8077218Z ##[group]Run rustup toolchain install 1.88.0 --profile minimal --no-self-update
+2025-11-09T23:38:06.8079041Z [36;1mrustup toolchain install 1.88.0 --profile minimal --no-self-update[0m
+2025-11-09T23:38:06.8110476Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:06.8111612Z env:
+2025-11-09T23:38:06.8112248Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:06.8113249Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:38:06.8114106Z ##[endgroup]
+2025-11-09T23:38:06.9011487Z info: syncing channel updates for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T23:38:06.9200911Z 
+2025-11-09T23:38:06.9328271Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T23:38:06.9330220Z 
+2025-11-09T23:38:06.9421774Z ##[group]Run rustup default 1.88.0
+2025-11-09T23:38:06.9422719Z [36;1mrustup default 1.88.0[0m
+2025-11-09T23:38:06.9452231Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:06.9453361Z env:
+2025-11-09T23:38:06.9453990Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:06.9454991Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:38:06.9455853Z ##[endgroup]
+2025-11-09T23:38:06.9588616Z info: using existing install for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T23:38:06.9969446Z info: default toolchain set to '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T23:38:06.9970879Z 
+2025-11-09T23:38:07.0090250Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T23:38:07.0092125Z 
+2025-11-09T23:38:07.0096658Z info: note that the toolchain '1.88.0-x86_64-unknown-linux-gnu' is currently in use (overridden by '/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus/rust-toolchain.toml')
+2025-11-09T23:38:07.0164984Z ##[group]Run : create cachekey
+2025-11-09T23:38:07.0165886Z [36;1m: create cachekey[0m
+2025-11-09T23:38:07.0167446Z [36;1mDATE=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2025-11-09T23:38:07.0169475Z [36;1mHASH=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2025-11-09T23:38:07.0171073Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:38:07.0200978Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:07.0202080Z env:
+2025-11-09T23:38:07.0202710Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:07.0203519Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:38:07.0204576Z ##[endgroup]
+2025-11-09T23:38:07.0728471Z ##[group]Run : disable incremental compilation
+2025-11-09T23:38:07.0729930Z [36;1m: disable incremental compilation[0m
+2025-11-09T23:38:07.0730995Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2025-11-09T23:38:07.0732323Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2025-11-09T23:38:07.0733280Z [36;1mfi[0m
+2025-11-09T23:38:07.0765417Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:07.0767211Z env:
+2025-11-09T23:38:07.0768211Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:07.0769470Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:38:07.0771295Z ##[endgroup]
+2025-11-09T23:38:07.0893163Z ##[group]Run : enable colors in Cargo output
+2025-11-09T23:38:07.0895185Z [36;1m: enable colors in Cargo output[0m
+2025-11-09T23:38:07.0896252Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2025-11-09T23:38:07.0897399Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2025-11-09T23:38:07.0899195Z [36;1mfi[0m
+2025-11-09T23:38:07.0932064Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:07.0933191Z env:
+2025-11-09T23:38:07.0933820Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:07.0934943Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:38:07.0935817Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:38:07.0936528Z ##[endgroup]
+2025-11-09T23:38:07.1073049Z ##[group]Run : enable Cargo sparse registry
+2025-11-09T23:38:07.1074114Z [36;1m: enable Cargo sparse registry[0m
+2025-11-09T23:38:07.1075664Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2025-11-09T23:38:07.1078482Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2025-11-09T23:38:07.1081218Z [36;1m  if rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2025-11-09T23:38:07.1083349Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-09T23:38:07.1085592Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2025-11-09T23:38:07.1087296Z [36;1m  elif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2025-11-09T23:38:07.1089677Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-09T23:38:07.1091667Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2025-11-09T23:38:07.1092810Z [36;1m  fi[0m
+2025-11-09T23:38:07.1093439Z [36;1mfi[0m
+2025-11-09T23:38:07.1121461Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:07.1122562Z env:
+2025-11-09T23:38:07.1123189Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:07.1124174Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:38:07.1125252Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:38:07.1125967Z ##[endgroup]
+2025-11-09T23:38:07.1633505Z ##[group]Run : work around spurious network errors in curl 8.0
+2025-11-09T23:38:07.1635130Z [36;1m: work around spurious network errors in curl 8.0[0m
+2025-11-09T23:38:07.1636958Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2025-11-09T23:38:07.1639140Z [36;1mif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2025-11-09T23:38:07.1640634Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2025-11-09T23:38:07.1641676Z [36;1mfi[0m
+2025-11-09T23:38:07.1671561Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:07.1673089Z env:
+2025-11-09T23:38:07.1676438Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:07.1677308Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:38:07.1678415Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:38:07.1679127Z ##[endgroup]
+2025-11-09T23:38:07.2000855Z ##[group]Run rustc +1.88.0 --version --verbose
+2025-11-09T23:38:07.2001926Z [36;1mrustc +1.88.0 --version --verbose[0m
+2025-11-09T23:38:07.2031595Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:38:07.2032717Z env:
+2025-11-09T23:38:07.2033550Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:07.2034576Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:38:07.2035545Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:38:07.2038173Z ##[endgroup]
+2025-11-09T23:38:07.2264783Z rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T23:38:07.2266432Z binary: rustc
+2025-11-09T23:38:07.2267872Z commit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc
+2025-11-09T23:38:07.2270221Z commit-date: 2025-06-23
+2025-11-09T23:38:07.2271559Z host: x86_64-unknown-linux-gnu
+2025-11-09T23:38:07.2273012Z release: 1.88.0
+2025-11-09T23:38:07.2274160Z LLVM version: 20.1.5

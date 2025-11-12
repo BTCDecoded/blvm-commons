@@ -1,0 +1,50 @@
+﻿2025-11-10T00:26:25.5601771Z ##[group]Run actions/upload-artifact@v4
+2025-11-10T00:26:25.5602093Z with:
+2025-11-10T00:26:25.5602313Z   name: consensus-proof-target
+2025-11-10T00:26:25.5602571Z   path: target/
+2025-11-10T00:26:25.5602780Z   retention-days: 1
+2025-11-10T00:26:25.5602998Z   if-no-files-found: warn
+2025-11-10T00:26:25.5603240Z   compression-level: 6
+2025-11-10T00:26:25.5603463Z   overwrite: false
+2025-11-10T00:26:25.5603736Z   include-hidden-files: false
+2025-11-10T00:26:25.5603974Z env:
+2025-11-10T00:26:25.5604161Z   CARGO_TERM_COLOR: always
+2025-11-10T00:26:25.5604692Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:26:25.5605046Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:26:25.5605274Z ##[endgroup]
+2025-11-10T00:26:26.0379384Z With the provided path, there will be 879 files uploaded
+2025-11-10T00:26:26.0386001Z Artifact name is valid!
+2025-11-10T00:26:26.0387133Z Root directory input is valid!
+2025-11-10T00:26:26.2268655Z Beginning upload of artifact content to blob storage
+2025-11-10T00:26:27.6100598Z Uploaded bytes 8388608
+2025-11-10T00:26:28.2775772Z Uploaded bytes 16777216
+2025-11-10T00:26:28.8775270Z Uploaded bytes 25165824
+2025-11-10T00:26:29.5067476Z Uploaded bytes 33554432
+2025-11-10T00:26:30.1017809Z Uploaded bytes 41943040
+2025-11-10T00:26:30.7478717Z Uploaded bytes 50331648
+2025-11-10T00:26:31.4023661Z Uploaded bytes 58720256
+2025-11-10T00:26:32.1062484Z Uploaded bytes 67108864
+2025-11-10T00:26:32.8785619Z Uploaded bytes 75497472
+2025-11-10T00:26:33.4621109Z Uploaded bytes 83886080
+2025-11-10T00:26:34.2253886Z Uploaded bytes 92274688
+2025-11-10T00:26:34.9519827Z Uploaded bytes 100663296
+2025-11-10T00:26:35.6983387Z Uploaded bytes 109051904
+2025-11-10T00:26:36.3562805Z Uploaded bytes 117440512
+2025-11-10T00:26:37.1324858Z Uploaded bytes 125829120
+2025-11-10T00:26:37.8568698Z Uploaded bytes 134217728
+2025-11-10T00:26:38.5346677Z Uploaded bytes 142606336
+2025-11-10T00:26:39.2413017Z Uploaded bytes 150994944
+2025-11-10T00:26:40.0241107Z Uploaded bytes 159383552
+2025-11-10T00:26:40.8353225Z Uploaded bytes 167772160
+2025-11-10T00:26:41.5653745Z Uploaded bytes 176160768
+2025-11-10T00:26:42.3664030Z Uploaded bytes 184549376
+2025-11-10T00:26:43.1056129Z Uploaded bytes 192937984
+2025-11-10T00:26:43.7226944Z Uploaded bytes 201326592
+2025-11-10T00:26:44.2328837Z Uploaded bytes 209715200
+2025-11-10T00:26:44.2787881Z Uploaded bytes 209748118
+2025-11-10T00:26:44.3120780Z Finished uploading artifact content to blob storage!
+2025-11-10T00:26:44.3124758Z SHA256 digest of uploaded artifact zip is 611eb233738b0a5205ae6148f00000b7b8dc96453f16bfe39e4bdf534a4ea98b
+2025-11-10T00:26:44.3134153Z Finalizing artifact upload
+2025-11-10T00:26:44.4689573Z Artifact consensus-proof-target.zip successfully finalized. Artifact ID 4514175158
+2025-11-10T00:26:44.4692822Z Artifact consensus-proof-target has been successfully uploaded! Final size is 209748118 bytes. Artifact ID is 4514175158
+2025-11-10T00:26:44.4701945Z Artifact download URL: https://github.com/BTCDecoded/bllvm-consensus/actions/runs/19216733288/artifacts/4514175158

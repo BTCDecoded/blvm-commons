@@ -1,0 +1,69 @@
+﻿2025-11-10T00:05:34.3146936Z ##[group]Run actions/checkout@v4
+2025-11-10T00:05:34.3147610Z with:
+2025-11-10T00:05:34.3148051Z   repository: BTCDecoded/bllvm-node
+2025-11-10T00:05:34.3148802Z   token: ***
+2025-11-10T00:05:34.3149302Z   ssh-strict: true
+2025-11-10T00:05:34.3149784Z   ssh-user: git
+2025-11-10T00:05:34.3150276Z   persist-credentials: true
+2025-11-10T00:05:34.3150810Z   clean: true
+2025-11-10T00:05:34.3151261Z   sparse-checkout-cone-mode: true
+2025-11-10T00:05:34.3151816Z   fetch-depth: 1
+2025-11-10T00:05:34.3152260Z   fetch-tags: false
+2025-11-10T00:05:34.3152712Z   show-progress: true
+2025-11-10T00:05:34.3153170Z   lfs: false
+2025-11-10T00:05:34.3153578Z   submodules: false
+2025-11-10T00:05:34.3154037Z   set-safe-directory: true
+2025-11-10T00:05:34.3154864Z env:
+2025-11-10T00:05:34.3155307Z   CARGO_TERM_COLOR: always
+2025-11-10T00:05:34.3155939Z ##[endgroup]
+2025-11-10T00:05:34.4506601Z Syncing repository: BTCDecoded/bllvm-node
+2025-11-10T00:05:34.4509521Z ##[group]Getting Git version info
+2025-11-10T00:05:34.4513155Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node'
+2025-11-10T00:05:34.4515799Z [command]/usr/bin/git version
+2025-11-10T00:05:34.4530058Z git version 2.43.0
+2025-11-10T00:05:34.4559671Z ##[endgroup]
+2025-11-10T00:05:34.4574911Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/66a29c16-a613-4c7e-9552-3a5659c5a724/.gitconfig'
+2025-11-10T00:05:34.4588692Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/66a29c16-a613-4c7e-9552-3a5659c5a724' before making global git config changes
+2025-11-10T00:05:34.4592366Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-10T00:05:34.4607345Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node
+2025-11-10T00:05:34.4653108Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-10T00:05:34.4679874Z https://github.com/BTCDecoded/bllvm-node
+2025-11-10T00:05:34.4697775Z ##[group]Removing previously created refs, to avoid conflicts
+2025-11-10T00:05:34.4701262Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2025-11-10T00:05:34.4723991Z refs/heads/main
+2025-11-10T00:05:34.4736159Z [command]/usr/bin/git checkout --detach
+2025-11-10T00:05:34.4816273Z HEAD is now at 573270a fix: Add bllvm-consensus checkout to all jobs that need it
+2025-11-10T00:05:34.4872655Z [command]/usr/bin/git branch --delete --force main
+2025-11-10T00:05:34.4907486Z Deleted branch main (was 573270a).
+2025-11-10T00:05:34.4950121Z ##[endgroup]
+2025-11-10T00:05:34.4953097Z [command]/usr/bin/git submodule status
+2025-11-10T00:05:34.5218705Z ##[group]Cleaning the repository
+2025-11-10T00:05:34.5223135Z [command]/usr/bin/git clean -ffdx
+2025-11-10T00:05:34.5289056Z Removing Cargo.lock
+2025-11-10T00:05:34.5304234Z [command]/usr/bin/git reset --hard HEAD
+2025-11-10T00:05:34.5405180Z HEAD is now at 573270a fix: Add bllvm-consensus checkout to all jobs that need it
+2025-11-10T00:05:34.5415692Z ##[endgroup]
+2025-11-10T00:05:34.5417637Z ##[group]Disabling automatic garbage collection
+2025-11-10T00:05:34.5421673Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-10T00:05:34.5461982Z ##[endgroup]
+2025-11-10T00:05:34.5462773Z ##[group]Setting up auth
+2025-11-10T00:05:34.5468113Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-10T00:05:34.5505312Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-10T00:05:34.5792491Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-10T00:05:34.5828510Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-10T00:05:34.6104728Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-10T00:05:34.6152405Z ##[endgroup]
+2025-11-10T00:05:34.6153975Z ##[group]Fetching the repository
+2025-11-10T00:05:34.6165383Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +573270a72e827bb13de8d1ac7d31924eadd9aed8:refs/remotes/origin/main
+2025-11-10T00:05:34.8273077Z ##[endgroup]
+2025-11-10T00:05:34.8275145Z ##[group]Determining the checkout info
+2025-11-10T00:05:34.8277267Z ##[endgroup]
+2025-11-10T00:05:34.8282272Z [command]/usr/bin/git sparse-checkout disable
+2025-11-10T00:05:34.8340942Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-10T00:05:34.8374709Z ##[group]Checking out the ref
+2025-11-10T00:05:34.8376364Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-10T00:05:34.8448784Z Switched to a new branch 'main'
+2025-11-10T00:05:34.8450708Z branch 'main' set up to track 'origin/main'.
+2025-11-10T00:05:34.8457676Z ##[endgroup]
+2025-11-10T00:05:34.8496774Z [command]/usr/bin/git log -1 --format=%H
+2025-11-10T00:05:34.8526796Z 573270a72e827bb13de8d1ac7d31924eadd9aed8

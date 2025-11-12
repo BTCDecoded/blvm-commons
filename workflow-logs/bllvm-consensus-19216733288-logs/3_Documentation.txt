@@ -1,0 +1,641 @@
+﻿2025-11-10T00:23:12.3803790Z Current runner version: '2.329.0'
+2025-11-10T00:23:12.3813066Z Runner name: 'linode-runner-02'
+2025-11-10T00:23:12.3813864Z Runner group name: 'default'
+2025-11-10T00:23:12.3815120Z Machine name: 'localhost'
+2025-11-10T00:23:12.3818252Z ##[group]GITHUB_TOKEN Permissions
+2025-11-10T00:23:12.3820604Z Contents: read
+2025-11-10T00:23:12.3821267Z Metadata: read
+2025-11-10T00:23:12.3821874Z Packages: read
+2025-11-10T00:23:12.3822575Z ##[endgroup]
+2025-11-10T00:23:12.3826844Z Secret source: Actions
+2025-11-10T00:23:12.3827557Z Prepare workflow directory
+2025-11-10T00:23:12.4468291Z Prepare all required actions
+2025-11-10T00:23:12.4518675Z Getting action download info
+2025-11-10T00:23:12.7510544Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-10T00:23:13.1211670Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:6d653acede28d24f02e3cd41383119e8b1b35921)
+2025-11-10T00:23:13.3469495Z Download action repository 'actions/cache@v3' (SHA:6f8efc29b200d32929f49075959781ed54ec270c)
+2025-11-10T00:23:14.0315914Z Complete job name: Documentation
+2025-11-10T00:23:14.1055163Z A job started hook has been configured by the self-hosted runner administrator
+2025-11-10T00:23:14.1239190Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-started.sh'
+2025-11-10T00:23:14.1276592Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:14.1306558Z ##[endgroup]
+2025-11-10T00:23:14.1525574Z Job started: Mon Nov 10 12:23:14 AM UTC 2025
+2025-11-10T00:23:14.1544041Z Available disk space: 9.0G
+2025-11-10T00:23:14.1578840Z WARNING: Disk usage is 82% - performing user-level cleanup
+2025-11-10T00:23:14.1580987Z Cleaning old work directories (user-level cleanup)...
+2025-11-10T00:23:14.2606513Z User-level cleanup completed. Disk usage: 82%
+2025-11-10T00:23:14.2953591Z ##[group]Run actions/checkout@v4
+2025-11-10T00:23:14.2954908Z with:
+2025-11-10T00:23:14.2955751Z   repository: BTCDecoded/bllvm-consensus
+2025-11-10T00:23:14.2957132Z   token: ***
+2025-11-10T00:23:14.2958199Z   ssh-strict: true
+2025-11-10T00:23:14.2959024Z   ssh-user: git
+2025-11-10T00:23:14.2961841Z   persist-credentials: true
+2025-11-10T00:23:14.2963034Z   clean: true
+2025-11-10T00:23:14.2963878Z   sparse-checkout-cone-mode: true
+2025-11-10T00:23:14.2965080Z   fetch-depth: 1
+2025-11-10T00:23:14.2965904Z   fetch-tags: false
+2025-11-10T00:23:14.2966745Z   show-progress: true
+2025-11-10T00:23:14.2967595Z   lfs: false
+2025-11-10T00:23:14.2968360Z   submodules: false
+2025-11-10T00:23:14.2969218Z   set-safe-directory: true
+2025-11-10T00:23:14.2970107Z env:
+2025-11-10T00:23:14.2970852Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:14.2973449Z ##[endgroup]
+2025-11-10T00:23:14.4676685Z Syncing repository: BTCDecoded/bllvm-consensus
+2025-11-10T00:23:14.4681245Z ##[group]Getting Git version info
+2025-11-10T00:23:14.4685950Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus'
+2025-11-10T00:23:14.4691222Z [command]/usr/bin/git version
+2025-11-10T00:23:14.4697693Z git version 2.43.0
+2025-11-10T00:23:14.4732946Z ##[endgroup]
+2025-11-10T00:23:14.4751777Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/8a1cb4db-7404-4b2d-81bd-f2b750d2bae3/.gitconfig'
+2025-11-10T00:23:14.4780594Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/8a1cb4db-7404-4b2d-81bd-f2b750d2bae3' before making global git config changes
+2025-11-10T00:23:14.4785987Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-10T00:23:14.4790689Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus
+2025-11-10T00:23:14.4843835Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-10T00:23:14.4871703Z https://github.com/BTCDecoded/bllvm-consensus
+2025-11-10T00:23:14.4887867Z ##[group]Removing previously created refs, to avoid conflicts
+2025-11-10T00:23:14.4891528Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2025-11-10T00:23:14.4919024Z refs/heads/main
+2025-11-10T00:23:14.4929228Z [command]/usr/bin/git checkout --detach
+2025-11-10T00:23:14.5009447Z HEAD is now at 8117c9d fix: Resolve Clippy and Rustfmt errors
+2025-11-10T00:23:14.5068556Z [command]/usr/bin/git branch --delete --force main
+2025-11-10T00:23:14.5099084Z Deleted branch main (was 8117c9d).
+2025-11-10T00:23:14.5148564Z ##[endgroup]
+2025-11-10T00:23:14.5150266Z [command]/usr/bin/git submodule status
+2025-11-10T00:23:14.5451723Z ##[group]Cleaning the repository
+2025-11-10T00:23:14.5456536Z [command]/usr/bin/git clean -ffdx
+2025-11-10T00:23:14.5535240Z [command]/usr/bin/git reset --hard HEAD
+2025-11-10T00:23:14.5631061Z HEAD is now at 8117c9d fix: Resolve Clippy and Rustfmt errors
+2025-11-10T00:23:14.5643306Z ##[endgroup]
+2025-11-10T00:23:14.5646293Z ##[group]Disabling automatic garbage collection
+2025-11-10T00:23:14.5648639Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-10T00:23:14.5694812Z ##[endgroup]
+2025-11-10T00:23:14.5697313Z ##[group]Setting up auth
+2025-11-10T00:23:14.5701489Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-10T00:23:14.5741702Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-10T00:23:14.6036218Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-10T00:23:14.6072174Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-10T00:23:14.6372557Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-10T00:23:14.6420570Z ##[endgroup]
+2025-11-10T00:23:14.6424186Z ##[group]Fetching the repository
+2025-11-10T00:23:14.6431508Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +8117c9d24fda06c4c3e65467c5c4ca10025375da:refs/remotes/origin/main
+2025-11-10T00:23:14.8586938Z ##[endgroup]
+2025-11-10T00:23:14.8589329Z ##[group]Determining the checkout info
+2025-11-10T00:23:14.8593622Z ##[endgroup]
+2025-11-10T00:23:14.8595225Z [command]/usr/bin/git sparse-checkout disable
+2025-11-10T00:23:14.8679258Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-10T00:23:14.8729129Z ##[group]Checking out the ref
+2025-11-10T00:23:14.8732190Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-10T00:23:14.8841706Z Switched to a new branch 'main'
+2025-11-10T00:23:14.8843455Z branch 'main' set up to track 'origin/main'.
+2025-11-10T00:23:14.8853524Z ##[endgroup]
+2025-11-10T00:23:14.8907092Z [command]/usr/bin/git log -1 --format=%H
+2025-11-10T00:23:14.8945868Z 8117c9d24fda06c4c3e65467c5c4ca10025375da
+2025-11-10T00:23:14.9478458Z ##[group]Run dtolnay/rust-toolchain@master
+2025-11-10T00:23:14.9479530Z with:
+2025-11-10T00:23:14.9480222Z   toolchain: 1.88.0
+2025-11-10T00:23:14.9480971Z env:
+2025-11-10T00:23:14.9483861Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:14.9485039Z ##[endgroup]
+2025-11-10T00:23:14.9650738Z ##[group]Run : parse toolchain version
+2025-11-10T00:23:14.9653600Z [36;1m: parse toolchain version[0m
+2025-11-10T00:23:14.9654750Z [36;1mif [[ -z $toolchain ]]; then[0m
+2025-11-10T00:23:14.9656468Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2025-11-10T00:23:14.9658483Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2025-11-10T00:23:14.9659553Z [36;1m  exit 1[0m
+2025-11-10T00:23:14.9660689Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2025-11-10T00:23:14.9662088Z [36;1m  if [[ Linux == macOS ]]; then[0m
+2025-11-10T00:23:14.9665171Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-10T00:23:14.9667289Z [36;1m  else[0m
+2025-11-10T00:23:14.9668650Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-10T00:23:14.9670201Z [36;1m  fi[0m
+2025-11-10T00:23:14.9671249Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2025-11-10T00:23:14.9674518Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2025-11-10T00:23:14.9676107Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2025-11-10T00:23:14.9677969Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2025-11-10T00:23:14.9679609Z [36;1melse[0m
+2025-11-10T00:23:14.9680506Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+2025-11-10T00:23:14.9681601Z [36;1mfi[0m
+2025-11-10T00:23:14.9714218Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:14.9715538Z env:
+2025-11-10T00:23:14.9716256Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:14.9717112Z   toolchain: 1.88.0
+2025-11-10T00:23:14.9717870Z ##[endgroup]
+2025-11-10T00:23:14.9883845Z ##[group]Run : construct rustup command line
+2025-11-10T00:23:14.9885392Z [36;1m: construct rustup command line[0m
+2025-11-10T00:23:14.9886905Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+2025-11-10T00:23:14.9889419Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+2025-11-10T00:23:14.9891083Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+2025-11-10T00:23:14.9929893Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:14.9931055Z env:
+2025-11-10T00:23:14.9933496Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:14.9934534Z   targets: 
+2025-11-10T00:23:14.9935293Z   components: 
+2025-11-10T00:23:14.9936014Z ##[endgroup]
+2025-11-10T00:23:15.0070296Z ##[group]Run : set $CARGO_HOME
+2025-11-10T00:23:15.0071232Z [36;1m: set $CARGO_HOME[0m
+2025-11-10T00:23:15.0072390Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+2025-11-10T00:23:15.0111007Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:15.0112170Z env:
+2025-11-10T00:23:15.0112860Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:15.0115487Z ##[endgroup]
+2025-11-10T00:23:15.0252371Z ##[group]Run : install rustup if needed
+2025-11-10T00:23:15.0254878Z [36;1m: install rustup if needed[0m
+2025-11-10T00:23:15.0256020Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2025-11-10T00:23:15.0258608Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+2025-11-10T00:23:15.0260977Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+2025-11-10T00:23:15.0262266Z [36;1mfi[0m
+2025-11-10T00:23:15.0295625Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:15.0296807Z env:
+2025-11-10T00:23:15.0297525Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:15.0298427Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:15.0299339Z ##[endgroup]
+2025-11-10T00:23:15.0873013Z info: downloading installer
+2025-11-10T00:23:15.3418633Z warn: It looks like you have an existing rustup settings file at:
+2025-11-10T00:23:15.3420803Z warn: /home/jswift/.rustup/settings.toml
+2025-11-10T00:23:15.3423149Z warn: Rustup will install the default toolchain as specified in the settings file,
+2025-11-10T00:23:15.3426230Z warn: instead of the one inferred from the default host triple.
+2025-11-10T00:23:15.3729243Z info: profile set to 'default'
+2025-11-10T00:23:15.3730195Z 
+2025-11-10T00:23:15.3730460Z 
+2025-11-10T00:23:15.3731312Z Rust is installed now. Great!
+2025-11-10T00:23:15.3732204Z 
+2025-11-10T00:23:15.3733051Z To get started you may need to restart your current shell.
+2025-11-10T00:23:15.3736155Z This would reload your PATH environment variable to include
+2025-11-10T00:23:15.3739079Z info: default host triple is x86_64-unknown-linux-gnu
+2025-11-10T00:23:15.3740915Z info: skipping toolchain installation
+2025-11-10T00:23:15.3742520Z Cargo's bin directory ($HOME/.cargo/bin).
+2025-11-10T00:23:15.3743577Z 
+2025-11-10T00:23:15.3744277Z To configure your current shell, you need to source
+2025-11-10T00:23:15.3746243Z the corresponding env file under $HOME/.cargo.
+2025-11-10T00:23:15.3747312Z 
+2025-11-10T00:23:15.3748302Z This is usually done by running one of the following (note the leading DOT):
+2025-11-10T00:23:15.3750585Z . "$HOME/.cargo/env"            # For sh/bash/zsh/ash/dash/pdksh
+2025-11-10T00:23:15.3752354Z source "$HOME/.cargo/env.fish"  # For fish
+2025-11-10T00:23:15.3754099Z source $"($nu.home-path)/.cargo/env.nu"  # For nushell
+2025-11-10T00:23:15.3873425Z ##[group]Run rustup toolchain install 1.88.0 --profile minimal --no-self-update
+2025-11-10T00:23:15.3876469Z [36;1mrustup toolchain install 1.88.0 --profile minimal --no-self-update[0m
+2025-11-10T00:23:15.3917090Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:15.3917559Z env:
+2025-11-10T00:23:15.3917855Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:15.3918217Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:15.3918901Z ##[endgroup]
+2025-11-10T00:23:15.4843689Z info: syncing channel updates for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-10T00:23:15.5035820Z 
+2025-11-10T00:23:15.5170041Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-10T00:23:15.5170902Z 
+2025-11-10T00:23:15.5238298Z ##[group]Run rustup default 1.88.0
+2025-11-10T00:23:15.5238702Z [36;1mrustup default 1.88.0[0m
+2025-11-10T00:23:15.5275024Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:15.5275523Z env:
+2025-11-10T00:23:15.5275832Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:15.5276210Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:15.5276599Z ##[endgroup]
+2025-11-10T00:23:15.5406311Z info: using existing install for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-10T00:23:15.5825225Z info: default toolchain set to '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-10T00:23:15.5825721Z 
+2025-11-10T00:23:15.5994164Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-10T00:23:15.5996479Z info: note that the toolchain '1.88.0-x86_64-unknown-linux-gnu' is currently in use (overridden by '/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus/rust-toolchain.toml')
+2025-11-10T00:23:15.5997761Z 
+2025-11-10T00:23:15.6060883Z ##[group]Run : create cachekey
+2025-11-10T00:23:15.6061230Z [36;1m: create cachekey[0m
+2025-11-10T00:23:15.6063405Z [36;1mDATE=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2025-11-10T00:23:15.6064050Z [36;1mHASH=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2025-11-10T00:23:15.6065194Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2025-11-10T00:23:15.6104988Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:15.6105416Z env:
+2025-11-10T00:23:15.6105669Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:15.6105987Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:15.6106292Z ##[endgroup]
+2025-11-10T00:23:15.6733704Z ##[group]Run : disable incremental compilation
+2025-11-10T00:23:15.6734123Z [36;1m: disable incremental compilation[0m
+2025-11-10T00:23:15.6734741Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2025-11-10T00:23:15.6735142Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2025-11-10T00:23:15.6735459Z [36;1mfi[0m
+2025-11-10T00:23:15.6768994Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:15.6769402Z env:
+2025-11-10T00:23:15.6769632Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:15.6769931Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:15.6770221Z ##[endgroup]
+2025-11-10T00:23:15.6851934Z ##[group]Run : enable colors in Cargo output
+2025-11-10T00:23:15.6852494Z [36;1m: enable colors in Cargo output[0m
+2025-11-10T00:23:15.6852839Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2025-11-10T00:23:15.6853210Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2025-11-10T00:23:15.6853524Z [36;1mfi[0m
+2025-11-10T00:23:15.6879655Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:15.6880044Z env:
+2025-11-10T00:23:15.6880272Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:15.6880560Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:15.6880849Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:23:15.6881091Z ##[endgroup]
+2025-11-10T00:23:15.6967705Z ##[group]Run : enable Cargo sparse registry
+2025-11-10T00:23:15.6968106Z [36;1m: enable Cargo sparse registry[0m
+2025-11-10T00:23:15.6968630Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2025-11-10T00:23:15.6969570Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2025-11-10T00:23:15.6970502Z [36;1m  if rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2025-11-10T00:23:15.6971268Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-10T00:23:15.6972143Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2025-11-10T00:23:15.6972730Z [36;1m  elif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2025-11-10T00:23:15.6973477Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-10T00:23:15.6974258Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2025-11-10T00:23:15.6974810Z [36;1m  fi[0m
+2025-11-10T00:23:15.6975038Z [36;1mfi[0m
+2025-11-10T00:23:15.7002768Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:15.7003169Z env:
+2025-11-10T00:23:15.7003398Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:15.7005604Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:15.7005899Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:23:15.7006149Z ##[endgroup]
+2025-11-10T00:23:15.7485412Z ##[group]Run : work around spurious network errors in curl 8.0
+2025-11-10T00:23:15.7485927Z [36;1m: work around spurious network errors in curl 8.0[0m
+2025-11-10T00:23:15.7486564Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2025-11-10T00:23:15.7487262Z [36;1mif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2025-11-10T00:23:15.7487792Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2025-11-10T00:23:15.7488162Z [36;1mfi[0m
+2025-11-10T00:23:15.7521282Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:15.7521673Z env:
+2025-11-10T00:23:15.7521899Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:15.7522379Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:15.7522674Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:23:15.7522941Z ##[endgroup]
+2025-11-10T00:23:15.7856666Z ##[group]Run rustc +1.88.0 --version --verbose
+2025-11-10T00:23:15.7857073Z [36;1mrustc +1.88.0 --version --verbose[0m
+2025-11-10T00:23:15.7886435Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:15.7886835Z env:
+2025-11-10T00:23:15.7887066Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:15.7887358Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:15.7887671Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:23:15.7887943Z ##[endgroup]
+2025-11-10T00:23:15.8116008Z rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-10T00:23:15.8116763Z binary: rustc
+2025-11-10T00:23:15.8117385Z commit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc
+2025-11-10T00:23:15.8118265Z commit-date: 2025-06-23
+2025-11-10T00:23:15.8118837Z host: x86_64-unknown-linux-gnu
+2025-11-10T00:23:15.8119437Z release: 1.88.0
+2025-11-10T00:23:15.8120128Z LLVM version: 20.1.5
+2025-11-10T00:23:16.1080062Z ##[group]Run actions/cache@v3
+2025-11-10T00:23:16.1080609Z with:
+2025-11-10T00:23:16.1080810Z   path: ~/.cargo/registry
+2025-11-10T00:23:16.1081307Z   key: Linux-cargo-registry-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-10T00:23:16.1081855Z   enableCrossOsArchive: false
+2025-11-10T00:23:16.1082125Z   fail-on-cache-miss: false
+2025-11-10T00:23:16.1082365Z   lookup-only: false
+2025-11-10T00:23:16.1082576Z env:
+2025-11-10T00:23:16.1082757Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:16.1083007Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:16.1083272Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:23:16.1083487Z ##[endgroup]
+2025-11-10T00:23:16.4298641Z Cache hit for: Linux-cargo-registry-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-10T00:23:17.6890414Z Received 134217728 of 838847341 (16.0%), 115.0 MBs/sec
+2025-11-10T00:23:18.6899564Z Received 306184192 of 838847341 (36.5%), 138.1 MBs/sec
+2025-11-10T00:23:19.6910362Z Received 524288000 of 838847341 (62.5%), 160.5 MBs/sec
+2025-11-10T00:23:20.6936161Z Received 671088640 of 838847341 (80.0%), 155.5 MBs/sec
+2025-11-10T00:23:21.5910899Z Received 838847341 of 838847341 (100.0%), 159.5 MBs/sec
+2025-11-10T00:23:21.5918804Z Cache Size: ~800 MB (838847341 B)
+2025-11-10T00:23:21.6095864Z [command]/usr/bin/tar -xf /home/jswift/actions-runner-org2/_work/_temp/6481772f-1e07-4b32-b438-74d91d2d90d6/cache.tzst -P -C /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus --use-compress-program unzstd
+2025-11-10T00:23:30.0072522Z Cache restored successfully
+2025-11-10T00:23:30.2302639Z Cache restored from key: Linux-cargo-registry-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-10T00:23:30.5563607Z ##[group]Run actions/cache@v3
+2025-11-10T00:23:30.5564067Z with:
+2025-11-10T00:23:30.5564544Z   path: ~/.cargo/git
+2025-11-10T00:23:30.5565256Z   key: Linux-cargo-index-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-10T00:23:30.5566144Z   enableCrossOsArchive: false
+2025-11-10T00:23:30.5566583Z   fail-on-cache-miss: false
+2025-11-10T00:23:30.5567002Z   lookup-only: false
+2025-11-10T00:23:30.5567321Z env:
+2025-11-10T00:23:30.5567608Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:30.5567988Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:30.5568385Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:23:30.5568710Z ##[endgroup]
+2025-11-10T00:23:30.8890385Z Cache not found for input keys: Linux-cargo-index-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-10T00:23:31.1502113Z ##[group]Run actions/cache@v3
+2025-11-10T00:23:31.1502437Z with:
+2025-11-10T00:23:31.1502650Z   path: target
+2025-11-10T00:23:31.1503176Z   key: Linux-cargo-build-target-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-10T00:23:31.1503787Z   enableCrossOsArchive: false
+2025-11-10T00:23:31.1504073Z   fail-on-cache-miss: false
+2025-11-10T00:23:31.1504575Z   lookup-only: false
+2025-11-10T00:23:31.1504837Z env:
+2025-11-10T00:23:31.1505064Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:31.1505382Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:31.1505802Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:23:31.1506043Z ##[endgroup]
+2025-11-10T00:23:31.4487928Z Cache hit for: Linux-cargo-build-target-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-10T00:23:32.0751489Z Received 34004884 of 34004884 (100.0%), 63.8 MBs/sec
+2025-11-10T00:23:32.0752233Z Cache Size: ~32 MB (34004884 B)
+2025-11-10T00:23:32.0787984Z [command]/usr/bin/tar -xf /home/jswift/actions-runner-org2/_work/_temp/ed3de340-535f-4bd3-a317-dea15aad186d/cache.tzst -P -C /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus --use-compress-program unzstd
+2025-11-10T00:23:32.3743445Z Cache restored successfully
+2025-11-10T00:23:32.3944616Z Cache restored from key: Linux-cargo-build-target-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-10T00:23:32.4136180Z ##[group]Run cargo doc --no-deps
+2025-11-10T00:23:32.4136538Z [36;1mcargo doc --no-deps[0m
+2025-11-10T00:23:32.4172508Z shell: /usr/bin/bash -e {0}
+2025-11-10T00:23:32.4173082Z env:
+2025-11-10T00:23:32.4173277Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:32.4173529Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:32.4173787Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:23:32.4174008Z ##[endgroup]
+2025-11-10T00:23:32.5767793Z [1m[32m Documenting[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus)
+2025-11-10T00:23:33.2717809Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `0`[0m
+2025-11-10T00:23:33.2719008Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/transaction.rs:77:36[0m
+2025-11-10T00:23:33.2722041Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2724888Z [0m[1m[38;5;12m77[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// 8. If tx is coinbase: 2 ≤ |ins[0].scriptSig| ≤ 100[0m
+2025-11-10T00:23:33.2726045Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                    [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `0` in scope[0m
+2025-11-10T00:23:33.2726751Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2727649Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:33.2736558Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::broken_intra_doc_links)]` on by default[0m
+2025-11-10T00:23:33.2737128Z 
+2025-11-10T00:23:33.2748507Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `0`[0m
+2025-11-10T00:23:33.2749221Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:23:12[0m
+2025-11-10T00:23:33.2749618Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2750193Z [0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - prev[0] is the first block of the adjustment period[0m
+2025-11-10T00:23:33.2750872Z [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `0` in scope[0m
+2025-11-10T00:23:33.2751289Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2751836Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:33.2752229Z 
+2025-11-10T00:23:33.2937308Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `ByteString`[0m
+2025-11-10T00:23:33.2938213Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/script.rs:7:60[0m
+2025-11-10T00:23:33.2939017Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2939918Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! - Stack pooling (thread-local pool of pre-allocated Vec<ByteString>)[0m
+2025-11-10T00:23:33.2940818Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                                            [0m[0m[1m[33m^^^^^^^^^^^^[0m
+2025-11-10T00:23:33.2941332Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2942166Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::invalid_html_tags)]` on by default[0m
+2025-11-10T00:23:33.2943355Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:33.2944144Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2947180Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m| [0m[0m//! - Stack pooling (thread-local pool of pre-allocated [0m[0m[38;5;10m`[0m[0mVec<ByteString>[0m[0m[38;5;10m`[0m[0m)[0m
+2025-11-10T00:23:33.2948513Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                                         [0m[0m[38;5;10m+[0m[0m               [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:33.2949157Z 
+2025-11-10T00:23:33.2949473Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `ByteString`[0m
+2025-11-10T00:23:33.2950321Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/script.rs:212:62[0m
+2025-11-10T00:23:33.2950999Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2951941Z [0m[1m[38;5;12m212[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// for optimal performance. This function works with any Vec<ByteString>.[0m
+2025-11-10T00:23:33.2952682Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                              [0m[0m[1m[33m^^^^^^^^^^^^[0m
+2025-11-10T00:23:33.2953281Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2954050Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:33.2954584Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2955369Z [0m[1m[38;5;12m212[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// for optimal performance. This function works with any [0m[0m[38;5;10m`[0m[0mVec<ByteString>[0m[0m[38;5;10m`[0m[0m.[0m
+2025-11-10T00:23:33.2956238Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[38;5;10m+[0m[0m               [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:33.2956534Z 
+2025-11-10T00:23:33.2957993Z [0m[1m[33mwarning[0m[0m[1m: this URL is not a hyperlink[0m
+2025-11-10T00:23:33.2959592Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/bip113.rs:6:20[0m
+2025-11-10T00:23:33.2960036Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2960651Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! Specification: https://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki[0m
+2025-11-10T00:23:33.2961339Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:23:33.2961705Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2962171Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: bare URLs are not automatically turned into clickable links[0m
+2025-11-10T00:23:33.2962818Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::bare_urls)]` on by default[0m
+2025-11-10T00:23:33.2963274Z [0m[1m[38;5;14mhelp[0m[0m: use an automatic link instead[0m
+2025-11-10T00:23:33.2963603Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2964614Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m| [0m[0m//! Specification: [0m[0m[38;5;10m<[0m[0mhttps://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki[0m[0m[38;5;10m>[0m
+2025-11-10T00:23:33.2965423Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[38;5;10m+[0m[0m                                                              [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:33.2965695Z 
+2025-11-10T00:23:33.2965888Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `Witness`[0m
+2025-11-10T00:23:33.2966300Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/mempool.rs:26:62[0m
+2025-11-10T00:23:33.2966631Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2967270Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// * `witnesses` - Optional witness data for each input (Vec<Witness> where Witness = Vec<ByteString>)[0m
+2025-11-10T00:23:33.2967951Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                              [0m[0m[1m[33m^^^^^^^^^[0m
+2025-11-10T00:23:33.2968324Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2968657Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:33.2968986Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2969705Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// * `witnesses` - Optional witness data for each input ([0m[0m[38;5;10m`[0m[0mVec<Witness>[0m[0m[38;5;10m`[0m[0m where Witness = Vec<ByteString>)[0m
+2025-11-10T00:23:33.2970478Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[38;5;10m+[0m[0m            [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:33.2970870Z 
+2025-11-10T00:23:33.2971082Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `ByteString`[0m
+2025-11-10T00:23:33.2971495Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/mempool.rs:26:91[0m
+2025-11-10T00:23:33.2971810Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2972625Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// * `witnesses` - Optional witness data for each input (Vec<Witness> where Witness = Vec<ByteString>)[0m
+2025-11-10T00:23:33.2973440Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                           [0m[0m[1m[33m^^^^^^^^^^^^[0m
+2025-11-10T00:23:33.2973789Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2974114Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:33.2974582Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2975323Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// * `witnesses` - Optional witness data for each input (Vec<Witness> where Witness = [0m[0m[38;5;10m`[0m[0mVec<ByteString>[0m[0m[38;5;10m`[0m[0m)[0m
+2025-11-10T00:23:33.2976448Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                        [0m[0m[38;5;10m+[0m[0m               [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:33.2976722Z 
+2025-11-10T00:23:33.2976951Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `witness-program`[0m
+2025-11-10T00:23:33.2977375Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/witness.rs:104:26[0m
+2025-11-10T00:23:33.2977710Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2978276Z [0m[1m[38;5;12m104[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// from SegWit v0 (OP_0 <witness-program>) or Taproot v1 (OP_1 <witness-program>)[0m
+2025-11-10T00:23:33.2979356Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                          [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:23:33.2979591Z 
+2025-11-10T00:23:33.2979826Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `witness-program`[0m
+2025-11-10T00:23:33.2980254Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/witness.rs:104:65[0m
+2025-11-10T00:23:33.2980580Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2981136Z [0m[1m[38;5;12m104[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// from SegWit v0 (OP_0 <witness-program>) or Taproot v1 (OP_1 <witness-program>)[0m
+2025-11-10T00:23:33.2981767Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:23:33.2982013Z 
+2025-11-10T00:23:33.2982208Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `Witness`[0m
+2025-11-10T00:23:33.2982636Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/reorganization.rs:48:80[0m
+2025-11-10T00:23:33.2982968Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2983567Z [0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// * `new_chain_witnesses` - Witness data for each block in new_chain (one Vec<Witness> per block)[0m
+2025-11-10T00:23:33.2984222Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                [0m[0m[1m[33m^^^^^^^^^[0m
+2025-11-10T00:23:33.2984702Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2985040Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:33.2985370Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:33.2986084Z [0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// * `new_chain_witnesses` - Witness data for each block in new_chain (one [0m[0m[38;5;10m`[0m[0mVec<Witness>[0m[0m[38;5;10m`[0m[0m per block)[0m
+2025-11-10T00:23:33.2986869Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                             [0m[0m[38;5;10m+[0m[0m            [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:33.2987128Z 
+2025-11-10T00:23:33.4603286Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (lib doc) generated 10 warnings (run `cargo fix --lib -p bllvm-consensus` to apply 1 suggestion)
+2025-11-10T00:23:33.4604750Z [1m[32m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 0.98s
+2025-11-10T00:23:33.4652205Z [1m[32m   Generated[0m /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus/target/doc/bllvm_consensus/index.html
+2025-11-10T00:23:33.4717456Z ##[group]Run cargo doc --no-deps --document-private-items
+2025-11-10T00:23:33.4717979Z [36;1mcargo doc --no-deps --document-private-items[0m
+2025-11-10T00:23:33.4748769Z shell: /usr/bin/bash -e {0}
+2025-11-10T00:23:33.4749360Z env:
+2025-11-10T00:23:33.4749576Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:33.4749836Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:33.4750113Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:23:33.4750347Z ##[endgroup]
+2025-11-10T00:23:33.6206081Z [1m[32m Documenting[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus)
+2025-11-10T00:23:34.1957840Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `0`[0m
+2025-11-10T00:23:34.1967298Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/transaction.rs:77:36[0m
+2025-11-10T00:23:34.1968072Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1968998Z [0m[1m[38;5;12m77[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// 8. If tx is coinbase: 2 ≤ |ins[0].scriptSig| ≤ 100[0m
+2025-11-10T00:23:34.1969894Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                    [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `0` in scope[0m
+2025-11-10T00:23:34.1970423Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1971073Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.1972049Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::broken_intra_doc_links)]` on by default[0m
+2025-11-10T00:23:34.1972443Z 
+2025-11-10T00:23:34.1976427Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `0`[0m
+2025-11-10T00:23:34.1977440Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:23:12[0m
+2025-11-10T00:23:34.1978094Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1979074Z [0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - prev[0] is the first block of the adjustment period[0m
+2025-11-10T00:23:34.1980209Z [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `0` in scope[0m
+2025-11-10T00:23:34.1980869Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1981733Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.1982344Z 
+2025-11-10T00:23:34.1984719Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `2`[0m
+2025-11-10T00:23:34.1986280Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:382:26[0m
+2025-11-10T00:23:34.1986870Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1987834Z [0m[1m[38;5;12m382[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: re_expanded.0[2] = expanded.0[2] ∧ re_expanded.0[3] = expanded.0[3][0m
+2025-11-10T00:23:34.1988944Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                          [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `2` in scope[0m
+2025-11-10T00:23:34.1989661Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1990515Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.1992535Z 
+2025-11-10T00:23:34.1992844Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `2`[0m
+2025-11-10T00:23:34.1993271Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:382:42[0m
+2025-11-10T00:23:34.1993622Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1994249Z [0m[1m[38;5;12m382[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: re_expanded.0[2] = expanded.0[2] ∧ re_expanded.0[3] = expanded.0[3][0m
+2025-11-10T00:23:34.1995337Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                          [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `2` in scope[0m
+2025-11-10T00:23:34.1995744Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1996719Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.1997077Z 
+2025-11-10T00:23:34.1997294Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `3`[0m
+2025-11-10T00:23:34.1997865Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:382:61[0m
+2025-11-10T00:23:34.1998191Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1998785Z [0m[1m[38;5;12m382[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: re_expanded.0[2] = expanded.0[2] ∧ re_expanded.0[3] = expanded.0[3][0m
+2025-11-10T00:23:34.1999446Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `3` in scope[0m
+2025-11-10T00:23:34.1999908Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2000395Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2000720Z 
+2025-11-10T00:23:34.2000912Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `3`[0m
+2025-11-10T00:23:34.2001296Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:382:77[0m
+2025-11-10T00:23:34.2001598Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2002128Z [0m[1m[38;5;12m382[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: re_expanded.0[2] = expanded.0[2] ∧ re_expanded.0[3] = expanded.0[3][0m
+2025-11-10T00:23:34.2002793Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                             [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `3` in scope[0m
+2025-11-10T00:23:34.2003190Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2003667Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2003989Z 
+2025-11-10T00:23:34.2004175Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `2`[0m
+2025-11-10T00:23:34.2004822Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:446:23[0m
+2025-11-10T00:23:34.2007021Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2007521Z [0m[1m[38;5;12m446[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: expanded.0[2] = target.0[2] ∧ expanded.0[3] = target.0[3][0m
+2025-11-10T00:23:34.2008132Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `2` in scope[0m
+2025-11-10T00:23:34.2008522Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2009015Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2009347Z 
+2025-11-10T00:23:34.2009531Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `2`[0m
+2025-11-10T00:23:34.2009923Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:446:37[0m
+2025-11-10T00:23:34.2010247Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2010756Z [0m[1m[38;5;12m446[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: expanded.0[2] = target.0[2] ∧ expanded.0[3] = target.0[3][0m
+2025-11-10T00:23:34.2011359Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                     [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `2` in scope[0m
+2025-11-10T00:23:34.2011747Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2012605Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2012937Z 
+2025-11-10T00:23:34.2013120Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `3`[0m
+2025-11-10T00:23:34.2013506Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:446:53[0m
+2025-11-10T00:23:34.2016368Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2016928Z [0m[1m[38;5;12m446[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: expanded.0[2] = target.0[2] ∧ expanded.0[3] = target.0[3][0m
+2025-11-10T00:23:34.2017783Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                     [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `3` in scope[0m
+2025-11-10T00:23:34.2018191Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2018824Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2019176Z 
+2025-11-10T00:23:34.2019363Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `3`[0m
+2025-11-10T00:23:34.2019810Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:446:67[0m
+2025-11-10T00:23:34.2020140Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2020668Z [0m[1m[38;5;12m446[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: expanded.0[2] = target.0[2] ∧ expanded.0[3] = target.0[3][0m
+2025-11-10T00:23:34.2021315Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                   [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `3` in scope[0m
+2025-11-10T00:23:34.2021713Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2022188Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2022562Z 
+2025-11-10T00:23:34.2117057Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `ByteString`[0m
+2025-11-10T00:23:34.2117857Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/script.rs:7:60[0m
+2025-11-10T00:23:34.2118293Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2119286Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! - Stack pooling (thread-local pool of pre-allocated Vec<ByteString>)[0m
+2025-11-10T00:23:34.2120422Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                                            [0m[0m[1m[33m^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2120943Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2121640Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::invalid_html_tags)]` on by default[0m
+2025-11-10T00:23:34.2122273Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:34.2122846Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2126442Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m| [0m[0m//! - Stack pooling (thread-local pool of pre-allocated [0m[0m[38;5;10m`[0m[0mVec<ByteString>[0m[0m[38;5;10m`[0m[0m)[0m
+2025-11-10T00:23:34.2127672Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                                         [0m[0m[38;5;10m+[0m[0m               [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2128032Z 
+2025-11-10T00:23:34.2128321Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `ByteString`[0m
+2025-11-10T00:23:34.2128864Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/script.rs:212:62[0m
+2025-11-10T00:23:34.2129290Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2130024Z [0m[1m[38;5;12m212[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// for optimal performance. This function works with any Vec<ByteString>.[0m
+2025-11-10T00:23:34.2131336Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                              [0m[0m[1m[33m^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2131984Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2132557Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:34.2133120Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2134290Z [0m[1m[38;5;12m212[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// for optimal performance. This function works with any [0m[0m[38;5;10m`[0m[0mVec<ByteString>[0m[0m[38;5;10m`[0m[0m.[0m
+2025-11-10T00:23:34.2135769Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[38;5;10m+[0m[0m               [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2136224Z 
+2025-11-10T00:23:34.2136559Z [0m[1m[33mwarning[0m[0m[1m: this URL is not a hyperlink[0m
+2025-11-10T00:23:34.2137124Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/bip113.rs:6:20[0m
+2025-11-10T00:23:34.2137655Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2138288Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! Specification: https://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki[0m
+2025-11-10T00:23:34.2139106Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2139470Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2139939Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: bare URLs are not automatically turned into clickable links[0m
+2025-11-10T00:23:34.2140584Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::bare_urls)]` on by default[0m
+2025-11-10T00:23:34.2141047Z [0m[1m[38;5;14mhelp[0m[0m: use an automatic link instead[0m
+2025-11-10T00:23:34.2141384Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2142077Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m| [0m[0m//! Specification: [0m[0m[38;5;10m<[0m[0mhttps://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki[0m[0m[38;5;10m>[0m
+2025-11-10T00:23:34.2142854Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[38;5;10m+[0m[0m                                                              [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2145294Z 
+2025-11-10T00:23:34.2145533Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `Witness`[0m
+2025-11-10T00:23:34.2145942Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/mempool.rs:26:62[0m
+2025-11-10T00:23:34.2146274Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2146902Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// * `witnesses` - Optional witness data for each input (Vec<Witness> where Witness = Vec<ByteString>)[0m
+2025-11-10T00:23:34.2147580Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                              [0m[0m[1m[33m^^^^^^^^^[0m
+2025-11-10T00:23:34.2147929Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2148264Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:34.2148659Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2149533Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// * `witnesses` - Optional witness data for each input ([0m[0m[38;5;10m`[0m[0mVec<Witness>[0m[0m[38;5;10m`[0m[0m where Witness = Vec<ByteString>)[0m
+2025-11-10T00:23:34.2150313Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[38;5;10m+[0m[0m            [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2150578Z 
+2025-11-10T00:23:34.2150784Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `ByteString`[0m
+2025-11-10T00:23:34.2151198Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/mempool.rs:26:91[0m
+2025-11-10T00:23:34.2151519Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2152140Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// * `witnesses` - Optional witness data for each input (Vec<Witness> where Witness = Vec<ByteString>)[0m
+2025-11-10T00:23:34.2152831Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                           [0m[0m[1m[33m^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2153188Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2153519Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:34.2153836Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2154857Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// * `witnesses` - Optional witness data for each input (Vec<Witness> where Witness = [0m[0m[38;5;10m`[0m[0mVec<ByteString>[0m[0m[38;5;10m`[0m[0m)[0m
+2025-11-10T00:23:34.2155716Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                        [0m[0m[38;5;10m+[0m[0m               [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2155991Z 
+2025-11-10T00:23:34.2156534Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `witness-program`[0m
+2025-11-10T00:23:34.2157003Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/witness.rs:104:26[0m
+2025-11-10T00:23:34.2157779Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2158358Z [0m[1m[38;5;12m104[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// from SegWit v0 (OP_0 <witness-program>) or Taproot v1 (OP_1 <witness-program>)[0m
+2025-11-10T00:23:34.2158966Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                          [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2159329Z 
+2025-11-10T00:23:34.2159556Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `witness-program`[0m
+2025-11-10T00:23:34.2160023Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/witness.rs:104:65[0m
+2025-11-10T00:23:34.2160351Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2160913Z [0m[1m[38;5;12m104[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// from SegWit v0 (OP_0 <witness-program>) or Taproot v1 (OP_1 <witness-program>)[0m
+2025-11-10T00:23:34.2161550Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2161800Z 
+2025-11-10T00:23:34.2162003Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `Witness`[0m
+2025-11-10T00:23:34.2162426Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/reorganization.rs:48:80[0m
+2025-11-10T00:23:34.2162757Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2163362Z [0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// * `new_chain_witnesses` - Witness data for each block in new_chain (one Vec<Witness> per block)[0m
+2025-11-10T00:23:34.2164039Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                [0m[0m[1m[33m^^^^^^^^^[0m
+2025-11-10T00:23:34.2164555Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2164901Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:34.2165236Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2165958Z [0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// * `new_chain_witnesses` - Witness data for each block in new_chain (one [0m[0m[38;5;10m`[0m[0mVec<Witness>[0m[0m[38;5;10m`[0m[0m per block)[0m
+2025-11-10T00:23:34.2166768Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                             [0m[0m[38;5;10m+[0m[0m            [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2167045Z 
+2025-11-10T00:23:34.3787102Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (lib doc) generated 18 warnings (run `cargo fix --lib -p bllvm-consensus` to apply 1 suggestion)
+2025-11-10T00:23:34.3788518Z [1m[32m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 0.84s
+2025-11-10T00:23:34.3833397Z [1m[32m   Generated[0m /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus/target/doc/bllvm_consensus/index.html
+2025-11-10T00:23:34.7659781Z Post job cleanup.
+2025-11-10T00:23:34.9279372Z Cache hit occurred on the primary key Linux-cargo-build-target-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014, not saving cache.
+2025-11-10T00:23:35.3006347Z Post job cleanup.
+2025-11-10T00:23:35.4876647Z [warning]Path Validation Error: Path(s) specified in the action for caching do(es) not exist, hence no cache is being saved.
+2025-11-10T00:23:35.8589779Z Post job cleanup.
+2025-11-10T00:23:36.0121353Z Cache hit occurred on the primary key Linux-cargo-registry-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014, not saving cache.
+2025-11-10T00:23:36.0249257Z Post job cleanup.
+2025-11-10T00:23:36.1468678Z [command]/usr/bin/git version
+2025-11-10T00:23:36.1511996Z git version 2.43.0
+2025-11-10T00:23:36.1561409Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/9aa3a961-a573-44d0-b619-932efb876046/.gitconfig'
+2025-11-10T00:23:36.1575104Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/9aa3a961-a573-44d0-b619-932efb876046' before making global git config changes
+2025-11-10T00:23:36.1577985Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-10T00:23:36.1582843Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus
+2025-11-10T00:23:36.1632419Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-10T00:23:36.1669815Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-10T00:23:36.1951231Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-10T00:23:36.1983518Z http.https://github.com/.extraheader
+2025-11-10T00:23:36.1998511Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-11-10T00:23:36.2040345Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-10T00:23:36.2417304Z A job completed hook has been configured by the self-hosted runner administrator
+2025-11-10T00:23:36.2467489Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-completed.sh'
+2025-11-10T00:23:36.2493476Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:23:36.2493829Z ##[endgroup]
+2025-11-10T00:23:36.2565816Z Job completed: Mon Nov 10 12:23:36 AM UTC 2025
+2025-11-10T00:23:36.2598733Z Available disk space: 8.9G
+2025-11-10T00:23:36.2599198Z Cleaning up after job completion...
+2025-11-10T00:23:36.3692666Z Cleanup completed. Available disk space: 8.9G
+2025-11-10T00:23:36.3740233Z Cleaning up orphan processes

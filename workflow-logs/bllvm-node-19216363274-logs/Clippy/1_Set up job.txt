@@ -1,0 +1,17 @@
+﻿2025-11-10T00:04:32.2514288Z Current runner version: '2.329.0'
+2025-11-10T00:04:32.2522741Z Runner name: 'linode-runner-02'
+2025-11-10T00:04:32.2523582Z Runner group name: 'default'
+2025-11-10T00:04:32.2524785Z Machine name: 'localhost'
+2025-11-10T00:04:32.2527952Z ##[group]GITHUB_TOKEN Permissions
+2025-11-10T00:04:32.2530245Z Contents: read
+2025-11-10T00:04:32.2530900Z Metadata: read
+2025-11-10T00:04:32.2531495Z Packages: read
+2025-11-10T00:04:32.2532122Z ##[endgroup]
+2025-11-10T00:04:32.2534207Z Secret source: Actions
+2025-11-10T00:04:32.2535328Z Prepare workflow directory
+2025-11-10T00:04:32.3386353Z Prepare all required actions
+2025-11-10T00:04:32.3438186Z Getting action download info
+2025-11-10T00:04:32.6520766Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-10T00:04:33.0447122Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:6d653acede28d24f02e3cd41383119e8b1b35921)
+2025-11-10T00:04:33.2872633Z Download action repository 'actions/cache@v3' (SHA:6f8efc29b200d32929f49075959781ed54ec270c)
+2025-11-10T00:04:33.9889999Z Complete job name: Clippy

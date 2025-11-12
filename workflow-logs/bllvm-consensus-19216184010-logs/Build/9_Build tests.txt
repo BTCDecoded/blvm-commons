@@ -1,0 +1,348 @@
+﻿2025-11-09T23:39:12.0304788Z ##[group]Run cargo test --no-run --release
+2025-11-09T23:39:12.0305205Z [36;1mcargo test --no-run --release[0m
+2025-11-09T23:39:12.0336842Z shell: /usr/bin/bash -e {0}
+2025-11-09T23:39:12.0337142Z env:
+2025-11-09T23:39:12.0337366Z   CARGO_TERM_COLOR: always
+2025-11-09T23:39:12.0337645Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:39:12.0337943Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:39:12.0338195Z ##[endgroup]
+2025-11-09T23:39:12.3230916Z [1m[32m   Compiling[0m libc v0.2.175
+2025-11-09T23:39:12.3231758Z [1m[32m   Compiling[0m cfg-if v1.0.3
+2025-11-09T23:39:12.3232635Z [1m[32m   Compiling[0m stable_deref_trait v1.2.1
+2025-11-09T23:39:12.3233352Z [1m[32m   Compiling[0m syn v2.0.106
+2025-11-09T23:39:12.3686367Z [1m[32m   Compiling[0m zerocopy v0.8.27
+2025-11-09T23:39:12.3722137Z [1m[32m   Compiling[0m serde v1.0.193
+2025-11-09T23:39:12.7735516Z [1m[32m   Compiling[0m itoa v1.0.15
+2025-11-09T23:39:12.8910121Z [1m[32m   Compiling[0m once_cell v1.21.3
+2025-11-09T23:39:13.1026394Z [1m[32m   Compiling[0m pin-project-lite v0.2.16
+2025-11-09T23:39:13.1589471Z [1m[32m   Compiling[0m litemap v0.8.1
+2025-11-09T23:39:13.3764018Z [1m[32m   Compiling[0m writeable v0.6.2
+2025-11-09T23:39:13.4706919Z [1m[32m   Compiling[0m typenum v1.18.0
+2025-11-09T23:39:13.5591491Z [1m[32m   Compiling[0m equivalent v1.0.2
+2025-11-09T23:39:13.6005489Z [1m[32m   Compiling[0m fnv v1.0.7
+2025-11-09T23:39:13.6511001Z [1m[32m   Compiling[0m crossbeam-utils v0.8.21
+2025-11-09T23:39:14.1076018Z [1m[32m   Compiling[0m bytes v1.10.1
+2025-11-09T23:39:14.1965211Z [1m[32m   Compiling[0m getrandom v0.2.16
+2025-11-09T23:39:14.2227561Z [1m[32m   Compiling[0m hashbrown v0.16.0
+2025-11-09T23:39:14.3898641Z [1m[32m   Compiling[0m rand_core v0.6.4
+2025-11-09T23:39:14.5918007Z [1m[32m   Compiling[0m either v1.15.0
+2025-11-09T23:39:14.8172449Z [1m[32m   Compiling[0m icu_properties_data v2.1.1
+2025-11-09T23:39:14.9956354Z [1m[32m   Compiling[0m icu_normalizer_data v2.1.1
+2025-11-09T23:39:15.0324513Z [1m[32m   Compiling[0m generic-array v0.14.7
+2025-11-09T23:39:15.0926400Z [1m[32m   Compiling[0m indexmap v2.12.0
+2025-11-09T23:39:15.1975974Z [1m[32m   Compiling[0m futures-core v0.3.31
+2025-11-09T23:39:15.3018136Z [1m[32m   Compiling[0m winnow v0.5.40
+2025-11-09T23:39:15.8215980Z [1m[32m   Compiling[0m libm v0.2.15
+2025-11-09T23:39:16.1705079Z [1m[32m   Compiling[0m autocfg v1.5.0
+2025-11-09T23:39:16.3789489Z [1m[32m   Compiling[0m syn v1.0.109
+2025-11-09T23:39:16.8606172Z [1m[32m   Compiling[0m ryu v1.0.20
+2025-11-09T23:39:17.0792301Z [1m[32m   Compiling[0m toml_datetime v0.6.3
+2025-11-09T23:39:17.7387387Z [1m[32m   Compiling[0m num-traits v0.2.19
+2025-11-09T23:39:17.8677567Z [1m[32m   Compiling[0m synstructure v0.13.2
+2025-11-09T23:39:17.9369443Z [1m[32m   Compiling[0m toml_edit v0.20.2
+2025-11-09T23:39:18.3540693Z [1m[32m   Compiling[0m socket2 v0.6.1
+2025-11-09T23:39:19.0802423Z [1m[32m   Compiling[0m mio v1.1.0
+2025-11-09T23:39:19.6778725Z [1m[32m   Compiling[0m smallvec v1.15.1
+2025-11-09T23:39:19.9800478Z [1m[32m   Compiling[0m getrandom v0.3.4
+2025-11-09T23:39:20.5307696Z [1m[32m   Compiling[0m object v0.37.3
+2025-11-09T23:39:20.9557251Z [1m[32m   Compiling[0m rustix v1.1.2
+2025-11-09T23:39:21.9449152Z [1m[32m   Compiling[0m proc-macro-crate v2.0.2
+2025-11-09T23:39:24.5392568Z [1m[32m   Compiling[0m crossbeam-epoch v0.9.18
+2025-11-09T23:39:29.1690143Z [1m[32m   Compiling[0m block-buffer v0.10.4
+2025-11-09T23:39:29.2802965Z [1m[32m   Compiling[0m crypto-common v0.1.6
+2025-11-09T23:39:29.3785644Z [1m[32m   Compiling[0m http v0.2.12
+2025-11-09T23:39:30.9561680Z [1m[32m   Compiling[0m tracing-core v0.1.34
+2025-11-09T23:39:31.2447384Z [1m[32m   Compiling[0m rayon-core v1.13.0
+2025-11-09T23:39:31.4155719Z [1m[32m   Compiling[0m futures-sink v0.3.31
+2025-11-09T23:39:31.8607261Z [1m[32m   Compiling[0m adler2 v2.0.1
+2025-11-09T23:39:31.9622876Z [1m[32m   Compiling[0m gimli v0.32.3
+2025-11-09T23:39:32.3015843Z [1m[32m   Compiling[0m bitflags v2.10.0
+2025-11-09T23:39:32.6095925Z [1m[32m   Compiling[0m linux-raw-sys v0.11.0
+2025-11-09T23:39:33.2751296Z [1m[32m   Compiling[0m futures-task v0.3.31
+2025-11-09T23:39:33.3601097Z [1m[32m   Compiling[0m memchr v2.7.6
+2025-11-09T23:39:34.2874985Z [1m[32m   Compiling[0m percent-encoding v2.3.2
+2025-11-09T23:39:34.4729686Z [1m[32m   Compiling[0m pin-utils v0.1.0
+2025-11-09T23:39:34.5135597Z [1m[32m   Compiling[0m regex-syntax v0.8.8
+2025-11-09T23:39:35.5465282Z [1m[32m   Compiling[0m httparse v1.10.1
+2025-11-09T23:39:36.4492720Z [1m[32m   Compiling[0m addr2line v0.25.1
+2025-11-09T23:39:36.9246396Z [1m[32m   Compiling[0m futures-util v0.3.31
+2025-11-09T23:39:38.5876886Z [1m[32m   Compiling[0m form_urlencoded v1.2.2
+2025-11-09T23:39:44.1744636Z [1m[32m   Compiling[0m miniz_oxide v0.8.9
+2025-11-09T23:39:44.5214674Z [1m[32m   Compiling[0m tracing v0.1.41
+2025-11-09T23:39:44.6557280Z [1m[32m   Compiling[0m digest v0.10.7
+2025-11-09T23:39:44.8512459Z [1m[32m   Compiling[0m crossbeam-deque v0.8.6
+2025-11-09T23:39:45.0690846Z [1m[32m   Compiling[0m anyhow v1.0.93
+2025-11-09T23:39:45.7330859Z [1m[32m   Compiling[0m clap_lex v0.7.6
+2025-11-09T23:39:45.8982845Z [1m[32m   Compiling[0m fastrand v2.3.0
+2025-11-09T23:39:46.0113411Z [1m[32m   Compiling[0m rustc-demangle v0.1.26
+2025-11-09T23:39:46.1737407Z [1m[32m   Compiling[0m slab v0.4.11
+2025-11-09T23:39:46.3635779Z [1m[32m   Compiling[0m try-lock v0.2.5
+2025-11-09T23:39:46.4285695Z [1m[32m   Compiling[0m lazy_static v1.5.0
+2025-11-09T23:39:46.4858513Z [1m[32m   Compiling[0m anstyle v1.0.13
+2025-11-09T23:39:46.7190432Z [1m[32m   Compiling[0m ciborium-io v0.2.2
+2025-11-09T23:39:46.7731864Z [1m[32m   Compiling[0m plotters-backend v0.3.7
+2025-11-09T23:39:46.7993407Z [1m[32m   Compiling[0m utf8_iter v1.0.4
+2025-11-09T23:39:46.9206796Z [1m[32m   Compiling[0m clap_builder v4.5.51
+2025-11-09T23:39:47.1065429Z [1m[32m   Compiling[0m plotters-svg v0.3.7
+2025-11-09T23:39:47.3603605Z [1m[32m   Compiling[0m want v0.3.1
+2025-11-09T23:39:47.4752922Z [1m[32m   Compiling[0m backtrace v0.3.76
+2025-11-09T23:39:50.0056430Z [1m[32m   Compiling[0m zerofrom-derive v0.1.6
+2025-11-09T23:39:52.3125305Z [1m[32m   Compiling[0m yoke-derive v0.8.1
+2025-11-09T23:39:53.7706957Z [1m[32m   Compiling[0m zerovec-derive v0.11.2
+2025-11-09T23:40:01.0592746Z [1m[32m   Compiling[0m zerocopy-derive v0.8.27
+2025-11-09T23:40:03.3840107Z [1m[32m   Compiling[0m displaydoc v0.2.5
+2025-11-09T23:40:08.1950044Z [1m[32m   Compiling[0m serde_derive v1.0.193
+2025-11-09T23:40:10.5611056Z [1m[32m   Compiling[0m tokio-macros v2.6.0
+2025-11-09T23:40:11.0605024Z [1m[32m   Compiling[0m zerofrom v0.1.6
+2025-11-09T23:40:11.2217329Z [1m[32m   Compiling[0m yoke v0.8.1
+2025-11-09T23:40:11.4047425Z [1m[32m   Compiling[0m zerovec v0.11.5
+2025-11-09T23:40:12.2028628Z [1m[32m   Compiling[0m tinystr v0.8.2
+2025-11-09T23:40:12.4075617Z [1m[32m   Compiling[0m icu_locale_core v2.1.1
+2025-11-09T23:40:14.3308454Z [1m[32m   Compiling[0m potential_utf v0.1.4
+2025-11-09T23:40:14.4547791Z [1m[32m   Compiling[0m zerotrie v0.2.3
+2025-11-09T23:40:14.8278662Z [1m[32m   Compiling[0m icu_provider v2.1.1
+2025-11-09T23:40:15.1879344Z [1m[32m   Compiling[0m icu_collections v2.1.1
+2025-11-09T23:40:15.8103212Z [1m[32m   Compiling[0m icu_properties v2.1.1
+2025-11-09T23:40:17.5232102Z [1m[32m   Compiling[0m icu_normalizer v2.1.1
+2025-11-09T23:40:17.9015449Z [1m[32m   Compiling[0m ppv-lite86 v0.2.21
+2025-11-09T23:40:18.3780017Z [1m[32m   Compiling[0m rand_chacha v0.3.1
+2025-11-09T23:40:18.6133996Z [1m[32m   Compiling[0m idna_adapter v1.2.1
+2025-11-09T23:40:18.6948371Z [1m[32m   Compiling[0m rand v0.8.5
+2025-11-09T23:40:19.1154819Z [1m[32m   Compiling[0m half v2.7.1
+2025-11-09T23:40:19.4851006Z [1m[32m   Compiling[0m bolero-generator-derive v0.11.0
+2025-11-09T23:40:19.6988246Z [1m[32m   Compiling[0m ciborium-ll v0.2.2
+2025-11-09T23:40:19.9097369Z [1m[32m   Compiling[0m idna v1.1.0
+2025-11-09T23:40:20.3968676Z [1m[32m   Compiling[0m tokio v1.48.0
+2025-11-09T23:40:21.6495785Z [1m[32m   Compiling[0m thiserror-impl v1.0.69
+2025-11-09T23:40:27.6050921Z [1m[32m   Compiling[0m tokio-util v0.7.17
+2025-11-09T23:40:28.0248894Z [1m[32m   Compiling[0m bolero-generator v0.11.1
+2025-11-09T23:40:28.4936923Z [1m[32m   Compiling[0m h2 v0.3.27
+2025-11-09T23:40:31.7375386Z [1m[32m   Compiling[0m tempfile v3.23.0
+2025-11-09T23:40:33.6523565Z [1m[32m   Compiling[0m secp256k1-sys v0.9.2
+2025-11-09T23:40:33.8680180Z [1m[32m   Compiling[0m sha2-asm v0.6.4
+2025-11-09T23:40:33.9164523Z [1m[32m   Compiling[0m regex-automata v0.4.13
+2025-11-09T23:40:35.0255511Z [1m[32m   Compiling[0m http-body v0.4.6
+2025-11-09T23:40:35.2739144Z [1m[32m   Compiling[0m futures-channel v0.3.31
+2025-11-09T23:40:35.3442536Z [1m[32m   Compiling[0m itertools v0.10.5
+2025-11-09T23:40:35.4915010Z [1m[32m   Compiling[0m rand_xoshiro v0.6.0
+2025-11-09T23:40:35.8281099Z [1m[32m   Compiling[0m serde_json v1.0.108
+2025-11-09T23:40:36.0558346Z [1m[32m   Compiling[0m wait-timeout v0.2.1
+2025-11-09T23:40:36.4208574Z [1m[32m   Compiling[0m socket2 v0.5.10
+2025-11-09T23:40:37.1168297Z [1m[32m   Compiling[0m same-file v1.0.6
+2025-11-09T23:40:37.1364986Z [1m[32m   Compiling[0m cast v0.3.0
+2025-11-09T23:40:37.2296688Z [1m[32m   Compiling[0m tower-service v0.3.3
+2025-11-09T23:40:37.2827053Z [1m[32m   Compiling[0m httpdate v1.0.3
+2025-11-09T23:40:37.3123280Z [1m[32m   Compiling[0m cpufeatures v0.2.17
+2025-11-09T23:40:37.3535475Z [1m[32m   Compiling[0m bit-vec v0.6.3
+2025-11-09T23:40:37.5718095Z [1m[32m   Compiling[0m quick-error v1.2.3
+2025-11-09T23:40:37.6053777Z [1m[32m   Compiling[0m pretty-hex v0.4.1
+2025-11-09T23:40:37.6302230Z [1m[32m   Compiling[0m rusty-fork v0.3.1
+2025-11-09T23:40:37.6969214Z [1m[32m   Compiling[0m bolero-engine v0.11.2
+2025-11-09T23:40:37.8750222Z [1m[32m   Compiling[0m bit-set v0.5.3
+2025-11-09T23:40:38.0365396Z [1m[32m   Compiling[0m hyper v0.14.32
+2025-11-09T23:40:38.2391783Z [1m[32m   Compiling[0m sha2 v0.10.9
+2025-11-09T23:40:38.3814996Z [1m[32m   Compiling[0m criterion-plot v0.5.0
+2025-11-09T23:40:38.6026599Z [1m[32m   Compiling[0m walkdir v2.5.0
+2025-11-09T23:40:38.8938272Z [1m[32m   Compiling[0m tinytemplate v1.2.1
+2025-11-09T23:40:39.0657334Z [1m[32m   Compiling[0m regex v1.12.2
+2025-11-09T23:40:39.1250982Z [1m[32m   Compiling[0m serde_urlencoded v0.7.1
+2025-11-09T23:40:39.4069213Z [1m[32m   Compiling[0m bincode v1.3.3
+2025-11-09T23:40:39.9685339Z [1m[32m   Compiling[0m url v2.5.7
+2025-11-09T23:40:39.9879259Z [1m[32m   Compiling[0m ciborium v0.2.2
+2025-11-09T23:40:40.0108964Z [1m[32m   Compiling[0m thiserror v1.0.69
+2025-11-09T23:40:40.0675055Z [1m[32m   Compiling[0m secp256k1 v0.28.2
+2025-11-09T23:40:40.6059723Z [1m[32m   Compiling[0m rayon v1.11.0
+2025-11-09T23:40:40.8875643Z [1m[32m   Compiling[0m clap v4.5.51
+2025-11-09T23:40:40.9310666Z [1m[32m   Compiling[0m plotters v0.3.7
+2025-11-09T23:40:41.8980397Z [1m[32m   Compiling[0m ripemd v0.1.3
+2025-11-09T23:40:42.5949662Z [1m[32m   Compiling[0m rand_xorshift v0.3.0
+2025-11-09T23:40:42.7122193Z [1m[32m   Compiling[0m is-terminal v0.4.17
+2025-11-09T23:40:42.8250169Z [1m[32m   Compiling[0m encoding_rs v0.8.35
+2025-11-09T23:40:43.0676406Z [1m[32m   Compiling[0m anes v0.1.6
+2025-11-09T23:40:43.2091995Z [1m[32m   Compiling[0m log v0.4.28
+2025-11-09T23:40:43.2946963Z [1m[32m   Compiling[0m mime v0.3.17
+2025-11-09T23:40:43.3938574Z [1m[32m   Compiling[0m sync_wrapper v0.1.2
+2025-11-09T23:40:43.4499654Z [1m[32m   Compiling[0m bitcoin_hashes v0.11.0
+2025-11-09T23:40:43.6374699Z [1m[32m   Compiling[0m oorandom v11.1.5
+2025-11-09T23:40:43.7155665Z [1m[32m   Compiling[0m hex v0.4.3
+2025-11-09T23:40:43.8121100Z [1m[32m   Compiling[0m base64 v0.21.7
+2025-11-09T23:40:44.0289342Z [1m[32m   Compiling[0m unarray v0.1.4
+2025-11-09T23:40:44.1149363Z [1m[32m   Compiling[0m ipnet v2.11.0
+2025-11-09T23:40:44.2804630Z [1m[32m   Compiling[0m proptest v1.5.0
+2025-11-09T23:40:45.0338221Z [1m[32m   Compiling[0m reqwest v0.11.27
+2025-11-09T23:40:45.1907875Z [1m[32m   Compiling[0m criterion v0.5.1
+2025-11-09T23:40:46.8555774Z [1m[32m   Compiling[0m bolero v0.11.1
+2025-11-09T23:40:47.1779500Z [1m[32m   Compiling[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus)
+2025-11-09T23:41:02.5074061Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: use of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.5076990Z [0m [0m[0m[1m[38;5;12m--> [0m[0mtests/mempool_helper_tests.rs:3:5[0m
+2025-11-09T23:41:02.5077387Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.5084820Z [0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse consensus_proof::block::calculate_tx_id;[0m
+2025-11-09T23:41:02.5085609Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.5086137Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.5088538Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `consensus_proof`, use `cargo add consensus_proof` to add it to your `Cargo.toml`[0m
+2025-11-09T23:41:02.5089230Z 
+2025-11-09T23:41:02.5090969Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: use of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.5091671Z [0m [0m[0m[1m[38;5;12m--> [0m[0mtests/mempool_helper_tests.rs:4:5[0m
+2025-11-09T23:41:02.5092051Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.5092621Z [0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse consensus_proof::mempool::*;[0m
+2025-11-09T23:41:02.5093260Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.5094030Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.5095204Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `consensus_proof`, use `cargo add consensus_proof` to add it to your `Cargo.toml`[0m
+2025-11-09T23:41:02.5096067Z 
+2025-11-09T23:41:02.5096528Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: use of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.5097311Z [0m [0m[0m[1m[38;5;12m--> [0m[0mtests/mempool_helper_tests.rs:5:5[0m
+2025-11-09T23:41:02.5097698Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.5098448Z [0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse consensus_proof::transaction::is_coinbase;[0m
+2025-11-09T23:41:02.5099206Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.5099734Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.5100766Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `consensus_proof`, use `cargo add consensus_proof` to add it to your `Cargo.toml`[0m
+2025-11-09T23:41:02.5101505Z 
+2025-11-09T23:41:02.5154211Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: use of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.5155814Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/taproot_script_path.rs:13:5[0m
+2025-11-09T23:41:02.5159169Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.5160821Z [0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse consensus_proof::taproot::{[0m
+2025-11-09T23:41:02.5161611Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.5162137Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.5163348Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `consensus_proof`, use `cargo add consensus_proof` to add it to your `Cargo.toml`[0m
+2025-11-09T23:41:02.5164758Z 
+2025-11-09T23:41:02.5165510Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: use of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.5166606Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/taproot_script_path.rs:16:5[0m
+2025-11-09T23:41:02.5167278Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.5168271Z [0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse consensus_proof::types::{ByteString, Hash};[0m
+2025-11-09T23:41:02.5169508Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.5170372Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.5171606Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `consensus_proof`, use `cargo add consensus_proof` to add it to your `Cargo.toml`[0m
+2025-11-09T23:41:02.5172469Z 
+2025-11-09T23:41:02.5481027Z [0m[1mFor more information about this error, try `rustc --explain E0433`.[0m
+2025-11-09T23:41:02.5551751Z [1m[31merror[0m[1m:[0m could not compile `bllvm-consensus` (test "taproot_script_path") due to 2 previous errors
+2025-11-09T23:41:02.5558261Z [1m[33mwarning[0m[1m:[0m build failed, waiting for other jobs to finish...
+2025-11-09T23:41:02.6180757Z [0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `consensus_proof`[0m
+2025-11-09T23:41:02.6184240Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:10:5[0m
+2025-11-09T23:41:02.6185173Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6186122Z [0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse consensus_proof::*;[0m
+2025-11-09T23:41:02.6187670Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.6188562Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6189739Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `consensus_proof`, use `cargo add consensus_proof` to add it to your `Cargo.toml`[0m
+2025-11-09T23:41:02.6190584Z 
+2025-11-09T23:41:02.6191037Z [0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `consensus_proof`[0m
+2025-11-09T23:41:02.6191885Z [0m [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:6:5[0m
+2025-11-09T23:41:02.6192530Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6193375Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse consensus_proof::bip113;[0m
+2025-11-09T23:41:02.6196039Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.6196902Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6198054Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `consensus_proof`, use `cargo add consensus_proof` to add it to your `Cargo.toml`[0m
+2025-11-09T23:41:02.6198897Z 
+2025-11-09T23:41:02.6199345Z [0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `consensus_proof`[0m
+2025-11-09T23:41:02.6200206Z [0m [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:7:5[0m
+2025-11-09T23:41:02.6200852Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6201685Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse consensus_proof::locktime;[0m
+2025-11-09T23:41:02.6202837Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.6203668Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6205035Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `consensus_proof`, use `cargo add consensus_proof` to add it to your `Cargo.toml`[0m
+2025-11-09T23:41:02.6207634Z 
+2025-11-09T23:41:02.6208119Z [0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `consensus_proof`[0m
+2025-11-09T23:41:02.6208902Z [0m [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:8:5[0m
+2025-11-09T23:41:02.6209272Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6209764Z [0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse consensus_proof::mempool;[0m
+2025-11-09T23:41:02.6210402Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.6210853Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6211569Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `consensus_proof`, use `cargo add consensus_proof` to add it to your `Cargo.toml`[0m
+2025-11-09T23:41:02.6212112Z 
+2025-11-09T23:41:02.6212357Z [0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `consensus_proof`[0m
+2025-11-09T23:41:02.6212854Z [0m [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:9:5[0m
+2025-11-09T23:41:02.6213745Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6216375Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse consensus_proof::witness;[0m
+2025-11-09T23:41:02.6217058Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.6217558Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6218201Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `consensus_proof`, use `cargo add consensus_proof` to add it to your `Cargo.toml`[0m
+2025-11-09T23:41:02.6218879Z 
+2025-11-09T23:41:02.6220043Z [0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `consensus_proof`[0m
+2025-11-09T23:41:02.6222902Z [0m [0m[0m[1m[38;5;12m--> [0m[0mtests/mempool_helper_tests.rs:6:5[0m
+2025-11-09T23:41:02.6223292Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6223788Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse consensus_proof::*;[0m
+2025-11-09T23:41:02.6224691Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `consensus_proof`[0m
+2025-11-09T23:41:02.6225197Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6225849Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `consensus_proof`, use `cargo add consensus_proof` to add it to your `Cargo.toml`[0m
+2025-11-09T23:41:02.6236361Z 
+2025-11-09T23:41:02.6603785Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-09T23:41:02.6604872Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:13:1[0m
+2025-11-09T23:41:02.6605556Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6606396Z [0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: BIP65 + BIP112 in same script[0m
+2025-11-09T23:41:02.6607389Z [0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-09T23:41:02.6608493Z [0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that CLTV and CSV can be used together in a single script[0m
+2025-11-09T23:41:02.6610257Z [0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// and both validations work correctly.[0m
+2025-11-09T23:41:02.6611390Z [0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m---------------------------------------[0m[0m[1m[33m^[0m
+2025-11-09T23:41:02.6612251Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6613822Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-09T23:41:02.6614794Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6615947Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-09T23:41:02.6617224Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_doc_comments)]` on by default[0m
+2025-11-09T23:41:02.6617723Z 
+2025-11-09T23:41:02.6621018Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-09T23:41:02.6622170Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:61:1[0m
+2025-11-09T23:41:02.6623069Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6624241Z [0m[1m[38;5;12m61[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: BIP113 + BIP65 validation[0m
+2025-11-09T23:41:02.6625673Z [0m[1m[38;5;12m62[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-09T23:41:02.6627828Z [0m[1m[38;5;12m63[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that median time-past (BIP113) is correctly used for timestamp CLTV validation (BIP65).[0m
+2025-11-09T23:41:02.6629716Z [0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m------------------------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-09T23:41:02.6630987Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6632186Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-09T23:41:02.6633168Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6634910Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-09T23:41:02.6635949Z 
+2025-11-09T23:41:02.6642937Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-09T23:41:02.6643987Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:107:1[0m
+2025-11-09T23:41:02.6644961Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6650233Z [0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: SegWit + Taproot combinations[0m
+2025-11-09T23:41:02.6651572Z [0m[1m[38;5;12m108[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-09T23:41:02.6659809Z [0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that SegWit witness validation (BIP141) and Taproot validation (BIP340/341/342)[0m
+2025-11-09T23:41:02.6661924Z [0m[1m[38;5;12m110[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// work correctly when both are present in different transactions.[0m
+2025-11-09T23:41:02.6663784Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-09T23:41:02.6665459Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6684691Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-09T23:41:02.6685589Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6686685Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-09T23:41:02.6687514Z 
+2025-11-09T23:41:02.6687879Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-09T23:41:02.6688733Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:160:1[0m
+2025-11-09T23:41:02.6689794Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6690890Z [0m[1m[38;5;12m160[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: BIP125 RBF + BIP152 Compact Blocks coordination[0m
+2025-11-09T23:41:02.6692109Z [0m[1m[38;5;12m161[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-09T23:41:02.6693556Z [0m[1m[38;5;12m162[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that RBF conflict detection works correctly during compact block reconstruction.[0m
+2025-11-09T23:41:02.6695553Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m-----------------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-09T23:41:02.6696652Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6697689Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-09T23:41:02.6698565Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6699748Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-09T23:41:02.6700607Z 
+2025-11-09T23:41:02.6700979Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-09T23:41:02.6701808Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:222:1[0m
+2025-11-09T23:41:02.6702513Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6703486Z [0m[1m[38;5;12m222[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: Locktime shared logic consistency[0m
+2025-11-09T23:41:02.6704782Z [0m[1m[38;5;12m223[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-09T23:41:02.6706588Z [0m[1m[38;5;12m224[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that BIP65 (CLTV) and BIP112 (CSV) use shared locktime logic consistently.[0m
+2025-11-09T23:41:02.6708207Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m-----------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-09T23:41:02.6709247Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6710253Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-09T23:41:02.6711151Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6712325Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-09T23:41:02.6713107Z 
+2025-11-09T23:41:02.6713694Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-09T23:41:02.6714611Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:253:1[0m
+2025-11-09T23:41:02.6715265Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6716137Z [0m[1m[38;5;12m253[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: Witness framework consistency[0m
+2025-11-09T23:41:02.6718326Z [0m[1m[38;5;12m254[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-09T23:41:02.6719650Z [0m[1m[38;5;12m255[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that unified witness framework correctly handles both SegWit and Taproot.[0m
+2025-11-09T23:41:02.6721118Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m----------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-09T23:41:02.6722049Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6723201Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-09T23:41:02.6724004Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:02.6725341Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-09T23:41:02.6726165Z 
+2025-11-09T23:41:02.7101571Z [0m[1mSome errors have detailed explanations: E0432, E0433.[0m
+2025-11-09T23:41:02.7102874Z [0m[1mFor more information about an error, try `rustc --explain E0432`.[0m
+2025-11-09T23:41:02.7167569Z [1m[31merror[0m[1m:[0m could not compile `bllvm-consensus` (test "mempool_helper_tests") due to 4 previous errors
+2025-11-09T23:41:02.8259482Z [0m[1mFor more information about this error, try `rustc --explain E0432`.[0m
+2025-11-09T23:41:02.8345107Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "cross_bip_property_tests") generated 6 warnings
+2025-11-09T23:41:02.8346688Z [1m[31merror[0m[1m:[0m could not compile `bllvm-consensus` (test "cross_bip_property_tests") due to 5 previous errors; 6 warnings emitted
+2025-11-09T23:41:09.4790512Z ##[error]Process completed with exit code 101.

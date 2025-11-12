@@ -1,0 +1,64 @@
+﻿2025-11-09T23:56:38.2861647Z ##[group]Run actions/checkout@v4
+2025-11-09T23:56:38.2862635Z with:
+2025-11-09T23:56:38.2863430Z   repository: BTCDecoded/bllvm-protocol
+2025-11-09T23:56:38.2864775Z   path: _temp-protocol-engine
+2025-11-09T23:56:38.2865965Z   token: ***
+2025-11-09T23:56:38.2866701Z   ssh-strict: true
+2025-11-09T23:56:38.2867459Z   ssh-user: git
+2025-11-09T23:56:38.2868245Z   persist-credentials: true
+2025-11-09T23:56:38.2869100Z   clean: true
+2025-11-09T23:56:38.2869904Z   sparse-checkout-cone-mode: true
+2025-11-09T23:56:38.2871473Z   fetch-depth: 1
+2025-11-09T23:56:38.2872251Z   fetch-tags: false
+2025-11-09T23:56:38.2873044Z   show-progress: true
+2025-11-09T23:56:38.2873840Z   lfs: false
+2025-11-09T23:56:38.2874747Z   submodules: false
+2025-11-09T23:56:38.2877194Z   set-safe-directory: true
+2025-11-09T23:56:38.2878045Z env:
+2025-11-09T23:56:38.2878756Z   CARGO_TERM_COLOR: always
+2025-11-09T23:56:38.2879618Z ##[endgroup]
+2025-11-09T23:56:38.4117481Z Syncing repository: BTCDecoded/bllvm-protocol
+2025-11-09T23:56:38.4126258Z ##[group]Getting Git version info
+2025-11-09T23:56:38.4130888Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-protocol-engine'
+2025-11-09T23:56:38.4186491Z [command]/usr/bin/git version
+2025-11-09T23:56:38.4238026Z git version 2.43.0
+2025-11-09T23:56:38.4270547Z ##[endgroup]
+2025-11-09T23:56:38.4283584Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/cd557c7c-6e10-4c09-8ab6-8350d4c6afca/.gitconfig'
+2025-11-09T23:56:38.4300164Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/cd557c7c-6e10-4c09-8ab6-8350d4c6afca' before making global git config changes
+2025-11-09T23:56:38.4303299Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T23:56:38.4307834Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-protocol-engine
+2025-11-09T23:56:38.4360362Z ##[group]Initializing the repository
+2025-11-09T23:56:38.4366546Z [command]/usr/bin/git init /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-protocol-engine
+2025-11-09T23:56:38.4417661Z Initialized empty Git repository in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-protocol-engine/.git/
+2025-11-09T23:56:38.4430913Z [command]/usr/bin/git remote add origin https://github.com/BTCDecoded/bllvm-protocol
+2025-11-09T23:56:38.4472824Z ##[endgroup]
+2025-11-09T23:56:38.4475530Z ##[group]Disabling automatic garbage collection
+2025-11-09T23:56:38.4476885Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T23:56:38.4514015Z ##[endgroup]
+2025-11-09T23:56:38.4515808Z ##[group]Setting up auth
+2025-11-09T23:56:38.4520558Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:56:38.4564167Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:56:38.4867562Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:56:38.4908536Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:56:38.5239481Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T23:56:38.5336415Z ##[endgroup]
+2025-11-09T23:56:38.5338450Z ##[group]Determining the default branch
+2025-11-09T23:56:38.5339976Z Retrieving the default branch name
+2025-11-09T23:56:38.8177234Z Default branch 'main'
+2025-11-09T23:56:38.8178969Z ##[endgroup]
+2025-11-09T23:56:38.8179988Z ##[group]Fetching the repository
+2025-11-09T23:56:38.8197030Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+2025-11-09T23:56:41.1385305Z From https://github.com/BTCDecoded/bllvm-protocol
+2025-11-09T23:56:41.1386118Z  * [new branch]      main       -> origin/main
+2025-11-09T23:56:41.1413056Z ##[endgroup]
+2025-11-09T23:56:41.1413882Z ##[group]Determining the checkout info
+2025-11-09T23:56:41.1415418Z ##[endgroup]
+2025-11-09T23:56:41.1418589Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T23:56:41.1468608Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T23:56:41.1500784Z ##[group]Checking out the ref
+2025-11-09T23:56:41.1504878Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T23:56:41.8315842Z Reset branch 'main'
+2025-11-09T23:56:41.8316586Z branch 'main' set up to track 'origin/main'.
+2025-11-09T23:56:41.8392318Z ##[endgroup]
+2025-11-09T23:56:41.8444534Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T23:56:41.8486076Z f5f0b046e78292228238657d2073c8b6558f8ab4

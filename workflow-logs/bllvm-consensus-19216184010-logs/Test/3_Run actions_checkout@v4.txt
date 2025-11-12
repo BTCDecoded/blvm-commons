@@ -1,0 +1,121 @@
+﻿2025-11-09T23:36:13.0852535Z ##[group]Run actions/checkout@v4
+2025-11-09T23:36:13.0853568Z with:
+2025-11-09T23:36:13.0854600Z   repository: BTCDecoded/bllvm-consensus
+2025-11-09T23:36:13.0855953Z   token: ***
+2025-11-09T23:36:13.0856732Z   ssh-strict: true
+2025-11-09T23:36:13.0857576Z   ssh-user: git
+2025-11-09T23:36:13.0858388Z   persist-credentials: true
+2025-11-09T23:36:13.0859292Z   clean: true
+2025-11-09T23:36:13.0860193Z   sparse-checkout-cone-mode: true
+2025-11-09T23:36:13.0861177Z   fetch-depth: 1
+2025-11-09T23:36:13.0861962Z   fetch-tags: false
+2025-11-09T23:36:13.0862772Z   show-progress: true
+2025-11-09T23:36:13.0863593Z   lfs: false
+2025-11-09T23:36:13.0864462Z   submodules: false
+2025-11-09T23:36:13.0865301Z   set-safe-directory: true
+2025-11-09T23:36:13.0866165Z env:
+2025-11-09T23:36:13.0868785Z   CARGO_TERM_COLOR: always
+2025-11-09T23:36:13.0869642Z ##[endgroup]
+2025-11-09T23:36:13.2203695Z Syncing repository: BTCDecoded/bllvm-consensus
+2025-11-09T23:36:13.2208299Z ##[group]Getting Git version info
+2025-11-09T23:36:13.2211485Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus'
+2025-11-09T23:36:13.2216095Z [command]/usr/bin/git version
+2025-11-09T23:36:13.2221885Z git version 2.43.0
+2025-11-09T23:36:13.2256065Z ##[endgroup]
+2025-11-09T23:36:13.2274630Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/c7f116a9-d853-4042-9d2f-b73a39ce46af/.gitconfig'
+2025-11-09T23:36:13.2289754Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/c7f116a9-d853-4042-9d2f-b73a39ce46af' before making global git config changes
+2025-11-09T23:36:13.2295128Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T23:36:13.2308139Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus
+2025-11-09T23:36:13.2361531Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-09T23:36:13.2387874Z https://github.com/BTCDecoded/bllvm-consensus
+2025-11-09T23:36:13.2409468Z ##[group]Removing previously created refs, to avoid conflicts
+2025-11-09T23:36:13.2414037Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2025-11-09T23:36:13.2443004Z refs/heads/main
+2025-11-09T23:36:13.2458551Z [command]/usr/bin/git checkout --detach
+2025-11-09T23:36:13.2550428Z HEAD is now at c28a36e fix: Resolve all compiler warnings
+2025-11-09T23:36:13.2552744Z M	Cargo.lock
+2025-11-09T23:36:13.2554974Z D	fuzz/target/x86_64-unknown-linux-gnu/release/block_validation
+2025-11-09T23:36:13.2558801Z D	fuzz/target/x86_64-unknown-linux-gnu/release/build/libfuzzer-sys-bd87bb1e7eaecf7b/out/libfuzzer.a
+2025-11-09T23:36:13.2562763Z D	fuzz/target/x86_64-unknown-linux-gnu/release/compact_block_reconstruction
+2025-11-09T23:36:13.2568407Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/block_validation-befdc5b2c3aca853
+2025-11-09T23:36:13.2572533Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/compact_block_reconstruction-198c40048f7b8e34
+2025-11-09T23:36:13.2576838Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/economic_validation-067a6978d175c1cb
+2025-11-09T23:36:13.2579295Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/liblibfuzzer_sys-7b86fd196e556805.rlib
+2025-11-09T23:36:13.2581490Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/mempool_operations-6bfa1da99cd797a1
+2025-11-09T23:36:13.2585131Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/pow_validation-076f9991c572630c
+2025-11-09T23:36:13.2588229Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/script_execution-861bffb0d43b9033
+2025-11-09T23:36:13.2590311Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/script_opcodes-7b9a8477588573e9
+2025-11-09T23:36:13.2592352Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/segwit_validation-e42e2e71e085a967
+2025-11-09T23:36:13.2598222Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/serialization-aafecb05b2599167
+2025-11-09T23:36:13.2602243Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/transaction_validation-25e34c4a701cf2c4
+2025-11-09T23:36:13.2607074Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/utxo_commitments-8366fb5f7088e16b
+2025-11-09T23:36:13.2610863Z D	fuzz/target/x86_64-unknown-linux-gnu/release/economic_validation
+2025-11-09T23:36:13.2613928Z D	fuzz/target/x86_64-unknown-linux-gnu/release/mempool_operations
+2025-11-09T23:36:13.2615961Z D	fuzz/target/x86_64-unknown-linux-gnu/release/pow_validation
+2025-11-09T23:36:13.2619084Z D	fuzz/target/x86_64-unknown-linux-gnu/release/script_execution
+2025-11-09T23:36:13.2620592Z D	fuzz/target/x86_64-unknown-linux-gnu/release/script_opcodes
+2025-11-09T23:36:13.2622837Z D	fuzz/target/x86_64-unknown-linux-gnu/release/segwit_validation
+2025-11-09T23:36:13.2625752Z D	fuzz/target/x86_64-unknown-linux-gnu/release/serialization
+2025-11-09T23:36:13.2629551Z D	fuzz/target/x86_64-unknown-linux-gnu/release/transaction_validation
+2025-11-09T23:36:13.2631274Z D	fuzz/target/x86_64-unknown-linux-gnu/release/utxo_commitments
+2025-11-09T23:36:13.2632580Z M	target/.rustc_info.json
+2025-11-09T23:36:13.2639443Z [command]/usr/bin/git branch --delete --force main
+2025-11-09T23:36:13.2645604Z Deleted branch main (was c28a36e).
+2025-11-09T23:36:13.2700920Z ##[endgroup]
+2025-11-09T23:36:13.2702390Z [command]/usr/bin/git submodule status
+2025-11-09T23:36:13.2999382Z ##[group]Cleaning the repository
+2025-11-09T23:36:13.3003078Z [command]/usr/bin/git clean -ffdx
+2025-11-09T23:36:13.3269589Z Removing target/release/
+2025-11-09T23:36:13.3283740Z [command]/usr/bin/git reset --hard HEAD
+2025-11-09T23:36:14.4172853Z Updating files:  53% (14/26)
+2025-11-09T23:36:14.4966706Z Updating files:  57% (15/26)
+2025-11-09T23:36:14.5840048Z Updating files:  61% (16/26)
+2025-11-09T23:36:14.6433183Z Updating files:  65% (17/26)
+2025-11-09T23:36:14.6646563Z Updating files:  69% (18/26)
+2025-11-09T23:36:14.7242501Z Updating files:  73% (19/26)
+2025-11-09T23:36:14.7808615Z Updating files:  76% (20/26)
+2025-11-09T23:36:14.8024471Z Updating files:  80% (21/26)
+2025-11-09T23:36:14.8595662Z Updating files:  84% (22/26)
+2025-11-09T23:36:14.8833910Z Updating files:  88% (23/26)
+2025-11-09T23:36:14.9628543Z Updating files:  92% (24/26)
+2025-11-09T23:36:14.9637812Z Updating files:  96% (25/26)
+2025-11-09T23:36:14.9638337Z Updating files: 100% (26/26)
+2025-11-09T23:36:14.9639213Z Updating files: 100% (26/26), done.
+2025-11-09T23:36:14.9655956Z HEAD is now at c28a36e fix: Resolve all compiler warnings
+2025-11-09T23:36:14.9802529Z ##[endgroup]
+2025-11-09T23:36:14.9804816Z ##[group]Disabling automatic garbage collection
+2025-11-09T23:36:14.9819662Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T23:36:14.9854707Z ##[endgroup]
+2025-11-09T23:36:14.9857221Z ##[group]Setting up auth
+2025-11-09T23:36:14.9868433Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:36:14.9916654Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:36:15.0222588Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:36:15.0269122Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:36:15.0557363Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T23:36:15.0601470Z ##[endgroup]
+2025-11-09T23:36:15.0602850Z ##[group]Fetching the repository
+2025-11-09T23:36:15.0613638Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ad634294ea6b2675c39337ed5ca3858e564b2e37:refs/remotes/origin/main
+2025-11-09T23:36:15.2847290Z From https://github.com/BTCDecoded/bllvm-consensus
+2025-11-09T23:36:15.2848442Z  + c28a36e...ad63429 ad634294ea6b2675c39337ed5ca3858e564b2e37 -> origin/main  (forced update)
+2025-11-09T23:36:15.2873624Z ##[endgroup]
+2025-11-09T23:36:15.2879234Z ##[group]Determining the checkout info
+2025-11-09T23:36:15.2879997Z ##[endgroup]
+2025-11-09T23:36:15.2887668Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T23:36:16.3830934Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T23:36:16.3868916Z ##[group]Checking out the ref
+2025-11-09T23:36:16.3874263Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T23:36:16.3975456Z Warning: you are leaving 1 commit behind, not connected to
+2025-11-09T23:36:16.3976380Z any of your branches:
+2025-11-09T23:36:16.3977528Z 
+2025-11-09T23:36:16.3978164Z   c28a36e fix: Resolve all compiler warnings
+2025-11-09T23:36:16.3978871Z 
+2025-11-09T23:36:16.3979340Z If you want to keep it by creating a new branch, this may be a good time
+2025-11-09T23:36:16.3980618Z to do so with:
+2025-11-09T23:36:16.3981547Z 
+2025-11-09T23:36:16.3981924Z  git branch <new-branch-name> c28a36e
+2025-11-09T23:36:16.3982283Z 
+2025-11-09T23:36:16.3986690Z Switched to a new branch 'main'
+2025-11-09T23:36:16.3987682Z branch 'main' set up to track 'origin/main'.
+2025-11-09T23:36:16.3994875Z ##[endgroup]
+2025-11-09T23:36:16.4043950Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T23:36:16.4084961Z ad634294ea6b2675c39337ed5ca3858e564b2e37

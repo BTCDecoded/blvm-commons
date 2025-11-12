@@ -1,0 +1,1323 @@
+﻿2025-11-09T23:58:45.2564755Z Current runner version: '2.329.0'
+2025-11-09T23:58:45.2573370Z Runner name: 'linode-runner-02'
+2025-11-09T23:58:45.2574507Z Runner group name: 'default'
+2025-11-09T23:58:45.2576017Z Machine name: 'localhost'
+2025-11-09T23:58:45.2579301Z ##[group]GITHUB_TOKEN Permissions
+2025-11-09T23:58:45.2583467Z Contents: read
+2025-11-09T23:58:45.2584104Z Metadata: read
+2025-11-09T23:58:45.2584998Z Packages: read
+2025-11-09T23:58:45.2585748Z ##[endgroup]
+2025-11-09T23:58:45.2587957Z Secret source: Actions
+2025-11-09T23:58:45.2588656Z Prepare workflow directory
+2025-11-09T23:58:45.3293145Z Prepare all required actions
+2025-11-09T23:58:45.3336746Z Getting action download info
+2025-11-09T23:58:45.6547364Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-09T23:58:46.1157522Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:6d653acede28d24f02e3cd41383119e8b1b35921)
+2025-11-09T23:58:46.4359839Z Download action repository 'actions/cache@v3' (SHA:6f8efc29b200d32929f49075959781ed54ec270c)
+2025-11-09T23:58:46.9310243Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-11-09T23:58:47.5800351Z Complete job name: Build
+2025-11-09T23:58:47.6458269Z A job started hook has been configured by the self-hosted runner administrator
+2025-11-09T23:58:47.6608193Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-started.sh'
+2025-11-09T23:58:47.6643879Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:47.6644832Z ##[endgroup]
+2025-11-09T23:58:47.6827058Z Job started: Sun Nov  9 11:58:47 PM UTC 2025
+2025-11-09T23:58:47.6851885Z Available disk space: 8.9G
+2025-11-09T23:58:47.6892456Z WARNING: Disk usage is 82% - performing user-level cleanup
+2025-11-09T23:58:47.6893705Z Cleaning old work directories (user-level cleanup)...
+2025-11-09T23:58:47.7928211Z User-level cleanup completed. Disk usage: 82%
+2025-11-09T23:58:47.8181794Z ##[group]Run actions/checkout@v4
+2025-11-09T23:58:47.8182182Z with:
+2025-11-09T23:58:47.8182475Z   repository: BTCDecoded/bllvm-consensus
+2025-11-09T23:58:47.8182976Z   token: ***
+2025-11-09T23:58:47.8183213Z   ssh-strict: true
+2025-11-09T23:58:47.8183468Z   ssh-user: git
+2025-11-09T23:58:47.8183723Z   persist-credentials: true
+2025-11-09T23:58:47.8184005Z   clean: true
+2025-11-09T23:58:47.8184259Z   sparse-checkout-cone-mode: true
+2025-11-09T23:58:47.8184740Z   fetch-depth: 1
+2025-11-09T23:58:47.8184981Z   fetch-tags: false
+2025-11-09T23:58:47.8185218Z   show-progress: true
+2025-11-09T23:58:47.8185462Z   lfs: false
+2025-11-09T23:58:47.8185677Z   submodules: false
+2025-11-09T23:58:47.8185922Z   set-safe-directory: true
+2025-11-09T23:58:47.8186173Z env:
+2025-11-09T23:58:47.8186392Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:47.8186648Z ##[endgroup]
+2025-11-09T23:58:47.9517420Z Syncing repository: BTCDecoded/bllvm-consensus
+2025-11-09T23:58:47.9519848Z ##[group]Getting Git version info
+2025-11-09T23:58:47.9520857Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus'
+2025-11-09T23:58:47.9522247Z [command]/usr/bin/git version
+2025-11-09T23:58:47.9530999Z git version 2.43.0
+2025-11-09T23:58:47.9566906Z ##[endgroup]
+2025-11-09T23:58:47.9579156Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/c3f57939-9332-4929-962a-fb9a620ba567/.gitconfig'
+2025-11-09T23:58:47.9594036Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/c3f57939-9332-4929-962a-fb9a620ba567' before making global git config changes
+2025-11-09T23:58:47.9596022Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T23:58:47.9601484Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus
+2025-11-09T23:58:47.9650324Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-09T23:58:47.9675677Z https://github.com/BTCDecoded/bllvm-consensus
+2025-11-09T23:58:47.9700741Z ##[group]Removing previously created refs, to avoid conflicts
+2025-11-09T23:58:47.9704751Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2025-11-09T23:58:47.9738124Z refs/heads/main
+2025-11-09T23:58:47.9752331Z [command]/usr/bin/git checkout --detach
+2025-11-09T23:58:48.1024832Z M	target/.rustc_info.json
+2025-11-09T23:58:48.1025758Z D	target/debug/.fingerprint/bitcoin_hashes-35bd5aff3b20c562/dep-lib-bitcoin_hashes
+2025-11-09T23:58:48.1026880Z D	target/debug/.fingerprint/bitcoin_hashes-35bd5aff3b20c562/invoked.timestamp
+2025-11-09T23:58:48.1027958Z D	target/debug/.fingerprint/bitcoin_hashes-35bd5aff3b20c562/lib-bitcoin_hashes
+2025-11-09T23:58:48.1029046Z D	target/debug/.fingerprint/bitcoin_hashes-35bd5aff3b20c562/lib-bitcoin_hashes.json
+2025-11-09T23:58:48.1030112Z D	target/debug/.fingerprint/bitcoin_hashes-bf175f8f2767a863/dep-lib-bitcoin_hashes
+2025-11-09T23:58:48.1031148Z D	target/debug/.fingerprint/bitcoin_hashes-bf175f8f2767a863/invoked.timestamp
+2025-11-09T23:58:48.1032077Z D	target/debug/.fingerprint/bitcoin_hashes-bf175f8f2767a863/lib-bitcoin_hashes
+2025-11-09T23:58:48.1034870Z D	target/debug/.fingerprint/bitcoin_hashes-bf175f8f2767a863/lib-bitcoin_hashes.json
+2025-11-09T23:58:48.1035812Z D	target/debug/.fingerprint/cc-bbea12d4a376216d/dep-lib-cc
+2025-11-09T23:58:48.1036572Z D	target/debug/.fingerprint/cc-bbea12d4a376216d/invoked.timestamp
+2025-11-09T23:58:48.1037316Z D	target/debug/.fingerprint/cc-bbea12d4a376216d/lib-cc
+2025-11-09T23:58:48.1038010Z D	target/debug/.fingerprint/cc-bbea12d4a376216d/lib-cc.json
+2025-11-09T23:58:48.1038777Z D	target/debug/.fingerprint/cfg-if-8c106a0aa6df78e9/dep-lib-cfg_if
+2025-11-09T23:58:48.1039614Z D	target/debug/.fingerprint/cfg-if-8c106a0aa6df78e9/invoked.timestamp
+2025-11-09T23:58:48.1040239Z D	target/debug/.fingerprint/cfg-if-8c106a0aa6df78e9/lib-cfg_if
+2025-11-09T23:58:48.1040741Z D	target/debug/.fingerprint/cfg-if-8c106a0aa6df78e9/lib-cfg_if.json
+2025-11-09T23:58:48.1041496Z D	target/debug/.fingerprint/cfg-if-b84f1857553d0875/dep-lib-cfg_if
+2025-11-09T23:58:48.1042030Z D	target/debug/.fingerprint/cfg-if-b84f1857553d0875/invoked.timestamp
+2025-11-09T23:58:48.1042499Z D	target/debug/.fingerprint/cfg-if-b84f1857553d0875/lib-cfg_if
+2025-11-09T23:58:48.1042957Z D	target/debug/.fingerprint/cfg-if-b84f1857553d0875/lib-cfg_if.json
+2025-11-09T23:58:48.1043515Z D	target/debug/.fingerprint/find-msvc-tools-fd36e75de8c7093b/dep-lib-find_msvc_tools
+2025-11-09T23:58:48.1044173Z D	target/debug/.fingerprint/find-msvc-tools-fd36e75de8c7093b/invoked.timestamp
+2025-11-09T23:58:48.1045292Z D	target/debug/.fingerprint/find-msvc-tools-fd36e75de8c7093b/lib-find_msvc_tools
+2025-11-09T23:58:48.1045923Z D	target/debug/.fingerprint/find-msvc-tools-fd36e75de8c7093b/lib-find_msvc_tools.json
+2025-11-09T23:58:48.1046577Z D	target/debug/.fingerprint/proc-macro2-0529b140448dee9d/build-script-build-script-build
+2025-11-09T23:58:48.1047264Z D	target/debug/.fingerprint/proc-macro2-0529b140448dee9d/build-script-build-script-build.json
+2025-11-09T23:58:48.1047944Z D	target/debug/.fingerprint/proc-macro2-0529b140448dee9d/dep-build-script-build-script-build
+2025-11-09T23:58:48.1048555Z D	target/debug/.fingerprint/proc-macro2-0529b140448dee9d/invoked.timestamp
+2025-11-09T23:58:48.1049087Z D	target/debug/.fingerprint/proc-macro2-8b59c7c7276862a6/dep-lib-proc_macro2
+2025-11-09T23:58:48.1049623Z D	target/debug/.fingerprint/proc-macro2-8b59c7c7276862a6/invoked.timestamp
+2025-11-09T23:58:48.1050158Z D	target/debug/.fingerprint/proc-macro2-8b59c7c7276862a6/lib-proc_macro2
+2025-11-09T23:58:48.1050718Z D	target/debug/.fingerprint/proc-macro2-8b59c7c7276862a6/lib-proc_macro2.json
+2025-11-09T23:58:48.1051347Z D	target/debug/.fingerprint/proc-macro2-c4fca423565ace57/run-build-script-build-script-build
+2025-11-09T23:58:48.1052061Z D	target/debug/.fingerprint/proc-macro2-c4fca423565ace57/run-build-script-build-script-build.json
+2025-11-09T23:58:48.1052982Z D	target/debug/.fingerprint/quote-a5ceb766d3b7df68/dep-lib-quote
+2025-11-09T23:58:48.1053484Z D	target/debug/.fingerprint/quote-a5ceb766d3b7df68/invoked.timestamp
+2025-11-09T23:58:48.1054213Z D	target/debug/.fingerprint/quote-a5ceb766d3b7df68/lib-quote
+2025-11-09T23:58:48.1054998Z D	target/debug/.fingerprint/quote-a5ceb766d3b7df68/lib-quote.json
+2025-11-09T23:58:48.1055474Z D	target/debug/.fingerprint/shlex-9ec73c791a70e40d/dep-lib-shlex
+2025-11-09T23:58:48.1055954Z D	target/debug/.fingerprint/shlex-9ec73c791a70e40d/invoked.timestamp
+2025-11-09T23:58:48.1056408Z D	target/debug/.fingerprint/shlex-9ec73c791a70e40d/lib-shlex
+2025-11-09T23:58:48.1056858Z D	target/debug/.fingerprint/shlex-9ec73c791a70e40d/lib-shlex.json
+2025-11-09T23:58:48.1057300Z D	target/debug/.fingerprint/syn-7c9b60c023b73f30/dep-lib-syn
+2025-11-09T23:58:48.1057750Z D	target/debug/.fingerprint/syn-7c9b60c023b73f30/invoked.timestamp
+2025-11-09T23:58:48.1058238Z D	target/debug/.fingerprint/syn-7c9b60c023b73f30/lib-syn
+2025-11-09T23:58:48.1058645Z D	target/debug/.fingerprint/syn-7c9b60c023b73f30/lib-syn.json
+2025-11-09T23:58:48.1059137Z D	target/debug/.fingerprint/thiserror-15e664b5df9f4850/dep-lib-thiserror
+2025-11-09T23:58:48.1060265Z D	target/debug/.fingerprint/thiserror-15e664b5df9f4850/invoked.timestamp
+2025-11-09T23:58:48.1061158Z D	target/debug/.fingerprint/thiserror-15e664b5df9f4850/lib-thiserror
+2025-11-09T23:58:48.1062010Z D	target/debug/.fingerprint/thiserror-15e664b5df9f4850/lib-thiserror.json
+2025-11-09T23:58:48.1062769Z D	target/debug/.fingerprint/thiserror-316b7d80e34b4821/dep-lib-thiserror
+2025-11-09T23:58:48.1064024Z D	target/debug/.fingerprint/thiserror-316b7d80e34b4821/invoked.timestamp
+2025-11-09T23:58:48.1065337Z D	target/debug/.fingerprint/thiserror-316b7d80e34b4821/lib-thiserror
+2025-11-09T23:58:48.1066350Z D	target/debug/.fingerprint/thiserror-316b7d80e34b4821/lib-thiserror.json
+2025-11-09T23:58:48.1067650Z D	target/debug/.fingerprint/thiserror-6cadb049729033d9/build-script-build-script-build
+2025-11-09T23:58:48.1069542Z D	target/debug/.fingerprint/thiserroHEAD is now at f1ff386 fix: Update test imports from consensus_proof to bllvm_consensus
+2025-11-09T23:58:48.1070860Z r-6cadb049729033d9/build-script-build-script-build.json
+2025-11-09T23:58:48.1072075Z D	target/debug/.fingerprint/thiserror-6cadb049729033d9/dep-build-script-build-script-build
+2025-11-09T23:58:48.1073360Z D	target/debug/.fingerprint/thiserror-6cadb049729033d9/invoked.timestamp
+2025-11-09T23:58:48.1074647Z D	target/debug/.fingerprint/thiserror-b336d6e8da9bee76/run-build-script-build-script-build
+2025-11-09T23:58:48.1076156Z D	target/debug/.fingerprint/thiserror-b336d6e8da9bee76/run-build-script-build-script-build.json
+2025-11-09T23:58:48.1077515Z D	target/debug/.fingerprint/thiserror-impl-10d48481f9b8882d/dep-lib-thiserror_impl
+2025-11-09T23:58:48.1079240Z D	target/debug/.fingerprint/thiserror-impl-10d48481f9b8882d/invoked.timestamp
+2025-11-09T23:58:48.1080629Z D	target/debug/.fingerprint/thiserror-impl-10d48481f9b8882d/lib-thiserror_impl
+2025-11-09T23:58:48.1081950Z D	target/debug/.fingerprint/thiserror-impl-10d48481f9b8882d/lib-thiserror_impl.json
+2025-11-09T23:58:48.1083227Z D	target/debug/.fingerprint/unicode-ident-c45196634c520476/dep-lib-unicode_ident
+2025-11-09T23:58:48.1106035Z D	target/debug/.fingerprint/unicode-ident-c45196634c520476/invoked.timestamp
+2025-11-09T23:58:48.1107154Z D	target/debug/.fingerprint/unicode-ident-c45196634c520476/lib-unicode_ident
+2025-11-09T23:58:48.1108201Z D	target/debug/.fingerprint/unicode-ident-c45196634c520476/lib-unicode_ident.json
+2025-11-09T23:58:48.1109213Z D	target/debug/build/proc-macro2-0529b140448dee9d/build-script-build
+2025-11-09T23:58:48.1110248Z D	target/debug/build/proc-macro2-0529b140448dee9d/build_script_build-0529b140448dee9d
+2025-11-09T23:58:48.1111379Z D	target/debug/build/proc-macro2-0529b140448dee9d/build_script_build-0529b140448dee9d.d
+2025-11-09T23:58:48.1112400Z D	target/debug/build/proc-macro2-c4fca423565ace57/invoked.timestamp
+2025-11-09T23:58:48.1113229Z D	target/debug/build/proc-macro2-c4fca423565ace57/output
+2025-11-09T23:58:48.1114013Z D	target/debug/build/proc-macro2-c4fca423565ace57/root-output
+2025-11-09T23:58:48.1115043Z D	target/debug/build/proc-macro2-c4fca423565ace57/stderr
+2025-11-09T23:58:48.1116110Z D	target/debug/build/thiserror-6cadb049729033d9/build-script-build
+2025-11-09T23:58:48.1117111Z D	target/debug/build/thiserror-6cadb049729033d9/build_script_build-6cadb049729033d9
+2025-11-09T23:58:48.1118215Z D	target/debug/build/thiserror-6cadb049729033d9/build_script_build-6cadb049729033d9.d
+2025-11-09T23:58:48.1119191Z D	target/debug/build/thiserror-b336d6e8da9bee76/invoked.timestamp
+2025-11-09T23:58:48.1119981Z D	target/debug/build/thiserror-b336d6e8da9bee76/output
+2025-11-09T23:58:48.1120714Z D	target/debug/build/thiserror-b336d6e8da9bee76/root-output
+2025-11-09T23:58:48.1121490Z D	target/debug/build/thiserror-b336d6e8da9bee76/stderr
+2025-11-09T23:58:48.1125330Z [command]/usr/bin/git branch --delete --force main
+2025-11-09T23:58:48.1131018Z Deleted branch main (was f1ff386).
+2025-11-09T23:58:48.1177926Z ##[endgroup]
+2025-11-09T23:58:48.1183512Z [command]/usr/bin/git submodule status
+2025-11-09T23:58:48.1484152Z ##[group]Cleaning the repository
+2025-11-09T23:58:48.1489128Z [command]/usr/bin/git clean -ffdx
+2025-11-09T23:58:48.1830730Z Removing target/.rustdoc_fingerprint.json
+2025-11-09T23:58:48.1833578Z Removing target/debug/.fingerprint/anyhow-059da4f0d7c55a8b/
+2025-11-09T23:58:48.1834510Z Removing target/debug/.fingerprint/anyhow-9d430c1379eea21c/
+2025-11-09T23:58:48.1836829Z Removing target/debug/.fingerprint/anyhow-e6cbf2b1ef9f5a17/
+2025-11-09T23:58:48.1837501Z Removing target/debug/.fingerprint/bincode-f1324220296ae161/
+2025-11-09T23:58:48.1838181Z Removing target/debug/.fingerprint/bitcoin_hashes-eaa237cf5b3503ad/
+2025-11-09T23:58:48.1838919Z Removing target/debug/.fingerprint/bllvm-consensus-9809b76fea622d79/
+2025-11-09T23:58:48.1839633Z Removing target/debug/.fingerprint/block-buffer-237124e17683fddb/
+2025-11-09T23:58:48.1840275Z Removing target/debug/.fingerprint/cc-7d5b8c3e1f4cbfcd/
+2025-11-09T23:58:48.1840885Z Removing target/debug/.fingerprint/cfg-if-fc0dab425a2b74c4/
+2025-11-09T23:58:48.1841926Z Removing target/debug/.fingerprint/cpufeatures-0f8ee1944988dae8/
+2025-11-09T23:58:48.1842647Z Removing target/debug/.fingerprint/crypto-common-6f50393ddbff5a83/
+2025-11-09T23:58:48.1843307Z Removing target/debug/.fingerprint/digest-915fde4393040a15/
+2025-11-09T23:58:48.1843988Z Removing target/debug/.fingerprint/find-msvc-tools-e0c11e7e4ca96379/
+2025-11-09T23:58:48.1844871Z Removing target/debug/.fingerprint/generic-array-036ebdaa4415d02c/
+2025-11-09T23:58:48.1845576Z Removing target/debug/.fingerprint/generic-array-0e8a2772e7ae3a96/
+2025-11-09T23:58:48.1846133Z Removing target/debug/.fingerprint/generic-array-27e0812fe9f1c82e/
+2025-11-09T23:58:48.1846586Z Removing target/debug/.fingerprint/hex-39f5f8bc1bd9aca4/
+2025-11-09T23:58:48.1847018Z Removing target/debug/.fingerprint/itoa-08c0ac77a7f9c5e1/
+2025-11-09T23:58:48.1847472Z Removing target/debug/.fingerprint/proc-macro2-013e91bf61085fba/
+2025-11-09T23:58:48.1847988Z Removing target/debug/.fingerprint/proc-macro2-0c90074a995b0125/
+2025-11-09T23:58:48.1848474Z Removing target/debug/.fingerprint/proc-macro2-a923716fdc1423c7/
+2025-11-09T23:58:48.1848942Z Removing target/debug/.fingerprint/quote-1fd57a8d49f3e414/
+2025-11-09T23:58:48.1849382Z Removing target/debug/.fingerprint/ripemd-f61d2a11e38c01dd/
+2025-11-09T23:58:48.1849862Z Removing target/debug/.fingerprint/ryu-1d74fbb8396b52fe/
+2025-11-09T23:58:48.1850307Z Removing target/debug/.fingerprint/secp256k1-a7db9034d9c45ea0/
+2025-11-09T23:58:48.1850786Z Removing target/debug/.fingerprint/secp256k1-sys-18fc324a2f93c70b/
+2025-11-09T23:58:48.1851271Z Removing target/debug/.fingerprint/secp256k1-sys-708e464d25e2f9a2/
+2025-11-09T23:58:48.1851776Z Removing target/debug/.fingerprint/secp256k1-sys-cbc42ff488488692/
+2025-11-09T23:58:48.1852246Z Removing target/debug/.fingerprint/serde-1f6df97ca8e777f3/
+2025-11-09T23:58:48.1852685Z Removing target/debug/.fingerprint/serde-79bd1dc91f22d7e2/
+2025-11-09T23:58:48.1853109Z Removing target/debug/.fingerprint/serde-a3217f5e798b0a0e/
+2025-11-09T23:58:48.1853570Z Removing target/debug/.fingerprint/serde_derive-f7022334ed5675a3/
+2025-11-09T23:58:48.1854214Z Removing target/debug/.fingerprint/serde_json-0dc48a5bcf535a0b/
+2025-11-09T23:58:48.1855028Z Removing target/debug/.fingerprint/serde_json-4b2f7e519a4c7e92/
+2025-11-09T23:58:48.1855976Z Removing target/debug/.fingerprint/serde_json-f87e09600e685d33/
+2025-11-09T23:58:48.1856438Z Removing target/debug/.fingerprint/sha2-a6f830be70788546/
+2025-11-09T23:58:48.1856876Z Removing target/debug/.fingerprint/sha2-asm-5fc243991633aa35/
+2025-11-09T23:58:48.1857315Z Removing target/debug/.fingerprint/sha2-asm-b2e38aa444311777/
+2025-11-09T23:58:48.1857757Z Removing target/debug/.fingerprint/sha2-asm-d08d40e52f733493/
+2025-11-09T23:58:48.1858186Z Removing target/debug/.fingerprint/shlex-83c7e0da01d13271/
+2025-11-09T23:58:48.1858604Z Removing target/debug/.fingerprint/syn-34d04d1461fb490a/
+2025-11-09T23:58:48.1859030Z Removing target/debug/.fingerprint/thiserror-0ab41f997ece6c55/
+2025-11-09T23:58:48.1859497Z Removing target/debug/.fingerprint/thiserror-5c7e835cbcf3ecb5/
+2025-11-09T23:58:48.1859956Z Removing target/debug/.fingerprint/thiserror-7a6e0ed1eb395f20/
+2025-11-09T23:58:48.1860446Z Removing target/debug/.fingerprint/thiserror-impl-74aca0240a9ecf0d/
+2025-11-09T23:58:48.1860934Z Removing target/debug/.fingerprint/typenum-911c3e43dcb6b56a/
+2025-11-09T23:58:48.1861377Z Removing target/debug/.fingerprint/typenum-93ec83b436bf1eae/
+2025-11-09T23:58:48.1861820Z Removing target/debug/.fingerprint/typenum-95c161620aaca3ae/
+2025-11-09T23:58:48.1862274Z Removing target/debug/.fingerprint/unicode-ident-796da7d7beff3c43/
+2025-11-09T23:58:48.1862764Z Removing target/debug/.fingerprint/version_check-a216429c4cbdde93/
+2025-11-09T23:58:48.1863198Z Removing target/debug/build/anyhow-9d430c1379eea21c/
+2025-11-09T23:58:48.1863579Z Removing target/debug/build/anyhow-e6cbf2b1ef9f5a17/
+2025-11-09T23:58:48.1864008Z Removing target/debug/build/generic-array-036ebdaa4415d02c/
+2025-11-09T23:58:48.1864810Z Removing target/debug/build/generic-array-27e0812fe9f1c82e/
+2025-11-09T23:58:48.1865259Z Removing target/debug/build/proc-macro2-0c90074a995b0125/
+2025-11-09T23:58:48.1865682Z Removing target/debug/build/proc-macro2-a923716fdc1423c7/
+2025-11-09T23:58:48.1866108Z Removing target/debug/build/secp256k1-sys-708e464d25e2f9a2/
+2025-11-09T23:58:48.1866521Z Removing target/debug/build/secp256k1-sys-cbc42ff488488692/
+2025-11-09T23:58:48.1866922Z Removing target/debug/build/serde-1f6df97ca8e777f3/
+2025-11-09T23:58:48.1867291Z Removing target/debug/build/serde-79bd1dc91f22d7e2/
+2025-11-09T23:58:48.1867684Z Removing target/debug/build/serde_json-0dc48a5bcf535a0b/
+2025-11-09T23:58:48.1868096Z Removing target/debug/build/serde_json-f87e09600e685d33/
+2025-11-09T23:58:48.1868480Z Removing target/debug/build/sha2-asm-b2e38aa444311777/
+2025-11-09T23:58:48.1868871Z Removing target/debug/build/sha2-asm-d08d40e52f733493/
+2025-11-09T23:58:48.1869262Z Removing target/debug/build/thiserror-0ab41f997ece6c55/
+2025-11-09T23:58:48.1869669Z Removing target/debug/build/thiserror-5c7e835cbcf3ecb5/
+2025-11-09T23:58:48.1873596Z Removing target/debug/build/typenum-911c3e43dcb6b56a/
+2025-11-09T23:58:48.1874558Z Removing target/debug/build/typenum-93ec83b436bf1eae/
+2025-11-09T23:58:48.1875404Z Removing target/debug/deps/anyhow-059da4f0d7c55a8b.d
+2025-11-09T23:58:48.1876102Z Removing target/debug/deps/bincode-f1324220296ae161.d
+2025-11-09T23:58:48.1876839Z Removing target/debug/deps/bitcoin_hashes-eaa237cf5b3503ad.d
+2025-11-09T23:58:48.1877612Z Removing target/debug/deps/block_buffer-237124e17683fddb.d
+2025-11-09T23:58:48.1878297Z Removing target/debug/deps/cc-7d5b8c3e1f4cbfcd.d
+2025-11-09T23:58:48.1878946Z Removing target/debug/deps/cfg_if-fc0dab425a2b74c4.d
+2025-11-09T23:58:48.1879639Z Removing target/debug/deps/cpufeatures-0f8ee1944988dae8.d
+2025-11-09T23:58:48.1880902Z Removing target/debug/deps/crypto_common-6f50393ddbff5a83.d
+2025-11-09T23:58:48.1881642Z Removing target/debug/deps/digest-915fde4393040a15.d
+2025-11-09T23:58:48.1882496Z Removing target/debug/deps/find_msvc_tools-e0c11e7e4ca96379.d
+2025-11-09T23:58:48.1883287Z Removing target/debug/deps/generic_array-0e8a2772e7ae3a96.d
+2025-11-09T23:58:48.1884254Z Removing target/debug/deps/hex-39f5f8bc1bd9aca4.d
+2025-11-09T23:58:48.1885085Z Removing target/debug/deps/itoa-08c0ac77a7f9c5e1.d
+2025-11-09T23:58:48.1885792Z Removing target/debug/deps/libanyhow-059da4f0d7c55a8b.rmeta
+2025-11-09T23:58:48.1886567Z Removing target/debug/deps/libbincode-f1324220296ae161.rmeta
+2025-11-09T23:58:48.1887381Z Removing target/debug/deps/libbitcoin_hashes-eaa237cf5b3503ad.rmeta
+2025-11-09T23:58:48.1888231Z Removing target/debug/deps/libblock_buffer-237124e17683fddb.rmeta
+2025-11-09T23:58:48.1889013Z Removing target/debug/deps/libcc-7d5b8c3e1f4cbfcd.rlib
+2025-11-09T23:58:48.1889722Z Removing target/debug/deps/libcc-7d5b8c3e1f4cbfcd.rmeta
+2025-11-09T23:58:48.1890454Z Removing target/debug/deps/libcfg_if-fc0dab425a2b74c4.rmeta
+2025-11-09T23:58:48.1892561Z Removing target/debug/deps/libcpufeatures-0f8ee1944988dae8.rmeta
+2025-11-09T23:58:48.1893425Z Removing target/debug/deps/libcrypto_common-6f50393ddbff5a83.rmeta
+2025-11-09T23:58:48.1894230Z Removing target/debug/deps/libdigest-915fde4393040a15.rmeta
+2025-11-09T23:58:48.1895228Z Removing target/debug/deps/libfind_msvc_tools-e0c11e7e4ca96379.rlib
+2025-11-09T23:58:48.1896102Z Removing target/debug/deps/libfind_msvc_tools-e0c11e7e4ca96379.rmeta
+2025-11-09T23:58:48.1897175Z Removing target/debug/deps/libgeneric_array-0e8a2772e7ae3a96.rmeta
+2025-11-09T23:58:48.1898018Z Removing target/debug/deps/libhex-39f5f8bc1bd9aca4.rmeta
+2025-11-09T23:58:48.1900618Z Removing target/debug/deps/libitoa-08c0ac77a7f9c5e1.rmeta
+2025-11-09T23:58:48.1901395Z Removing target/debug/deps/libproc_macro2-013e91bf61085fba.rlib
+2025-11-09T23:58:48.1902203Z Removing target/debug/deps/libproc_macro2-013e91bf61085fba.rmeta
+2025-11-09T23:58:48.1902987Z Removing target/debug/deps/libquote-1fd57a8d49f3e414.rlib
+2025-11-09T23:58:48.1903736Z Removing target/debug/deps/libquote-1fd57a8d49f3e414.rmeta
+2025-11-09T23:58:48.1904950Z Removing target/debug/deps/libripemd-f61d2a11e38c01dd.rmeta
+2025-11-09T23:58:48.1905771Z Removing target/debug/deps/libryu-1d74fbb8396b52fe.rmeta
+2025-11-09T23:58:48.1906579Z Removing target/debug/deps/libsecp256k1-a7db9034d9c45ea0.rmeta
+2025-11-09T23:58:48.1907397Z Removing target/debug/deps/libsecp256k1_sys-18fc324a2f93c70b.rmeta
+2025-11-09T23:58:48.1908196Z Removing target/debug/deps/libserde-a3217f5e798b0a0e.rmeta
+2025-11-09T23:58:48.1910611Z Removing target/debug/deps/libserde_derive-f7022334ed5675a3.so
+2025-11-09T23:58:48.1911407Z Removing target/debug/deps/libserde_json-4b2f7e519a4c7e92.rmeta
+2025-11-09T23:58:48.1912174Z Removing target/debug/deps/libsha2-a6f830be70788546.rmeta
+2025-11-09T23:58:48.1912913Z Removing target/debug/deps/libsha2_asm-5fc243991633aa35.rmeta
+2025-11-09T23:58:48.1913663Z Removing target/debug/deps/libshlex-83c7e0da01d13271.rlib
+2025-11-09T23:58:48.1914527Z Removing target/debug/deps/libshlex-83c7e0da01d13271.rmeta
+2025-11-09T23:58:48.1915272Z Removing target/debug/deps/libsyn-34d04d1461fb490a.rlib
+2025-11-09T23:58:48.1915997Z Removing target/debug/deps/libsyn-34d04d1461fb490a.rmeta
+2025-11-09T23:58:48.1916791Z Removing target/debug/deps/libthiserror-7a6e0ed1eb395f20.rmeta
+2025-11-09T23:58:48.1917620Z Removing target/debug/deps/libthiserror_impl-74aca0240a9ecf0d.so
+2025-11-09T23:58:48.1918416Z Removing target/debug/deps/libtypenum-95c161620aaca3ae.rmeta
+2025-11-09T23:58:48.1919240Z Removing target/debug/deps/libunicode_ident-796da7d7beff3c43.rlib
+2025-11-09T23:58:48.1920091Z Removing target/debug/deps/libunicode_ident-796da7d7beff3c43.rmeta
+2025-11-09T23:58:48.1920943Z Removing target/debug/deps/libversion_check-a216429c4cbdde93.rlib
+2025-11-09T23:58:48.1921775Z Removing target/debug/deps/libversion_check-a216429c4cbdde93.rmeta
+2025-11-09T23:58:48.1922580Z Removing target/debug/deps/proc_macro2-013e91bf61085fba.d
+2025-11-09T23:58:48.1923283Z Removing target/debug/deps/quote-1fd57a8d49f3e414.d
+2025-11-09T23:58:48.1923944Z Removing target/debug/deps/ripemd-f61d2a11e38c01dd.d
+2025-11-09T23:58:48.1924803Z Removing target/debug/deps/ryu-1d74fbb8396b52fe.d
+2025-11-09T23:58:48.1925480Z Removing target/debug/deps/secp256k1-a7db9034d9c45ea0.d
+2025-11-09T23:58:48.1926441Z Removing target/debug/deps/secp256k1_sys-18fc324a2f93c70b.d
+2025-11-09T23:58:48.1927136Z Removing target/debug/deps/serde-a3217f5e798b0a0e.d
+2025-11-09T23:58:48.1927834Z Removing target/debug/deps/serde_derive-f7022334ed5675a3.d
+2025-11-09T23:58:48.1928563Z Removing target/debug/deps/serde_json-4b2f7e519a4c7e92.d
+2025-11-09T23:58:48.1929668Z Removing target/debug/deps/sha2-a6f830be70788546.d
+2025-11-09T23:58:48.1930362Z Removing target/debug/deps/sha2_asm-5fc243991633aa35.d
+2025-11-09T23:58:48.1931027Z Removing target/debug/deps/shlex-83c7e0da01d13271.d
+2025-11-09T23:58:48.1931684Z Removing target/debug/deps/syn-34d04d1461fb490a.d
+2025-11-09T23:58:48.1932349Z Removing target/debug/deps/thiserror-7a6e0ed1eb395f20.d
+2025-11-09T23:58:48.1933089Z Removing target/debug/deps/thiserror_impl-74aca0240a9ecf0d.d
+2025-11-09T23:58:48.2048580Z Removing target/debug/deps/typenum-95c161620aaca3ae.d
+2025-11-09T23:58:48.2049403Z Removing target/debug/deps/unicode_ident-796da7d7beff3c43.d
+2025-11-09T23:58:48.2050161Z Removing target/debug/deps/version_check-a216429c4cbdde93.d
+2025-11-09T23:58:48.2050592Z Removing target/debug/examples/
+2025-11-09T23:58:48.2050909Z Removing target/debug/incremental/
+2025-11-09T23:58:48.2051207Z Removing target/doc/
+2025-11-09T23:58:48.2062917Z [command]/usr/bin/git reset --hard HEAD
+2025-11-09T23:58:48.3195940Z HEAD is now at f1ff386 fix: Update test imports from consensus_proof to bllvm_consensus
+2025-11-09T23:58:48.3212001Z ##[endgroup]
+2025-11-09T23:58:48.3213128Z ##[group]Disabling automatic garbage collection
+2025-11-09T23:58:48.3229347Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T23:58:48.3269314Z ##[endgroup]
+2025-11-09T23:58:48.3270058Z ##[group]Setting up auth
+2025-11-09T23:58:48.3276664Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:58:48.3315251Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:58:48.3630068Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:58:48.3676271Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:58:48.4009912Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T23:58:48.4055749Z ##[endgroup]
+2025-11-09T23:58:48.4056691Z ##[group]Fetching the repository
+2025-11-09T23:58:48.4067073Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f1ff38664dd5deaaa46fc9d342df1d4aa6559aca:refs/remotes/origin/main
+2025-11-09T23:58:48.6304280Z ##[endgroup]
+2025-11-09T23:58:48.6305768Z ##[group]Determining the checkout info
+2025-11-09T23:58:48.6306923Z ##[endgroup]
+2025-11-09T23:58:48.6314714Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T23:58:48.6891505Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T23:58:48.6927184Z ##[group]Checking out the ref
+2025-11-09T23:58:48.6931842Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T23:58:48.8015707Z Switched to a new branch 'main'
+2025-11-09T23:58:48.8016410Z branch 'main' set up to track 'origin/main'.
+2025-11-09T23:58:48.8023126Z ##[endgroup]
+2025-11-09T23:58:48.8071945Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T23:58:48.8100597Z f1ff38664dd5deaaa46fc9d342df1d4aa6559aca
+2025-11-09T23:58:48.8371678Z ##[group]Run dtolnay/rust-toolchain@master
+2025-11-09T23:58:48.8372037Z with:
+2025-11-09T23:58:48.8372264Z   toolchain: 1.88.0
+2025-11-09T23:58:48.8372496Z env:
+2025-11-09T23:58:48.8372715Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:48.8372971Z ##[endgroup]
+2025-11-09T23:58:48.8506353Z ##[group]Run : parse toolchain version
+2025-11-09T23:58:48.8506966Z [36;1m: parse toolchain version[0m
+2025-11-09T23:58:48.8507288Z [36;1mif [[ -z $toolchain ]]; then[0m
+2025-11-09T23:58:48.8507840Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2025-11-09T23:58:48.8508418Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2025-11-09T23:58:48.8508748Z [36;1m  exit 1[0m
+2025-11-09T23:58:48.8509099Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2025-11-09T23:58:48.8509534Z [36;1m  if [[ Linux == macOS ]]; then[0m
+2025-11-09T23:58:48.8510096Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:58:48.8512555Z [36;1m  else[0m
+2025-11-09T23:58:48.8512961Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:58:48.8513424Z [36;1m  fi[0m
+2025-11-09T23:58:48.8513743Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2025-11-09T23:58:48.8515074Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:58:48.8515580Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2025-11-09T23:58:48.8516111Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:58:48.8516603Z [36;1melse[0m
+2025-11-09T23:58:48.8516870Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:58:48.8517208Z [36;1mfi[0m
+2025-11-09T23:58:48.8550169Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:48.8550549Z env:
+2025-11-09T23:58:48.8550778Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:48.8551040Z   toolchain: 1.88.0
+2025-11-09T23:58:48.8551285Z ##[endgroup]
+2025-11-09T23:58:48.8680649Z ##[group]Run : construct rustup command line
+2025-11-09T23:58:48.8681034Z [36;1m: construct rustup command line[0m
+2025-11-09T23:58:48.8681507Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:58:48.8682139Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:58:48.8682633Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:58:48.8712121Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:48.8712503Z env:
+2025-11-09T23:58:48.8712732Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:48.8712990Z   targets: 
+2025-11-09T23:58:48.8713221Z   components: 
+2025-11-09T23:58:48.8713439Z ##[endgroup]
+2025-11-09T23:58:48.8796035Z ##[group]Run : set $CARGO_HOME
+2025-11-09T23:58:48.8796332Z [36;1m: set $CARGO_HOME[0m
+2025-11-09T23:58:48.8796685Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+2025-11-09T23:58:48.8821609Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:48.8821994Z env:
+2025-11-09T23:58:48.8822234Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:48.8822494Z ##[endgroup]
+2025-11-09T23:58:48.8902355Z ##[group]Run : install rustup if needed
+2025-11-09T23:58:48.8902708Z [36;1m: install rustup if needed[0m
+2025-11-09T23:58:48.8903033Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2025-11-09T23:58:48.8903785Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+2025-11-09T23:58:48.8904663Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+2025-11-09T23:58:48.8905194Z [36;1mfi[0m
+2025-11-09T23:58:48.8933141Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:48.8933521Z env:
+2025-11-09T23:58:48.8933741Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:48.8934023Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:58:48.8934295Z ##[endgroup]
+2025-11-09T23:58:48.9542524Z info: downloading installer
+2025-11-09T23:58:49.1775538Z warn: It looks like you have an existing rustup settings file at:
+2025-11-09T23:58:49.1776268Z warn: /home/jswift/.rustup/settings.toml
+2025-11-09T23:58:49.1776904Z warn: Rustup will install the default toolchain as specified in the settings file,
+2025-11-09T23:58:49.1777650Z warn: instead of the one inferred from the default host triple.
+2025-11-09T23:58:49.2065639Z info: profile set to 'default'
+2025-11-09T23:58:49.2066349Z info: default host triple is x86_64-unknown-linux-gnu
+2025-11-09T23:58:49.2066966Z info: skipping toolchain installation
+2025-11-09T23:58:49.2067344Z 
+2025-11-09T23:58:49.2067414Z 
+2025-11-09T23:58:49.2067656Z Rust is installed now. Great!
+2025-11-09T23:58:49.2067963Z 
+2025-11-09T23:58:49.2068233Z To get started you may need to restart your current shell.
+2025-11-09T23:58:49.2068955Z This would reload your PATH environment variable to include
+2025-11-09T23:58:49.2069598Z Cargo's bin directory ($HOME/.cargo/bin).
+2025-11-09T23:58:49.2069976Z 
+2025-11-09T23:58:49.2070217Z To configure your current shell, you need to source
+2025-11-09T23:58:49.2070833Z the corresponding env file under $HOME/.cargo.
+2025-11-09T23:58:49.2071205Z 
+2025-11-09T23:58:49.2071565Z This is usually done by running one of the following (note the leading DOT):
+2025-11-09T23:58:49.2072367Z . "$HOME/.cargo/env"            # For sh/bash/zsh/ash/dash/pdksh
+2025-11-09T23:58:49.2072995Z source "$HOME/.cargo/env.fish"  # For fish
+2025-11-09T23:58:49.2073547Z source $"($nu.home-path)/.cargo/env.nu"  # For nushell
+2025-11-09T23:58:49.2192819Z ##[group]Run rustup toolchain install 1.88.0 --profile minimal --no-self-update
+2025-11-09T23:58:49.2193372Z [36;1mrustup toolchain install 1.88.0 --profile minimal --no-self-update[0m
+2025-11-09T23:58:49.2227330Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:49.2227690Z env:
+2025-11-09T23:58:49.2227884Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:49.2228122Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:58:49.2228385Z ##[endgroup]
+2025-11-09T23:58:49.3148697Z info: syncing channel updates for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T23:58:49.3316783Z 
+2025-11-09T23:58:49.3442940Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T23:58:49.3443565Z 
+2025-11-09T23:58:49.3507105Z ##[group]Run rustup default 1.88.0
+2025-11-09T23:58:49.3507404Z [36;1mrustup default 1.88.0[0m
+2025-11-09T23:58:49.3582699Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:49.3583144Z env:
+2025-11-09T23:58:49.3583374Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:49.3583622Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:58:49.3583954Z ##[endgroup]
+2025-11-09T23:58:49.3711079Z info: using existing install for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T23:58:49.4108676Z info: default toolchain set to '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T23:58:49.4109301Z 
+2025-11-09T23:58:49.4242333Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T23:58:49.4243009Z 
+2025-11-09T23:58:49.4244563Z info: note that the toolchain '1.88.0-x86_64-unknown-linux-gnu' is currently in use (overridden by '/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus/rust-toolchain.toml')
+2025-11-09T23:58:49.4322791Z ##[group]Run : create cachekey
+2025-11-09T23:58:49.4323256Z [36;1m: create cachekey[0m
+2025-11-09T23:58:49.4324058Z [36;1mDATE=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2025-11-09T23:58:49.4325279Z [36;1mHASH=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2025-11-09T23:58:49.4326413Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:58:49.4372529Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:49.4373130Z env:
+2025-11-09T23:58:49.4373452Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:49.4373880Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:58:49.4374812Z ##[endgroup]
+2025-11-09T23:58:49.4964181Z ##[group]Run : disable incremental compilation
+2025-11-09T23:58:49.4964822Z [36;1m: disable incremental compilation[0m
+2025-11-09T23:58:49.4965150Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2025-11-09T23:58:49.4965473Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2025-11-09T23:58:49.4965736Z [36;1mfi[0m
+2025-11-09T23:58:49.4998351Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:49.4998692Z env:
+2025-11-09T23:58:49.4998874Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:49.4999120Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:58:49.4999357Z ##[endgroup]
+2025-11-09T23:58:49.5079833Z ##[group]Run : enable colors in Cargo output
+2025-11-09T23:58:49.5080159Z [36;1m: enable colors in Cargo output[0m
+2025-11-09T23:58:49.5080471Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2025-11-09T23:58:49.5080804Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2025-11-09T23:58:49.5081087Z [36;1mfi[0m
+2025-11-09T23:58:49.5108250Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:49.5108599Z env:
+2025-11-09T23:58:49.5108793Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:49.5109035Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:58:49.5109645Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:58:49.5109854Z ##[endgroup]
+2025-11-09T23:58:49.5183789Z ##[group]Run : enable Cargo sparse registry
+2025-11-09T23:58:49.5184119Z [36;1m: enable Cargo sparse registry[0m
+2025-11-09T23:58:49.5184747Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2025-11-09T23:58:49.5185512Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2025-11-09T23:58:49.5186266Z [36;1m  if rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2025-11-09T23:58:49.5186867Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-09T23:58:49.5187459Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2025-11-09T23:58:49.5187918Z [36;1m  elif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2025-11-09T23:58:49.5188506Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-09T23:58:49.5189087Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2025-11-09T23:58:49.5191161Z [36;1m  fi[0m
+2025-11-09T23:58:49.5191335Z [36;1mfi[0m
+2025-11-09T23:58:49.5219853Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:49.5220210Z env:
+2025-11-09T23:58:49.5220705Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:49.5220966Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:58:49.5221213Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:58:49.5221422Z ##[endgroup]
+2025-11-09T23:58:49.5696151Z ##[group]Run : work around spurious network errors in curl 8.0
+2025-11-09T23:58:49.5696620Z [36;1m: work around spurious network errors in curl 8.0[0m
+2025-11-09T23:58:49.5697495Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2025-11-09T23:58:49.5698112Z [36;1mif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2025-11-09T23:58:49.5698567Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2025-11-09T23:58:49.5698873Z [36;1mfi[0m
+2025-11-09T23:58:49.5725439Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:49.5725786Z env:
+2025-11-09T23:58:49.5725975Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:49.5726415Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:58:49.5726678Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:58:49.5726892Z ##[endgroup]
+2025-11-09T23:58:49.6016508Z ##[group]Run rustc +1.88.0 --version --verbose
+2025-11-09T23:58:49.6016911Z [36;1mrustc +1.88.0 --version --verbose[0m
+2025-11-09T23:58:49.6052303Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:58:49.6052893Z env:
+2025-11-09T23:58:49.6053104Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:49.6053375Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:58:49.6053653Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:58:49.6053889Z ##[endgroup]
+2025-11-09T23:58:49.6295591Z rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T23:58:49.6296126Z binary: rustc
+2025-11-09T23:58:49.6296589Z commit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc
+2025-11-09T23:58:49.6297387Z commit-date: 2025-06-23
+2025-11-09T23:58:49.6297861Z host: x86_64-unknown-linux-gnu
+2025-11-09T23:58:49.6298203Z release: 1.88.0
+2025-11-09T23:58:49.6298478Z LLVM version: 20.1.5
+2025-11-09T23:58:49.9038281Z ##[group]Run actions/cache@v3
+2025-11-09T23:58:49.9038599Z with:
+2025-11-09T23:58:49.9038820Z   path: ~/.cargo/registry
+2025-11-09T23:58:49.9039337Z   key: Linux-cargo-registry-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-09T23:58:49.9039902Z   enableCrossOsArchive: false
+2025-11-09T23:58:49.9040190Z   fail-on-cache-miss: false
+2025-11-09T23:58:49.9040444Z   lookup-only: false
+2025-11-09T23:58:49.9040656Z env:
+2025-11-09T23:58:49.9040852Z   CARGO_TERM_COLOR: always
+2025-11-09T23:58:49.9041105Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:58:49.9041387Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:58:49.9041606Z ##[endgroup]
+2025-11-09T23:58:50.2650234Z Cache hit for: Linux-cargo-registry-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-09T23:58:51.5181461Z Received 134217728 of 838847341 (16.0%), 114.8 MBs/sec
+2025-11-09T23:58:52.5267169Z Received 310378496 of 838847341 (37.0%), 139.4 MBs/sec
+2025-11-09T23:58:53.5294245Z Received 499122176 of 838847341 (59.5%), 152.2 MBs/sec
+2025-11-09T23:58:54.5784586Z Received 671088640 of 838847341 (80.0%), 153.3 MBs/sec
+2025-11-09T23:58:55.5615722Z Received 838847341 of 838847341 (100.0%), 155.1 MBs/sec
+2025-11-09T23:58:55.5617340Z Cache Size: ~800 MB (838847341 B)
+2025-11-09T23:58:55.5665000Z [command]/usr/bin/tar -xf /home/jswift/actions-runner-org2/_work/_temp/852448b1-a3fa-47c2-931b-54e11191cc0e/cache.tzst -P -C /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus --use-compress-program unzstd
+2025-11-09T23:59:03.6683750Z Cache restored successfully
+2025-11-09T23:59:03.7962541Z Cache restored from key: Linux-cargo-registry-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-09T23:59:04.0981938Z ##[group]Run actions/cache@v3
+2025-11-09T23:59:04.0983047Z with:
+2025-11-09T23:59:04.0983460Z   path: ~/.cargo/git
+2025-11-09T23:59:04.0984487Z   key: Linux-cargo-index-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-09T23:59:04.0985290Z   enableCrossOsArchive: false
+2025-11-09T23:59:04.0985713Z   fail-on-cache-miss: false
+2025-11-09T23:59:04.0986090Z   lookup-only: false
+2025-11-09T23:59:04.0986709Z env:
+2025-11-09T23:59:04.0987002Z   CARGO_TERM_COLOR: always
+2025-11-09T23:59:04.0987383Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:59:04.0987782Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:59:04.0988142Z ##[endgroup]
+2025-11-09T23:59:04.4381117Z Cache not found for input keys: Linux-cargo-index-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-09T23:59:04.7057284Z ##[group]Run actions/cache@v3
+2025-11-09T23:59:04.7057592Z with:
+2025-11-09T23:59:04.7057785Z   path: target
+2025-11-09T23:59:04.7058258Z   key: consensus-proof-Linux-target-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-09T23:59:04.7058793Z   enableCrossOsArchive: false
+2025-11-09T23:59:04.7059039Z   fail-on-cache-miss: false
+2025-11-09T23:59:04.7059273Z   lookup-only: false
+2025-11-09T23:59:04.7059507Z env:
+2025-11-09T23:59:04.7059709Z   CARGO_TERM_COLOR: always
+2025-11-09T23:59:04.7061849Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:59:04.7062096Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:59:04.7062295Z ##[endgroup]
+2025-11-09T23:59:05.0004633Z Cache not found for input keys: consensus-proof-Linux-target-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-09T23:59:05.0112687Z ##[group]Run cargo build --release
+2025-11-09T23:59:05.0113064Z [36;1mcargo build --release[0m
+2025-11-09T23:59:05.0145521Z shell: /usr/bin/bash -e {0}
+2025-11-09T23:59:05.0145812Z env:
+2025-11-09T23:59:05.0146026Z   CARGO_TERM_COLOR: always
+2025-11-09T23:59:05.0146309Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:59:05.0146600Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:59:05.0146837Z ##[endgroup]
+2025-11-09T23:59:05.2185674Z [1m[32m   Compiling[0m proc-macro2 v1.0.101
+2025-11-09T23:59:05.2186347Z [1m[32m   Compiling[0m shlex v1.3.0
+2025-11-09T23:59:05.2186957Z [1m[32m   Compiling[0m unicode-ident v1.0.19
+2025-11-09T23:59:05.2187588Z [1m[32m   Compiling[0m find-msvc-tools v0.1.2
+2025-11-09T23:59:05.3251553Z [1m[32m   Compiling[0m typenum v1.18.0
+2025-11-09T23:59:05.5377450Z [1m[32m   Compiling[0m cc v1.2.38
+2025-11-09T23:59:05.7845857Z [1m[32m   Compiling[0m version_check v0.9.5
+2025-11-09T23:59:06.8691639Z [1m[32m   Compiling[0m generic-array v0.14.7
+2025-11-09T23:59:06.9237785Z [1m[32m   Compiling[0m quote v1.0.40
+2025-11-09T23:59:07.8093700Z [1m[32m   Compiling[0m syn v2.0.106
+2025-11-09T23:59:08.0983770Z [1m[32m   Compiling[0m serde v1.0.193
+2025-11-09T23:59:08.5341081Z [1m[32m   Compiling[0m crypto-common v0.1.6
+2025-11-09T23:59:08.6287540Z [1m[32m   Compiling[0m block-buffer v0.10.4
+2025-11-09T23:59:08.7412643Z [1m[32m   Compiling[0m digest v0.10.7
+2025-11-09T23:59:08.9689028Z [1m[32m   Compiling[0m serde_json v1.0.108
+2025-11-09T23:59:09.0486247Z [1m[32m   Compiling[0m anyhow v1.0.93
+2025-11-09T23:59:09.2221393Z [1m[32m   Compiling[0m thiserror v1.0.69
+2025-11-09T23:59:09.6802722Z [1m[32m   Compiling[0m cpufeatures v0.2.17
+2025-11-09T23:59:09.7167840Z [1m[32m   Compiling[0m itoa v1.0.15
+2025-11-09T23:59:09.8043914Z [1m[32m   Compiling[0m ryu v1.0.20
+2025-11-09T23:59:09.8258304Z [1m[32m   Compiling[0m cfg-if v1.0.3
+2025-11-09T23:59:10.0080441Z [1m[32m   Compiling[0m ripemd v0.1.3
+2025-11-09T23:59:10.3573961Z [1m[32m   Compiling[0m hex v0.4.3
+2025-11-09T23:59:10.6915937Z [1m[32m   Compiling[0m bitcoin_hashes v0.11.0
+2025-11-09T23:59:12.2528242Z [1m[32m   Compiling[0m sha2-asm v0.6.4
+2025-11-09T23:59:12.5178990Z [1m[32m   Compiling[0m secp256k1-sys v0.9.2
+2025-11-09T23:59:12.7589819Z [1m[32m   Compiling[0m sha2 v0.10.9
+2025-11-09T23:59:17.0829166Z [1m[32m   Compiling[0m serde_derive v1.0.193
+2025-11-09T23:59:17.0833110Z [1m[32m   Compiling[0m thiserror-impl v1.0.69
+2025-11-09T23:59:20.0496053Z [1m[32m   Compiling[0m secp256k1 v0.28.2
+2025-11-09T23:59:27.9172742Z [1m[32m   Compiling[0m bincode v1.3.3
+2025-11-09T23:59:28.6654708Z [1m[32m   Compiling[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus)
+2025-11-09T23:59:40.4621784Z [1m[32m    Finished[0m `release` profile [optimized] target(s) in 35.38s
+2025-11-09T23:59:40.4744161Z ##[group]Run cargo test --no-run --release
+2025-11-09T23:59:40.4744833Z [36;1mcargo test --no-run --release[0m
+2025-11-09T23:59:40.4778650Z shell: /usr/bin/bash -e {0}
+2025-11-09T23:59:40.4778898Z env:
+2025-11-09T23:59:40.4779095Z   CARGO_TERM_COLOR: always
+2025-11-09T23:59:40.4779352Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:59:40.4779601Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:59:40.4779816Z ##[endgroup]
+2025-11-09T23:59:40.7080064Z [1m[32m   Compiling[0m libc v0.2.175
+2025-11-09T23:59:40.7085006Z [1m[32m   Compiling[0m cfg-if v1.0.3
+2025-11-09T23:59:40.7085887Z [1m[32m   Compiling[0m stable_deref_trait v1.2.1
+2025-11-09T23:59:40.7086464Z [1m[32m   Compiling[0m syn v2.0.106
+2025-11-09T23:59:40.7471234Z [1m[32m   Compiling[0m zerocopy v0.8.27
+2025-11-09T23:59:40.7553038Z [1m[32m   Compiling[0m serde v1.0.193
+2025-11-09T23:59:41.1745448Z [1m[32m   Compiling[0m itoa v1.0.15
+2025-11-09T23:59:41.2952694Z [1m[32m   Compiling[0m once_cell v1.21.3
+2025-11-09T23:59:41.5318583Z [1m[32m   Compiling[0m litemap v0.8.1
+2025-11-09T23:59:41.7505981Z [1m[32m   Compiling[0m writeable v0.6.2
+2025-11-09T23:59:41.8767556Z [1m[32m   Compiling[0m pin-project-lite v0.2.16
+2025-11-09T23:59:41.9274762Z [1m[32m   Compiling[0m typenum v1.18.0
+2025-11-09T23:59:41.9517357Z [1m[32m   Compiling[0m crossbeam-utils v0.8.21
+2025-11-09T23:59:42.4361965Z [1m[32m   Compiling[0m equivalent v1.0.2
+2025-11-09T23:59:42.4813398Z [1m[32m   Compiling[0m icu_normalizer_data v2.1.1
+2025-11-09T23:59:42.6070720Z [1m[32m   Compiling[0m getrandom v0.2.16
+2025-11-09T23:59:42.6370092Z [1m[32m   Compiling[0m bytes v1.10.1
+2025-11-09T23:59:42.6494454Z [1m[32m   Compiling[0m fnv v1.0.7
+2025-11-09T23:59:42.7035764Z [1m[32m   Compiling[0m hashbrown v0.16.0
+2025-11-09T23:59:42.7895114Z [1m[32m   Compiling[0m rand_core v0.6.4
+2025-11-09T23:59:43.0043498Z [1m[32m   Compiling[0m icu_properties_data v2.1.1
+2025-11-09T23:59:43.1911985Z [1m[32m   Compiling[0m either v1.15.0
+2025-11-09T23:59:43.4282309Z [1m[32m   Compiling[0m generic-array v0.14.7
+2025-11-09T23:59:43.5302708Z [1m[32m   Compiling[0m indexmap v2.12.0
+2025-11-09T23:59:43.5519803Z [1m[32m   Compiling[0m autocfg v1.5.0
+2025-11-09T23:59:44.2048670Z [1m[32m   Compiling[0m syn v1.0.109
+2025-11-09T23:59:44.5848747Z [1m[32m   Compiling[0m libm v0.2.15
+2025-11-09T23:59:44.6300848Z [1m[32m   Compiling[0m toml_datetime v0.6.3
+2025-11-09T23:59:44.9206638Z [1m[32m   Compiling[0m futures-core v0.3.31
+2025-11-09T23:59:45.0143685Z [1m[32m   Compiling[0m ryu v1.0.20
+2025-11-09T23:59:45.0436256Z [1m[32m   Compiling[0m winnow v0.5.40
+2025-11-09T23:59:45.1279027Z [1m[32m   Compiling[0m num-traits v0.2.19
+2025-11-09T23:59:45.4899380Z [1m[32m   Compiling[0m socket2 v0.6.1
+2025-11-09T23:59:45.9964858Z [1m[32m   Compiling[0m mio v1.1.0
+2025-11-09T23:59:46.1819785Z [1m[32m   Compiling[0m getrandom v0.3.4
+2025-11-09T23:59:46.5797954Z [1m[32m   Compiling[0m synstructure v0.13.2
+2025-11-09T23:59:46.7162797Z [1m[32m   Compiling[0m rustix v1.1.2
+2025-11-09T23:59:47.5412498Z [1m[32m   Compiling[0m toml_edit v0.20.2
+2025-11-09T23:59:47.6455037Z [1m[32m   Compiling[0m object v0.37.3
+2025-11-09T23:59:48.0162746Z [1m[32m   Compiling[0m smallvec v1.15.1
+2025-11-09T23:59:48.4333725Z [1m[32m   Compiling[0m crossbeam-epoch v0.9.18
+2025-11-09T23:59:58.1692486Z [1m[32m   Compiling[0m proc-macro-crate v2.0.2
+2025-11-10T00:00:00.9433766Z [1m[32m   Compiling[0m block-buffer v0.10.4
+2025-11-10T00:00:01.0517348Z [1m[32m   Compiling[0m crypto-common v0.1.6
+2025-11-10T00:00:01.1534693Z [1m[32m   Compiling[0m http v0.2.12
+2025-11-10T00:00:03.0718782Z [1m[32m   Compiling[0m tracing-core v0.1.34
+2025-11-10T00:00:04.0976521Z [1m[32m   Compiling[0m linux-raw-sys v0.11.0
+2025-11-10T00:00:04.3070553Z [1m[32m   Compiling[0m regex-syntax v0.8.8
+2025-11-10T00:00:05.0482516Z [1m[32m   Compiling[0m gimli v0.32.3
+2025-11-10T00:00:10.9466646Z [1m[32m   Compiling[0m rayon-core v1.13.0
+2025-11-10T00:00:11.2072042Z [1m[32m   Compiling[0m futures-task v0.3.31
+2025-11-10T00:00:11.4302213Z [1m[32m   Compiling[0m futures-sink v0.3.31
+2025-11-10T00:00:11.5903049Z [1m[32m   Compiling[0m pin-utils v0.1.0
+2025-11-10T00:00:11.6805326Z [1m[32m   Compiling[0m adler2 v2.0.1
+2025-11-10T00:00:11.8735562Z [1m[32m   Compiling[0m percent-encoding v2.3.2
+2025-11-10T00:00:12.2280090Z [1m[32m   Compiling[0m memchr v2.7.6
+2025-11-10T00:00:12.2673267Z [1m[32m   Compiling[0m httparse v1.10.1
+2025-11-10T00:00:13.5710389Z [1m[32m   Compiling[0m bitflags v2.10.0
+2025-11-10T00:00:18.1696497Z [1m[32m   Compiling[0m form_urlencoded v1.2.2
+2025-11-10T00:00:18.5245976Z [1m[32m   Compiling[0m miniz_oxide v0.8.9
+2025-11-10T00:00:19.3537671Z [1m[32m   Compiling[0m futures-util v0.3.31
+2025-11-10T00:00:21.7636981Z [1m[32m   Compiling[0m addr2line v0.25.1
+2025-11-10T00:00:21.7842734Z [1m[32m   Compiling[0m tracing v0.1.41
+2025-11-10T00:00:22.4243148Z [1m[32m   Compiling[0m digest v0.10.7
+2025-11-10T00:00:22.7516978Z [1m[32m   Compiling[0m crossbeam-deque v0.8.6
+2025-11-10T00:00:23.2147725Z [1m[32m   Compiling[0m zerofrom-derive v0.1.6
+2025-11-10T00:00:23.3283523Z [1m[32m   Compiling[0m yoke-derive v0.8.1
+2025-11-10T00:00:23.4303942Z [1m[32m   Compiling[0m zerovec-derive v0.11.2
+2025-11-10T00:00:28.8373372Z [1m[32m   Compiling[0m displaydoc v0.2.5
+2025-11-10T00:00:34.5941559Z [1m[32m   Compiling[0m zerocopy-derive v0.8.27
+2025-11-10T00:00:37.3357079Z [1m[32m   Compiling[0m serde_derive v1.0.193
+2025-11-10T00:00:41.7792456Z [1m[32m   Compiling[0m tokio-macros v2.6.0
+2025-11-10T00:00:46.5160070Z [1m[32m   Compiling[0m zerofrom v0.1.6
+2025-11-10T00:00:46.6241093Z [1m[32m   Compiling[0m yoke v0.8.1
+2025-11-10T00:00:46.8129784Z [1m[32m   Compiling[0m zerovec v0.11.5
+2025-11-10T00:00:47.5717189Z [1m[32m   Compiling[0m tinystr v0.8.2
+2025-11-10T00:00:47.7796931Z [1m[32m   Compiling[0m icu_locale_core v2.1.1
+2025-11-10T00:00:49.7043498Z [1m[32m   Compiling[0m potential_utf v0.1.4
+2025-11-10T00:00:49.8370184Z [1m[32m   Compiling[0m zerotrie v0.2.3
+2025-11-10T00:00:50.2514527Z [1m[32m   Compiling[0m icu_provider v2.1.1
+2025-11-10T00:00:50.6452597Z [1m[32m   Compiling[0m icu_collections v2.1.1
+2025-11-10T00:00:51.3074567Z [1m[32m   Compiling[0m icu_properties v2.1.1
+2025-11-10T00:00:51.6426294Z [1m[32m   Compiling[0m ppv-lite86 v0.2.21
+2025-11-10T00:00:51.7585577Z [1m[32m   Compiling[0m tokio v1.48.0
+2025-11-10T00:00:52.1158439Z [1m[32m   Compiling[0m rand_chacha v0.3.1
+2025-11-10T00:00:52.8350089Z [1m[32m   Compiling[0m icu_normalizer v2.1.1
+2025-11-10T00:00:52.9709059Z [1m[32m   Compiling[0m rand v0.8.5
+2025-11-10T00:00:53.9135354Z [1m[32m   Compiling[0m idna_adapter v1.2.1
+2025-11-10T00:00:54.0070566Z [1m[32m   Compiling[0m half v2.7.1
+2025-11-10T00:00:54.0402989Z [1m[32m   Compiling[0m bolero-generator-derive v0.11.0
+2025-11-10T00:00:54.3881290Z [1m[32m   Compiling[0m anyhow v1.0.93
+2025-11-10T00:00:54.9171085Z [1m[32m   Compiling[0m fastrand v2.3.0
+2025-11-10T00:00:55.1873795Z [1m[32m   Compiling[0m lazy_static v1.5.0
+2025-11-10T00:00:55.2413554Z [1m[32m   Compiling[0m utf8_iter v1.0.4
+2025-11-10T00:00:55.3552357Z [1m[32m   Compiling[0m clap_lex v0.7.6
+2025-11-10T00:00:55.6510485Z [1m[32m   Compiling[0m rustc-demangle v0.1.26
+2025-11-10T00:00:56.4472509Z [1m[32m   Compiling[0m try-lock v0.2.5
+2025-11-10T00:00:56.5105664Z [1m[32m   Compiling[0m ciborium-io v0.2.2
+2025-11-10T00:00:56.5581698Z [1m[32m   Compiling[0m tokio-util v0.7.17
+2025-11-10T00:00:57.4497830Z [1m[32m   Compiling[0m slab v0.4.11
+2025-11-10T00:00:57.6467711Z [1m[32m   Compiling[0m anstyle v1.0.13
+2025-11-10T00:00:57.8838745Z [1m[32m   Compiling[0m plotters-backend v0.3.7
+2025-11-10T00:00:58.2333699Z [1m[32m   Compiling[0m plotters-svg v0.3.7
+2025-11-10T00:00:58.4922838Z [1m[32m   Compiling[0m clap_builder v4.5.51
+2025-11-10T00:00:59.2114169Z [1m[32m   Compiling[0m h2 v0.3.27
+2025-11-10T00:01:02.1711151Z [1m[32m   Compiling[0m bolero-generator v0.11.1
+2025-11-10T00:01:05.1684918Z [1m[32m   Compiling[0m ciborium-ll v0.2.2
+2025-11-10T00:01:05.3671014Z [1m[32m   Compiling[0m want v0.3.1
+2025-11-10T00:01:05.4795629Z [1m[32m   Compiling[0m serde_json v1.0.108
+2025-11-10T00:01:05.5258782Z [1m[32m   Compiling[0m backtrace v0.3.76
+2025-11-10T00:01:05.7382186Z [1m[32m   Compiling[0m idna v1.1.0
+2025-11-10T00:01:05.9872381Z [1m[32m   Compiling[0m tempfile v3.23.0
+2025-11-10T00:01:06.6482459Z [1m[32m   Compiling[0m thiserror-impl v1.0.69
+2025-11-10T00:01:07.5455937Z [1m[32m   Compiling[0m secp256k1-sys v0.9.2
+2025-11-10T00:01:07.7825815Z [1m[32m   Compiling[0m sha2-asm v0.6.4
+2025-11-10T00:01:08.2467700Z [1m[32m   Compiling[0m regex-automata v0.4.13
+2025-11-10T00:01:08.7363614Z [1m[32m   Compiling[0m http-body v0.4.6
+2025-11-10T00:01:09.0013860Z [1m[32m   Compiling[0m futures-channel v0.3.31
+2025-11-10T00:01:09.2291662Z [1m[32m   Compiling[0m itertools v0.10.5
+2025-11-10T00:01:10.1833067Z [1m[32m   Compiling[0m rand_xoshiro v0.6.0
+2025-11-10T00:01:10.7864695Z [1m[32m   Compiling[0m socket2 v0.5.10
+2025-11-10T00:01:11.0564583Z [1m[32m   Compiling[0m wait-timeout v0.2.1
+2025-11-10T00:01:11.4235838Z [1m[32m   Compiling[0m bit-vec v0.6.3
+2025-11-10T00:01:11.5161620Z [1m[32m   Compiling[0m tower-service v0.3.3
+2025-11-10T00:01:11.5722765Z [1m[32m   Compiling[0m httpdate v1.0.3
+2025-11-10T00:01:11.6862281Z [1m[32m   Compiling[0m pretty-hex v0.4.1
+2025-11-10T00:01:11.7929486Z [1m[32m   Compiling[0m cast v0.3.0
+2025-11-10T00:01:11.8583464Z [1m[32m   Compiling[0m same-file v1.0.6
+2025-11-10T00:01:11.9993271Z [1m[32m   Compiling[0m cpufeatures v0.2.17
+2025-11-10T00:01:12.0080420Z [1m[32m   Compiling[0m quick-error v1.2.3
+2025-11-10T00:01:12.0415749Z [1m[32m   Compiling[0m sha2 v0.10.9
+2025-11-10T00:01:12.0679961Z [1m[32m   Compiling[0m rusty-fork v0.3.1
+2025-11-10T00:01:12.4212788Z [1m[32m   Compiling[0m criterion-plot v0.5.0
+2025-11-10T00:01:12.7282278Z [1m[32m   Compiling[0m walkdir v2.5.0
+2025-11-10T00:01:13.1477586Z [1m[32m   Compiling[0m bolero-engine v0.11.2
+2025-11-10T00:01:13.2832733Z [1m[32m   Compiling[0m hyper v0.14.32
+2025-11-10T00:01:13.3391419Z [1m[32m   Compiling[0m bit-set v0.5.3
+2025-11-10T00:01:13.4935712Z [1m[32m   Compiling[0m regex v1.12.2
+2025-11-10T00:01:13.8062298Z [1m[32m   Compiling[0m rayon v1.11.0
+2025-11-10T00:01:14.4921215Z [1m[32m   Compiling[0m secp256k1 v0.28.2
+2025-11-10T00:01:15.1208444Z [1m[32m   Compiling[0m tinytemplate v1.2.1
+2025-11-10T00:01:16.2521959Z [1m[32m   Compiling[0m url v2.5.7
+2025-11-10T00:01:17.1551993Z [1m[32m   Compiling[0m bincode v1.3.3
+2025-11-10T00:01:17.6940091Z [1m[32m   Compiling[0m serde_urlencoded v0.7.1
+2025-11-10T00:01:17.9860389Z [1m[32m   Compiling[0m ciborium v0.2.2
+2025-11-10T00:01:18.1622211Z [1m[32m   Compiling[0m clap v4.5.51
+2025-11-10T00:01:18.2124689Z [1m[32m   Compiling[0m plotters v0.3.7
+2025-11-10T00:01:18.2611480Z [1m[32m   Compiling[0m ripemd v0.1.3
+2025-11-10T00:01:18.9306924Z [1m[32m   Compiling[0m rand_xorshift v0.3.0
+2025-11-10T00:01:19.0510870Z [1m[32m   Compiling[0m is-terminal v0.4.17
+2025-11-10T00:01:19.1252859Z [1m[32m   Compiling[0m encoding_rs v0.8.35
+2025-11-10T00:01:19.5152351Z [1m[32m   Compiling[0m unarray v0.1.4
+2025-11-10T00:01:19.5933495Z [1m[32m   Compiling[0m oorandom v11.1.5
+2025-11-10T00:01:19.6886577Z [1m[32m   Compiling[0m ipnet v2.11.0
+2025-11-10T00:01:19.8201396Z [1m[32m   Compiling[0m hex v0.4.3
+2025-11-10T00:01:19.8258685Z [1m[32m   Compiling[0m thiserror v1.0.69
+2025-11-10T00:01:19.8849029Z [1m[32m   Compiling[0m mime v0.3.17
+2025-11-10T00:01:20.1516562Z [1m[32m   Compiling[0m bitcoin_hashes v0.11.0
+2025-11-10T00:01:20.2492310Z [1m[32m   Compiling[0m sync_wrapper v0.1.2
+2025-11-10T00:01:20.3018422Z [1m[32m   Compiling[0m base64 v0.21.7
+2025-11-10T00:01:20.5893951Z [1m[32m   Compiling[0m anes v0.1.6
+2025-11-10T00:01:20.7445136Z [1m[32m   Compiling[0m log v0.4.28
+2025-11-10T00:01:20.8182608Z [1m[32m   Compiling[0m criterion v0.5.1
+2025-11-10T00:01:20.9395898Z [1m[32m   Compiling[0m reqwest v0.11.27
+2025-11-10T00:01:21.9098854Z [1m[32m   Compiling[0m proptest v1.5.0
+2025-11-10T00:01:23.1127326Z [1m[32m   Compiling[0m bolero v0.11.1
+2025-11-10T00:01:23.4537563Z [1m[32m   Compiling[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus)
+2025-11-10T00:01:38.5327369Z [0m[1m[33mwarning[0m[0m[1m: unused import: `ByteString`[0m
+2025-11-10T00:01:38.5365791Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/taproot_script_path.rs:16:30[0m
+2025-11-10T00:01:38.5380368Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5389329Z [0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::types::{ByteString, Hash};[0m
+2025-11-10T00:01:38.5390350Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[33m^^^^^^^^^^[0m
+2025-11-10T00:01:38.5390974Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5391771Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:01:38.5392268Z 
+2025-11-10T00:01:38.5393394Z [0m[1m[33mwarning[0m[0m[1m: unused import: `bllvm_consensus::types::ByteString`[0m
+2025-11-10T00:01:38.5394516Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/consensus_flags.rs:24:5[0m
+2025-11-10T00:01:38.5395176Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5396092Z [0m[1m[38;5;12m24[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::types::ByteString;[0m
+2025-11-10T00:01:38.5397008Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:01:38.5397682Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5398428Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:01:38.5398913Z 
+2025-11-10T00:01:38.5577759Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:01:38.5579063Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:13:1[0m
+2025-11-10T00:01:38.5579945Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5589148Z [0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: BIP65 + BIP112 in same script[0m
+2025-11-10T00:01:38.5590866Z [0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:01:38.5592411Z [0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that CLTV and CSV can be used together in a single script[0m
+2025-11-10T00:01:38.5626666Z [0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// and both validations work correctly.[0m
+2025-11-10T00:01:38.5628417Z [0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m---------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:01:38.5629593Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5631566Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:01:38.5632670Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5634117Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:01:38.5635917Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_doc_comments)]` on by default[0m
+2025-11-10T00:01:38.5636685Z 
+2025-11-10T00:01:38.5637226Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:01:38.5638273Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:61:1[0m
+2025-11-10T00:01:38.5639160Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5640788Z [0m[1m[38;5;12m61[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: BIP113 + BIP65 validation[0m
+2025-11-10T00:01:38.5642115Z [0m[1m[38;5;12m62[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:01:38.5643729Z [0m[1m[38;5;12m63[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that median time-past (BIP113) is correctly used for timestamp CLTV validation (BIP65).[0m
+2025-11-10T00:01:38.5645798Z [0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m------------------------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:01:38.5647056Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5648384Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:01:38.5649384Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5650822Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:01:38.5652210Z 
+2025-11-10T00:01:38.5652885Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:01:38.5655124Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:107:1[0m
+2025-11-10T00:01:38.5655956Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5659283Z [0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: SegWit + Taproot combinations[0m
+2025-11-10T00:01:38.5660355Z [0m[1m[38;5;12m108[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:01:38.5661726Z [0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that SegWit witness validation (BIP141) and Taproot validation (BIP340/341/342)[0m
+2025-11-10T00:01:38.5663299Z [0m[1m[38;5;12m110[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// work correctly when both are present in different transactions.[0m
+2025-11-10T00:01:38.5664805Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:01:38.5665716Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5668415Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:01:38.5669181Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5670879Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:01:38.5671708Z 
+2025-11-10T00:01:38.5672071Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:01:38.5672860Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:160:1[0m
+2025-11-10T00:01:38.5674015Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5677013Z [0m[1m[38;5;12m160[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: BIP125 RBF + BIP152 Compact Blocks coordination[0m
+2025-11-10T00:01:38.5678147Z [0m[1m[38;5;12m161[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:01:38.5679501Z [0m[1m[38;5;12m162[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that RBF conflict detection works correctly during compact block reconstruction.[0m
+2025-11-10T00:01:38.5681066Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m-----------------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:01:38.5682328Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5683329Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:01:38.5684145Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5685493Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:01:38.5687577Z 
+2025-11-10T00:01:38.5688116Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:01:38.5688867Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:222:1[0m
+2025-11-10T00:01:38.5689533Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5690461Z [0m[1m[38;5;12m222[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: Locktime shared logic consistency[0m
+2025-11-10T00:01:38.5691492Z [0m[1m[38;5;12m223[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:01:38.5692718Z [0m[1m[38;5;12m224[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that BIP65 (CLTV) and BIP112 (CSV) use shared locktime logic consistently.[0m
+2025-11-10T00:01:38.5694546Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m-----------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:01:38.5695433Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5696347Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:01:38.5697115Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5698193Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:01:38.5698967Z 
+2025-11-10T00:01:38.5699269Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:01:38.5700002Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:253:1[0m
+2025-11-10T00:01:38.5700609Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5701446Z [0m[1m[38;5;12m253[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: Witness framework consistency[0m
+2025-11-10T00:01:38.5702461Z [0m[1m[38;5;12m254[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:01:38.5703686Z [0m[1m[38;5;12m255[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that unified witness framework correctly handles both SegWit and Taproot.[0m
+2025-11-10T00:01:38.5705291Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m----------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:01:38.5706229Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5707155Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:01:38.5707907Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.5710480Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:01:38.5711229Z 
+2025-11-10T00:01:38.6084097Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `tx`[0m
+2025-11-10T00:01:38.6085188Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:26:13[0m
+2025-11-10T00:01:38.6088353Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.6093255Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let tx = Transaction {[0m
+2025-11-10T00:01:38.6098975Z [0m   [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[33m^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_tx`[0m
+2025-11-10T00:01:38.6103044Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:38.6108198Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:01:38.6112623Z 
+2025-11-10T00:01:40.5232848Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:01:40.5255489Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:1129:17[0m
+2025-11-10T00:01:40.5257889Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5258668Z [0m[1m[38;5;12m1129[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let mut a = k(0x6a09e667);[0m
+2025-11-10T00:01:40.5259524Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^[0m
+2025-11-10T00:01:40.5260273Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5261085Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:01:40.5261700Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5262842Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
+2025-11-10T00:01:40.5263297Z 
+2025-11-10T00:01:40.5263719Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:01:40.5264720Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:1130:17[0m
+2025-11-10T00:01:40.5265337Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5266086Z [0m[1m[38;5;12m1130[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let mut b = k(0xbb67ae85);[0m
+2025-11-10T00:01:40.5266948Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^[0m
+2025-11-10T00:01:40.5267688Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5268507Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:01:40.5268913Z 
+2025-11-10T00:01:40.5269287Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:01:40.5270067Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:1131:17[0m
+2025-11-10T00:01:40.5270673Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5271424Z [0m[1m[38;5;12m1131[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let mut c = k(0x3c6ef372);[0m
+2025-11-10T00:01:40.5272299Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^[0m
+2025-11-10T00:01:40.5273040Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5273832Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:01:40.5274262Z 
+2025-11-10T00:01:40.5274857Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:01:40.5275592Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:1133:17[0m
+2025-11-10T00:01:40.5276216Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5276938Z [0m[1m[38;5;12m1133[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let mut e = k(0x510e527f);[0m
+2025-11-10T00:01:40.5277752Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^[0m
+2025-11-10T00:01:40.5278480Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5279249Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:01:40.5279648Z 
+2025-11-10T00:01:40.5280291Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:01:40.5281231Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:1134:17[0m
+2025-11-10T00:01:40.5282464Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5283469Z [0m[1m[38;5;12m1134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let mut f = k(0x9b05688c);[0m
+2025-11-10T00:01:40.5324859Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^[0m
+2025-11-10T00:01:40.5325854Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5326650Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:01:40.5327619Z 
+2025-11-10T00:01:40.5328042Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:01:40.5328863Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:1135:17[0m
+2025-11-10T00:01:40.5329472Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5330229Z [0m[1m[38;5;12m1135[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let mut g = k(0x1f83d9ab);[0m
+2025-11-10T00:01:40.5331131Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^[0m
+2025-11-10T00:01:40.5331873Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5333033Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:01:40.5333458Z 
+2025-11-10T00:01:40.5409194Z [0m[1m[33mwarning[0m[0m[1m: unnecessary `unsafe` block[0m
+2025-11-10T00:01:40.5410061Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/simd_bytes.rs:76:9[0m
+2025-11-10T00:01:40.5410691Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5411363Z [0m[1m[38;5;12m76[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        unsafe {[0m
+2025-11-10T00:01:40.5412314Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33munnecessary `unsafe` block[0m
+2025-11-10T00:01:40.5413023Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5414537Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_unsafe)]` on by default[0m
+2025-11-10T00:01:40.5415038Z 
+2025-11-10T00:01:40.5435285Z [0m[1m[33mwarning[0m[0m[1m: unnecessary `unsafe` block[0m
+2025-11-10T00:01:40.5438980Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/simd_bytes.rs:86:9[0m
+2025-11-10T00:01:40.5439676Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5440371Z [0m[1m[38;5;12m86[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        unsafe {[0m
+2025-11-10T00:01:40.5441290Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33munnecessary `unsafe` block[0m
+2025-11-10T00:01:40.5441795Z 
+2025-11-10T00:01:40.5442154Z [0m[1m[33mwarning[0m[0m[1m: unnecessary `unsafe` block[0m
+2025-11-10T00:01:40.5442854Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/simd_bytes.rs:96:9[0m
+2025-11-10T00:01:40.5444017Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5444840Z [0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        unsafe {[0m
+2025-11-10T00:01:40.5445699Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33munnecessary `unsafe` block[0m
+2025-11-10T00:01:40.5447915Z 
+2025-11-10T00:01:40.5987469Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:01:40.5988560Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/mempool.rs:1218:13[0m
+2025-11-10T00:01:40.5990651Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5991676Z [0m[1m[38;5;12m1218[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut mempool = Mempool::new();[0m
+2025-11-10T00:01:40.5992647Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^^[0m
+2025-11-10T00:01:40.5993447Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.5994793Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:01:40.5995290Z 
+2025-11-10T00:01:40.6025344Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:01:40.6026234Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/mempool.rs:1242:13[0m
+2025-11-10T00:01:40.6028602Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.6029450Z [0m[1m[38;5;12m1242[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut tx1 = create_valid_transaction();[0m
+2025-11-10T00:01:40.6030423Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^[0m
+2025-11-10T00:01:40.6031224Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.6032018Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:01:40.6032464Z 
+2025-11-10T00:01:40.6279283Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `shifted_back`[0m
+2025-11-10T00:01:40.6280772Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:1100:21[0m
+2025-11-10T00:01:40.6281388Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.6282371Z [0m[1m[38;5;12m1100[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let shifted_back = shifted_right.shl(shift);[0m
+2025-11-10T00:01:40.6284033Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[33m^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_shifted_back`[0m
+2025-11-10T00:01:40.6285165Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.6285902Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:01:40.6286412Z 
+2025-11-10T00:01:40.7956039Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `weight`[0m
+2025-11-10T00:01:40.7959563Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/segwit.rs:868:17[0m
+2025-11-10T00:01:40.7961000Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:40.7975861Z [0m[1m[38;5;12m868[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let weight = calculate_transaction_weight(&tx, witness.as_ref()).unwrap();[0m
+2025-11-10T00:01:40.7977678Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_weight`[0m
+2025-11-10T00:01:40.7978647Z 
+2025-11-10T00:01:49.6471316Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "taproot_script_path") generated 1 warning (run `cargo fix --test "taproot_script_path"` to apply 1 suggestion)
+2025-11-10T00:01:49.8151539Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "consensus_flags") generated 1 warning (run `cargo fix --test "consensus_flags"` to apply 1 suggestion)
+2025-11-10T00:01:57.0978358Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "cross_bip_property_tests") generated 7 warnings
+2025-11-10T00:01:57.1858987Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `pre_cltv_height`[0m
+2025-11-10T00:01:57.1860467Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/time_based_consensus.rs:248:9[0m
+2025-11-10T00:01:57.1861430Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:57.1862584Z [0m[1m[38;5;12m248[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let pre_cltv_height = 419327;[0m
+2025-11-10T00:01:57.1863923Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_pre_cltv_height`[0m
+2025-11-10T00:01:57.1865060Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:57.1865801Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:01:57.1866463Z 
+2025-11-10T00:01:57.1867052Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `post_cltv_height`[0m
+2025-11-10T00:01:57.1867885Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/time_based_consensus.rs:270:9[0m
+2025-11-10T00:01:57.1868463Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:01:57.1869544Z [0m[1m[38;5;12m270[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let post_cltv_height = 419328;[0m
+2025-11-10T00:01:57.1870906Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_post_cltv_height`[0m
+2025-11-10T00:01:57.1871646Z 
+2025-11-10T00:02:08.2250456Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "time_based_consensus") generated 2 warnings
+2025-11-10T00:02:08.2747715Z [0m[1m[33mwarning[0m[0m[1m: unused import: `ValidationResult`[0m
+2025-11-10T00:02:08.2750941Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/coinbase_maturity.rs:10:52[0m
+2025-11-10T00:02:08.2751896Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:08.2753281Z [0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::types::{BlockHeader, UtxoSet, ValidationResult};[0m
+2025-11-10T00:02:08.2754919Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                    [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:02:08.2755830Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:08.2757252Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:02:08.2759767Z 
+2025-11-10T00:02:08.2975885Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `utxo_set`[0m
+2025-11-10T00:02:08.2977185Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/coinbase_maturity.rs:37:13[0m
+2025-11-10T00:02:08.2978129Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:08.2979470Z [0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let mut utxo_set = UtxoSet::new();[0m
+2025-11-10T00:02:08.2980977Z [0m   [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_utxo_set`[0m
+2025-11-10T00:02:08.2982083Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:08.2983100Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:02:08.2989850Z 
+2025-11-10T00:02:08.2996420Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `coinbase_outpoint`[0m
+2025-11-10T00:02:08.3001522Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/coinbase_maturity.rs:38:9[0m
+2025-11-10T00:02:08.3006369Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:08.3011082Z [0m[1m[38;5;12m38[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let coinbase_outpoint = OutPoint {[0m
+2025-11-10T00:02:08.3016530Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_coinbase_outpoint`[0m
+2025-11-10T00:02:08.3020153Z 
+2025-11-10T00:02:08.3057076Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:02:08.3060690Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/coinbase_maturity.rs:37:9[0m
+2025-11-10T00:02:08.3064156Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:08.3095571Z [0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let mut utxo_set = UtxoSet::new();[0m
+2025-11-10T00:02:08.3097084Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^^^[0m
+2025-11-10T00:02:08.3098343Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:08.3103609Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:02:08.3105053Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:08.3106264Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
+2025-11-10T00:02:08.3107074Z 
+2025-11-10T00:02:14.5105261Z [0m[1m[33mwarning[0m[0m[1m: unused import: `bllvm_consensus::pow::check_proof_of_work`[0m
+2025-11-10T00:02:14.5106294Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/historical_consensus.rs:15:5[0m
+2025-11-10T00:02:14.5107363Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:14.5108317Z [0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::pow::check_proof_of_work;[0m
+2025-11-10T00:02:14.5109302Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:02:14.5109943Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:14.5110665Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:02:14.5111144Z 
+2025-11-10T00:02:14.5111802Z [0m[1m[33mwarning[0m[0m[1m: unused import: `ValidationResult`[0m
+2025-11-10T00:02:14.5112754Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/historical_consensus.rs:16:52[0m
+2025-11-10T00:02:14.5113491Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:14.5116005Z [0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::{Block, BlockHeader, UtxoSet, ValidationResult};[0m
+2025-11-10T00:02:14.5117154Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                    [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:02:14.5117587Z 
+2025-11-10T00:02:19.1882597Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "coinbase_maturity") generated 4 warnings (run `cargo fix --test "coinbase_maturity"` to apply 2 suggestions)
+2025-11-10T00:02:19.2352959Z [0m[1m[33mwarning[0m[0m[1m: unused import: `bllvm_consensus::types::ByteString`[0m
+2025-11-10T00:02:19.2354525Z [0m [0m[0m[1m[38;5;12m--> [0m[0mtests/p2sh_redeem_script.rs:9:5[0m
+2025-11-10T00:02:19.2355345Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:19.2356195Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::types::ByteString;[0m
+2025-11-10T00:02:19.2357003Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:02:19.2357563Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:19.2358247Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:02:19.2358668Z 
+2025-11-10T00:02:25.1593032Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "historical_consensus") generated 2 warnings (run `cargo fix --test "historical_consensus"` to apply 2 suggestions)
+2025-11-10T00:02:29.4405816Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `i`[0m
+2025-11-10T00:02:29.4409713Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:26:18[0m
+2025-11-10T00:02:29.4410397Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:29.4411153Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            for (i, case) in cases.iter().enumerate() {[0m
+2025-11-10T00:02:29.4412235Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                  [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_i`[0m
+2025-11-10T00:02:29.4412980Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:29.4413658Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:02:29.4414088Z 
+2025-11-10T00:02:29.4414545Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `prevouts`[0m
+2025-11-10T00:02:29.4415276Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:33:49[0m
+2025-11-10T00:02:29.4415831Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:29.4416891Z [0m[1m[38;5;12m33[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   if let Value::Array(prevouts) = &test_case[0] {[0m
+2025-11-10T00:02:29.4418127Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_prevouts`[0m
+2025-11-10T00:02:29.4418744Z 
+2025-11-10T00:02:29.4420860Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `tx_hex`[0m
+2025-11-10T00:02:29.4421888Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:34:54[0m
+2025-11-10T00:02:29.4422449Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:29.4423365Z [0m[1m[38;5;12m34[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   if let Value::String(tx_hex) = &test_case[1] {[0m
+2025-11-10T00:02:29.4424712Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                            [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_tx_hex`[0m
+2025-11-10T00:02:29.4425303Z 
+2025-11-10T00:02:29.4425639Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `flags`[0m
+2025-11-10T00:02:29.4426314Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:36:41[0m
+2025-11-10T00:02:29.4426857Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:29.4427636Z [0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   let flags = parse_flags(&test_case[2]);[0m
+2025-11-10T00:02:29.4428782Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                           [0m[0m[1m[33m^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_flags`[0m
+2025-11-10T00:02:29.4431338Z 
+2025-11-10T00:02:29.4487405Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `i`[0m
+2025-11-10T00:02:29.4492175Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:74:18[0m
+2025-11-10T00:02:29.4492935Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:29.4495000Z [0m[1m[38;5;12m74[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            for (i, case) in cases.iter().enumerate() {[0m
+2025-11-10T00:02:29.4496219Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                  [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_i`[0m
+2025-11-10T00:02:29.4497922Z 
+2025-11-10T00:02:29.4500172Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `script_sig_str`[0m
+2025-11-10T00:02:29.4501356Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:79:46[0m
+2025-11-10T00:02:29.4502111Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:29.4503155Z [0m[1m[38;5;12m79[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        if let Value::String(script_sig_str) = &test_case[0] {[0m
+2025-11-10T00:02:29.4504698Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[33m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_script_sig_str`[0m
+2025-11-10T00:02:29.4505964Z 
+2025-11-10T00:02:29.4506682Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `script_pubkey_str`[0m
+2025-11-10T00:02:29.4507483Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:80:50[0m
+2025-11-10T00:02:29.4508109Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:29.4509264Z [0m[1m[38;5;12m80[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   if let Value::String(script_pubkey_str) = &test_case[1] {[0m
+2025-11-10T00:02:29.4512584Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_script_pubkey_str`[0m
+2025-11-10T00:02:29.4513369Z 
+2025-11-10T00:02:29.4513753Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `flags`[0m
+2025-11-10T00:02:29.4515097Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:83:41[0m
+2025-11-10T00:02:29.4516415Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:29.4517368Z [0m[1m[38;5;12m83[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   let flags = parse_flag_string(flags_str);[0m
+2025-11-10T00:02:29.4518737Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                           [0m[0m[1m[33m^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_flags`[0m
+2025-11-10T00:02:29.4519411Z 
+2025-11-10T00:02:29.4520185Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `expected`[0m
+2025-11-10T00:02:29.4521007Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:86:41[0m
+2025-11-10T00:02:29.4521659Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:29.4522535Z [0m[1m[38;5;12m86[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   let expected = test_case[0m
+2025-11-10T00:02:29.4524894Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                           [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_expected`[0m
+2025-11-10T00:02:29.4525626Z 
+2025-11-10T00:02:30.4070449Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "p2sh_redeem_script") generated 1 warning (run `cargo fix --test "p2sh_redeem_script"` to apply 1 suggestion)
+2025-11-10T00:02:30.4530644Z [0m[1m[33mwarning[0m[0m[1m: unused import: `bllvm_consensus::mempool::replacement_checks`[0m
+2025-11-10T00:02:30.4531729Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/mempool_rbf_edge_cases.rs:14:5[0m
+2025-11-10T00:02:30.4532368Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:30.4533620Z [0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::mempool::replacement_checks;[0m
+2025-11-10T00:02:30.4534890Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:02:30.4535545Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:30.4536269Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:02:30.4536737Z 
+2025-11-10T00:02:30.4537345Z [0m[1m[33mwarning[0m[0m[1m: unused import: `bllvm_consensus::mempool::Mempool`[0m
+2025-11-10T00:02:30.4538257Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/mempool_rbf_edge_cases.rs:15:5[0m
+2025-11-10T00:02:30.4538876Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:30.4539747Z [0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::mempool::Mempool;[0m
+2025-11-10T00:02:30.4540612Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:02:30.4541035Z 
+2025-11-10T00:02:41.4266475Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "core_vector_extractor") generated 9 warnings
+2025-11-10T00:02:41.5760272Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "mempool_rbf_edge_cases") generated 2 warnings (run `cargo fix --test "mempool_rbf_edge_cases"` to apply 2 suggestions)
+2025-11-10T00:02:41.6484037Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `weight_no`[0m
+2025-11-10T00:02:41.6485851Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/block_weight_edge_cases.rs:98:9[0m
+2025-11-10T00:02:41.6486966Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:41.6488166Z [0m[1m[38;5;12m98[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let weight_no = weight_no_witness.unwrap();[0m
+2025-11-10T00:02:41.6489585Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_weight_no`[0m
+2025-11-10T00:02:41.6490532Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:41.6493312Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:02:41.6493817Z 
+2025-11-10T00:02:41.6494631Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `weight_with`[0m
+2025-11-10T00:02:41.6495945Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/block_weight_edge_cases.rs:99:9[0m
+2025-11-10T00:02:41.6496964Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:41.6498145Z [0m[1m[38;5;12m99[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let weight_with = weight_with_witness.unwrap();[0m
+2025-11-10T00:02:41.6556906Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_weight_with`[0m
+2025-11-10T00:02:41.6557606Z 
+2025-11-10T00:02:41.6558020Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `pre_segwit_height`[0m
+2025-11-10T00:02:41.6558894Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/block_weight_edge_cases.rs:162:9[0m
+2025-11-10T00:02:41.6559519Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:41.6560256Z [0m[1m[38;5;12m162[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let pre_segwit_height = 481823;[0m
+2025-11-10T00:02:41.6561529Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_pre_segwit_height`[0m
+2025-11-10T00:02:41.6562262Z 
+2025-11-10T00:02:41.6562708Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `post_segwit_height`[0m
+2025-11-10T00:02:41.6563555Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/block_weight_edge_cases.rs:163:9[0m
+2025-11-10T00:02:41.6564196Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:41.6565168Z [0m[1m[38;5;12m163[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let post_segwit_height = 481824;[0m
+2025-11-10T00:02:41.6566496Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_post_segwit_height`[0m
+2025-11-10T00:02:41.6567630Z 
+2025-11-10T00:02:49.2165364Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `segwit_activation_height`[0m
+2025-11-10T00:02:49.2166302Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/witness_commitment.rs:65:9[0m
+2025-11-10T00:02:49.2166932Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:49.2167673Z [0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let segwit_activation_height = 481824;[0m
+2025-11-10T00:02:49.2169036Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_segwit_activation_height`[0m
+2025-11-10T00:02:49.2169995Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:49.2170696Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:02:49.2171182Z 
+2025-11-10T00:02:49.2183488Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `witness_root`[0m
+2025-11-10T00:02:49.2184634Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/witness_commitment.rs:173:9[0m
+2025-11-10T00:02:49.2185625Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:49.2186759Z [0m[1m[38;5;12m173[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let witness_root = compute_witness_merkle_root(&block, &witnesses).unwrap();[0m
+2025-11-10T00:02:49.2188279Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_witness_root`[0m
+2025-11-10T00:02:49.2189091Z 
+2025-11-10T00:02:52.7817557Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "block_weight_edge_cases") generated 4 warnings
+2025-11-10T00:02:53.6066652Z [0m[1m[33mwarning[0m[0m[1m: unused import: `bllvm_consensus::types::ByteString`[0m
+2025-11-10T00:02:53.6069654Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/signature_validation_edge_cases.rs:14:5[0m
+2025-11-10T00:02:53.6071656Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:53.6073809Z [0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::types::ByteString;[0m
+2025-11-10T00:02:53.6076667Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:02:53.6078547Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:02:53.6080478Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:02:53.6082841Z 
+2025-11-10T00:03:00.1951746Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "witness_commitment") generated 2 warnings
+2025-11-10T00:03:01.8958547Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (lib test) generated 13 warnings (run `cargo fix --lib -p bllvm-consensus --tests` to apply 8 suggestions)
+2025-11-10T00:03:01.9407929Z [0m[1m[33mwarning[0m[0m[1m: unused import: `bllvm_consensus::types::ByteString`[0m
+2025-11-10T00:03:01.9408891Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/script_opcodes_exhaustive.rs:13:5[0m
+2025-11-10T00:03:01.9409536Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:01.9410349Z [0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::types::ByteString;[0m
+2025-11-10T00:03:01.9411186Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:03:01.9411944Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:01.9412651Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:03:01.9413115Z 
+2025-11-10T00:03:01.9759970Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:03:01.9761611Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/script_opcodes_exhaustive.rs:183:9[0m
+2025-11-10T00:03:01.9762309Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:01.9763561Z [0m[1m[38;5;12m183[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let mut script = vec![0x51; MAX_SCRIPT_SIZE];[0m
+2025-11-10T00:03:01.9764712Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^[0m
+2025-11-10T00:03:01.9765474Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:01.9766270Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:03:01.9766920Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:01.9767620Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
+2025-11-10T00:03:01.9768087Z 
+2025-11-10T00:03:01.9786960Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:03:01.9788136Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/script_opcodes_exhaustive.rs:191:9[0m
+2025-11-10T00:03:01.9789101Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:01.9790235Z [0m[1m[38;5;12m191[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let mut large_script = vec![0x51; MAX_SCRIPT_SIZE + 1];[0m
+2025-11-10T00:03:01.9791462Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^^^^^^^[0m
+2025-11-10T00:03:01.9792740Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:01.9793555Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:03:01.9793991Z 
+2025-11-10T00:03:03.7830533Z [0m[1m[33mwarning[0m[0m[1m: unused import: `bllvm_consensus::segwit::Witness`[0m
+2025-11-10T00:03:03.7831454Z [0m [0m[0m[1m[38;5;12m--> [0m[0mtests/witness_stack_size.rs:9:5[0m
+2025-11-10T00:03:03.7832058Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:03.7832916Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::segwit::Witness;[0m
+2025-11-10T00:03:03.7833753Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:03:03.7834356Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:03.7845406Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:03:03.7845913Z 
+2025-11-10T00:03:04.9233767Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "signature_validation_edge_cases") generated 1 warning (run `cargo fix --test "signature_validation_edge_cases"` to apply 1 suggestion)
+2025-11-10T00:03:04.9740113Z [0m[1m[33mwarning[0m[0m[1m: unused import: `bllvm_consensus::pow::check_proof_of_work`[0m
+2025-11-10T00:03:04.9741123Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/mainnet_blocks.rs:15:5[0m
+2025-11-10T00:03:04.9743438Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:04.9744916Z [0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::pow::check_proof_of_work;[0m
+2025-11-10T00:03:04.9745842Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:03:04.9746453Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:04.9747146Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:03:04.9747610Z 
+2025-11-10T00:03:04.9753668Z [0m[1m[33mwarning[0m[0m[1m: unused import: `std::path::PathBuf`[0m
+2025-11-10T00:03:04.9754634Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/mainnet_blocks.rs:322:9[0m
+2025-11-10T00:03:04.9755222Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:03:04.9756011Z [0m[1m[38;5;12m322[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    use std::path::PathBuf;[0m
+2025-11-10T00:03:04.9756816Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:03:04.9757190Z 
+2025-11-10T00:03:13.2224613Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "script_opcodes_exhaustive") generated 3 warnings (run `cargo fix --test "script_opcodes_exhaustive"` to apply 3 suggestions)
+2025-11-10T00:03:14.0635890Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "witness_stack_size") generated 1 warning (run `cargo fix --test "witness_stack_size"` to apply 1 suggestion)
+2025-11-10T00:03:16.4924034Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "mainnet_blocks") generated 2 warnings (run `cargo fix --test "mainnet_blocks"` to apply 2 suggestions)
+2025-11-10T00:03:16.4925916Z [1m[32m    Finished[0m `release` profile [optimized] target(s) in 3m 35s
+2025-11-10T00:03:16.5091188Z [1m[32m  Executable[0m unittests src/lib.rs (target/release/deps/bllvm_consensus-8e253cb2cbcd3eb9)
+2025-11-10T00:03:16.5092989Z [1m[32m  Executable[0m tests/api_tests.rs (target/release/deps/api_tests-5dd5d74d02fd7baf)
+2025-11-10T00:03:16.5094928Z [1m[32m  Executable[0m tests/block_weight_edge_cases.rs (target/release/deps/block_weight_edge_cases-714ccf5f058b45b5)
+2025-11-10T00:03:16.5097125Z [1m[32m  Executable[0m tests/coinbase_maturity.rs (target/release/deps/coinbase_maturity-9a76f29e6045541c)
+2025-11-10T00:03:16.5099307Z [1m[32m  Executable[0m tests/comprehensive_unit_tests.rs (target/release/deps/comprehensive_unit_tests-10fdb476978629a5)
+2025-11-10T00:03:16.5101417Z [1m[32m  Executable[0m tests/consensus_flags.rs (target/release/deps/consensus_flags-260218e9a6f85940)
+2025-11-10T00:03:16.5103027Z [1m[32m  Executable[0m tests/core_vector_extractor.rs (target/release/deps/core_vector_extractor-f79f36b1c035e06d)
+2025-11-10T00:03:16.5106433Z [1m[32m  Executable[0m tests/cross_bip_property_tests.rs (target/release/deps/cross_bip_property_tests-d7e699b71aa7c955)
+2025-11-10T00:03:16.5107720Z [1m[32m  Executable[0m tests/error_path_tests.rs (target/release/deps/error_path_tests-7eaf1789c19dfb82)
+2025-11-10T00:03:16.5108967Z [1m[32m  Executable[0m tests/historical_consensus.rs (target/release/deps/historical_consensus-fc9e3ee4055038b1)
+2025-11-10T00:03:16.5110187Z [1m[32m  Executable[0m tests/integration_opportunities.rs (target/release/deps/integration_opportunities-d1704f350eec7ab4)
+2025-11-10T00:03:16.5111057Z [1m[32m  Executable[0m tests/integration_tests.rs (target/release/deps/integration_tests-0ccb2d019d97c23c)
+2025-11-10T00:03:16.5111830Z [1m[32m  Executable[0m tests/mainnet_blocks.rs (target/release/deps/mainnet_blocks-4e8bbae6c6abebce)
+2025-11-10T00:03:16.5114208Z [1m[32m  Executable[0m tests/mempool_helper_tests.rs (target/release/deps/mempool_helper_tests-3098dc96c348a98b)
+2025-11-10T00:03:16.5115274Z [1m[32m  Executable[0m tests/mempool_rbf_edge_cases.rs (target/release/deps/mempool_rbf_edge_cases-687c687bd0678332)
+2025-11-10T00:03:16.5116054Z [1m[32m  Executable[0m tests/network_tests.rs (target/release/deps/network_tests-26d33fd51a784978)
+2025-11-10T00:03:16.5117173Z [1m[32m  Executable[0m tests/p2sh_redeem_script.rs (target/release/deps/p2sh_redeem_script-8f99e2296c4075b5)
+2025-11-10T00:03:16.5118011Z [1m[32m  Executable[0m tests/script_opcode_tests.rs (target/release/deps/script_opcode_tests-ba8dc076ef376acb)
+2025-11-10T00:03:16.5118891Z [1m[32m  Executable[0m tests/script_opcodes_exhaustive.rs (target/release/deps/script_opcodes_exhaustive-2e5bf52345c1dce3)
+2025-11-10T00:03:16.5119863Z [1m[32m  Executable[0m tests/signature_validation_edge_cases.rs (target/release/deps/signature_validation_edge_cases-7458599550515927)
+2025-11-10T00:03:16.5121184Z [1m[32m  Executable[0m tests/soft_fork_activation.rs (target/release/deps/soft_fork_activation-2ca2f39a29a7475f)
+2025-11-10T00:03:16.5122095Z [1m[32m  Executable[0m tests/taproot_script_path.rs (target/release/deps/taproot_script_path-9cf33ed2175b97d1)
+2025-11-10T00:03:16.5122832Z [1m[32m  Executable[0m tests/test_helpers.rs (target/release/deps/test_helpers-b2632c1a96649a9a)
+2025-11-10T00:03:16.5123598Z [1m[32m  Executable[0m tests/time_based_consensus.rs (target/release/deps/time_based_consensus-e65b6cae0ce3878d)
+2025-11-10T00:03:16.5124629Z [1m[32m  Executable[0m tests/witness_commitment.rs (target/release/deps/witness_commitment-733bc46837f4e180)
+2025-11-10T00:03:16.5125638Z [1m[32m  Executable[0m tests/witness_stack_size.rs (target/release/deps/witness_stack_size-487c68b2204c7097)
+2025-11-10T00:03:16.5210643Z ##[group]Run actions/upload-artifact@v4
+2025-11-10T00:03:16.5210946Z with:
+2025-11-10T00:03:16.5211144Z   name: consensus-proof-target
+2025-11-10T00:03:16.5211489Z   path: target/
+2025-11-10T00:03:16.5211684Z   retention-days: 1
+2025-11-10T00:03:16.5211889Z   if-no-files-found: warn
+2025-11-10T00:03:16.5212115Z   compression-level: 6
+2025-11-10T00:03:16.5212321Z   overwrite: false
+2025-11-10T00:03:16.5212520Z   include-hidden-files: false
+2025-11-10T00:03:16.5212745Z env:
+2025-11-10T00:03:16.5212986Z   CARGO_TERM_COLOR: always
+2025-11-10T00:03:16.5213250Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:03:16.5213496Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:03:16.5213696Z ##[endgroup]
+2025-11-10T00:03:17.0072813Z With the provided path, there will be 879 files uploaded
+2025-11-10T00:03:17.0079118Z Artifact name is valid!
+2025-11-10T00:03:17.0080519Z Root directory input is valid!
+2025-11-10T00:03:17.2077935Z Beginning upload of artifact content to blob storage
+2025-11-10T00:03:18.5247114Z Uploaded bytes 8388608
+2025-11-10T00:03:19.1938195Z Uploaded bytes 16777216
+2025-11-10T00:03:19.8274732Z Uploaded bytes 25165824
+2025-11-10T00:03:20.4254216Z Uploaded bytes 33554432
+2025-11-10T00:03:21.0081258Z Uploaded bytes 41943040
+2025-11-10T00:03:21.7316618Z Uploaded bytes 50331648
+2025-11-10T00:03:22.3172191Z Uploaded bytes 58720256
+2025-11-10T00:03:23.0257201Z Uploaded bytes 67108864
+2025-11-10T00:03:23.6905153Z Uploaded bytes 75497472
+2025-11-10T00:03:24.3784777Z Uploaded bytes 83886080
+2025-11-10T00:03:25.1577870Z Uploaded bytes 92274688
+2025-11-10T00:03:25.8496766Z Uploaded bytes 100663296
+2025-11-10T00:03:26.5437749Z Uploaded bytes 109051904
+2025-11-10T00:03:27.3005552Z Uploaded bytes 117440512
+2025-11-10T00:03:28.0207481Z Uploaded bytes 125829120
+2025-11-10T00:03:28.7475278Z Uploaded bytes 134217728
+2025-11-10T00:03:29.3269670Z Uploaded bytes 142606336
+2025-11-10T00:03:30.1268949Z Uploaded bytes 150994944
+2025-11-10T00:03:30.9507401Z Uploaded bytes 159383552
+2025-11-10T00:03:31.7312591Z Uploaded bytes 167772160
+2025-11-10T00:03:32.4245316Z Uploaded bytes 176160768
+2025-11-10T00:03:33.3070020Z Uploaded bytes 184549376
+2025-11-10T00:03:34.0320042Z Uploaded bytes 192937984
+2025-11-10T00:03:34.5208941Z Uploaded bytes 201326592
+2025-11-10T00:03:35.1228323Z Uploaded bytes 209715200
+2025-11-10T00:03:35.1678034Z Uploaded bytes 209745835
+2025-11-10T00:03:35.2025166Z Finished uploading artifact content to blob storage!
+2025-11-10T00:03:35.2028259Z SHA256 digest of uploaded artifact zip is 6eaa4ed45798d6e4258340ef1653c7466c74950639e279552abd00a95be645fd
+2025-11-10T00:03:35.2031377Z Finalizing artifact upload
+2025-11-10T00:03:35.3730522Z Artifact consensus-proof-target.zip successfully finalized. Artifact ID 4514070532
+2025-11-10T00:03:35.3732022Z Artifact consensus-proof-target has been successfully uploaded! Final size is 209745835 bytes. Artifact ID is 4514070532
+2025-11-10T00:03:35.3740473Z Artifact download URL: https://github.com/BTCDecoded/bllvm-consensus/actions/runs/19216303098/artifacts/4514070532
+2025-11-10T00:03:35.8685982Z Post job cleanup.
+2025-11-10T00:03:36.0468288Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus --files-from manifest.txt --use-compress-program zstdmt
+2025-11-10T00:03:38.8468410Z Sent 0 of 186913133 (0.0%), 0.0 MBs/sec
+2025-11-10T00:03:39.0159830Z Sent 186913133 of 186913133 (100.0%), 152.2 MBs/sec
+2025-11-10T00:03:39.1468702Z Cache saved with key: consensus-proof-Linux-target-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-10T00:03:39.6257127Z Post job cleanup.
+2025-11-10T00:03:39.8009344Z [warning]Path Validation Error: Path(s) specified in the action for caching do(es) not exist, hence no cache is being saved.
+2025-11-10T00:03:40.2678131Z Post job cleanup.
+2025-11-10T00:03:40.4281878Z Cache hit occurred on the primary key Linux-cargo-registry-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014, not saving cache.
+2025-11-10T00:03:40.4429589Z Post job cleanup.
+2025-11-10T00:03:40.5657835Z [command]/usr/bin/git version
+2025-11-10T00:03:40.5720094Z git version 2.43.0
+2025-11-10T00:03:40.5768495Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/fbb01cfd-54c7-4a7d-b4c5-a5fe6b7f6b09/.gitconfig'
+2025-11-10T00:03:40.5779819Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/fbb01cfd-54c7-4a7d-b4c5-a5fe6b7f6b09' before making global git config changes
+2025-11-10T00:03:40.5781210Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-10T00:03:40.5788177Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus
+2025-11-10T00:03:40.5837131Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-10T00:03:40.5875337Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-10T00:03:40.6196594Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-10T00:03:40.6226882Z http.https://github.com/.extraheader
+2025-11-10T00:03:40.6242564Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-11-10T00:03:40.6281267Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-10T00:03:40.6690839Z A job completed hook has been configured by the self-hosted runner administrator
+2025-11-10T00:03:40.6744086Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-completed.sh'
+2025-11-10T00:03:40.6770973Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-10T00:03:40.6771373Z ##[endgroup]
+2025-11-10T00:03:40.6849272Z Job completed: Mon Nov 10 12:03:40 AM UTC 2025
+2025-11-10T00:03:40.6883018Z Available disk space: 9.0G
+2025-11-10T00:03:40.6883512Z Cleaning up after job completion...
+2025-11-10T00:03:40.8062299Z Cleanup completed. Available disk space: 9.0G
+2025-11-10T00:03:40.8123381Z Cleaning up orphan processes

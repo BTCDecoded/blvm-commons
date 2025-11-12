@@ -1,0 +1,174 @@
+﻿2025-11-10T00:23:33.4717446Z ##[group]Run cargo doc --no-deps --document-private-items
+2025-11-10T00:23:33.4717976Z [36;1mcargo doc --no-deps --document-private-items[0m
+2025-11-10T00:23:33.4748762Z shell: /usr/bin/bash -e {0}
+2025-11-10T00:23:33.4749357Z env:
+2025-11-10T00:23:33.4749573Z   CARGO_TERM_COLOR: always
+2025-11-10T00:23:33.4749834Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:23:33.4750111Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:23:33.4750344Z ##[endgroup]
+2025-11-10T00:23:33.6206036Z [1m[32m Documenting[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus)
+2025-11-10T00:23:34.1957796Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `0`[0m
+2025-11-10T00:23:34.1967267Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/transaction.rs:77:36[0m
+2025-11-10T00:23:34.1968065Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1968938Z [0m[1m[38;5;12m77[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// 8. If tx is coinbase: 2 ≤ |ins[0].scriptSig| ≤ 100[0m
+2025-11-10T00:23:34.1969890Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                    [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `0` in scope[0m
+2025-11-10T00:23:34.1970420Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1971070Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.1972046Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::broken_intra_doc_links)]` on by default[0m
+2025-11-10T00:23:34.1972440Z 
+2025-11-10T00:23:34.1976413Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `0`[0m
+2025-11-10T00:23:34.1977434Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:23:12[0m
+2025-11-10T00:23:34.1978090Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1979059Z [0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - prev[0] is the first block of the adjustment period[0m
+2025-11-10T00:23:34.1980188Z [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `0` in scope[0m
+2025-11-10T00:23:34.1980865Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1981727Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.1982338Z 
+2025-11-10T00:23:34.1984708Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `2`[0m
+2025-11-10T00:23:34.1986272Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:382:26[0m
+2025-11-10T00:23:34.1986864Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1987828Z [0m[1m[38;5;12m382[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: re_expanded.0[2] = expanded.0[2] ∧ re_expanded.0[3] = expanded.0[3][0m
+2025-11-10T00:23:34.1988938Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                          [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `2` in scope[0m
+2025-11-10T00:23:34.1989631Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1990511Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.1992529Z 
+2025-11-10T00:23:34.1992840Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `2`[0m
+2025-11-10T00:23:34.1993268Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:382:42[0m
+2025-11-10T00:23:34.1993619Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1994245Z [0m[1m[38;5;12m382[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: re_expanded.0[2] = expanded.0[2] ∧ re_expanded.0[3] = expanded.0[3][0m
+2025-11-10T00:23:34.1995330Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                          [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `2` in scope[0m
+2025-11-10T00:23:34.1995740Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1996297Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.1997074Z 
+2025-11-10T00:23:34.1997291Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `3`[0m
+2025-11-10T00:23:34.1997862Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:382:61[0m
+2025-11-10T00:23:34.1998188Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.1998781Z [0m[1m[38;5;12m382[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: re_expanded.0[2] = expanded.0[2] ∧ re_expanded.0[3] = expanded.0[3][0m
+2025-11-10T00:23:34.1999443Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `3` in scope[0m
+2025-11-10T00:23:34.1999905Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2000392Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2000718Z 
+2025-11-10T00:23:34.2000902Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `3`[0m
+2025-11-10T00:23:34.2001294Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:382:77[0m
+2025-11-10T00:23:34.2001596Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2002125Z [0m[1m[38;5;12m382[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: re_expanded.0[2] = expanded.0[2] ∧ re_expanded.0[3] = expanded.0[3][0m
+2025-11-10T00:23:34.2002790Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                             [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `3` in scope[0m
+2025-11-10T00:23:34.2003187Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2003664Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2003986Z 
+2025-11-10T00:23:34.2004173Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `2`[0m
+2025-11-10T00:23:34.2004817Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:446:23[0m
+2025-11-10T00:23:34.2007012Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2007518Z [0m[1m[38;5;12m446[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: expanded.0[2] = target.0[2] ∧ expanded.0[3] = target.0[3][0m
+2025-11-10T00:23:34.2008129Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `2` in scope[0m
+2025-11-10T00:23:34.2008519Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2009013Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2009344Z 
+2025-11-10T00:23:34.2009528Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `2`[0m
+2025-11-10T00:23:34.2009921Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:446:37[0m
+2025-11-10T00:23:34.2010244Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2010739Z [0m[1m[38;5;12m446[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: expanded.0[2] = target.0[2] ∧ expanded.0[3] = target.0[3][0m
+2025-11-10T00:23:34.2011356Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                     [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `2` in scope[0m
+2025-11-10T00:23:34.2011745Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2012600Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2012933Z 
+2025-11-10T00:23:34.2013118Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `3`[0m
+2025-11-10T00:23:34.2013503Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:446:53[0m
+2025-11-10T00:23:34.2016359Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2016924Z [0m[1m[38;5;12m446[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: expanded.0[2] = target.0[2] ∧ expanded.0[3] = target.0[3][0m
+2025-11-10T00:23:34.2017572Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                     [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `3` in scope[0m
+2025-11-10T00:23:34.2018188Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2018821Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2019173Z 
+2025-11-10T00:23:34.2019361Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `3`[0m
+2025-11-10T00:23:34.2019807Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:446:67[0m
+2025-11-10T00:23:34.2020137Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2020665Z [0m[1m[38;5;12m446[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// - And: expanded.0[2] = target.0[2] ∧ expanded.0[3] = target.0[3][0m
+2025-11-10T00:23:34.2021312Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                   [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mno item named `3` in scope[0m
+2025-11-10T00:23:34.2021703Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2022185Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-10T00:23:34.2022559Z 
+2025-11-10T00:23:34.2117026Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `ByteString`[0m
+2025-11-10T00:23:34.2117850Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/script.rs:7:60[0m
+2025-11-10T00:23:34.2118290Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2119278Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! - Stack pooling (thread-local pool of pre-allocated Vec<ByteString>)[0m
+2025-11-10T00:23:34.2120413Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                                            [0m[0m[1m[33m^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2120940Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2121637Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::invalid_html_tags)]` on by default[0m
+2025-11-10T00:23:34.2122253Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:34.2122840Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2126424Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m| [0m[0m//! - Stack pooling (thread-local pool of pre-allocated [0m[0m[38;5;10m`[0m[0mVec<ByteString>[0m[0m[38;5;10m`[0m[0m)[0m
+2025-11-10T00:23:34.2127667Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                                         [0m[0m[38;5;10m+[0m[0m               [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2128028Z 
+2025-11-10T00:23:34.2128318Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `ByteString`[0m
+2025-11-10T00:23:34.2128861Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/script.rs:212:62[0m
+2025-11-10T00:23:34.2129288Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2130021Z [0m[1m[38;5;12m212[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// for optimal performance. This function works with any Vec<ByteString>.[0m
+2025-11-10T00:23:34.2131313Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                              [0m[0m[1m[33m^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2131976Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2132553Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:34.2133116Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2134285Z [0m[1m[38;5;12m212[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// for optimal performance. This function works with any [0m[0m[38;5;10m`[0m[0mVec<ByteString>[0m[0m[38;5;10m`[0m[0m.[0m
+2025-11-10T00:23:34.2135763Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[38;5;10m+[0m[0m               [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2136220Z 
+2025-11-10T00:23:34.2136555Z [0m[1m[33mwarning[0m[0m[1m: this URL is not a hyperlink[0m
+2025-11-10T00:23:34.2137120Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/bip113.rs:6:20[0m
+2025-11-10T00:23:34.2137461Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2138284Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! Specification: https://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki[0m
+2025-11-10T00:23:34.2139095Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2139468Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2139936Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: bare URLs are not automatically turned into clickable links[0m
+2025-11-10T00:23:34.2140581Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::bare_urls)]` on by default[0m
+2025-11-10T00:23:34.2141045Z [0m[1m[38;5;14mhelp[0m[0m: use an automatic link instead[0m
+2025-11-10T00:23:34.2141382Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2142068Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m| [0m[0m//! Specification: [0m[0m[38;5;10m<[0m[0mhttps://github.com/bitcoin/bips/blob/master/bip-0113.mediawiki[0m[0m[38;5;10m>[0m
+2025-11-10T00:23:34.2142851Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[38;5;10m+[0m[0m                                                              [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2145288Z 
+2025-11-10T00:23:34.2145530Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `Witness`[0m
+2025-11-10T00:23:34.2145939Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/mempool.rs:26:62[0m
+2025-11-10T00:23:34.2146271Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2146899Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// * `witnesses` - Optional witness data for each input (Vec<Witness> where Witness = Vec<ByteString>)[0m
+2025-11-10T00:23:34.2147577Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                              [0m[0m[1m[33m^^^^^^^^^[0m
+2025-11-10T00:23:34.2147926Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2148256Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:34.2148655Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2149520Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// * `witnesses` - Optional witness data for each input ([0m[0m[38;5;10m`[0m[0mVec<Witness>[0m[0m[38;5;10m`[0m[0m where Witness = Vec<ByteString>)[0m
+2025-11-10T00:23:34.2150310Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[38;5;10m+[0m[0m            [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2150576Z 
+2025-11-10T00:23:34.2150781Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `ByteString`[0m
+2025-11-10T00:23:34.2151195Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/mempool.rs:26:91[0m
+2025-11-10T00:23:34.2151517Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2152132Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// * `witnesses` - Optional witness data for each input (Vec<Witness> where Witness = Vec<ByteString>)[0m
+2025-11-10T00:23:34.2152829Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                           [0m[0m[1m[33m^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2153186Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2153517Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:34.2153834Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2154851Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// * `witnesses` - Optional witness data for each input (Vec<Witness> where Witness = [0m[0m[38;5;10m`[0m[0mVec<ByteString>[0m[0m[38;5;10m`[0m[0m)[0m
+2025-11-10T00:23:34.2155712Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                        [0m[0m[38;5;10m+[0m[0m               [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2155988Z 
+2025-11-10T00:23:34.2156341Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `witness-program`[0m
+2025-11-10T00:23:34.2157000Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/witness.rs:104:26[0m
+2025-11-10T00:23:34.2157775Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2158355Z [0m[1m[38;5;12m104[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// from SegWit v0 (OP_0 <witness-program>) or Taproot v1 (OP_1 <witness-program>)[0m
+2025-11-10T00:23:34.2158963Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                          [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2159326Z 
+2025-11-10T00:23:34.2159554Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `witness-program`[0m
+2025-11-10T00:23:34.2160020Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/witness.rs:104:65[0m
+2025-11-10T00:23:34.2160348Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2160910Z [0m[1m[38;5;12m104[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// from SegWit v0 (OP_0 <witness-program>) or Taproot v1 (OP_1 <witness-program>)[0m
+2025-11-10T00:23:34.2161542Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                 [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:23:34.2161797Z 
+2025-11-10T00:23:34.2162001Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `Witness`[0m
+2025-11-10T00:23:34.2162416Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/reorganization.rs:48:80[0m
+2025-11-10T00:23:34.2162754Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2163359Z [0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m/// * `new_chain_witnesses` - Witness data for each block in new_chain (one Vec<Witness> per block)[0m
+2025-11-10T00:23:34.2164036Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                [0m[0m[1m[33m^^^^^^^^^[0m
+2025-11-10T00:23:34.2164552Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2164898Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-10T00:23:34.2165229Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:23:34.2165954Z [0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m| [0m[0m/// * `new_chain_witnesses` - Witness data for each block in new_chain (one [0m[0m[38;5;10m`[0m[0mVec<Witness>[0m[0m[38;5;10m`[0m[0m per block)[0m
+2025-11-10T00:23:34.2166756Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                             [0m[0m[38;5;10m+[0m[0m            [0m[0m[38;5;10m+[0m
+2025-11-10T00:23:34.2167043Z 
+2025-11-10T00:23:34.3787068Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (lib doc) generated 18 warnings (run `cargo fix --lib -p bllvm-consensus` to apply 1 suggestion)
+2025-11-10T00:23:34.3788510Z [1m[32m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 0.84s
+2025-11-10T00:23:34.3833377Z [1m[32m   Generated[0m /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus/target/doc/bllvm_consensus/index.html

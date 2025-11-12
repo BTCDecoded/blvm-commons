@@ -1,0 +1,108 @@
+﻿2025-11-09T23:20:09.5893646Z ##[group]Run actions/checkout@v4
+2025-11-09T23:20:09.5893932Z with:
+2025-11-09T23:20:09.5894229Z   repository: BTCDecoded/consensus-proof
+2025-11-09T23:20:09.5894678Z   path: _temp-consensus-proof
+2025-11-09T23:20:09.5894920Z   persist-credentials: false
+2025-11-09T23:20:09.5895288Z   token: ***
+2025-11-09T23:20:09.5895472Z   ssh-strict: true
+2025-11-09T23:20:09.5895701Z   ssh-user: git
+2025-11-09T23:20:09.5895898Z   clean: true
+2025-11-09T23:20:09.5896092Z   sparse-checkout-cone-mode: true
+2025-11-09T23:20:09.5896334Z   fetch-depth: 1
+2025-11-09T23:20:09.5896512Z   fetch-tags: false
+2025-11-09T23:20:09.5896711Z   show-progress: true
+2025-11-09T23:20:09.5896902Z   lfs: false
+2025-11-09T23:20:09.5897077Z   submodules: false
+2025-11-09T23:20:09.5897268Z   set-safe-directory: true
+2025-11-09T23:20:09.5897477Z env:
+2025-11-09T23:20:09.5897644Z   CARGO_TERM_COLOR: always
+2025-11-09T23:20:09.5897847Z ##[endgroup]
+2025-11-09T23:20:09.7029601Z Syncing repository: BTCDecoded/consensus-proof
+2025-11-09T23:20:09.7038910Z ##[group]Getting Git version info
+2025-11-09T23:20:09.7039887Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-consensus-proof'
+2025-11-09T23:20:09.7083482Z [command]/usr/bin/git version
+2025-11-09T23:20:09.7131017Z git version 2.43.0
+2025-11-09T23:20:09.7159628Z ##[endgroup]
+2025-11-09T23:20:09.7170565Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/dcfe9ee2-5876-43f7-8824-14a3648bf54f/.gitconfig'
+2025-11-09T23:20:09.7183364Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/dcfe9ee2-5876-43f7-8824-14a3648bf54f' before making global git config changes
+2025-11-09T23:20:09.7184760Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T23:20:09.7197980Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-consensus-proof
+2025-11-09T23:20:09.7237267Z ##[group]Initializing the repository
+2025-11-09T23:20:09.7241591Z [command]/usr/bin/git init /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-consensus-proof
+2025-11-09T23:20:09.7290408Z Initialized empty Git repository in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-consensus-proof/.git/
+2025-11-09T23:20:09.7302875Z [command]/usr/bin/git remote add origin https://github.com/BTCDecoded/consensus-proof
+2025-11-09T23:20:09.7341113Z ##[endgroup]
+2025-11-09T23:20:09.7341847Z ##[group]Disabling automatic garbage collection
+2025-11-09T23:20:09.7345171Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T23:20:09.7383022Z ##[endgroup]
+2025-11-09T23:20:09.7383385Z ##[group]Setting up auth
+2025-11-09T23:20:09.7390237Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:20:09.7429449Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:20:09.7712710Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:20:09.7750805Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:20:09.8032887Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T23:20:09.8079568Z ##[endgroup]
+2025-11-09T23:20:09.8080320Z ##[group]Determining the default branch
+2025-11-09T23:20:09.8083539Z Retrieving the default branch name
+2025-11-09T23:20:10.2360671Z Default branch 'main'
+2025-11-09T23:20:10.2362078Z ##[endgroup]
+2025-11-09T23:20:10.2362573Z ##[group]Fetching the repository
+2025-11-09T23:20:10.2371909Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+2025-11-09T23:20:14.8875274Z From https://github.com/BTCDecoded/consensus-proof
+2025-11-09T23:20:14.8875840Z  * [new branch]      main       -> origin/main
+2025-11-09T23:20:14.8903519Z ##[endgroup]
+2025-11-09T23:20:14.8905725Z ##[group]Determining the checkout info
+2025-11-09T23:20:14.8908145Z ##[endgroup]
+2025-11-09T23:20:14.8913282Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T23:20:14.8960203Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T23:20:14.9030278Z ##[group]Checking out the ref
+2025-11-09T23:20:14.9040546Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T23:20:15.9670922Z Updating files:  67% (793/1179)
+2025-11-09T23:20:15.9926619Z Updating files:  68% (802/1179)
+2025-11-09T23:20:16.1183695Z Updating files:  69% (814/1179)
+2025-11-09T23:20:16.5084046Z Updating files:  70% (826/1179)
+2025-11-09T23:20:16.6213966Z Updating files:  71% (838/1179)
+2025-11-09T23:20:16.6785685Z Updating files:  72% (849/1179)
+2025-11-09T23:20:16.9268051Z Updating files:  73% (861/1179)
+2025-11-09T23:20:16.9488251Z Updating files:  73% (871/1179)
+2025-11-09T23:20:17.2622247Z Updating files:  74% (873/1179)
+2025-11-09T23:20:17.2629729Z Updating files:  75% (885/1179)
+2025-11-09T23:20:17.2646640Z Updating files:  76% (897/1179)
+2025-11-09T23:20:17.2670724Z Updating files:  77% (908/1179)
+2025-11-09T23:20:17.2686659Z Updating files:  78% (920/1179)
+2025-11-09T23:20:17.2698484Z Updating files:  79% (932/1179)
+2025-11-09T23:20:17.2706293Z Updating files:  80% (944/1179)
+2025-11-09T23:20:17.2711807Z Updating files:  81% (955/1179)
+2025-11-09T23:20:17.2718155Z Updating files:  82% (967/1179)
+2025-11-09T23:20:17.2723395Z Updating files:  83% (979/1179)
+2025-11-09T23:20:17.2729034Z Updating files:  84% (991/1179)
+2025-11-09T23:20:17.3073176Z Updating files:  85% (1003/1179)
+2025-11-09T23:20:17.3381955Z Updating files:  86% (1014/1179)
+2025-11-09T23:20:17.3633419Z Updating files:  87% (1026/1179)
+2025-11-09T23:20:17.4091128Z Updating files:  88% (1038/1179)
+2025-11-09T23:20:17.4276568Z Updating files:  89% (1050/1179)
+2025-11-09T23:20:17.4287738Z Updating files:  90% (1062/1179)
+2025-11-09T23:20:17.4298122Z Updating files:  91% (1073/1179)
+2025-11-09T23:20:17.4308794Z Updating files:  92% (1085/1179)
+2025-11-09T23:20:17.4319682Z Updating files:  93% (1097/1179)
+2025-11-09T23:20:17.4331310Z Updating files:  94% (1109/1179)
+2025-11-09T23:20:17.4341717Z Updating files:  95% (1121/1179)
+2025-11-09T23:20:17.4356493Z Updating files:  96% (1132/1179)
+2025-11-09T23:20:17.4364733Z Updating files:  97% (1144/1179)
+2025-11-09T23:20:17.4371951Z Updating files:  98% (1156/1179)
+2025-11-09T23:20:17.4381276Z Updating files:  99% (1168/1179)
+2025-11-09T23:20:17.4381767Z Updating files: 100% (1179/1179)
+2025-11-09T23:20:17.4382086Z Updating files: 100% (1179/1179), done.
+2025-11-09T23:20:17.4409605Z Reset branch 'main'
+2025-11-09T23:20:17.4411810Z branch 'main' set up to track 'origin/main'.
+2025-11-09T23:20:17.4571404Z ##[endgroup]
+2025-11-09T23:20:17.4624751Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T23:20:17.4654653Z c28a36e7b60be4e32a38f72b272322cd66a3f71d
+2025-11-09T23:20:17.4668438Z ##[group]Removing auth
+2025-11-09T23:20:17.4672037Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:20:17.4707010Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:20:17.5002174Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:20:17.5032976Z http.https://github.com/.extraheader
+2025-11-09T23:20:17.5045742Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-11-09T23:20:17.5091637Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:20:17.5377008Z ##[endgroup]

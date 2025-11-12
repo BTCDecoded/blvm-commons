@@ -1,0 +1,221 @@
+﻿2025-11-09T23:51:19.2053285Z ##[group]Run actions/checkout@v4
+2025-11-09T23:51:19.2054019Z with:
+2025-11-09T23:51:19.2054842Z   repository: BTCDecoded/bllvm-protocol
+2025-11-09T23:51:19.2055809Z   token: ***
+2025-11-09T23:51:19.2056284Z   ssh-strict: true
+2025-11-09T23:51:19.2056803Z   ssh-user: git
+2025-11-09T23:51:19.2057299Z   persist-credentials: true
+2025-11-09T23:51:19.2057857Z   clean: true
+2025-11-09T23:51:19.2058340Z   sparse-checkout-cone-mode: true
+2025-11-09T23:51:19.2058908Z   fetch-depth: 1
+2025-11-09T23:51:19.2059384Z   fetch-tags: false
+2025-11-09T23:51:19.2060039Z   show-progress: true
+2025-11-09T23:51:19.2060574Z   lfs: false
+2025-11-09T23:51:19.2061030Z   submodules: false
+2025-11-09T23:51:19.2063308Z   set-safe-directory: true
+2025-11-09T23:51:19.2063868Z env:
+2025-11-09T23:51:19.2064522Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:19.2065144Z ##[endgroup]
+2025-11-09T23:51:19.3441598Z Syncing repository: BTCDecoded/bllvm-protocol
+2025-11-09T23:51:19.3447290Z ##[group]Getting Git version info
+2025-11-09T23:51:19.3449982Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol'
+2025-11-09T23:51:19.3452388Z [command]/usr/bin/git version
+2025-11-09T23:51:19.3456796Z git version 2.43.0
+2025-11-09T23:51:19.3491429Z ##[endgroup]
+2025-11-09T23:51:19.3508699Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/c837be3c-01e4-43ba-8c5b-73831c13d34e/.gitconfig'
+2025-11-09T23:51:19.3536235Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/c837be3c-01e4-43ba-8c5b-73831c13d34e' before making global git config changes
+2025-11-09T23:51:19.3540142Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T23:51:19.3543290Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol
+2025-11-09T23:51:19.3598248Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-09T23:51:19.3627998Z https://github.com/BTCDecoded/bllvm-protocol
+2025-11-09T23:51:19.3651479Z ##[group]Removing previously created refs, to avoid conflicts
+2025-11-09T23:51:19.3658693Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2025-11-09T23:51:19.3688944Z refs/heads/main
+2025-11-09T23:51:19.3700968Z [command]/usr/bin/git checkout --detach
+2025-11-09T23:51:19.6100866Z HEAD is now at f5f0b04 fix: Update workflow to use correct repository name (bllvm-consensus)
+2025-11-09T23:51:19.6104125Z M	Cargo.lock
+2025-11-09T23:51:19.6108931Z M	target/.rustc_info.json
+2025-11-09T23:51:19.6168339Z [command]/usr/bin/git branch --delete --force main
+2025-11-09T23:51:19.6202079Z Deleted branch main (was f5f0b04).
+2025-11-09T23:51:19.6254211Z ##[endgroup]
+2025-11-09T23:51:19.6255807Z [command]/usr/bin/git submodule status
+2025-11-09T23:51:19.6535670Z ##[group]Cleaning the repository
+2025-11-09T23:51:19.6537904Z [command]/usr/bin/git clean -ffdx
+2025-11-09T23:51:19.6788604Z Removing target/.rustdoc_fingerprint.json
+2025-11-09T23:51:19.6790645Z Removing target/debug/.fingerprint/anyhow-059da4f0d7c55a8b/
+2025-11-09T23:51:19.6793024Z Removing target/debug/.fingerprint/anyhow-9d430c1379eea21c/
+2025-11-09T23:51:19.6795531Z Removing target/debug/.fingerprint/anyhow-e6cbf2b1ef9f5a17/
+2025-11-09T23:51:19.6797813Z Removing target/debug/.fingerprint/bech32-12784f55ab70c0f6/
+2025-11-09T23:51:19.6800149Z Removing target/debug/.fingerprint/bincode-6e75c10fe231fb5b/
+2025-11-09T23:51:19.6802670Z Removing target/debug/.fingerprint/bitcoin_hashes-eaa237cf5b3503ad/
+2025-11-09T23:51:19.6805790Z Removing target/debug/.fingerprint/bllvm-consensus-86b3cfe60ce31dfb/
+2025-11-09T23:51:19.6808752Z Removing target/debug/.fingerprint/bllvm-protocol-31ea8a5e10c8e481/
+2025-11-09T23:51:19.6811838Z Removing target/debug/.fingerprint/block-buffer-ed0c7c63643d9070/
+2025-11-09T23:51:19.6814789Z Removing target/debug/.fingerprint/cc-c3bab78ff053740a/
+2025-11-09T23:51:19.6817624Z Removing target/debug/.fingerprint/cfg-if-7603db952f85cc63/
+2025-11-09T23:51:19.6820524Z Removing target/debug/.fingerprint/cpufeatures-0f8ee1944988dae8/
+2025-11-09T23:51:19.6824025Z Removing target/debug/.fingerprint/crypto-common-3c5965312269fcf5/
+2025-11-09T23:51:19.6827769Z Removing target/debug/.fingerprint/digest-1f622b016543a542/
+2025-11-09T23:51:19.6830931Z Removing target/debug/.fingerprint/find-msvc-tools-7471ae18ecbc92d1/
+2025-11-09T23:51:19.6836258Z Removing target/debug/.fingerprint/generic-array-02da0d194d6ce3b5/
+2025-11-09T23:51:19.6839638Z Removing target/debug/.fingerprint/generic-array-36ef946c33138e1f/
+2025-11-09T23:51:19.6843010Z Removing target/debug/.fingerprint/generic-array-affd7e45afa3d6ef/
+2025-11-09T23:51:19.6846768Z Removing target/debug/.fingerprint/hex-39f5f8bc1bd9aca4/
+2025-11-09T23:51:19.6850153Z Removing target/debug/.fingerprint/itoa-08c0ac77a7f9c5e1/
+2025-11-09T23:51:19.6853782Z Removing target/debug/.fingerprint/proc-macro2-013e91bf61085fba/
+2025-11-09T23:51:19.6857359Z Removing target/debug/.fingerprint/proc-macro2-0c90074a995b0125/
+2025-11-09T23:51:19.6860643Z Removing target/debug/.fingerprint/proc-macro2-a923716fdc1423c7/
+2025-11-09T23:51:19.6863933Z Removing target/debug/.fingerprint/quote-3360d067b27f704c/
+2025-11-09T23:51:19.6867013Z Removing target/debug/.fingerprint/quote-5d4225f4d4915179/
+2025-11-09T23:51:19.6869908Z Removing target/debug/.fingerprint/quote-c2510e7aa42c175d/
+2025-11-09T23:51:19.6872902Z Removing target/debug/.fingerprint/ripemd-b2a4de375d61d509/
+2025-11-09T23:51:19.6876137Z Removing target/debug/.fingerprint/ryu-1d74fbb8396b52fe/
+2025-11-09T23:51:19.6879106Z Removing target/debug/.fingerprint/secp256k1-21b08ecd261dc97d/
+2025-11-09T23:51:19.6882385Z Removing target/debug/.fingerprint/secp256k1-sys-53bd58ebd1122fae/
+2025-11-09T23:51:19.6885882Z Removing target/debug/.fingerprint/secp256k1-sys-6fd4b73b21a9673e/
+2025-11-09T23:51:19.6889182Z Removing target/debug/.fingerprint/secp256k1-sys-a5a8c53e862658d4/
+2025-11-09T23:51:19.6892307Z Removing target/debug/.fingerprint/serde-1f6df97ca8e777f3/
+2025-11-09T23:51:19.6895343Z Removing target/debug/.fingerprint/serde-79bd1dc91f22d7e2/
+2025-11-09T23:51:19.6898299Z Removing target/debug/.fingerprint/serde-b0d11ba0e5f5f5f8/
+2025-11-09T23:51:19.6901347Z Removing target/debug/.fingerprint/serde_derive-485606c1dd0d25e8/
+2025-11-09T23:51:19.6906178Z Removing target/debug/.fingerprint/serde_json-0dc48a5bcf535a0b/
+2025-11-09T23:51:19.6909807Z Removing target/debug/.fingerprint/serde_json-330ca27f9e7094a2/
+2025-11-09T23:51:19.6913173Z Removing target/debug/.fingerprint/serde_json-f87e09600e685d33/
+2025-11-09T23:51:19.6918150Z Removing target/debug/.fingerprint/sha2-4e9acfe85698c02f/
+2025-11-09T23:51:19.6921017Z Removing target/debug/.fingerprint/sha2-asm-099dd8bc5d669f97/
+2025-11-09T23:51:19.6923983Z Removing target/debug/.fingerprint/sha2-asm-24ff003bca7bc94c/
+2025-11-09T23:51:19.6927116Z Removing target/debug/.fingerprint/sha2-asm-3b1083d90ef43202/
+2025-11-09T23:51:19.6930069Z Removing target/debug/.fingerprint/shlex-83c7e0da01d13271/
+2025-11-09T23:51:19.6932994Z Removing target/debug/.fingerprint/syn-ac22a29aa0958776/
+2025-11-09T23:51:19.6937786Z Removing target/debug/.fingerprint/thiserror-0ab41f997ece6c55/
+2025-11-09T23:51:19.6940894Z Removing target/debug/.fingerprint/thiserror-3e3835fcd789459f/
+2025-11-09T23:51:19.6943945Z Removing target/debug/.fingerprint/thiserror-5c7e835cbcf3ecb5/
+2025-11-09T23:51:19.6949035Z Removing target/debug/.fingerprint/thiserror-impl-5dcc7ed75452c5d0/
+2025-11-09T23:51:19.6952519Z Removing target/debug/.fingerprint/typenum-06d9d8c431f086b8/
+2025-11-09T23:51:19.6955673Z Removing target/debug/.fingerprint/typenum-6dbc395390c95a39/
+2025-11-09T23:51:19.6958664Z Removing target/debug/.fingerprint/typenum-8a7224baaad087a3/
+2025-11-09T23:51:19.6961884Z Removing target/debug/.fingerprint/unicode-ident-796da7d7beff3c43/
+2025-11-09T23:51:19.6965311Z Removing target/debug/.fingerprint/version_check-a216429c4cbdde93/
+2025-11-09T23:51:19.6968110Z Removing target/debug/build/anyhow-9d430c1379eea21c/
+2025-11-09T23:51:19.6970618Z Removing target/debug/build/anyhow-e6cbf2b1ef9f5a17/
+2025-11-09T23:51:19.6973327Z Removing target/debug/build/generic-array-02da0d194d6ce3b5/
+2025-11-09T23:51:19.6976663Z Removing target/debug/build/generic-array-affd7e45afa3d6ef/
+2025-11-09T23:51:19.6979540Z Removing target/debug/build/proc-macro2-0c90074a995b0125/
+2025-11-09T23:51:19.6982330Z Removing target/debug/build/proc-macro2-a923716fdc1423c7/
+2025-11-09T23:51:19.6985981Z Removing target/debug/build/quote-3360d067b27f704c/
+2025-11-09T23:51:19.6988497Z Removing target/debug/build/quote-c2510e7aa42c175d/
+2025-11-09T23:51:19.6991210Z Removing target/debug/build/secp256k1-sys-6fd4b73b21a9673e/
+2025-11-09T23:51:19.6996142Z Removing target/debug/build/secp256k1-sys-a5a8c53e862658d4/
+2025-11-09T23:51:19.6998996Z Removing target/debug/build/serde-1f6df97ca8e777f3/
+2025-11-09T23:51:19.7001705Z Removing target/debug/build/serde-79bd1dc91f22d7e2/
+2025-11-09T23:51:19.7005982Z Removing target/debug/build/serde_json-0dc48a5bcf535a0b/
+2025-11-09T23:51:19.7008881Z Removing target/debug/build/serde_json-f87e09600e685d33/
+2025-11-09T23:51:19.7011705Z Removing target/debug/build/sha2-asm-099dd8bc5d669f97/
+2025-11-09T23:51:19.7014675Z Removing target/debug/build/sha2-asm-24ff003bca7bc94c/
+2025-11-09T23:51:19.7019211Z Removing target/debug/build/thiserror-0ab41f997ece6c55/
+2025-11-09T23:51:19.7022028Z Removing target/debug/build/thiserror-5c7e835cbcf3ecb5/
+2025-11-09T23:51:19.7024961Z Removing target/debug/build/typenum-06d9d8c431f086b8/
+2025-11-09T23:51:19.7027673Z Removing target/debug/build/typenum-6dbc395390c95a39/
+2025-11-09T23:51:19.7031607Z Removing target/debug/deps/anyhow-059da4f0d7c55a8b.d
+2025-11-09T23:51:19.7034221Z Removing target/debug/deps/bech32-12784f55ab70c0f6.d
+2025-11-09T23:51:19.7037123Z Removing target/debug/deps/bincode-6e75c10fe231fb5b.d
+2025-11-09T23:51:19.7040022Z Removing target/debug/deps/bitcoin_hashes-eaa237cf5b3503ad.d
+2025-11-09T23:51:19.7043161Z Removing target/debug/deps/bllvm_consensus-86b3cfe60ce31dfb.d
+2025-11-09T23:51:19.7047381Z Removing target/debug/deps/block_buffer-ed0c7c63643d9070.d
+2025-11-09T23:51:19.7050087Z Removing target/debug/deps/cc-c3bab78ff053740a.d
+2025-11-09T23:51:19.7052647Z Removing target/debug/deps/cfg_if-7603db952f85cc63.d
+2025-11-09T23:51:19.7057052Z Removing target/debug/deps/cpufeatures-0f8ee1944988dae8.d
+2025-11-09T23:51:19.7059997Z Removing target/debug/deps/crypto_common-3c5965312269fcf5.d
+2025-11-09T23:51:19.7062724Z Removing target/debug/deps/digest-1f622b016543a542.d
+2025-11-09T23:51:19.7065964Z Removing target/debug/deps/find_msvc_tools-7471ae18ecbc92d1.d
+2025-11-09T23:51:19.7069234Z Removing target/debug/deps/generic_array-36ef946c33138e1f.d
+2025-11-09T23:51:19.7071967Z Removing target/debug/deps/hex-39f5f8bc1bd9aca4.d
+2025-11-09T23:51:19.7075770Z Removing target/debug/deps/itoa-08c0ac77a7f9c5e1.d
+2025-11-09T23:51:19.7078489Z Removing target/debug/deps/libanyhow-059da4f0d7c55a8b.rmeta
+2025-11-09T23:51:19.7081524Z Removing target/debug/deps/libbech32-12784f55ab70c0f6.rmeta
+2025-11-09T23:51:19.7086419Z Removing target/debug/deps/libbincode-6e75c10fe231fb5b.rmeta
+2025-11-09T23:51:19.7089618Z Removing target/debug/deps/libbitcoin_hashes-eaa237cf5b3503ad.rmeta
+2025-11-09T23:51:19.7093043Z Removing target/debug/deps/libbllvm_consensus-86b3cfe60ce31dfb.rmeta
+2025-11-09T23:51:19.7098158Z Removing target/debug/deps/libblock_buffer-ed0c7c63643d9070.rmeta
+2025-11-09T23:51:19.7101065Z Removing target/debug/deps/libcc-c3bab78ff053740a.rlib
+2025-11-09T23:51:19.7103714Z Removing target/debug/deps/libcc-c3bab78ff053740a.rmeta
+2025-11-09T23:51:19.7106741Z Removing target/debug/deps/libcfg_if-7603db952f85cc63.rmeta
+2025-11-09T23:51:19.7109765Z Removing target/debug/deps/libcpufeatures-0f8ee1944988dae8.rmeta
+2025-11-09T23:51:19.7113000Z Removing target/debug/deps/libcrypto_common-3c5965312269fcf5.rmeta
+2025-11-09T23:51:19.7116601Z Removing target/debug/deps/libdigest-1f622b016543a542.rmeta
+2025-11-09T23:51:19.7119674Z Removing target/debug/deps/libfind_msvc_tools-7471ae18ecbc92d1.rlib
+2025-11-09T23:51:19.7123007Z Removing target/debug/deps/libfind_msvc_tools-7471ae18ecbc92d1.rmeta
+2025-11-09T23:51:19.7127942Z Removing target/debug/deps/libgeneric_array-36ef946c33138e1f.rmeta
+2025-11-09T23:51:19.7131206Z Removing target/debug/deps/libhex-39f5f8bc1bd9aca4.rmeta
+2025-11-09T23:51:19.7133966Z Removing target/debug/deps/libitoa-08c0ac77a7f9c5e1.rmeta
+2025-11-09T23:51:19.7137191Z Removing target/debug/deps/libproc_macro2-013e91bf61085fba.rlib
+2025-11-09T23:51:19.7140753Z Removing target/debug/deps/libproc_macro2-013e91bf61085fba.rmeta
+2025-11-09T23:51:19.7143726Z Removing target/debug/deps/libquote-5d4225f4d4915179.rlib
+2025-11-09T23:51:19.7146632Z Removing target/debug/deps/libquote-5d4225f4d4915179.rmeta
+2025-11-09T23:51:19.7149470Z Removing target/debug/deps/libripemd-b2a4de375d61d509.rmeta
+2025-11-09T23:51:19.7152290Z Removing target/debug/deps/libryu-1d74fbb8396b52fe.rmeta
+2025-11-09T23:51:19.7155330Z Removing target/debug/deps/libsecp256k1-21b08ecd261dc97d.rmeta
+2025-11-09T23:51:19.7158508Z Removing target/debug/deps/libsecp256k1_sys-53bd58ebd1122fae.rmeta
+2025-11-09T23:51:19.7161393Z Removing target/debug/deps/libserde-b0d11ba0e5f5f5f8.rmeta
+2025-11-09T23:51:19.7163989Z Removing target/debug/deps/libserde_derive-485606c1dd0d25e8.so
+2025-11-09T23:51:19.7166213Z Removing target/debug/deps/libserde_json-330ca27f9e7094a2.rmeta
+2025-11-09T23:51:19.7168889Z Removing target/debug/deps/libsha2-4e9acfe85698c02f.rmeta
+2025-11-09T23:51:19.7170656Z Removing target/debug/deps/libsha2_asm-3b1083d90ef43202.rmeta
+2025-11-09T23:51:19.7172649Z Removing target/debug/deps/libshlex-83c7e0da01d13271.rlib
+2025-11-09T23:51:19.7175249Z Removing target/debug/deps/libshlex-83c7e0da01d13271.rmeta
+2025-11-09T23:51:19.7176936Z Removing target/debug/deps/libsyn-ac22a29aa0958776.rlib
+2025-11-09T23:51:19.7179269Z Removing target/debug/deps/libsyn-ac22a29aa0958776.rmeta
+2025-11-09T23:51:19.7181448Z Removing target/debug/deps/libthiserror-3e3835fcd789459f.rmeta
+2025-11-09T23:51:19.7184493Z Removing target/debug/deps/libthiserror_impl-5dcc7ed75452c5d0.so
+2025-11-09T23:51:19.7188993Z Removing target/debug/deps/libtypenum-8a7224baaad087a3.rmeta
+2025-11-09T23:51:19.7192565Z Removing target/debug/deps/libunicode_ident-796da7d7beff3c43.rlib
+2025-11-09T23:51:19.7197874Z Removing target/debug/deps/libunicode_ident-796da7d7beff3c43.rmeta
+2025-11-09T23:51:19.7201003Z Removing target/debug/deps/libversion_check-a216429c4cbdde93.rlib
+2025-11-09T23:51:19.7205899Z Removing target/debug/deps/libversion_check-a216429c4cbdde93.rmeta
+2025-11-09T23:51:19.7209186Z Removing target/debug/deps/proc_macro2-013e91bf61085fba.d
+2025-11-09T23:51:19.7211740Z Removing target/debug/deps/quote-5d4225f4d4915179.d
+2025-11-09T23:51:19.7216296Z Removing target/debug/deps/ripemd-b2a4de375d61d509.d
+2025-11-09T23:51:19.7218810Z Removing target/debug/deps/ryu-1d74fbb8396b52fe.d
+2025-11-09T23:51:19.7221337Z Removing target/debug/deps/secp256k1-21b08ecd261dc97d.d
+2025-11-09T23:51:19.7223963Z Removing target/debug/deps/secp256k1_sys-53bd58ebd1122fae.d
+2025-11-09T23:51:19.7226683Z Removing target/debug/deps/serde-b0d11ba0e5f5f5f8.d
+2025-11-09T23:51:19.7229195Z Removing target/debug/deps/serde_derive-485606c1dd0d25e8.d
+2025-11-09T23:51:19.7232646Z Removing target/debug/deps/serde_json-330ca27f9e7094a2.d
+2025-11-09T23:51:19.7236792Z Removing target/debug/deps/sha2-4e9acfe85698c02f.d
+2025-11-09T23:51:19.7239215Z Removing target/debug/deps/sha2_asm-3b1083d90ef43202.d
+2025-11-09T23:51:19.7241710Z Removing target/debug/deps/shlex-83c7e0da01d13271.d
+2025-11-09T23:51:19.7245961Z Removing target/debug/deps/syn-ac22a29aa0958776.d
+2025-11-09T23:51:19.7248526Z Removing target/debug/deps/thiserror-3e3835fcd789459f.d
+2025-11-09T23:51:19.7251355Z Removing target/debug/deps/thiserror_impl-5dcc7ed75452c5d0.d
+2025-11-09T23:51:19.7254035Z Removing target/debug/deps/typenum-8a7224baaad087a3.d
+2025-11-09T23:51:19.7256186Z Removing target/debug/deps/unicode_ident-796da7d7beff3c43.d
+2025-11-09T23:51:19.7258605Z Removing target/debug/deps/version_check-a216429c4cbdde93.d
+2025-11-09T23:51:19.7260465Z Removing target/debug/examples/
+2025-11-09T23:51:19.7263396Z Removing target/doc/
+2025-11-09T23:51:19.7269476Z [command]/usr/bin/git reset --hard HEAD
+2025-11-09T23:51:19.7282018Z HEAD is now at f5f0b04 fix: Update workflow to use correct repository name (bllvm-consensus)
+2025-11-09T23:51:19.7289018Z ##[endgroup]
+2025-11-09T23:51:19.7291475Z ##[group]Disabling automatic garbage collection
+2025-11-09T23:51:19.7293870Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T23:51:19.7329904Z ##[endgroup]
+2025-11-09T23:51:19.7331386Z ##[group]Setting up auth
+2025-11-09T23:51:19.7337912Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:51:19.7382306Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:51:19.7697422Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:51:19.7734838Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:51:19.8074180Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T23:51:19.8131342Z ##[endgroup]
+2025-11-09T23:51:19.8132900Z ##[group]Fetching the repository
+2025-11-09T23:51:19.8148969Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f5f0b046e78292228238657d2073c8b6558f8ab4:refs/remotes/origin/main
+2025-11-09T23:51:20.0172348Z ##[endgroup]
+2025-11-09T23:51:20.0177212Z ##[group]Determining the checkout info
+2025-11-09T23:51:20.0179677Z ##[endgroup]
+2025-11-09T23:51:20.0181960Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T23:51:20.0249750Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T23:51:20.0287738Z ##[group]Checking out the ref
+2025-11-09T23:51:20.0291714Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T23:51:20.0352144Z Switched to a new branch 'main'
+2025-11-09T23:51:20.0354115Z branch 'main' set up to track 'origin/main'.
+2025-11-09T23:51:20.0366188Z ##[endgroup]
+2025-11-09T23:51:20.0409081Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T23:51:20.0441023Z f5f0b046e78292228238657d2073c8b6558f8ab4

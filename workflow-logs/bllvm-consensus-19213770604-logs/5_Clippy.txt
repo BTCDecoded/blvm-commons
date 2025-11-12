@@ -1,0 +1,417 @@
+﻿2025-11-09T20:07:33.2649543Z Current runner version: '2.329.0'
+2025-11-09T20:07:33.2658750Z Runner name: 'linode-runner-02'
+2025-11-09T20:07:33.2659626Z Runner group name: 'default'
+2025-11-09T20:07:33.2662543Z Machine name: 'localhost'
+2025-11-09T20:07:33.2665799Z ##[group]GITHUB_TOKEN Permissions
+2025-11-09T20:07:33.2668238Z Contents: read
+2025-11-09T20:07:33.2668852Z Metadata: read
+2025-11-09T20:07:33.2669495Z Packages: read
+2025-11-09T20:07:33.2670091Z ##[endgroup]
+2025-11-09T20:07:33.2672377Z Secret source: Actions
+2025-11-09T20:07:33.2673244Z Prepare workflow directory
+2025-11-09T20:07:33.3317923Z Prepare all required actions
+2025-11-09T20:07:33.3384684Z Getting action download info
+2025-11-09T20:07:33.6684569Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-09T20:07:34.0559433Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:6d653acede28d24f02e3cd41383119e8b1b35921)
+2025-11-09T20:07:34.3069882Z Download action repository 'actions/cache@v3' (SHA:6f8efc29b200d32929f49075959781ed54ec270c)
+2025-11-09T20:07:35.0162631Z Complete job name: Clippy
+2025-11-09T20:07:35.0891985Z A job started hook has been configured by the self-hosted runner administrator
+2025-11-09T20:07:35.1084187Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-started.sh'
+2025-11-09T20:07:35.1122421Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:35.1124606Z ##[endgroup]
+2025-11-09T20:07:35.1372944Z Job started: Sun Nov  9 08:07:35 PM UTC 2025
+2025-11-09T20:07:35.1397342Z Available disk space: 11G
+2025-11-09T20:07:35.1435286Z Disk usage is 78% - no cleanup needed
+2025-11-09T20:07:35.1915297Z ##[group]Run actions/checkout@v4
+2025-11-09T20:07:35.1917004Z with:
+2025-11-09T20:07:35.1920085Z   repository: BTCDecoded/bllvm-consensus
+2025-11-09T20:07:35.1922241Z   token: ***
+2025-11-09T20:07:35.1923523Z   ssh-strict: true
+2025-11-09T20:07:35.1925278Z   ssh-user: git
+2025-11-09T20:07:35.1928405Z   persist-credentials: true
+2025-11-09T20:07:35.1929931Z   clean: true
+2025-11-09T20:07:35.1931346Z   sparse-checkout-cone-mode: true
+2025-11-09T20:07:35.1933008Z   fetch-depth: 1
+2025-11-09T20:07:35.1934474Z   fetch-tags: false
+2025-11-09T20:07:35.1935848Z   show-progress: true
+2025-11-09T20:07:35.1937227Z   lfs: false
+2025-11-09T20:07:35.1938498Z   submodules: false
+2025-11-09T20:07:35.1939893Z   set-safe-directory: true
+2025-11-09T20:07:35.1941370Z env:
+2025-11-09T20:07:35.1942578Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:35.1944059Z ##[endgroup]
+2025-11-09T20:07:35.3646103Z Syncing repository: BTCDecoded/bllvm-consensus
+2025-11-09T20:07:35.3650226Z ##[group]Getting Git version info
+2025-11-09T20:07:35.3653173Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus'
+2025-11-09T20:07:35.3657347Z [command]/usr/bin/git version
+2025-11-09T20:07:35.3683792Z git version 2.43.0
+2025-11-09T20:07:35.3725779Z ##[endgroup]
+2025-11-09T20:07:35.3738004Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/7f108f62-3f41-4175-8c4a-ed19b1a291a4/.gitconfig'
+2025-11-09T20:07:35.3751571Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/7f108f62-3f41-4175-8c4a-ed19b1a291a4' before making global git config changes
+2025-11-09T20:07:35.3757066Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T20:07:35.3763062Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus
+2025-11-09T20:07:35.3821489Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-09T20:07:35.3852205Z https://github.com/BTCDecoded/bllvm-consensus
+2025-11-09T20:07:35.3874811Z ##[group]Removing previously created refs, to avoid conflicts
+2025-11-09T20:07:35.3880418Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2025-11-09T20:07:35.3910099Z refs/heads/main
+2025-11-09T20:07:35.3926391Z [command]/usr/bin/git checkout --detach
+2025-11-09T20:07:35.4049229Z HEAD is now at 197dced feat: Add low-hanging fruit optimizations
+2025-11-09T20:07:35.4061702Z D	fuzz/target/x86_64-unknown-linux-gnu/release/block_validation
+2025-11-09T20:07:35.4066671Z D	fuzz/target/x86_64-unknown-linux-gnu/release/build/libfuzzer-sys-bd87bb1e7eaecf7b/out/libfuzzer.a
+2025-11-09T20:07:35.4074102Z D	fuzz/target/x86_64-unknown-linux-gnu/release/compact_block_reconstruction
+2025-11-09T20:07:35.4079616Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/economic_validation-067a6978d175c1cb
+2025-11-09T20:07:35.4083880Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/liblibfuzzer_sys-7b86fd196e556805.rlib
+2025-11-09T20:07:35.4088218Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/mempool_operations-6bfa1da99cd797a1
+2025-11-09T20:07:35.4090452Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/pow_validation-076f9991c572630c
+2025-11-09T20:07:35.4092869Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/script_execution-861bffb0d43b9033
+2025-11-09T20:07:35.4100042Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/script_opcodes-7b9a8477588573e9
+2025-11-09T20:07:35.4102274Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/segwit_validation-e42e2e71e085a967
+2025-11-09T20:07:35.4104727Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/serialization-aafecb05b2599167
+2025-11-09T20:07:35.4107918Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/transaction_validation-25e34c4a701cf2c4
+2025-11-09T20:07:35.4112658Z D	fuzz/target/x86_64-unknown-linux-gnu/release/deps/utxo_commitments-8366fb5f7088e16b
+2025-11-09T20:07:35.4127514Z [command]/usr/bin/git branch --delete --force main
+2025-11-09T20:07:35.4156015Z Deleted branch main (was 197dced).
+2025-11-09T20:07:35.4207181Z ##[endgroup]
+2025-11-09T20:07:35.4209093Z [command]/usr/bin/git submodule status
+2025-11-09T20:07:35.4498954Z ##[group]Cleaning the repository
+2025-11-09T20:07:35.4503535Z [command]/usr/bin/git clean -ffdx
+2025-11-09T20:07:35.4583064Z [command]/usr/bin/git reset --hard HEAD
+2025-11-09T20:07:36.5202990Z HEAD is now at 197dced feat: Add low-hanging fruit optimizations
+2025-11-09T20:07:36.5349585Z ##[endgroup]
+2025-11-09T20:07:36.5351106Z ##[group]Disabling automatic garbage collection
+2025-11-09T20:07:36.5357277Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T20:07:36.5399780Z ##[endgroup]
+2025-11-09T20:07:36.5400623Z ##[group]Setting up auth
+2025-11-09T20:07:36.5407235Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T20:07:36.5442529Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T20:07:36.5731848Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T20:07:36.5771763Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T20:07:36.6065580Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T20:07:36.6115518Z ##[endgroup]
+2025-11-09T20:07:36.6116413Z ##[group]Fetching the repository
+2025-11-09T20:07:36.6125907Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +c28a36e7b60be4e32a38f72b272322cd66a3f71d:refs/remotes/origin/main
+2025-11-09T20:07:36.8333667Z From https://github.com/BTCDecoded/bllvm-consensus
+2025-11-09T20:07:36.8337228Z  + 197dced...c28a36e c28a36e7b60be4e32a38f72b272322cd66a3f71d -> origin/main  (forced update)
+2025-11-09T20:07:36.8364080Z ##[endgroup]
+2025-11-09T20:07:36.8364911Z ##[group]Determining the checkout info
+2025-11-09T20:07:36.8368827Z ##[endgroup]
+2025-11-09T20:07:36.8376281Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T20:07:37.3608395Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T20:07:37.3647931Z ##[group]Checking out the ref
+2025-11-09T20:07:37.3653472Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T20:07:37.3770960Z Warning: you are leaving 1 commit behind, not connected to
+2025-11-09T20:07:37.3772010Z any of your branches:
+2025-11-09T20:07:37.3772327Z 
+2025-11-09T20:07:37.3772589Z   197dced feat: Add low-hanging fruit optimizations
+2025-11-09T20:07:37.3773020Z 
+2025-11-09T20:07:37.3773353Z If you want to keep it by creating a new branch, this may be a good time
+2025-11-09T20:07:37.3774059Z to do so with:
+2025-11-09T20:07:37.3774468Z 
+2025-11-09T20:07:37.3774687Z  git branch <new-branch-name> 197dced
+2025-11-09T20:07:37.3775039Z 
+2025-11-09T20:07:37.3782928Z Switched to a new branch 'main'
+2025-11-09T20:07:37.3785385Z branch 'main' set up to track 'origin/main'.
+2025-11-09T20:07:37.3796871Z ##[endgroup]
+2025-11-09T20:07:37.3843607Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T20:07:37.3870759Z c28a36e7b60be4e32a38f72b272322cd66a3f71d
+2025-11-09T20:07:37.4183237Z ##[group]Run dtolnay/rust-toolchain@master
+2025-11-09T20:07:37.4183572Z with:
+2025-11-09T20:07:37.4183749Z   toolchain: 1.88.0
+2025-11-09T20:07:37.4183941Z   components: clippy
+2025-11-09T20:07:37.4184133Z env:
+2025-11-09T20:07:37.4184302Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:37.4184792Z ##[endgroup]
+2025-11-09T20:07:37.4301664Z ##[group]Run : parse toolchain version
+2025-11-09T20:07:37.4302005Z [36;1m: parse toolchain version[0m
+2025-11-09T20:07:37.4302284Z [36;1mif [[ -z $toolchain ]]; then[0m
+2025-11-09T20:07:37.4302791Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2025-11-09T20:07:37.4303306Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2025-11-09T20:07:37.4303580Z [36;1m  exit 1[0m
+2025-11-09T20:07:37.4303883Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2025-11-09T20:07:37.4304258Z [36;1m  if [[ Linux == macOS ]]; then[0m
+2025-11-09T20:07:37.4304938Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:07:37.4305397Z [36;1m  else[0m
+2025-11-09T20:07:37.4305761Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:07:37.4306171Z [36;1m  fi[0m
+2025-11-09T20:07:37.4306439Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2025-11-09T20:07:37.4306960Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:07:37.4307391Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2025-11-09T20:07:37.4307861Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:07:37.4308301Z [36;1melse[0m
+2025-11-09T20:07:37.4308525Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:07:37.4308812Z [36;1mfi[0m
+2025-11-09T20:07:37.4340273Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:37.4340622Z env:
+2025-11-09T20:07:37.4340804Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:37.4341019Z   toolchain: 1.88.0
+2025-11-09T20:07:37.4341206Z ##[endgroup]
+2025-11-09T20:07:37.4470077Z ##[group]Run : construct rustup command line
+2025-11-09T20:07:37.4470397Z [36;1m: construct rustup command line[0m
+2025-11-09T20:07:37.4470814Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:07:37.4471407Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:07:37.4471848Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:07:37.4500380Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:37.4500705Z env:
+2025-11-09T20:07:37.4500883Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:37.4501124Z   targets: 
+2025-11-09T20:07:37.4501476Z   components: clippy
+2025-11-09T20:07:37.4501665Z ##[endgroup]
+2025-11-09T20:07:37.4597664Z ##[group]Run : set $CARGO_HOME
+2025-11-09T20:07:37.4599767Z [36;1m: set $CARGO_HOME[0m
+2025-11-09T20:07:37.4600074Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+2025-11-09T20:07:37.4625082Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:37.4625443Z env:
+2025-11-09T20:07:37.4625638Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:37.4625870Z ##[endgroup]
+2025-11-09T20:07:37.4707241Z ##[group]Run : install rustup if needed
+2025-11-09T20:07:37.4707546Z [36;1m: install rustup if needed[0m
+2025-11-09T20:07:37.4707858Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2025-11-09T20:07:37.4710534Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+2025-11-09T20:07:37.4711539Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+2025-11-09T20:07:37.4711821Z [36;1mfi[0m
+2025-11-09T20:07:37.4741716Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:37.4742085Z env:
+2025-11-09T20:07:37.4742276Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:37.4742530Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:37.4742776Z ##[endgroup]
+2025-11-09T20:07:37.5787836Z info: downloading installer
+2025-11-09T20:07:37.9739474Z warn: It looks like you have an existing rustup settings file at:
+2025-11-09T20:07:37.9740177Z warn: /home/jswift/.rustup/settings.toml
+2025-11-09T20:07:37.9740894Z warn: Rustup will install the default toolchain as specified in the settings file,
+2025-11-09T20:07:37.9741731Z warn: instead of the one inferred from the default host triple.
+2025-11-09T20:07:37.9994808Z info: profile set to 'default'
+2025-11-09T20:07:37.9995215Z 
+2025-11-09T20:07:37.9995550Z info: default host triple is x86_64-unknown-linux-gnu
+2025-11-09T20:07:37.9996221Z info: skipping toolchain installation
+2025-11-09T20:07:37.9997712Z 
+2025-11-09T20:07:37.9998088Z Rust is installed now. Great!
+2025-11-09T20:07:37.9998465Z 
+2025-11-09T20:07:37.9998800Z To get started you may need to restart your current shell.
+2025-11-09T20:07:38.0001216Z This would reload your PATH environment variable to include
+2025-11-09T20:07:38.0002079Z Cargo's bin directory ($HOME/.cargo/bin).
+2025-11-09T20:07:38.0002555Z 
+2025-11-09T20:07:38.0002854Z To configure your current shell, you need to source
+2025-11-09T20:07:38.0003666Z the corresponding env file under $HOME/.cargo.
+2025-11-09T20:07:38.0004180Z 
+2025-11-09T20:07:38.0004776Z This is usually done by running one of the following (note the leading DOT):
+2025-11-09T20:07:38.0005705Z . "$HOME/.cargo/env"            # For sh/bash/zsh/ash/dash/pdksh
+2025-11-09T20:07:38.0006670Z source "$HOME/.cargo/env.fish"  # For fish
+2025-11-09T20:07:38.0007250Z source $"($nu.home-path)/.cargo/env.nu"  # For nushell
+2025-11-09T20:07:38.0202178Z ##[group]Run rustup toolchain install 1.88.0 --component clippy --profile minimal --no-self-update
+2025-11-09T20:07:38.0202898Z [36;1mrustup toolchain install 1.88.0 --component clippy --profile minimal --no-self-update[0m
+2025-11-09T20:07:38.0241055Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:38.0241410Z env:
+2025-11-09T20:07:38.0241602Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:38.0241844Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:38.0242098Z ##[endgroup]
+2025-11-09T20:07:38.1136135Z info: syncing channel updates for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T20:07:38.2345581Z info: latest update on 2025-06-26, rust version 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T20:07:38.2788480Z info: component 'clippy' for target 'x86_64-unknown-linux-gnu' is up to date
+2025-11-09T20:07:38.2807896Z 
+2025-11-09T20:07:38.2933850Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T20:07:38.2934598Z 
+2025-11-09T20:07:38.3009106Z ##[group]Run rustup default 1.88.0
+2025-11-09T20:07:38.3009429Z [36;1mrustup default 1.88.0[0m
+2025-11-09T20:07:38.3043752Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:38.3044107Z env:
+2025-11-09T20:07:38.3044486Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:38.3044863Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:38.3045202Z ##[endgroup]
+2025-11-09T20:07:38.3210092Z info: using existing install for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T20:07:38.3866166Z info: default toolchain set to '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T20:07:38.3866577Z 
+2025-11-09T20:07:38.3983529Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T20:07:38.3984136Z 
+2025-11-09T20:07:38.3985973Z info: note that the toolchain '1.88.0-x86_64-unknown-linux-gnu' is currently in use (overridden by '/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus/rust-toolchain.toml')
+2025-11-09T20:07:38.4049719Z ##[group]Run : create cachekey
+2025-11-09T20:07:38.4050528Z [36;1m: create cachekey[0m
+2025-11-09T20:07:38.4051348Z [36;1mDATE=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2025-11-09T20:07:38.4052386Z [36;1mHASH=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2025-11-09T20:07:38.4053238Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2025-11-09T20:07:38.4098873Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:38.4099433Z env:
+2025-11-09T20:07:38.4099731Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:38.4100130Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:38.4100525Z ##[endgroup]
+2025-11-09T20:07:38.4788889Z ##[group]Run : disable incremental compilation
+2025-11-09T20:07:38.4789482Z [36;1m: disable incremental compilation[0m
+2025-11-09T20:07:38.4790033Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2025-11-09T20:07:38.4790601Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2025-11-09T20:07:38.4791097Z [36;1mfi[0m
+2025-11-09T20:07:38.4833251Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:38.4833838Z env:
+2025-11-09T20:07:38.4834125Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:38.4834718Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:38.4835120Z ##[endgroup]
+2025-11-09T20:07:38.4942409Z ##[group]Run : enable colors in Cargo output
+2025-11-09T20:07:38.4943017Z [36;1m: enable colors in Cargo output[0m
+2025-11-09T20:07:38.4943581Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2025-11-09T20:07:38.4944155Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2025-11-09T20:07:38.4944843Z [36;1mfi[0m
+2025-11-09T20:07:38.4986426Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:38.4986976Z env:
+2025-11-09T20:07:38.4987267Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:38.4987801Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:38.4988223Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:07:38.4988561Z ##[endgroup]
+2025-11-09T20:07:38.5093093Z ##[group]Run : enable Cargo sparse registry
+2025-11-09T20:07:38.5093658Z [36;1m: enable Cargo sparse registry[0m
+2025-11-09T20:07:38.5094267Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2025-11-09T20:07:38.5095834Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2025-11-09T20:07:38.5097283Z [36;1m  if rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2025-11-09T20:07:38.5098882Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-09T20:07:38.5100039Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2025-11-09T20:07:38.5100897Z [36;1m  elif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2025-11-09T20:07:38.5102764Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-09T20:07:38.5104211Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2025-11-09T20:07:38.5104962Z [36;1m  fi[0m
+2025-11-09T20:07:38.5105268Z [36;1mfi[0m
+2025-11-09T20:07:38.5146937Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:38.5147478Z env:
+2025-11-09T20:07:38.5147776Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:38.5148265Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:38.5148671Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:07:38.5149009Z ##[endgroup]
+2025-11-09T20:07:38.5831221Z ##[group]Run : work around spurious network errors in curl 8.0
+2025-11-09T20:07:38.5831957Z [36;1m: work around spurious network errors in curl 8.0[0m
+2025-11-09T20:07:38.5832910Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2025-11-09T20:07:38.5836061Z [36;1mif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2025-11-09T20:07:38.5837176Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2025-11-09T20:07:38.5837753Z [36;1mfi[0m
+2025-11-09T20:07:38.5880393Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:38.5880964Z env:
+2025-11-09T20:07:38.5881257Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:38.5881667Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:38.5882084Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:07:38.5882432Z ##[endgroup]
+2025-11-09T20:07:38.6203362Z ##[group]Run rustc +1.88.0 --version --verbose
+2025-11-09T20:07:38.6203924Z [36;1mrustc +1.88.0 --version --verbose[0m
+2025-11-09T20:07:38.6248098Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:38.6248570Z env:
+2025-11-09T20:07:38.6248814Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:38.6249149Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:38.6249530Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:07:38.6249862Z ##[endgroup]
+2025-11-09T20:07:38.6506351Z rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T20:07:38.6506876Z binary: rustc
+2025-11-09T20:07:38.6507297Z commit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc
+2025-11-09T20:07:38.6507850Z commit-date: 2025-06-23
+2025-11-09T20:07:38.6508228Z host: x86_64-unknown-linux-gnu
+2025-11-09T20:07:38.6508611Z release: 1.88.0
+2025-11-09T20:07:38.6508931Z LLVM version: 20.1.5
+2025-11-09T20:07:38.9033749Z ##[group]Run actions/cache@v3
+2025-11-09T20:07:38.9034043Z with:
+2025-11-09T20:07:38.9034231Z   path: ~/.cargo/registry
+2025-11-09T20:07:38.9034993Z   key: Linux-cargo-registry-18e22b9087ea3936f6fb608612539f2a5f8a364e25dcf24a4dfbe30fa4fd3c9e
+2025-11-09T20:07:38.9035500Z   enableCrossOsArchive: false
+2025-11-09T20:07:38.9035747Z   fail-on-cache-miss: false
+2025-11-09T20:07:38.9035968Z   lookup-only: false
+2025-11-09T20:07:38.9036161Z env:
+2025-11-09T20:07:38.9036326Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:38.9036574Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:38.9036828Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:07:38.9037029Z ##[endgroup]
+2025-11-09T20:07:39.3017764Z Cache hit for: Linux-cargo-registry-18e22b9087ea3936f6fb608612539f2a5f8a364e25dcf24a4dfbe30fa4fd3c9e
+2025-11-09T20:07:40.4262731Z Received 130023424 of 838783448 (15.5%), 124.0 MBs/sec
+2025-11-09T20:07:41.4588224Z Received 268435456 of 838783448 (32.0%), 126.0 MBs/sec
+2025-11-09T20:07:42.4612585Z Received 411041792 of 838783448 (49.0%), 129.2 MBs/sec
+2025-11-09T20:07:43.4643308Z Received 570425344 of 838783448 (68.0%), 134.7 MBs/sec
+2025-11-09T20:07:44.4646730Z Received 750780416 of 838783448 (89.5%), 142.1 MBs/sec
+2025-11-09T20:07:45.0535460Z Received 838783448 of 838783448 (100.0%), 142.2 MBs/sec
+2025-11-09T20:07:45.0538497Z Cache Size: ~800 MB (838783448 B)
+2025-11-09T20:07:45.0586592Z [command]/usr/bin/tar -xf /home/jswift/actions-runner-org2/_work/_temp/3a2f07ee-9654-493b-b968-e4bf6b6e86c1/cache.tzst -P -C /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus --use-compress-program unzstd
+2025-11-09T20:07:53.4239191Z Cache restored successfully
+2025-11-09T20:07:53.6048670Z Cache restored from key: Linux-cargo-registry-18e22b9087ea3936f6fb608612539f2a5f8a364e25dcf24a4dfbe30fa4fd3c9e
+2025-11-09T20:07:53.8992361Z ##[group]Run actions/cache@v3
+2025-11-09T20:07:53.8992807Z with:
+2025-11-09T20:07:53.8993119Z   path: ~/.cargo/git
+2025-11-09T20:07:53.8993831Z   key: Linux-cargo-index-18e22b9087ea3936f6fb608612539f2a5f8a364e25dcf24a4dfbe30fa4fd3c9e
+2025-11-09T20:07:53.8994896Z   enableCrossOsArchive: false
+2025-11-09T20:07:53.8995313Z   fail-on-cache-miss: false
+2025-11-09T20:07:53.8995701Z   lookup-only: false
+2025-11-09T20:07:53.8996027Z env:
+2025-11-09T20:07:53.8996316Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:53.8996726Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:53.8997140Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:07:53.8997492Z ##[endgroup]
+2025-11-09T20:07:54.2489714Z Cache not found for input keys: Linux-cargo-index-18e22b9087ea3936f6fb608612539f2a5f8a364e25dcf24a4dfbe30fa4fd3c9e
+2025-11-09T20:07:54.5148986Z ##[group]Run actions/cache@v3
+2025-11-09T20:07:54.5149424Z with:
+2025-11-09T20:07:54.5149722Z   path: target
+2025-11-09T20:07:54.5150505Z   key: Linux-cargo-build-target-18e22b9087ea3936f6fb608612539f2a5f8a364e25dcf24a4dfbe30fa4fd3c9e
+2025-11-09T20:07:54.5151436Z   enableCrossOsArchive: false
+2025-11-09T20:07:54.5151864Z   fail-on-cache-miss: false
+2025-11-09T20:07:54.5152262Z   lookup-only: false
+2025-11-09T20:07:54.5155151Z env:
+2025-11-09T20:07:54.5155461Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:54.5155867Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:54.5156300Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:07:54.5156638Z ##[endgroup]
+2025-11-09T20:07:54.8225616Z Cache hit for: Linux-cargo-build-target-18e22b9087ea3936f6fb608612539f2a5f8a364e25dcf24a4dfbe30fa4fd3c9e
+2025-11-09T20:07:55.4808666Z Received 33940857 of 33940857 (100.0%), 57.8 MBs/sec
+2025-11-09T20:07:55.4809802Z Cache Size: ~32 MB (33940857 B)
+2025-11-09T20:07:55.4846985Z [command]/usr/bin/tar -xf /home/jswift/actions-runner-org2/_work/_temp/8a06ef42-54f2-4a09-b494-3e81a930f352/cache.tzst -P -C /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus --use-compress-program unzstd
+2025-11-09T20:07:55.7886149Z Cache restored successfully
+2025-11-09T20:07:55.8088808Z Cache restored from key: Linux-cargo-build-target-18e22b9087ea3936f6fb608612539f2a5f8a364e25dcf24a4dfbe30fa4fd3c9e
+2025-11-09T20:07:55.8253084Z ##[group]Run cargo clippy -- -D warnings
+2025-11-09T20:07:55.8253456Z [36;1mcargo clippy -- -D warnings[0m
+2025-11-09T20:07:55.8285330Z shell: /usr/bin/bash -e {0}
+2025-11-09T20:07:55.8285590Z env:
+2025-11-09T20:07:55.8286239Z   CARGO_TERM_COLOR: always
+2025-11-09T20:07:55.8286496Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T20:07:55.8286762Z   CARGO_INCREMENTAL: 0
+2025-11-09T20:07:55.8287002Z ##[endgroup]
+2025-11-09T20:07:56.1296924Z [1m[32m    Checking[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus)
+2025-11-09T20:07:56.2515415Z [0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `crate::crypto`[0m
+2025-11-09T20:07:56.2516337Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/block.rs:905:16[0m
+2025-11-09T20:07:56.2516950Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T20:07:56.2517831Z [0m[1m[38;5;12m905[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    use crate::crypto::OptimizedSha256;[0m
+2025-11-09T20:07:56.2519020Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;9m^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `crypto` in the crate root[0m
+2025-11-09T20:07:56.2519588Z 
+2025-11-09T20:07:56.2520089Z [0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `crate::crypto`[0m
+2025-11-09T20:07:56.2520864Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/mining.rs:448:16[0m
+2025-11-09T20:07:56.2521431Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T20:07:56.2522266Z [0m[1m[38;5;12m448[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    use crate::crypto::OptimizedSha256;[0m
+2025-11-09T20:07:56.2523376Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;9m^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `crypto` in the crate root[0m
+2025-11-09T20:07:56.2524754Z 
+2025-11-09T20:07:56.2838943Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `batch_compute_sighashes`[0m
+2025-11-09T20:07:56.2839846Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/script.rs:1040:47[0m
+2025-11-09T20:07:56.2840446Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-09T20:07:56.2842308Z [0m[1m[38;5;12m1040[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                use crate::transaction_hash::{batch_compute_sighashes, calculate_transaction_sighash, SighashType};[0m
+2025-11-09T20:07:56.2843637Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                                               [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T20:07:56.2844275Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-09T20:07:56.2845387Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D unused-imports` implied by `-D warnings`[0m
+2025-11-09T20:07:56.2846437Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(unused_imports)]`[0m
+2025-11-09T20:07:56.2847019Z 
+2025-11-09T20:07:56.2847454Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `batch_compute_sighashes`[0m
+2025-11-09T20:07:56.2848266Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/script.rs:1086:47[0m
+2025-11-09T20:07:56.2848849Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-09T20:07:56.2850174Z [0m[1m[38;5;12m1086[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                use crate::transaction_hash::{batch_compute_sighashes, calculate_transaction_sighash, SighashType};[0m
+2025-11-09T20:07:56.2850918Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                                               [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T20:07:56.2851173Z 
+2025-11-09T20:07:56.7663439Z [0m[1mFor more information about this error, try `rustc --explain E0432`.[0m
+2025-11-09T20:07:56.7793490Z [1m[31merror[0m[1m:[0m could not compile `bllvm-consensus` (lib) due to 4 previous errors
+2025-11-09T20:07:56.7935048Z ##[error]Process completed with exit code 101.
+2025-11-09T20:07:56.8031737Z Post job cleanup.
+2025-11-09T20:07:56.9276698Z [command]/usr/bin/git version
+2025-11-09T20:07:56.9328510Z git version 2.43.0
+2025-11-09T20:07:56.9376471Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/f4445107-35bf-42c4-96c9-109547e553cd/.gitconfig'
+2025-11-09T20:07:56.9390154Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/f4445107-35bf-42c4-96c9-109547e553cd' before making global git config changes
+2025-11-09T20:07:56.9394559Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T20:07:56.9397929Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus
+2025-11-09T20:07:56.9449249Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T20:07:56.9493689Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T20:07:56.9817919Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T20:07:56.9847036Z http.https://github.com/.extraheader
+2025-11-09T20:07:56.9864914Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-11-09T20:07:56.9908906Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T20:07:57.0362927Z A job completed hook has been configured by the self-hosted runner administrator
+2025-11-09T20:07:57.0399067Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-completed.sh'
+2025-11-09T20:07:57.0424917Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T20:07:57.0425329Z ##[endgroup]
+2025-11-09T20:07:57.0492783Z Job completed: Sun Nov  9 08:07:57 PM UTC 2025
+2025-11-09T20:07:57.0527498Z Available disk space: 11G
+2025-11-09T20:07:57.0528021Z Cleaning up after job completion...
+2025-11-09T20:07:57.1645081Z Cleanup completed. Available disk space: 11G
+2025-11-09T20:07:57.1696145Z Cleaning up orphan processes

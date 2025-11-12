@@ -1,0 +1,145 @@
+﻿2025-11-09T23:52:08.1526137Z ##[group]Run cargo clippy -- -D warnings
+2025-11-09T23:52:08.1526494Z [36;1mcargo clippy -- -D warnings[0m
+2025-11-09T23:52:08.1558502Z shell: /usr/bin/bash -e {0}
+2025-11-09T23:52:08.1560979Z env:
+2025-11-09T23:52:08.1561185Z   CARGO_TERM_COLOR: always
+2025-11-09T23:52:08.1561450Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:52:08.1561729Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:52:08.1561957Z ##[endgroup]
+2025-11-09T23:52:08.5427392Z [1m[32m    Checking[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-consensus)
+2025-11-09T23:52:09.3336013Z [1m[32m    Checking[0m bllvm-protocol v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol)
+2025-11-09T23:52:09.4494017Z [0m[1m[38;5;9merror[0m[0m[1m: unused imports: `OutPoint` and `UTXO`[0m
+2025-11-09T23:52:09.4495125Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network.rs:9:30[0m
+2025-11-09T23:52:09.4495616Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:09.4503222Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::types::{OutPoint, UTXO, UtxoSet};[0m
+2025-11-09T23:52:09.4504229Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[38;5;9m^^^^^^^^[0m[0m  [0m[0m[1m[38;5;9m^^^^[0m
+2025-11-09T23:52:09.4505055Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:09.4505892Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D unused-imports` implied by `-D warnings`[0m
+2025-11-09T23:52:09.4506860Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(unused_imports)]`[0m
+2025-11-09T23:52:09.4507617Z 
+2025-11-09T23:52:09.7684807Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `peer_state`[0m
+2025-11-09T23:52:09.7685710Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network.rs:450:5[0m
+2025-11-09T23:52:09.7686286Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:09.7687072Z [0m[1m[38;5;12m450[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    peer_state: &mut PeerState,[0m
+2025-11-09T23:52:09.7688397Z [0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_peer_state`[0m
+2025-11-09T23:52:09.7689356Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:09.7690172Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D unused-variables` implied by `-D warnings`[0m
+2025-11-09T23:52:09.7694040Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(unused_variables)]`[0m
+2025-11-09T23:52:09.7694911Z 
+2025-11-09T23:52:09.9818785Z [0m[1m[38;5;9merror[0m[0m[1m: method `bit_offset` is never used[0m
+2025-11-09T23:52:09.9820113Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/bip158.rs:156:8[0m
+2025-11-09T23:52:09.9821023Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:09.9821749Z [0m[1m[38;5;12m122[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a> BitReader<'a> {[0m
+2025-11-09T23:52:09.9822810Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+2025-11-09T23:52:09.9823579Z [0m[1m[38;5;12m...[0m
+2025-11-09T23:52:09.9824533Z [0m[1m[38;5;12m156[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn bit_offset(&self) -> usize {[0m
+2025-11-09T23:52:09.9825410Z [0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[38;5;9m^^^^^^^^^^[0m
+2025-11-09T23:52:09.9826010Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:09.9826748Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D dead-code` implied by `-D warnings`[0m
+2025-11-09T23:52:09.9827757Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(dead_code)]`[0m
+2025-11-09T23:52:09.9828267Z 
+2025-11-09T23:52:10.0112971Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:52:10.0114708Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network.rs:418:44[0m
+2025-11-09T23:52:10.0116145Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.0117405Z [0m[1m[38;5;12m418[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                Ok(NetworkResponse::Reject(format!("Invalid block: {}", reason)))[0m
+2025-11-09T23:52:10.0118908Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                            [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:52:10.0121373Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.0122633Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:52:10.0125095Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D clippy::uninlined-format-args` implied by `-D warnings`[0m
+2025-11-09T23:52:10.0126487Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(clippy::uninlined_format_args)]`[0m
+2025-11-09T23:52:10.0127451Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:52:10.0127999Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.0129171Z [0m[1m[38;5;12m418[0m[0m [0m[0m[38;5;9m- [0m[0m                Ok(NetworkResponse::Reject(format!("Invalid block: {}"[0m[0m[38;5;9m, reason[0m[0m)))[0m
+2025-11-09T23:52:10.0130838Z [0m[1m[38;5;12m418[0m[0m [0m[0m[38;5;10m+ [0m[0m                Ok(NetworkResponse::Reject(format!("Invalid block: {[0m[0m[38;5;10mreason[0m[0m}")))[0m
+2025-11-09T23:52:10.0131796Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.0132083Z 
+2025-11-09T23:52:10.0132597Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:52:10.0133455Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network.rs:442:40[0m
+2025-11-09T23:52:10.0134037Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.0135393Z [0m[1m[38;5;12m442[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            Ok(NetworkResponse::Reject(format!("Invalid transaction: {}", reason)))[0m
+2025-11-09T23:52:10.0136577Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                        [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:52:10.0137236Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.0138457Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:52:10.0139622Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:52:10.0140172Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.0141392Z [0m[1m[38;5;12m442[0m[0m [0m[0m[38;5;9m- [0m[0m            Ok(NetworkResponse::Reject(format!("Invalid transaction: {}"[0m[0m[38;5;9m, reason[0m[0m)))[0m
+2025-11-09T23:52:10.0143082Z [0m[1m[38;5;12m442[0m[0m [0m[0m[38;5;10m+ [0m[0m            Ok(NetworkResponse::Reject(format!("Invalid transaction: {[0m[0m[38;5;10mreason[0m[0m}")))[0m
+2025-11-09T23:52:10.0144746Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.0145037Z 
+2025-11-09T23:52:10.1949110Z [0m[1m[38;5;9merror[0m[0m[1m: the borrowed expression implements the required traits[0m
+2025-11-09T23:52:10.1950117Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/bip157.rs:30:24[0m
+2025-11-09T23:52:10.1950705Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.1951457Z [0m[1m[38;5;12m30[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        hasher2.update(&first_hash);[0m
+2025-11-09T23:52:10.1952529Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;9m^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: change this to: `first_hash`[0m
+2025-11-09T23:52:10.1953253Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.1954771Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_borrows_for_generic_args[0m
+2025-11-09T23:52:10.1957058Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D clippy::needless-borrows-for-generic-args` implied by `-D warnings`[0m
+2025-11-09T23:52:10.1960515Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(clippy::needless_borrows_for_generic_args)]`[0m
+2025-11-09T23:52:10.1961199Z 
+2025-11-09T23:52:10.1961715Z [0m[1m[38;5;9merror[0m[0m[1m: the borrowed expression implements the required traits[0m
+2025-11-09T23:52:10.1962553Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/bip157.rs:48:28[0m
+2025-11-09T23:52:10.1963122Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.1963898Z [0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            hasher2.update(&first_hash);[0m
+2025-11-09T23:52:10.1965147Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;9m^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: change this to: `first_hash`[0m
+2025-11-09T23:52:10.1965891Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.1967220Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_borrows_for_generic_args[0m
+2025-11-09T23:52:10.1968197Z 
+2025-11-09T23:52:10.1968733Z [0m[1m[38;5;9merror[0m[0m[1m: the borrowed expression implements the required traits[0m
+2025-11-09T23:52:10.1969551Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/bip157.rs:76:24[0m
+2025-11-09T23:52:10.1970123Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.1970863Z [0m[1m[38;5;12m76[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        hasher2.update(&first_hash);[0m
+2025-11-09T23:52:10.1971877Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;9m^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: change this to: `first_hash`[0m
+2025-11-09T23:52:10.1972574Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.1973867Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_borrows_for_generic_args[0m
+2025-11-09T23:52:10.1975088Z 
+2025-11-09T23:52:10.2721889Z [0m[1m[38;5;9merror[0m[0m[1m: this expression creates a reference which is immediately dereferenced by the compiler[0m
+2025-11-09T23:52:10.2723015Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/payment.rs:208:55[0m
+2025-11-09T23:52:10.2724027Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2725507Z [0m[1m[38;5;12m208[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let pubkey = secp256k1::PublicKey::from_slice(&pubkey)[0m
+2025-11-09T23:52:10.2726768Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                       [0m[0m[1m[38;5;9m^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: change this to: `pubkey`[0m
+2025-11-09T23:52:10.2727533Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2728752Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_borrow[0m
+2025-11-09T23:52:10.2730276Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D clippy::needless-borrow` implied by `-D warnings`[0m
+2025-11-09T23:52:10.2731574Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(clippy::needless_borrow)]`[0m
+2025-11-09T23:52:10.2732180Z 
+2025-11-09T23:52:10.2732694Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:52:10.2733531Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/payment.rs:209:53[0m
+2025-11-09T23:52:10.2734120Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2735506Z [0m[1m[38;5;12m209[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            .map_err(|e| Bip70Error::SignatureError(format!("Invalid public key: {}", e)))?;[0m
+2025-11-09T23:52:10.2736727Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:52:10.2737738Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2738958Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:52:10.2740380Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:52:10.2740936Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2742225Z [0m[1m[38;5;12m209[0m[0m [0m[0m[38;5;9m- [0m[0m            .map_err(|e| Bip70Error::SignatureError(format!("Invalid public key: {}"[0m[0m[38;5;9m, e[0m[0m)))?;[0m
+2025-11-09T23:52:10.2744005Z [0m[1m[38;5;12m209[0m[0m [0m[0m[38;5;10m+ [0m[0m            .map_err(|e| Bip70Error::SignatureError(format!("Invalid public key: {[0m[0m[38;5;10me[0m[0m}")))?;[0m
+2025-11-09T23:52:10.2745204Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2745596Z 
+2025-11-09T23:52:10.2830317Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:52:10.2831258Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/payment.rs:398:53[0m
+2025-11-09T23:52:10.2831894Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2833102Z [0m[1m[38;5;12m398[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            .map_err(|e| Bip70Error::SignatureError(format!("Invalid pubkey: {}", e)))?;[0m
+2025-11-09T23:52:10.2834574Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:52:10.2835290Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2836547Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:52:10.2837747Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:52:10.2838516Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2841867Z [0m[1m[38;5;12m398[0m[0m [0m[0m[38;5;9m- [0m[0m            .map_err(|e| Bip70Error::SignatureError(format!("Invalid pubkey: {}"[0m[0m[38;5;9m, e[0m[0m)))?;[0m
+2025-11-09T23:52:10.2855800Z [0m[1m[38;5;12m398[0m[0m [0m[0m[38;5;10m+ [0m[0m            .map_err(|e| Bip70Error::SignatureError(format!("Invalid pubkey: {[0m[0m[38;5;10me[0m[0m}")))?;[0m
+2025-11-09T23:52:10.2856951Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2857249Z 
+2025-11-09T23:52:10.2902711Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:52:10.2903619Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/payment.rs:519:53[0m
+2025-11-09T23:52:10.2904903Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2906096Z [0m[1m[38;5;12m519[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            .map_err(|e| Bip70Error::SignatureError(format!("Invalid pubkey: {}", e)))?;[0m
+2025-11-09T23:52:10.2908867Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:52:10.2909552Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2910819Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:52:10.2912020Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:52:10.2912589Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2913836Z [0m[1m[38;5;12m519[0m[0m [0m[0m[38;5;9m- [0m[0m            .map_err(|e| Bip70Error::SignatureError(format!("Invalid pubkey: {}"[0m[0m[38;5;9m, e[0m[0m)))?;[0m
+2025-11-09T23:52:10.2916047Z [0m[1m[38;5;12m519[0m[0m [0m[0m[38;5;10m+ [0m[0m            .map_err(|e| Bip70Error::SignatureError(format!("Invalid pubkey: {[0m[0m[38;5;10me[0m[0m}")))?;[0m
+2025-11-09T23:52:10.2917062Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:52:10.2917678Z 
+2025-11-09T23:52:10.3528978Z [1m[31merror[0m[1m:[0m could not compile `bllvm-protocol` (lib) due to 12 previous errors
+2025-11-09T23:52:10.3663064Z ##[error]Process completed with exit code 101.

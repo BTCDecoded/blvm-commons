@@ -1,0 +1,15 @@
+{
+  "timestamp": 1762240183.1251087,
+  "system": "Bitcoin Core",
+  "benchmarks": {
+    "transaction_validation": {
+      "error": "Failed to generate blocks"
+    },
+    "block_validation": {
+      "error": "No valid measurements"
+    },
+    "hash_operations": {
+      "error": "No valid measurements"
+    }
+  }
+}

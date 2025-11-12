@@ -1,0 +1,852 @@
+﻿2025-11-09T23:51:17.7786552Z Current runner version: '2.329.0'
+2025-11-09T23:51:17.7793123Z Runner name: 'linode-runner-02'
+2025-11-09T23:51:17.7794109Z Runner group name: 'default'
+2025-11-09T23:51:17.7795414Z Machine name: 'localhost'
+2025-11-09T23:51:17.7798466Z ##[group]GITHUB_TOKEN Permissions
+2025-11-09T23:51:17.7800864Z Contents: read
+2025-11-09T23:51:17.7801500Z Metadata: read
+2025-11-09T23:51:17.7802099Z Packages: read
+2025-11-09T23:51:17.7802733Z ##[endgroup]
+2025-11-09T23:51:17.7805349Z Secret source: Actions
+2025-11-09T23:51:17.7806178Z Prepare workflow directory
+2025-11-09T23:51:17.8531923Z Prepare all required actions
+2025-11-09T23:51:17.8576987Z Getting action download info
+2025-11-09T23:51:18.1500379Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-09T23:51:18.5387545Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:6d653acede28d24f02e3cd41383119e8b1b35921)
+2025-11-09T23:51:18.9582217Z Complete job name: Rustfmt
+2025-11-09T23:51:19.0240466Z A job started hook has been configured by the self-hosted runner administrator
+2025-11-09T23:51:19.0407349Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-started.sh'
+2025-11-09T23:51:19.0441044Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:19.0442092Z ##[endgroup]
+2025-11-09T23:51:19.0643604Z Job started: Sun Nov  9 11:51:19 PM UTC 2025
+2025-11-09T23:51:19.0663021Z Available disk space: 9.2G
+2025-11-09T23:51:19.0705208Z WARNING: Disk usage is 82% - performing user-level cleanup
+2025-11-09T23:51:19.0708842Z Cleaning old work directories (user-level cleanup)...
+2025-11-09T23:51:19.1730391Z User-level cleanup completed. Disk usage: 82%
+2025-11-09T23:51:19.2053321Z ##[group]Run actions/checkout@v4
+2025-11-09T23:51:19.2054025Z with:
+2025-11-09T23:51:19.2054858Z   repository: BTCDecoded/bllvm-protocol
+2025-11-09T23:51:19.2055817Z   token: ***
+2025-11-09T23:51:19.2056301Z   ssh-strict: true
+2025-11-09T23:51:19.2056807Z   ssh-user: git
+2025-11-09T23:51:19.2057302Z   persist-credentials: true
+2025-11-09T23:51:19.2057861Z   clean: true
+2025-11-09T23:51:19.2058343Z   sparse-checkout-cone-mode: true
+2025-11-09T23:51:19.2058912Z   fetch-depth: 1
+2025-11-09T23:51:19.2059387Z   fetch-tags: false
+2025-11-09T23:51:19.2060046Z   show-progress: true
+2025-11-09T23:51:19.2060582Z   lfs: false
+2025-11-09T23:51:19.2061033Z   submodules: false
+2025-11-09T23:51:19.2063312Z   set-safe-directory: true
+2025-11-09T23:51:19.2063872Z env:
+2025-11-09T23:51:19.2064534Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:19.2065150Z ##[endgroup]
+2025-11-09T23:51:19.3441665Z Syncing repository: BTCDecoded/bllvm-protocol
+2025-11-09T23:51:19.3447431Z ##[group]Getting Git version info
+2025-11-09T23:51:19.3450011Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol'
+2025-11-09T23:51:19.3452400Z [command]/usr/bin/git version
+2025-11-09T23:51:19.3456824Z git version 2.43.0
+2025-11-09T23:51:19.3491457Z ##[endgroup]
+2025-11-09T23:51:19.3508742Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/c837be3c-01e4-43ba-8c5b-73831c13d34e/.gitconfig'
+2025-11-09T23:51:19.3536276Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/c837be3c-01e4-43ba-8c5b-73831c13d34e' before making global git config changes
+2025-11-09T23:51:19.3540181Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T23:51:19.3543328Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol
+2025-11-09T23:51:19.3598286Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-09T23:51:19.3628063Z https://github.com/BTCDecoded/bllvm-protocol
+2025-11-09T23:51:19.3651513Z ##[group]Removing previously created refs, to avoid conflicts
+2025-11-09T23:51:19.3658730Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2025-11-09T23:51:19.3688984Z refs/heads/main
+2025-11-09T23:51:19.3701001Z [command]/usr/bin/git checkout --detach
+2025-11-09T23:51:19.6100964Z HEAD is now at f5f0b04 fix: Update workflow to use correct repository name (bllvm-consensus)
+2025-11-09T23:51:19.6104153Z M	Cargo.lock
+2025-11-09T23:51:19.6108964Z M	target/.rustc_info.json
+2025-11-09T23:51:19.6168390Z [command]/usr/bin/git branch --delete --force main
+2025-11-09T23:51:19.6202117Z Deleted branch main (was f5f0b04).
+2025-11-09T23:51:19.6254248Z ##[endgroup]
+2025-11-09T23:51:19.6255834Z [command]/usr/bin/git submodule status
+2025-11-09T23:51:19.6535716Z ##[group]Cleaning the repository
+2025-11-09T23:51:19.6537937Z [command]/usr/bin/git clean -ffdx
+2025-11-09T23:51:19.6788645Z Removing target/.rustdoc_fingerprint.json
+2025-11-09T23:51:19.6790718Z Removing target/debug/.fingerprint/anyhow-059da4f0d7c55a8b/
+2025-11-09T23:51:19.6793033Z Removing target/debug/.fingerprint/anyhow-9d430c1379eea21c/
+2025-11-09T23:51:19.6795544Z Removing target/debug/.fingerprint/anyhow-e6cbf2b1ef9f5a17/
+2025-11-09T23:51:19.6797821Z Removing target/debug/.fingerprint/bech32-12784f55ab70c0f6/
+2025-11-09T23:51:19.6800166Z Removing target/debug/.fingerprint/bincode-6e75c10fe231fb5b/
+2025-11-09T23:51:19.6802689Z Removing target/debug/.fingerprint/bitcoin_hashes-eaa237cf5b3503ad/
+2025-11-09T23:51:19.6805821Z Removing target/debug/.fingerprint/bllvm-consensus-86b3cfe60ce31dfb/
+2025-11-09T23:51:19.6808759Z Removing target/debug/.fingerprint/bllvm-protocol-31ea8a5e10c8e481/
+2025-11-09T23:51:19.6811856Z Removing target/debug/.fingerprint/block-buffer-ed0c7c63643d9070/
+2025-11-09T23:51:19.6815010Z Removing target/debug/.fingerprint/cc-c3bab78ff053740a/
+2025-11-09T23:51:19.6817633Z Removing target/debug/.fingerprint/cfg-if-7603db952f85cc63/
+2025-11-09T23:51:19.6820916Z Removing target/debug/.fingerprint/cpufeatures-0f8ee1944988dae8/
+2025-11-09T23:51:19.6824042Z Removing target/debug/.fingerprint/crypto-common-3c5965312269fcf5/
+2025-11-09T23:51:19.6827805Z Removing target/debug/.fingerprint/digest-1f622b016543a542/
+2025-11-09T23:51:19.6830948Z Removing target/debug/.fingerprint/find-msvc-tools-7471ae18ecbc92d1/
+2025-11-09T23:51:19.6836278Z Removing target/debug/.fingerprint/generic-array-02da0d194d6ce3b5/
+2025-11-09T23:51:19.6839647Z Removing target/debug/.fingerprint/generic-array-36ef946c33138e1f/
+2025-11-09T23:51:19.6843017Z Removing target/debug/.fingerprint/generic-array-affd7e45afa3d6ef/
+2025-11-09T23:51:19.6846778Z Removing target/debug/.fingerprint/hex-39f5f8bc1bd9aca4/
+2025-11-09T23:51:19.6850175Z Removing target/debug/.fingerprint/itoa-08c0ac77a7f9c5e1/
+2025-11-09T23:51:19.6853813Z Removing target/debug/.fingerprint/proc-macro2-013e91bf61085fba/
+2025-11-09T23:51:19.6857379Z Removing target/debug/.fingerprint/proc-macro2-0c90074a995b0125/
+2025-11-09T23:51:19.6860675Z Removing target/debug/.fingerprint/proc-macro2-a923716fdc1423c7/
+2025-11-09T23:51:19.6863948Z Removing target/debug/.fingerprint/quote-3360d067b27f704c/
+2025-11-09T23:51:19.6867023Z Removing target/debug/.fingerprint/quote-5d4225f4d4915179/
+2025-11-09T23:51:19.6869916Z Removing target/debug/.fingerprint/quote-c2510e7aa42c175d/
+2025-11-09T23:51:19.6872916Z Removing target/debug/.fingerprint/ripemd-b2a4de375d61d509/
+2025-11-09T23:51:19.6876155Z Removing target/debug/.fingerprint/ryu-1d74fbb8396b52fe/
+2025-11-09T23:51:19.6879116Z Removing target/debug/.fingerprint/secp256k1-21b08ecd261dc97d/
+2025-11-09T23:51:19.6882403Z Removing target/debug/.fingerprint/secp256k1-sys-53bd58ebd1122fae/
+2025-11-09T23:51:19.6885896Z Removing target/debug/.fingerprint/secp256k1-sys-6fd4b73b21a9673e/
+2025-11-09T23:51:19.6889194Z Removing target/debug/.fingerprint/secp256k1-sys-a5a8c53e862658d4/
+2025-11-09T23:51:19.6892319Z Removing target/debug/.fingerprint/serde-1f6df97ca8e777f3/
+2025-11-09T23:51:19.6895376Z Removing target/debug/.fingerprint/serde-79bd1dc91f22d7e2/
+2025-11-09T23:51:19.6898307Z Removing target/debug/.fingerprint/serde-b0d11ba0e5f5f5f8/
+2025-11-09T23:51:19.6901361Z Removing target/debug/.fingerprint/serde_derive-485606c1dd0d25e8/
+2025-11-09T23:51:19.6906197Z Removing target/debug/.fingerprint/serde_json-0dc48a5bcf535a0b/
+2025-11-09T23:51:19.6909820Z Removing target/debug/.fingerprint/serde_json-330ca27f9e7094a2/
+2025-11-09T23:51:19.6913184Z Removing target/debug/.fingerprint/serde_json-f87e09600e685d33/
+2025-11-09T23:51:19.6918168Z Removing target/debug/.fingerprint/sha2-4e9acfe85698c02f/
+2025-11-09T23:51:19.6921025Z Removing target/debug/.fingerprint/sha2-asm-099dd8bc5d669f97/
+2025-11-09T23:51:19.6923992Z Removing target/debug/.fingerprint/sha2-asm-24ff003bca7bc94c/
+2025-11-09T23:51:19.6927124Z Removing target/debug/.fingerprint/sha2-asm-3b1083d90ef43202/
+2025-11-09T23:51:19.6930080Z Removing target/debug/.fingerprint/shlex-83c7e0da01d13271/
+2025-11-09T23:51:19.6933007Z Removing target/debug/.fingerprint/syn-ac22a29aa0958776/
+2025-11-09T23:51:19.6937826Z Removing target/debug/.fingerprint/thiserror-0ab41f997ece6c55/
+2025-11-09T23:51:19.6940912Z Removing target/debug/.fingerprint/thiserror-3e3835fcd789459f/
+2025-11-09T23:51:19.6943953Z Removing target/debug/.fingerprint/thiserror-5c7e835cbcf3ecb5/
+2025-11-09T23:51:19.6949044Z Removing target/debug/.fingerprint/thiserror-impl-5dcc7ed75452c5d0/
+2025-11-09T23:51:19.6952531Z Removing target/debug/.fingerprint/typenum-06d9d8c431f086b8/
+2025-11-09T23:51:19.6955683Z Removing target/debug/.fingerprint/typenum-6dbc395390c95a39/
+2025-11-09T23:51:19.6958674Z Removing target/debug/.fingerprint/typenum-8a7224baaad087a3/
+2025-11-09T23:51:19.6961898Z Removing target/debug/.fingerprint/unicode-ident-796da7d7beff3c43/
+2025-11-09T23:51:19.6965329Z Removing target/debug/.fingerprint/version_check-a216429c4cbdde93/
+2025-11-09T23:51:19.6968119Z Removing target/debug/build/anyhow-9d430c1379eea21c/
+2025-11-09T23:51:19.6970626Z Removing target/debug/build/anyhow-e6cbf2b1ef9f5a17/
+2025-11-09T23:51:19.6973569Z Removing target/debug/build/generic-array-02da0d194d6ce3b5/
+2025-11-09T23:51:19.6976674Z Removing target/debug/build/generic-array-affd7e45afa3d6ef/
+2025-11-09T23:51:19.6979547Z Removing target/debug/build/proc-macro2-0c90074a995b0125/
+2025-11-09T23:51:19.6982337Z Removing target/debug/build/proc-macro2-a923716fdc1423c7/
+2025-11-09T23:51:19.6986002Z Removing target/debug/build/quote-3360d067b27f704c/
+2025-11-09T23:51:19.6988504Z Removing target/debug/build/quote-c2510e7aa42c175d/
+2025-11-09T23:51:19.6991221Z Removing target/debug/build/secp256k1-sys-6fd4b73b21a9673e/
+2025-11-09T23:51:19.6996162Z Removing target/debug/build/secp256k1-sys-a5a8c53e862658d4/
+2025-11-09T23:51:19.6999009Z Removing target/debug/build/serde-1f6df97ca8e777f3/
+2025-11-09T23:51:19.7001729Z Removing target/debug/build/serde-79bd1dc91f22d7e2/
+2025-11-09T23:51:19.7006001Z Removing target/debug/build/serde_json-0dc48a5bcf535a0b/
+2025-11-09T23:51:19.7008896Z Removing target/debug/build/serde_json-f87e09600e685d33/
+2025-11-09T23:51:19.7011743Z Removing target/debug/build/sha2-asm-099dd8bc5d669f97/
+2025-11-09T23:51:19.7014697Z Removing target/debug/build/sha2-asm-24ff003bca7bc94c/
+2025-11-09T23:51:19.7019230Z Removing target/debug/build/thiserror-0ab41f997ece6c55/
+2025-11-09T23:51:19.7022043Z Removing target/debug/build/thiserror-5c7e835cbcf3ecb5/
+2025-11-09T23:51:19.7024979Z Removing target/debug/build/typenum-06d9d8c431f086b8/
+2025-11-09T23:51:19.7027685Z Removing target/debug/build/typenum-6dbc395390c95a39/
+2025-11-09T23:51:19.7031623Z Removing target/debug/deps/anyhow-059da4f0d7c55a8b.d
+2025-11-09T23:51:19.7034233Z Removing target/debug/deps/bech32-12784f55ab70c0f6.d
+2025-11-09T23:51:19.7037142Z Removing target/debug/deps/bincode-6e75c10fe231fb5b.d
+2025-11-09T23:51:19.7040040Z Removing target/debug/deps/bitcoin_hashes-eaa237cf5b3503ad.d
+2025-11-09T23:51:19.7043176Z Removing target/debug/deps/bllvm_consensus-86b3cfe60ce31dfb.d
+2025-11-09T23:51:19.7047401Z Removing target/debug/deps/block_buffer-ed0c7c63643d9070.d
+2025-11-09T23:51:19.7050153Z Removing target/debug/deps/cc-c3bab78ff053740a.d
+2025-11-09T23:51:19.7052659Z Removing target/debug/deps/cfg_if-7603db952f85cc63.d
+2025-11-09T23:51:19.7057072Z Removing target/debug/deps/cpufeatures-0f8ee1944988dae8.d
+2025-11-09T23:51:19.7060015Z Removing target/debug/deps/crypto_common-3c5965312269fcf5.d
+2025-11-09T23:51:19.7062738Z Removing target/debug/deps/digest-1f622b016543a542.d
+2025-11-09T23:51:19.7065987Z Removing target/debug/deps/find_msvc_tools-7471ae18ecbc92d1.d
+2025-11-09T23:51:19.7069262Z Removing target/debug/deps/generic_array-36ef946c33138e1f.d
+2025-11-09T23:51:19.7071980Z Removing target/debug/deps/hex-39f5f8bc1bd9aca4.d
+2025-11-09T23:51:19.7075788Z Removing target/debug/deps/itoa-08c0ac77a7f9c5e1.d
+2025-11-09T23:51:19.7078518Z Removing target/debug/deps/libanyhow-059da4f0d7c55a8b.rmeta
+2025-11-09T23:51:19.7081540Z Removing target/debug/deps/libbech32-12784f55ab70c0f6.rmeta
+2025-11-09T23:51:19.7086439Z Removing target/debug/deps/libbincode-6e75c10fe231fb5b.rmeta
+2025-11-09T23:51:19.7089655Z Removing target/debug/deps/libbitcoin_hashes-eaa237cf5b3503ad.rmeta
+2025-11-09T23:51:19.7093054Z Removing target/debug/deps/libbllvm_consensus-86b3cfe60ce31dfb.rmeta
+2025-11-09T23:51:19.7098178Z Removing target/debug/deps/libblock_buffer-ed0c7c63643d9070.rmeta
+2025-11-09T23:51:19.7101078Z Removing target/debug/deps/libcc-c3bab78ff053740a.rlib
+2025-11-09T23:51:19.7103737Z Removing target/debug/deps/libcc-c3bab78ff053740a.rmeta
+2025-11-09T23:51:19.7106762Z Removing target/debug/deps/libcfg_if-7603db952f85cc63.rmeta
+2025-11-09T23:51:19.7109777Z Removing target/debug/deps/libcpufeatures-0f8ee1944988dae8.rmeta
+2025-11-09T23:51:19.7113020Z Removing target/debug/deps/libcrypto_common-3c5965312269fcf5.rmeta
+2025-11-09T23:51:19.7116622Z Removing target/debug/deps/libdigest-1f622b016543a542.rmeta
+2025-11-09T23:51:19.7119688Z Removing target/debug/deps/libfind_msvc_tools-7471ae18ecbc92d1.rlib
+2025-11-09T23:51:19.7123027Z Removing target/debug/deps/libfind_msvc_tools-7471ae18ecbc92d1.rmeta
+2025-11-09T23:51:19.7128233Z Removing target/debug/deps/libgeneric_array-36ef946c33138e1f.rmeta
+2025-11-09T23:51:19.7131219Z Removing target/debug/deps/libhex-39f5f8bc1bd9aca4.rmeta
+2025-11-09T23:51:19.7133983Z Removing target/debug/deps/libitoa-08c0ac77a7f9c5e1.rmeta
+2025-11-09T23:51:19.7137207Z Removing target/debug/deps/libproc_macro2-013e91bf61085fba.rlib
+2025-11-09T23:51:19.7140776Z Removing target/debug/deps/libproc_macro2-013e91bf61085fba.rmeta
+2025-11-09T23:51:19.7143741Z Removing target/debug/deps/libquote-5d4225f4d4915179.rlib
+2025-11-09T23:51:19.7146650Z Removing target/debug/deps/libquote-5d4225f4d4915179.rmeta
+2025-11-09T23:51:19.7149498Z Removing target/debug/deps/libripemd-b2a4de375d61d509.rmeta
+2025-11-09T23:51:19.7152306Z Removing target/debug/deps/libryu-1d74fbb8396b52fe.rmeta
+2025-11-09T23:51:19.7155351Z Removing target/debug/deps/libsecp256k1-21b08ecd261dc97d.rmeta
+2025-11-09T23:51:19.7158530Z Removing target/debug/deps/libsecp256k1_sys-53bd58ebd1122fae.rmeta
+2025-11-09T23:51:19.7161424Z Removing target/debug/deps/libserde-b0d11ba0e5f5f5f8.rmeta
+2025-11-09T23:51:19.7164005Z Removing target/debug/deps/libserde_derive-485606c1dd0d25e8.so
+2025-11-09T23:51:19.7166221Z Removing target/debug/deps/libserde_json-330ca27f9e7094a2.rmeta
+2025-11-09T23:51:19.7168913Z Removing target/debug/deps/libsha2-4e9acfe85698c02f.rmeta
+2025-11-09T23:51:19.7170660Z Removing target/debug/deps/libsha2_asm-3b1083d90ef43202.rmeta
+2025-11-09T23:51:19.7172659Z Removing target/debug/deps/libshlex-83c7e0da01d13271.rlib
+2025-11-09T23:51:19.7175264Z Removing target/debug/deps/libshlex-83c7e0da01d13271.rmeta
+2025-11-09T23:51:19.7176940Z Removing target/debug/deps/libsyn-ac22a29aa0958776.rlib
+2025-11-09T23:51:19.7179278Z Removing target/debug/deps/libsyn-ac22a29aa0958776.rmeta
+2025-11-09T23:51:19.7181459Z Removing target/debug/deps/libthiserror-3e3835fcd789459f.rmeta
+2025-11-09T23:51:19.7184512Z Removing target/debug/deps/libthiserror_impl-5dcc7ed75452c5d0.so
+2025-11-09T23:51:19.7189005Z Removing target/debug/deps/libtypenum-8a7224baaad087a3.rmeta
+2025-11-09T23:51:19.7192612Z Removing target/debug/deps/libunicode_ident-796da7d7beff3c43.rlib
+2025-11-09T23:51:19.7197897Z Removing target/debug/deps/libunicode_ident-796da7d7beff3c43.rmeta
+2025-11-09T23:51:19.7201020Z Removing target/debug/deps/libversion_check-a216429c4cbdde93.rlib
+2025-11-09T23:51:19.7205923Z Removing target/debug/deps/libversion_check-a216429c4cbdde93.rmeta
+2025-11-09T23:51:19.7209206Z Removing target/debug/deps/proc_macro2-013e91bf61085fba.d
+2025-11-09T23:51:19.7211770Z Removing target/debug/deps/quote-5d4225f4d4915179.d
+2025-11-09T23:51:19.7216321Z Removing target/debug/deps/ripemd-b2a4de375d61d509.d
+2025-11-09T23:51:19.7218832Z Removing target/debug/deps/ryu-1d74fbb8396b52fe.d
+2025-11-09T23:51:19.7221348Z Removing target/debug/deps/secp256k1-21b08ecd261dc97d.d
+2025-11-09T23:51:19.7223973Z Removing target/debug/deps/secp256k1_sys-53bd58ebd1122fae.d
+2025-11-09T23:51:19.7226695Z Removing target/debug/deps/serde-b0d11ba0e5f5f5f8.d
+2025-11-09T23:51:19.7229227Z Removing target/debug/deps/serde_derive-485606c1dd0d25e8.d
+2025-11-09T23:51:19.7232662Z Removing target/debug/deps/serde_json-330ca27f9e7094a2.d
+2025-11-09T23:51:19.7236803Z Removing target/debug/deps/sha2-4e9acfe85698c02f.d
+2025-11-09T23:51:19.7239230Z Removing target/debug/deps/sha2_asm-3b1083d90ef43202.d
+2025-11-09T23:51:19.7241728Z Removing target/debug/deps/shlex-83c7e0da01d13271.d
+2025-11-09T23:51:19.7245971Z Removing target/debug/deps/syn-ac22a29aa0958776.d
+2025-11-09T23:51:19.7248545Z Removing target/debug/deps/thiserror-3e3835fcd789459f.d
+2025-11-09T23:51:19.7251376Z Removing target/debug/deps/thiserror_impl-5dcc7ed75452c5d0.d
+2025-11-09T23:51:19.7254057Z Removing target/debug/deps/typenum-8a7224baaad087a3.d
+2025-11-09T23:51:19.7256196Z Removing target/debug/deps/unicode_ident-796da7d7beff3c43.d
+2025-11-09T23:51:19.7258623Z Removing target/debug/deps/version_check-a216429c4cbdde93.d
+2025-11-09T23:51:19.7260476Z Removing target/debug/examples/
+2025-11-09T23:51:19.7263402Z Removing target/doc/
+2025-11-09T23:51:19.7269693Z [command]/usr/bin/git reset --hard HEAD
+2025-11-09T23:51:19.7282051Z HEAD is now at f5f0b04 fix: Update workflow to use correct repository name (bllvm-consensus)
+2025-11-09T23:51:19.7289038Z ##[endgroup]
+2025-11-09T23:51:19.7291488Z ##[group]Disabling automatic garbage collection
+2025-11-09T23:51:19.7293883Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T23:51:19.7329927Z ##[endgroup]
+2025-11-09T23:51:19.7331393Z ##[group]Setting up auth
+2025-11-09T23:51:19.7337930Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:51:19.7382347Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:51:19.7697486Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:51:19.7734920Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:51:19.8074242Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T23:51:19.8131378Z ##[endgroup]
+2025-11-09T23:51:19.8132906Z ##[group]Fetching the repository
+2025-11-09T23:51:19.8149000Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f5f0b046e78292228238657d2073c8b6558f8ab4:refs/remotes/origin/main
+2025-11-09T23:51:20.0172404Z ##[endgroup]
+2025-11-09T23:51:20.0177243Z ##[group]Determining the checkout info
+2025-11-09T23:51:20.0179699Z ##[endgroup]
+2025-11-09T23:51:20.0181994Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T23:51:20.0249783Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T23:51:20.0287777Z ##[group]Checking out the ref
+2025-11-09T23:51:20.0291791Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T23:51:20.0352181Z Switched to a new branch 'main'
+2025-11-09T23:51:20.0354140Z branch 'main' set up to track 'origin/main'.
+2025-11-09T23:51:20.0366223Z ##[endgroup]
+2025-11-09T23:51:20.0409118Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T23:51:20.0441057Z f5f0b046e78292228238657d2073c8b6558f8ab4
+2025-11-09T23:51:20.0781642Z ##[group]Run actions/checkout@v4
+2025-11-09T23:51:20.0783225Z with:
+2025-11-09T23:51:20.0786558Z   repository: BTCDecoded/bllvm-consensus
+2025-11-09T23:51:20.0788463Z   path: _temp-consensus-proof
+2025-11-09T23:51:20.0790455Z   token: ***
+2025-11-09T23:51:20.0791654Z   ssh-strict: true
+2025-11-09T23:51:20.0792967Z   ssh-user: git
+2025-11-09T23:51:20.0796344Z   persist-credentials: true
+2025-11-09T23:51:20.0797600Z   clean: true
+2025-11-09T23:51:20.0798447Z   sparse-checkout-cone-mode: true
+2025-11-09T23:51:20.0799472Z   fetch-depth: 1
+2025-11-09T23:51:20.0800277Z   fetch-tags: false
+2025-11-09T23:51:20.0801124Z   show-progress: true
+2025-11-09T23:51:20.0801969Z   lfs: false
+2025-11-09T23:51:20.0802742Z   submodules: false
+2025-11-09T23:51:20.0803600Z   set-safe-directory: true
+2025-11-09T23:51:20.0806557Z env:
+2025-11-09T23:51:20.0807318Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:20.0808330Z ##[endgroup]
+2025-11-09T23:51:20.2041438Z Syncing repository: BTCDecoded/bllvm-consensus
+2025-11-09T23:51:20.2051717Z ##[group]Getting Git version info
+2025-11-09T23:51:20.2055603Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/_temp-consensus-proof'
+2025-11-09T23:51:20.2109450Z [command]/usr/bin/git version
+2025-11-09T23:51:20.2153417Z git version 2.43.0
+2025-11-09T23:51:20.2186943Z ##[endgroup]
+2025-11-09T23:51:20.2198177Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/98b1bfe3-911d-460f-ba96-d240e3c89fe0/.gitconfig'
+2025-11-09T23:51:20.2216211Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/98b1bfe3-911d-460f-ba96-d240e3c89fe0' before making global git config changes
+2025-11-09T23:51:20.2221491Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T23:51:20.2234605Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/_temp-consensus-proof
+2025-11-09T23:51:20.2282767Z ##[group]Initializing the repository
+2025-11-09T23:51:20.2292970Z [command]/usr/bin/git init /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/_temp-consensus-proof
+2025-11-09T23:51:20.2339167Z Initialized empty Git repository in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/_temp-consensus-proof/.git/
+2025-11-09T23:51:20.2352234Z [command]/usr/bin/git remote add origin https://github.com/BTCDecoded/bllvm-consensus
+2025-11-09T23:51:20.2388890Z ##[endgroup]
+2025-11-09T23:51:20.2391107Z ##[group]Disabling automatic garbage collection
+2025-11-09T23:51:20.2392513Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T23:51:20.2426872Z ##[endgroup]
+2025-11-09T23:51:20.2428182Z ##[group]Setting up auth
+2025-11-09T23:51:20.2433228Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:51:20.2466243Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:51:20.2758443Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:51:20.2795628Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:51:20.3087007Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T23:51:20.3135538Z ##[endgroup]
+2025-11-09T23:51:20.3138039Z ##[group]Determining the default branch
+2025-11-09T23:51:20.3140069Z Retrieving the default branch name
+2025-11-09T23:51:20.5918699Z Default branch 'main'
+2025-11-09T23:51:20.5921817Z ##[endgroup]
+2025-11-09T23:51:20.5924265Z ##[group]Fetching the repository
+2025-11-09T23:51:20.5930976Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+2025-11-09T23:51:25.3358998Z From https://github.com/BTCDecoded/bllvm-consensus
+2025-11-09T23:51:25.3359785Z  * [new branch]      main       -> origin/main
+2025-11-09T23:51:25.3393732Z ##[endgroup]
+2025-11-09T23:51:25.3394901Z ##[group]Determining the checkout info
+2025-11-09T23:51:25.3395915Z ##[endgroup]
+2025-11-09T23:51:25.3398764Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T23:51:25.3451786Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T23:51:25.3491699Z ##[group]Checking out the ref
+2025-11-09T23:51:25.3496901Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T23:51:26.3972770Z Updating files:  67% (793/1180)
+2025-11-09T23:51:26.4240390Z Updating files:  68% (803/1180)
+2025-11-09T23:51:26.5514741Z Updating files:  69% (815/1180)
+2025-11-09T23:51:26.9307573Z Updating files:  70% (826/1180)
+2025-11-09T23:51:27.0261666Z Updating files:  71% (838/1180)
+2025-11-09T23:51:27.1066752Z Updating files:  72% (850/1180)
+2025-11-09T23:51:27.3573202Z Updating files:  73% (862/1180)
+2025-11-09T23:51:27.3586114Z Updating files:  73% (873/1180)
+2025-11-09T23:51:27.6734646Z Updating files:  74% (874/1180)
+2025-11-09T23:51:27.6740570Z Updating files:  75% (885/1180)
+2025-11-09T23:51:27.6754709Z Updating files:  76% (897/1180)
+2025-11-09T23:51:27.6777812Z Updating files:  77% (909/1180)
+2025-11-09T23:51:27.6794225Z Updating files:  78% (921/1180)
+2025-11-09T23:51:27.6806077Z Updating files:  79% (933/1180)
+2025-11-09T23:51:27.6813821Z Updating files:  80% (944/1180)
+2025-11-09T23:51:27.6822190Z Updating files:  81% (956/1180)
+2025-11-09T23:51:27.6829725Z Updating files:  82% (968/1180)
+2025-11-09T23:51:27.6835040Z Updating files:  83% (980/1180)
+2025-11-09T23:51:27.6841914Z Updating files:  84% (992/1180)
+2025-11-09T23:51:27.7174290Z Updating files:  85% (1003/1180)
+2025-11-09T23:51:27.7499999Z Updating files:  86% (1015/1180)
+2025-11-09T23:51:27.7741402Z Updating files:  87% (1027/1180)
+2025-11-09T23:51:27.8202163Z Updating files:  88% (1039/1180)
+2025-11-09T23:51:27.8390406Z Updating files:  89% (1051/1180)
+2025-11-09T23:51:27.8399874Z Updating files:  90% (1062/1180)
+2025-11-09T23:51:27.8433856Z Updating files:  91% (1074/1180)
+2025-11-09T23:51:27.8434811Z Updating files:  92% (1086/1180)
+2025-11-09T23:51:27.8436352Z Updating files:  93% (1098/1180)
+2025-11-09T23:51:27.8436808Z Updating files:  94% (1110/1180)
+2025-11-09T23:51:27.8447041Z Updating files:  95% (1121/1180)
+2025-11-09T23:51:27.8462497Z Updating files:  96% (1133/1180)
+2025-11-09T23:51:27.8471092Z Updating files:  97% (1145/1180)
+2025-11-09T23:51:27.8479680Z Updating files:  98% (1157/1180)
+2025-11-09T23:51:27.8489019Z Updating files:  99% (1169/1180)
+2025-11-09T23:51:27.8489457Z Updating files: 100% (1180/1180)
+2025-11-09T23:51:27.8489861Z Updating files: 100% (1180/1180), done.
+2025-11-09T23:51:27.8515195Z Reset branch 'main'
+2025-11-09T23:51:27.8516927Z branch 'main' set up to track 'origin/main'.
+2025-11-09T23:51:27.8700600Z ##[endgroup]
+2025-11-09T23:51:27.8753577Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T23:51:27.8788610Z f1ff38664dd5deaaa46fc9d342df1d4aa6559aca
+2025-11-09T23:51:27.8955811Z ##[group]Run if [ -d "../bllvm-consensus" ]; then rm -rf ../bllvm-consensus; fi
+2025-11-09T23:51:27.8956385Z [36;1mif [ -d "../bllvm-consensus" ]; then rm -rf ../bllvm-consensus; fi[0m
+2025-11-09T23:51:27.8956791Z [36;1mmv _temp-consensus-proof ../bllvm-consensus[0m
+2025-11-09T23:51:27.8987748Z shell: /usr/bin/bash -e {0}
+2025-11-09T23:51:27.8987986Z env:
+2025-11-09T23:51:27.8988171Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:27.8988381Z ##[endgroup]
+2025-11-09T23:51:28.0312446Z ##[group]Run dtolnay/rust-toolchain@master
+2025-11-09T23:51:28.0312744Z with:
+2025-11-09T23:51:28.0312926Z   toolchain: 1.88.0
+2025-11-09T23:51:28.0313115Z   components: rustfmt
+2025-11-09T23:51:28.0313307Z env:
+2025-11-09T23:51:28.0313469Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.0313676Z ##[endgroup]
+2025-11-09T23:51:28.0429072Z ##[group]Run : parse toolchain version
+2025-11-09T23:51:28.0429622Z [36;1m: parse toolchain version[0m
+2025-11-09T23:51:28.0429886Z [36;1mif [[ -z $toolchain ]]; then[0m
+2025-11-09T23:51:28.0430380Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2025-11-09T23:51:28.0430913Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2025-11-09T23:51:28.0431201Z [36;1m  exit 1[0m
+2025-11-09T23:51:28.0431513Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2025-11-09T23:51:28.0431905Z [36;1m  if [[ Linux == macOS ]]; then[0m
+2025-11-09T23:51:28.0432431Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:51:28.0432898Z [36;1m  else[0m
+2025-11-09T23:51:28.0433276Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:51:28.0433720Z [36;1m  fi[0m
+2025-11-09T23:51:28.0434001Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2025-11-09T23:51:28.0434685Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:51:28.0435125Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2025-11-09T23:51:28.0435614Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:51:28.0436073Z [36;1melse[0m
+2025-11-09T23:51:28.0436306Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:51:28.0436594Z [36;1mfi[0m
+2025-11-09T23:51:28.0471405Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.0471745Z env:
+2025-11-09T23:51:28.0471930Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.0472149Z   toolchain: 1.88.0
+2025-11-09T23:51:28.0472336Z ##[endgroup]
+2025-11-09T23:51:28.0599684Z ##[group]Run : construct rustup command line
+2025-11-09T23:51:28.0600008Z [36;1m: construct rustup command line[0m
+2025-11-09T23:51:28.0600510Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:51:28.0601083Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:51:28.0601528Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:51:28.0632222Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.0632556Z env:
+2025-11-09T23:51:28.0632745Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.0633052Z   targets: 
+2025-11-09T23:51:28.0633240Z   components: rustfmt
+2025-11-09T23:51:28.0633437Z ##[endgroup]
+2025-11-09T23:51:28.0730500Z ##[group]Run : set $CARGO_HOME
+2025-11-09T23:51:28.0730788Z [36;1m: set $CARGO_HOME[0m
+2025-11-09T23:51:28.0731120Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+2025-11-09T23:51:28.0763990Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.0766931Z env:
+2025-11-09T23:51:28.0767136Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.0767365Z ##[endgroup]
+2025-11-09T23:51:28.0848388Z ##[group]Run : install rustup if needed
+2025-11-09T23:51:28.0848686Z [36;1m: install rustup if needed[0m
+2025-11-09T23:51:28.0848970Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2025-11-09T23:51:28.0849679Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+2025-11-09T23:51:28.0850545Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+2025-11-09T23:51:28.0850807Z [36;1mfi[0m
+2025-11-09T23:51:28.0881018Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.0881336Z env:
+2025-11-09T23:51:28.0881521Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.0881750Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:51:28.0881976Z ##[endgroup]
+2025-11-09T23:51:28.1522288Z info: downloading installer
+2025-11-09T23:51:28.3733957Z warn: It looks like you have an existing rustup settings file at:
+2025-11-09T23:51:28.3734711Z warn: /home/jswift/.rustup/settings.toml
+2025-11-09T23:51:28.3735375Z warn: Rustup will install the default toolchain as specified in the settings file,
+2025-11-09T23:51:28.3736120Z warn: instead of the one inferred from the default host triple.
+2025-11-09T23:51:28.4025259Z info: profile set to 'default'
+2025-11-09T23:51:28.4025747Z info: default host triple is x86_64-unknown-linux-gnu
+2025-11-09T23:51:28.4026375Z info: skipping toolchain installation
+2025-11-09T23:51:28.4026822Z 
+2025-11-09T23:51:28.4026853Z 
+2025-11-09T23:51:28.4027053Z Rust is installed now. Great!
+2025-11-09T23:51:28.4027361Z 
+2025-11-09T23:51:28.4027653Z To get started you may need to restart your current shell.
+2025-11-09T23:51:28.4028373Z This would reload your PATH environment variable to include
+2025-11-09T23:51:28.4028859Z Cargo's bin directory ($HOME/.cargo/bin).
+2025-11-09T23:51:28.4029136Z 
+2025-11-09T23:51:28.4029305Z To configure your current shell, you need to source
+2025-11-09T23:51:28.4029758Z the corresponding env file under $HOME/.cargo.
+2025-11-09T23:51:28.4030035Z 
+2025-11-09T23:51:28.4030301Z This is usually done by running one of the following (note the leading DOT):
+2025-11-09T23:51:28.4030905Z . "$HOME/.cargo/env"            # For sh/bash/zsh/ash/dash/pdksh
+2025-11-09T23:51:28.4031371Z source "$HOME/.cargo/env.fish"  # For fish
+2025-11-09T23:51:28.4031793Z source $"($nu.home-path)/.cargo/env.nu"  # For nushell
+2025-11-09T23:51:28.4231942Z ##[group]Run rustup toolchain install 1.88.0 --component rustfmt --profile minimal --no-self-update
+2025-11-09T23:51:28.4232669Z [36;1mrustup toolchain install 1.88.0 --component rustfmt --profile minimal --no-self-update[0m
+2025-11-09T23:51:28.4262961Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.4263322Z env:
+2025-11-09T23:51:28.4263512Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.4263773Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:51:28.4264018Z ##[endgroup]
+2025-11-09T23:51:28.5240135Z info: syncing channel updates for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T23:51:28.5879993Z info: latest update on 2025-06-26, rust version 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T23:51:28.6218796Z info: component 'rustfmt' for target 'x86_64-unknown-linux-gnu' is up to date
+2025-11-09T23:51:28.6242385Z 
+2025-11-09T23:51:28.6379889Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T23:51:28.6380468Z 
+2025-11-09T23:51:28.6447054Z ##[group]Run rustup default 1.88.0
+2025-11-09T23:51:28.6447376Z [36;1mrustup default 1.88.0[0m
+2025-11-09T23:51:28.6475043Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.6475369Z env:
+2025-11-09T23:51:28.6475551Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.6475783Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:51:28.6476014Z ##[endgroup]
+2025-11-09T23:51:28.6600366Z info: using existing install for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T23:51:28.7000126Z info: default toolchain set to '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-09T23:51:28.7000618Z 
+2025-11-09T23:51:28.7123074Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T23:51:28.7127921Z info: note that the toolchain '1.88.0-x86_64-unknown-linux-gnu' is currently in use (overridden by '/home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/rust-toolchain.toml')
+2025-11-09T23:51:28.7129103Z 
+2025-11-09T23:51:28.7192819Z ##[group]Run : create cachekey
+2025-11-09T23:51:28.7193531Z [36;1m: create cachekey[0m
+2025-11-09T23:51:28.7194915Z [36;1mDATE=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2025-11-09T23:51:28.7195931Z [36;1mHASH=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2025-11-09T23:51:28.7196736Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2025-11-09T23:51:28.7241508Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.7242044Z env:
+2025-11-09T23:51:28.7242357Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.7242760Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:51:28.7243178Z ##[endgroup]
+2025-11-09T23:51:28.7884617Z ##[group]Run : disable incremental compilation
+2025-11-09T23:51:28.7885184Z [36;1m: disable incremental compilation[0m
+2025-11-09T23:51:28.7885705Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2025-11-09T23:51:28.7886235Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2025-11-09T23:51:28.7886716Z [36;1mfi[0m
+2025-11-09T23:51:28.7930046Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.7930581Z env:
+2025-11-09T23:51:28.7930889Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.7931293Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:51:28.7931717Z ##[endgroup]
+2025-11-09T23:51:28.8035046Z ##[group]Run : enable colors in Cargo output
+2025-11-09T23:51:28.8035619Z [36;1m: enable colors in Cargo output[0m
+2025-11-09T23:51:28.8036129Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2025-11-09T23:51:28.8036699Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2025-11-09T23:51:28.8037172Z [36;1mfi[0m
+2025-11-09T23:51:28.8076092Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.8076645Z env:
+2025-11-09T23:51:28.8076949Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.8077351Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:51:28.8077781Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:51:28.8078128Z ##[endgroup]
+2025-11-09T23:51:28.8183856Z ##[group]Run : enable Cargo sparse registry
+2025-11-09T23:51:28.8184621Z [36;1m: enable Cargo sparse registry[0m
+2025-11-09T23:51:28.8185238Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2025-11-09T23:51:28.8186565Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2025-11-09T23:51:28.8189262Z [36;1m  if rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2025-11-09T23:51:28.8190315Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-09T23:51:28.8191367Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2025-11-09T23:51:28.8192179Z [36;1m  elif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2025-11-09T23:51:28.8193273Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-09T23:51:28.8194496Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2025-11-09T23:51:28.8195082Z [36;1m  fi[0m
+2025-11-09T23:51:28.8195400Z [36;1mfi[0m
+2025-11-09T23:51:28.8233035Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.8233669Z env:
+2025-11-09T23:51:28.8234012Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.8234572Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:51:28.8235003Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:51:28.8235360Z ##[endgroup]
+2025-11-09T23:51:28.8749716Z ##[group]Run : work around spurious network errors in curl 8.0
+2025-11-09T23:51:28.8750164Z [36;1m: work around spurious network errors in curl 8.0[0m
+2025-11-09T23:51:28.8750752Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2025-11-09T23:51:28.8751405Z [36;1mif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2025-11-09T23:51:28.8752023Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2025-11-09T23:51:28.8752351Z [36;1mfi[0m
+2025-11-09T23:51:28.8786168Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.8786512Z env:
+2025-11-09T23:51:28.8786702Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.8786948Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:51:28.8787412Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:51:28.8787629Z ##[endgroup]
+2025-11-09T23:51:28.9080370Z ##[group]Run rustc +1.88.0 --version --verbose
+2025-11-09T23:51:28.9080726Z [36;1mrustc +1.88.0 --version --verbose[0m
+2025-11-09T23:51:28.9114666Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:28.9115329Z env:
+2025-11-09T23:51:28.9115550Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.9115840Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:51:28.9116135Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:51:28.9116382Z ##[endgroup]
+2025-11-09T23:51:28.9346617Z rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-09T23:51:28.9347155Z binary: rustc
+2025-11-09T23:51:28.9347546Z commit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc
+2025-11-09T23:51:28.9348087Z commit-date: 2025-06-23
+2025-11-09T23:51:28.9348468Z host: x86_64-unknown-linux-gnu
+2025-11-09T23:51:28.9348876Z release: 1.88.0
+2025-11-09T23:51:28.9349209Z LLVM version: 20.1.5
+2025-11-09T23:51:28.9437336Z ##[group]Run cargo fmt -- --check
+2025-11-09T23:51:28.9437656Z [36;1mcargo fmt -- --check[0m
+2025-11-09T23:51:28.9465912Z shell: /usr/bin/bash -e {0}
+2025-11-09T23:51:28.9466156Z env:
+2025-11-09T23:51:28.9466331Z   CARGO_TERM_COLOR: always
+2025-11-09T23:51:28.9466893Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:51:28.9467144Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:51:28.9467352Z ##[endgroup]
+2025-11-09T23:51:29.1627407Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/bip158.rs:64:
+2025-11-09T23:51:29.1628439Z              self.current_byte |= 1u8 << (7 - self.bit_count);
+2025-11-09T23:51:29.1628966Z          }
+2025-11-09T23:51:29.1629213Z          self.bit_count += 1;
+2025-11-09T23:51:29.1629515Z -        
+2025-11-09T23:51:29.1629745Z +
+2025-11-09T23:51:29.1629970Z          if self.bit_count == 8 {
+2025-11-09T23:51:29.1630335Z              self.data.push(self.current_byte);
+2025-11-09T23:51:29.1630723Z              self.current_byte = 0;
+2025-11-09T23:51:29.1631431Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/bip158.rs:270:
+2025-11-09T23:51:29.1632047Z      }
+2025-11-09T23:51:29.1632265Z  
+2025-11-09T23:51:29.1632504Z      let n = filter.num_elements as u64;
+2025-11-09T23:51:29.1633049Z -    
+2025-11-09T23:51:29.1633257Z +
+2025-11-09T23:51:29.1633491Z      // Hash script to range [0, N*M)
+2025-11-09T23:51:29.1633901Z      let script_hash = hash_to_range(script, n, BIP158_M);
+2025-11-09T23:51:29.1634504Z -    
+2025-11-09T23:51:29.1636612Z +
+2025-11-09T23:51:29.1636879Z      // Decode filter to reconstruct sorted set
+2025-11-09T23:51:29.1642078Z      let mut reader = BitReader::new(&filter.filter_data);
+2025-11-09T23:51:29.1642473Z      let mut decoded_values = Vec::new();
+2025-11-09T23:51:29.1642978Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/bip158.rs:280:
+2025-11-09T23:51:29.1643492Z      let mut current_value = 0u64;
+2025-11-09T23:51:29.1643736Z -    
+2025-11-09T23:51:29.1643929Z +
+2025-11-09T23:51:29.1644154Z      // Decode all differences and reconstruct values
+2025-11-09T23:51:29.1646377Z      for _ in 0..filter.num_elements {
+2025-11-09T23:51:29.1646890Z          if let Some(diff) = golomb_rice_decode(&mut reader, BIP158_P) {
+2025-11-09T23:51:29.1647461Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/bip158.rs:289:
+2025-11-09T23:51:29.1647937Z              return false;
+2025-11-09T23:51:29.1648148Z          }
+2025-11-09T23:51:29.1648319Z      }
+2025-11-09T23:51:29.1648480Z -    
+2025-11-09T23:51:29.1648645Z +
+2025-11-09T23:51:29.1648843Z      // Check if script_hash is in the decoded set
+2025-11-09T23:51:29.1649190Z      decoded_values.binary_search(&script_hash).is_ok()
+2025-11-09T23:51:29.1649485Z  }
+2025-11-09T23:51:29.1649877Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/bip158.rs:327:
+2025-11-09T23:51:29.1650334Z      #[test]
+2025-11-09T23:51:29.1650571Z      fn test_golomb_rice_encode_decode_roundtrip() {
+2025-11-09T23:51:29.1650920Z          let test_values = vec![0, 1, 2, 10, 100, 1000, 10000];
+2025-11-09T23:51:29.1651494Z -        
+2025-11-09T23:51:29.1651664Z +
+2025-11-09T23:51:29.1651835Z          for value in test_values {
+2025-11-09T23:51:29.1652141Z              let encoded = golomb_rice_encode(value, BIP158_P);
+2025-11-09T23:51:29.1654864Z              let mut reader = BitReader::new(&encoded);
+2025-11-09T23:51:29.1655368Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/bip158.rs:334:
+2025-11-09T23:51:29.1655911Z              let decoded = golomb_rice_decode(&mut reader, BIP158_P);
+2025-11-09T23:51:29.1656235Z -            
+2025-11-09T23:51:29.1656418Z +
+2025-11-09T23:51:29.1656722Z              assert_eq!(decoded, Some(value), "Roundtrip failed for value {}", value);
+2025-11-09T23:51:29.1657106Z          }
+2025-11-09T23:51:29.1657271Z      }
+2025-11-09T23:51:29.1658178Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/bip158.rs:339:
+2025-11-09T23:51:29.1658650Z  
+2025-11-09T23:51:29.1658818Z      #[test]
+2025-11-09T23:51:29.1659022Z      fn test_build_and_match_filter() {
+2025-11-09T23:51:29.1659440Z -        use crate::{Transaction, TransactionInput, TransactionOutput, OutPoint};
+2025-11-09T23:51:29.1659837Z -        
+2025-11-09T23:51:29.1660139Z +        use crate::{OutPoint, Transaction, TransactionInput, TransactionOutput};
+2025-11-09T23:51:29.1660522Z +
+2025-11-09T23:51:29.1660703Z          // Create a test transaction
+2025-11-09T23:51:29.1660974Z          let tx = Transaction {
+2025-11-09T23:51:29.1661206Z              version: 1,
+2025-11-09T23:51:29.1661638Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/bip158.rs:358:
+2025-11-09T23:51:29.1662056Z              }],
+2025-11-09T23:51:29.1662237Z              lock_time: 0,
+2025-11-09T23:51:29.1662430Z          };
+2025-11-09T23:51:29.1662588Z -        
+2025-11-09T23:51:29.1662748Z +
+2025-11-09T23:51:29.1662899Z          // Build filter
+2025-11-09T23:51:29.1663176Z          let filter = build_block_filter(&[tx.clone()], &[]).unwrap();
+2025-11-09T23:51:29.1663506Z          assert!(filter.num_elements > 0);
+2025-11-09T23:51:29.1663942Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/bip158.rs:365:
+2025-11-09T23:51:29.1664491Z -        
+2025-11-09T23:51:29.1664649Z +
+2025-11-09T23:51:29.1664827Z          // Match the script that's in the filter
+2025-11-09T23:51:29.1665149Z          let script_in_filter = &tx.outputs[0].script_pubkey;
+2025-11-09T23:51:29.1667546Z          assert!(match_filter(&filter, script_in_filter));
+2025-11-09T23:51:29.1668003Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/bip158.rs:369:
+2025-11-09T23:51:29.1668491Z -        
+2025-11-09T23:51:29.1668637Z +
+2025-11-09T23:51:29.1668813Z          // Match a script that's not in the filter
+2025-11-09T23:51:29.1669126Z          let script_not_in_filter = vec![0x53, 0x54]; // OP_3 OP_4
+2025-11-09T23:51:29.1669541Z -        // Note: May have false positives due to GCS nature, but should generally work
+2025-11-09T23:51:29.1670032Z +                                                     // Note: May have false positives due to GCS nature, but should generally work
+2025-11-09T23:51:29.1670471Z          let matched = match_filter(&filter, &script_not_in_filter);
+2025-11-09T23:51:29.1671077Z          // False positives are possible, so we can't assert false
+2025-11-09T23:51:29.1671469Z          // But we can verify the filter works for scripts that are definitely in it
+2025-11-09T23:51:29.1722523Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/lib.rs:63:
+2025-11-09T23:51:29.1723270Z  pub mod variants;
+2025-11-09T23:51:29.1723493Z  
+2025-11-09T23:51:29.1723708Z  // Protocol-level BIP implementations
+2025-11-09T23:51:29.1724113Z -pub mod address;  // BIP173/350/351: Bech32/Bech32m address encoding
+2025-11-09T23:51:29.1724805Z -pub mod bip157;   // BIP157: Client-side block filtering network protocol
+2025-11-09T23:51:29.1725348Z -pub mod bip158;   // BIP158: Compact block filters
+2025-11-09T23:51:29.1725943Z -pub mod payment;  // BIP70: Payment protocol (P2P variant)
+2025-11-09T23:51:29.1726622Z +pub mod address; // BIP173/350/351: Bech32/Bech32m address encoding
+2025-11-09T23:51:29.1727125Z +pub mod bip157; // BIP157: Client-side block filtering network protocol
+2025-11-09T23:51:29.1727563Z +pub mod bip158; // BIP158: Compact block filters
+2025-11-09T23:51:29.1727950Z +pub mod payment; // BIP70: Payment protocol (P2P variant)
+2025-11-09T23:51:29.1728463Z  
+2025-11-09T23:51:29.1728654Z  /// Bitcoin Protocol Engine
+2025-11-09T23:51:29.1728902Z  ///
+2025-11-09T23:51:29.1751714Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:4:
+2025-11-09T23:51:29.1753306Z  //! Protocol-specific limits and validation are handled here, with consensus
+2025-11-09T23:51:29.1753847Z  //! validation delegated to the consensus layer.
+2025-11-09T23:51:29.1754182Z  
+2025-11-09T23:51:29.1755056Z -use crate::{BitcoinProtocolEngine, Result};
+2025-11-09T23:51:29.1755510Z  use crate::validation::ProtocolValidationContext;
+2025-11-09T23:51:29.1755957Z -use bllvm_consensus::types::{OutPoint, UTXO, UtxoSet};
+2025-11-09T23:51:29.1756422Z +use crate::{BitcoinProtocolEngine, Result};
+2025-11-09T23:51:29.1756819Z +use bllvm_consensus::types::{OutPoint, UtxoSet, UTXO};
+2025-11-09T23:51:29.1757381Z  use bllvm_consensus::{Block, BlockHeader, Hash, Transaction, ValidationResult};
+2025-11-09T23:51:29.1757850Z  
+2025-11-09T23:51:29.1758119Z  /// NetworkMessage: Bitcoin P2P protocol message types
+2025-11-09T23:51:29.1758752Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:226:
+2025-11-09T23:51:29.1759431Z          NetworkMessage::VerAck => process_verack_message(peer_state),
+2025-11-09T23:51:29.1759986Z          NetworkMessage::Addr(addr) => process_addr_message(addr, peer_state),
+2025-11-09T23:51:29.1760552Z          NetworkMessage::Inv(inv) => process_inv_message(inv, chain_access),
+2025-11-09T23:51:29.1761015Z -        NetworkMessage::GetData(getdata) => {
+2025-11-09T23:51:29.1761408Z -            process_getdata_message(getdata, chain_access)
+2025-11-09T23:51:29.1761754Z -        }
+2025-11-09T23:51:29.1762165Z +        NetworkMessage::GetData(getdata) => process_getdata_message(getdata, chain_access),
+2025-11-09T23:51:29.1762713Z          NetworkMessage::GetHeaders(getheaders) => {
+2025-11-09T23:51:29.1763244Z              process_getheaders_message(getheaders, chain_access)
+2025-11-09T23:51:29.1763817Z          }
+2025-11-09T23:51:29.1764285Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:235:
+2025-11-09T23:51:29.1765232Z          NetworkMessage::Headers(headers) => process_headers_message(headers),
+2025-11-09T23:51:29.1765737Z -        NetworkMessage::Block(block) => {
+2025-11-09T23:51:29.1766139Z -            process_block_message(engine, block, utxo_set, height)
+2025-11-09T23:51:29.1766847Z -        }
+2025-11-09T23:51:29.1767270Z +        NetworkMessage::Block(block) => process_block_message(engine, block, utxo_set, height),
+2025-11-09T23:51:29.1767905Z          NetworkMessage::Tx(tx) => process_tx_message(engine, tx, height),
+2025-11-09T23:51:29.1768470Z          NetworkMessage::Ping(ping) => process_ping_message(ping, peer_state),
+2025-11-09T23:51:29.1769047Z          NetworkMessage::Pong(pong) => process_pong_message(pong, peer_state),
+2025-11-09T23:51:29.1769812Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:368:
+2025-11-09T23:51:29.1770430Z  ) -> Result<NetworkResponse> {
+2025-11-09T23:51:29.1770775Z      // Use chain access to find headers (if provided)
+2025-11-09T23:51:29.1771150Z      if let Some(chain) = chain_access {
+2025-11-09T23:51:29.1771522Z -        let headers = chain.get_headers_for_locator(
+2025-11-09T23:51:29.1771805Z -            &getheaders.block_locator_hashes,
+2025-11-09T23:51:29.1772079Z -            &getheaders.hash_stop,
+2025-11-09T23:51:29.1772488Z -        );
+2025-11-09T23:51:29.1772720Z +        let headers =
+2025-11-09T23:51:29.1773251Z +            chain.get_headers_for_locator(&getheaders.block_locator_hashes, &getheaders.hash_stop);
+2025-11-09T23:51:29.1773752Z          return Ok(NetworkResponse::SendMessage(NetworkMessage::Headers(
+2025-11-09T23:51:29.1774084Z              HeadersMessage { headers },
+2025-11-09T23:51:29.1774438Z          )));
+2025-11-09T23:51:29.1774812Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:378:
+2025-11-09T23:51:29.1775232Z      }
+2025-11-09T23:51:29.1775379Z  
+2025-11-09T23:51:29.1775641Z -    Ok(NetworkResponse::Reject("Chain access not available".to_string()))
+2025-11-09T23:51:29.1775998Z +    Ok(NetworkResponse::Reject(
+2025-11-09T23:51:29.1776246Z +        "Chain access not available".to_string(),
+2025-11-09T23:51:29.1776489Z +    ))
+2025-11-09T23:51:29.1776639Z  }
+2025-11-09T23:51:29.1776775Z  
+2025-11-09T23:51:29.1776939Z  /// Process headers message
+2025-11-09T23:51:29.1777466Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:406:
+2025-11-09T23:51:29.1777889Z  
+2025-11-09T23:51:29.1778154Z      // Delegate to consensus via protocol engine (requires utxo_set and height)
+2025-11-09T23:51:29.1778535Z      if let (Some(utxos), Some(h)) = (utxo_set, height) {
+2025-11-09T23:51:29.1778856Z -        let context = ProtocolValidationContext::new(
+2025-11-09T23:51:29.1779148Z -            engine.get_protocol_version(),
+2025-11-09T23:51:29.1779384Z -            h,
+2025-11-09T23:51:29.1779546Z -        )?;
+2025-11-09T23:51:29.1779863Z +        let context = ProtocolValidationContext::new(engine.get_protocol_version(), h)?;
+2025-11-09T23:51:29.1780357Z          let result = engine.validate_block_with_protocol(block, utxos, h, &context)?;
+2025-11-09T23:51:29.1780704Z  
+2025-11-09T23:51:29.1780854Z          match result {
+2025-11-09T23:51:29.1781239Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:416:
+2025-11-09T23:51:29.1781730Z              ValidationResult::Valid => Ok(NetworkResponse::Ok),
+2025-11-09T23:51:29.1782046Z -            ValidationResult::Invalid(reason) => {
+2025-11-09T23:51:29.1782402Z -                Ok(NetworkResponse::Reject(format!("Invalid block: {}", reason)))
+2025-11-09T23:51:29.1782718Z -            }
+2025-11-09T23:51:29.1783014Z +            ValidationResult::Invalid(reason) => Ok(NetworkResponse::Reject(format!(
+2025-11-09T23:51:29.1783702Z +                "Invalid block: {}",
+2025-11-09T23:51:29.1783939Z +                reason
+2025-11-09T23:51:29.1784124Z +            ))),
+2025-11-09T23:51:29.1784291Z          }
+2025-11-09T23:51:29.1784572Z      } else {
+2025-11-09T23:51:29.1784857Z -        Ok(NetworkResponse::Reject("Missing validation context".to_string()))
+2025-11-09T23:51:29.1786978Z +        Ok(NetworkResponse::Reject(
+2025-11-09T23:51:29.1787235Z +            "Missing validation context".to_string(),
+2025-11-09T23:51:29.1787483Z +        ))
+2025-11-09T23:51:29.1787630Z      }
+2025-11-09T23:51:29.1787785Z  }
+2025-11-09T23:51:29.1787926Z  
+2025-11-09T23:51:29.1788280Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:430:
+2025-11-09T23:51:29.1788708Z      height: Option<u64>,
+2025-11-09T23:51:29.1788923Z  ) -> Result<NetworkResponse> {
+2025-11-09T23:51:29.1789170Z      // Check protocol limits and validate
+2025-11-09T23:51:29.1789457Z -    let context = ProtocolValidationContext::new(
+2025-11-09T23:51:29.1789746Z -        engine.get_protocol_version(),
+2025-11-09T23:51:29.1789990Z -        height.unwrap_or(0),
+2025-11-09T23:51:29.1790203Z -    )?;
+2025-11-09T23:51:29.1790355Z +    let context =
+2025-11-09T23:51:29.1790705Z +        ProtocolValidationContext::new(engine.get_protocol_version(), height.unwrap_or(0))?;
+2025-11-09T23:51:29.1791362Z      let result = engine.validate_transaction_with_protocol(tx, &context)?;
+2025-11-09T23:51:29.1791687Z  
+2025-11-09T23:51:29.1791838Z      match result {
+2025-11-09T23:51:29.1792212Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:440:
+2025-11-09T23:51:29.1792888Z          ValidationResult::Valid => Ok(NetworkResponse::Ok),
+2025-11-09T23:51:29.1793272Z -        ValidationResult::Invalid(reason) => {
+2025-11-09T23:51:29.1793903Z -            Ok(NetworkResponse::Reject(format!("Invalid transaction: {}", reason)))
+2025-11-09T23:51:29.1794505Z -        }
+2025-11-09T23:51:29.1794973Z +        ValidationResult::Invalid(reason) => Ok(NetworkResponse::Reject(format!(
+2025-11-09T23:51:29.1797137Z +            "Invalid transaction: {}",
+2025-11-09T23:51:29.1797650Z +            reason
+2025-11-09T23:51:29.1797825Z +        ))),
+2025-11-09T23:51:29.1797983Z      }
+2025-11-09T23:51:29.1798132Z  }
+2025-11-09T23:51:29.1798282Z  
+2025-11-09T23:51:29.1798639Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:447:
+2025-11-09T23:51:29.1799067Z  /// Process ping message
+2025-11-09T23:51:29.1799285Z -fn process_ping_message(
+2025-11-09T23:51:29.1799652Z -    ping: &PingMessage,
+2025-11-09T23:51:29.1809046Z -    peer_state: &mut PeerState,
+2025-11-09T23:51:29.1809518Z -) -> Result<NetworkResponse> {
+2025-11-09T23:51:29.1810183Z +fn process_ping_message(ping: &PingMessage, peer_state: &mut PeerState) -> Result<NetworkResponse> {
+2025-11-09T23:51:29.1810758Z      let pong = NetworkMessage::Pong(PongMessage { nonce: ping.nonce });
+2025-11-09T23:51:29.1811133Z      Ok(NetworkResponse::SendMessage(pong))
+2025-11-09T23:51:29.1811380Z  }
+2025-11-09T23:51:29.1811747Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:465:
+2025-11-09T23:51:29.1812162Z  }
+2025-11-09T23:51:29.1814216Z  
+2025-11-09T23:51:29.1814608Z  /// Process mempool message
+2025-11-09T23:51:29.1815080Z -fn process_mempool_message(
+2025-11-09T23:51:29.1815352Z -    chain_access: Option<&dyn ChainStateAccess>,
+2025-11-09T23:51:29.1815638Z -) -> Result<NetworkResponse> {
+2025-11-09T23:51:29.1816096Z +fn process_mempool_message(chain_access: Option<&dyn ChainStateAccess>) -> Result<NetworkResponse> {
+2025-11-09T23:51:29.1816620Z      // Send all mempool transactions (if chain access provided)
+2025-11-09T23:51:29.1816941Z      if let Some(chain) = chain_access {
+2025-11-09T23:51:29.1817243Z          let mempool_txs = chain.get_mempool_transactions();
+2025-11-09T23:51:29.1817727Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/network.rs:493:
+2025-11-09T23:51:29.1818226Z      peer_state.min_fee_rate = Some(feefilter.feerate);
+2025-11-09T23:51:29.1818526Z      Ok(NetworkResponse::Ok)
+2025-11-09T23:51:29.1818741Z  }
+2025-11-09T23:51:29.1818888Z -
+2025-11-09T23:51:29.1819041Z  
+2025-11-09T23:51:29.1836404Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/payment.rs:356:
+2025-11-09T23:51:29.1837087Z  }
+2025-11-09T23:51:29.1837239Z  
+2025-11-09T23:51:29.1837497Z  /// BIP70 Payment Protocol client (for making payments via P2P)
+2025-11-09T23:51:29.1837820Z -/// 
+2025-11-09T23:51:29.1837979Z +///
+2025-11-09T23:51:29.1838255Z  /// Note: Node-specific message creation functions are in bllvm-node.
+2025-11-09T23:51:29.1838662Z  /// This struct provides protocol-level validation only.
+2025-11-09T23:51:29.1838987Z  pub struct PaymentProtocolClient;
+2025-11-09T23:51:29.1839442Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/payment.rs:422:
+2025-11-09T23:51:29.1839875Z  }
+2025-11-09T23:51:29.1840016Z  
+2025-11-09T23:51:29.1840272Z  /// BIP70 Payment Protocol server (for receiving payments via P2P)
+2025-11-09T23:51:29.1840590Z -/// 
+2025-11-09T23:51:29.1840748Z +///
+2025-11-09T23:51:29.1841018Z  /// Note: Node-specific message creation functions are in bllvm-node.
+2025-11-09T23:51:29.1841420Z  /// This struct provides protocol-level processing only.
+2025-11-09T23:51:29.1841746Z  pub struct PaymentProtocolServer;
+2025-11-09T23:51:29.1842497Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/payment.rs:463:
+2025-11-09T23:51:29.1842952Z  
+2025-11-09T23:51:29.1843163Z          // Validate merchant_data matches original request
+2025-11-09T23:51:29.1843938Z          if let Some(ref payment_merchant_data) = payment.merchant_data {
+2025-11-09T23:51:29.1844765Z -            if let Some(ref request_merchant_data) = original_request.payment_details.merchant_data {
+2025-11-09T23:51:29.1845531Z +            if let Some(ref request_merchant_data) = original_request.payment_details.merchant_data
+2025-11-09T23:51:29.1845945Z +            {
+2025-11-09T23:51:29.1846179Z                  if payment_merchant_data != request_merchant_data {
+2025-11-09T23:51:29.1846558Z                      return Err(Bip70Error::ValidationError(
+2025-11-09T23:51:29.1846867Z -                        "Merchant data mismatch".to_string()
+2025-11-09T23:51:29.1847173Z +                        "Merchant data mismatch".to_string(),
+2025-11-09T23:51:29.1847447Z                      ));
+2025-11-09T23:51:29.1847641Z                  }
+2025-11-09T23:51:29.1847820Z              }
+2025-11-09T23:51:29.1848358Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol/src/payment.rs:473:
+2025-11-09T23:51:29.1848940Z          } else if original_request.payment_details.merchant_data.is_some() {
+2025-11-09T23:51:29.1849328Z              return Err(Bip70Error::ValidationError(
+2025-11-09T23:51:29.1849640Z -                "Payment missing merchant data".to_string()
+2025-11-09T23:51:29.1849953Z +                "Payment missing merchant data".to_string(),
+2025-11-09T23:51:29.1850228Z              ));
+2025-11-09T23:51:29.1850404Z          }
+2025-11-09T23:51:29.1850565Z  
+2025-11-09T23:51:29.1988543Z ##[error]Process completed with exit code 1.
+2025-11-09T23:51:29.2064790Z Post job cleanup.
+2025-11-09T23:51:29.3347550Z Post job cleanup.
+2025-11-09T23:51:29.4896896Z [command]/usr/bin/git version
+2025-11-09T23:51:29.4953790Z git version 2.43.0
+2025-11-09T23:51:29.5026444Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/d390a8ae-13d8-4be3-8da2-5b01a9bdb721/.gitconfig'
+2025-11-09T23:51:29.5046110Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/d390a8ae-13d8-4be3-8da2-5b01a9bdb721' before making global git config changes
+2025-11-09T23:51:29.5047324Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T23:51:29.5055072Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol
+2025-11-09T23:51:29.5112329Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:51:29.5151907Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:51:29.5441624Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:51:29.5470589Z http.https://github.com/.extraheader
+2025-11-09T23:51:29.5484801Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-11-09T23:51:29.5522213Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:51:29.5917375Z A job completed hook has been configured by the self-hosted runner administrator
+2025-11-09T23:51:29.5960806Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-completed.sh'
+2025-11-09T23:51:29.5985213Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:29.5985576Z ##[endgroup]
+2025-11-09T23:51:29.6053588Z Job completed: Sun Nov  9 11:51:29 PM UTC 2025
+2025-11-09T23:51:29.6088865Z Available disk space: 9.2G
+2025-11-09T23:51:29.6089332Z Cleaning up after job completion...
+2025-11-09T23:51:29.7094933Z Cleanup completed. Available disk space: 9.2G
+2025-11-09T23:51:29.7154770Z Cleaning up orphan processes

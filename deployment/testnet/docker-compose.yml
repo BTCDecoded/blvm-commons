@@ -1,0 +1,154 @@
+version: '3.8'
+
+services:
+  governance-app:
+    build:
+      context: ../../governance-app
+      dockerfile: Dockerfile.testnet
+    container_name: governance-app-testnet
+    ports:
+      - "8080:8080"
+      - "9090:9090"  # Prometheus metrics
+    environment:
+      - RUST_LOG=info
+      - DATABASE_URL=sqlite:governance-app-testnet.db
+      - DRY_RUN_MODE=false
+      - LOG_ENFORCEMENT_DECISIONS=true
+      - ENFORCEMENT_LOG_PATH=/app/logs/enforcement-decisions.jsonl
+      - GITHUB_APP_ID=123456
+      - GITHUB_PRIVATE_KEY_PATH=/app/keys/testnet-app-key.pem
+      - GITHUB_WEBHOOK_SECRET=testnet-webhook-secret
+      - NOSTR_PRIVATE_KEY_PATH=/app/keys/testnet-nostr-key.pem
+      - AUDIT_LOG_ENABLED=true
+      - AUDIT_LOG_PATH=/app/logs/audit.log
+      - SERVER_AUTHORIZATION_ENABLED=true
+      - ECONOMIC_NODES_ENABLED=true
+      - GOVERNANCE_FORK_ENABLED=true
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./keys:/app/keys
+      - ./governance-config:/app/governance/config
+    depends_on:
+      - prometheus
+      - grafana
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-testnet
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-testnet
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=testnet123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana-dashboards.json:/etc/grafana/provisioning/dashboards/dashboards.json
+      - ./monitoring/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-testnet
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - governance-app
+    restart: unless-stopped
+
+  # Test economic nodes
+  test-mining-pool-1:
+    image: alpine:latest
+    container_name: test-mining-pool-1
+    command: ["sh", "-c", "while true; do sleep 3600; done"]
+    environment:
+      - NODE_NAME=TestMiningPool1
+      - NODE_TYPE=mining_pool
+      - HASH_RATE_PERCENT=15.0
+    volumes:
+      - ./test-nodes/mining-pool-1:/app
+    restart: unless-stopped
+
+  test-mining-pool-2:
+    image: alpine:latest
+    container_name: test-mining-pool-2
+    command: ["sh", "-c", "while true; do sleep 3600; done"]
+    environment:
+      - NODE_NAME=TestMiningPool2
+      - NODE_TYPE=mining_pool
+      - HASH_RATE_PERCENT=20.0
+    volumes:
+      - ./test-nodes/mining-pool-2:/app
+    restart: unless-stopped
+
+  test-exchange-1:
+    image: alpine:latest
+    container_name: test-exchange-1
+    command: ["sh", "-c", "while true; do sleep 3600; done"]
+    environment:
+      - NODE_NAME=TestExchange1
+      - NODE_TYPE=exchange
+      - ECONOMIC_ACTIVITY_PERCENT=25.0
+    volumes:
+      - ./test-nodes/exchange-1:/app
+    restart: unless-stopped
+
+  test-exchange-2:
+    image: alpine:latest
+    container_name: test-exchange-2
+    command: ["sh", "-c", "while true; do sleep 3600; done"]
+    environment:
+      - NODE_NAME=TestExchange2
+      - NODE_TYPE=exchange
+      - ECONOMIC_ACTIVITY_PERCENT=20.0
+    volumes:
+      - ./test-nodes/exchange-2:/app
+    restart: unless-stopped
+
+  test-custodian-1:
+    image: alpine:latest
+    container_name: test-custodian-1
+    command: ["sh", "-c", "while true; do sleep 3600; done"]
+    environment:
+      - NODE_NAME=TestCustodian1
+      - NODE_TYPE=custodian
+      - ECONOMIC_ACTIVITY_PERCENT=15.0
+    volumes:
+      - ./test-nodes/custodian-1:/app
+    restart: unless-stopped
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  default:
+    name: governance-testnet

@@ -1,0 +1,42 @@
+{
+  "without_production": {
+    "transaction_validation": {
+      "simple_ns": 60.6,
+      "complex_ns": 222.75
+    },
+    "hash_operations": {
+      "sha256_1kb_us": 12.19,
+      "double_sha256_1kb_us": 15.29
+    }
+  },
+  "with_production": {
+    "timestamp": "2025-11-04T03:40:48.942638",
+    "features": "production",
+    "transaction_validation": {
+      "simple_ns": 18.75,
+      "complex_ns": 201.12,
+      "simple_throughput_tx_per_sec": 53333333.333333336,
+      "complex_throughput_tx_per_sec": 4972155.926809865
+    },
+    "hash_operations": {
+      "sha256_1kb_us": 4.7,
+      "double_sha256_1kb_us": 4.79,
+      "sha256_throughput_ops_per_sec": 212765.9574468085,
+      "double_sha256_throughput_ops_per_sec": 208768.26722338205
+    }
+  },
+  "improvements": {
+    "transaction_validation": {
+      "simple_improvement_percent": 69.05940594059406,
+      "simple_speedup": 3.232,
+      "complex_improvement_percent": 9.710437710437708,
+      "complex_speedup": 1.1075477326968974
+    },
+    "hash_operations": {
+      "sha256_improvement_percent": 61.44380639868745,
+      "sha256_speedup": 2.5936170212765957,
+      "double_sha256_improvement_percent": 68.67233485938522,
+      "double_sha256_speedup": 3.1920668058455113
+    }
+  }
+}

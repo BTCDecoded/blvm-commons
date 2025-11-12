@@ -1,0 +1,5 @@
+﻿2025-11-09T23:56:22.3112456Z Post job cleanup.
+2025-11-09T23:56:22.4993864Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol --files-from manifest.txt --use-compress-program zstdmt
+2025-11-09T23:56:26.1792712Z Sent 46665235 of 247991827 (18.8%), 44.5 MBs/sec
+2025-11-09T23:56:26.3292494Z Sent 247991827 of 247991827 (100.0%), 205.7 MBs/sec
+2025-11-09T23:56:26.4605975Z Cache saved with key: bllvm-protocol-Linux-target-0c2157c8fc74e102e58149ed1ac07759678df31e5b91e9edf17b41610bf384c5

@@ -1,0 +1,13 @@
+﻿2025-11-09T23:38:36.9765959Z ##[group]Run actions/cache@v3
+2025-11-09T23:38:36.9766313Z with:
+2025-11-09T23:38:36.9766531Z   path: target
+2025-11-09T23:38:36.9767077Z   key: consensus-proof-Linux-target-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014
+2025-11-09T23:38:36.9767702Z   enableCrossOsArchive: false
+2025-11-09T23:38:36.9767992Z   fail-on-cache-miss: false
+2025-11-09T23:38:36.9768259Z   lookup-only: false
+2025-11-09T23:38:36.9768522Z env:
+2025-11-09T23:38:36.9768762Z   CARGO_TERM_COLOR: always
+2025-11-09T23:38:36.9769029Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:38:36.9769326Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:38:36.9769564Z ##[endgroup]
+2025-11-09T23:38:37.2630799Z Cache not found for input keys: consensus-proof-Linux-target-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014

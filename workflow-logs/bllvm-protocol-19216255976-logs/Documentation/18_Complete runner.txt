@@ -1,0 +1,8 @@
+﻿2025-11-09T23:51:13.9340229Z A job completed hook has been configured by the self-hosted runner administrator
+2025-11-09T23:51:13.9386133Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-completed.sh'
+2025-11-09T23:51:13.9412457Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-09T23:51:13.9412899Z ##[endgroup]
+2025-11-09T23:51:13.9488356Z Job completed: Sun Nov  9 11:51:13 PM UTC 2025
+2025-11-09T23:51:13.9525334Z Available disk space: 9.1G
+2025-11-09T23:51:13.9525870Z Cleaning up after job completion...
+2025-11-09T23:51:14.0749193Z Cleanup completed. Available disk space: 9.1G

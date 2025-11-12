@@ -1,0 +1,24 @@
+﻿2025-11-09T23:45:01.0752687Z ##[group]Run cargo doc --no-deps
+2025-11-09T23:45:01.0753031Z [36;1mcargo doc --no-deps[0m
+2025-11-09T23:45:01.0785392Z shell: /usr/bin/bash -e {0}
+2025-11-09T23:45:01.0785671Z env:
+2025-11-09T23:45:01.0785878Z   CARGO_TERM_COLOR: always
+2025-11-09T23:45:01.0786140Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:45:01.0786415Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:45:01.0786645Z ##[endgroup]
+2025-11-09T23:45:01.1833820Z [1m[32m    Updating[0m crates.io index
+2025-11-09T23:45:01.4092508Z [1m[31merror[0m[1m:[0m failed to get `bllvm-consensus` as a dependency of package `bllvm-protocol v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-protocol)`
+2025-11-09T23:45:01.4094288Z     ... which satisfies path dependency `bllvm-protocol` of package `bllvm-node v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node)`
+2025-11-09T23:45:01.4095309Z 
+2025-11-09T23:45:01.4095420Z Caused by:
+2025-11-09T23:45:01.4095769Z   failed to load source for dependency `bllvm-consensus`
+2025-11-09T23:45:01.4096204Z 
+2025-11-09T23:45:01.4096310Z Caused by:
+2025-11-09T23:45:01.4096780Z   Unable to update /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus
+2025-11-09T23:45:01.4097271Z 
+2025-11-09T23:45:01.4097372Z Caused by:
+2025-11-09T23:45:01.4099393Z   failed to read `/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/Cargo.toml`
+2025-11-09T23:45:01.4099918Z 
+2025-11-09T23:45:01.4100017Z Caused by:
+2025-11-09T23:45:01.4100300Z   No such file or directory (os error 2)
+2025-11-09T23:45:01.4123616Z ##[error]Process completed with exit code 101.

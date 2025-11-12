@@ -1,0 +1,783 @@
+﻿2025-11-11T18:38:58.1751210Z Current runner version: '2.329.0'
+2025-11-11T18:38:58.1762726Z Runner name: 'linode-runner-02'
+2025-11-11T18:38:58.1764822Z Runner group name: 'default'
+2025-11-11T18:38:58.1766181Z Machine name: 'localhost'
+2025-11-11T18:38:58.1770954Z ##[group]GITHUB_TOKEN Permissions
+2025-11-11T18:38:58.1773451Z Contents: read
+2025-11-11T18:38:58.1774192Z Metadata: read
+2025-11-11T18:38:58.1775091Z Packages: read
+2025-11-11T18:38:58.1775709Z ##[endgroup]
+2025-11-11T18:38:58.1778505Z Secret source: Actions
+2025-11-11T18:38:58.1779327Z Prepare workflow directory
+2025-11-11T18:38:58.2496141Z Prepare all required actions
+2025-11-11T18:38:58.2547362Z Getting action download info
+2025-11-11T18:38:58.5789461Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-11T18:38:58.9852491Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:0f44b27771c32bda9f458f75a1e241b09791b331)
+2025-11-11T18:38:59.4789406Z Complete job name: Rustfmt
+2025-11-11T18:38:59.5474590Z A job started hook has been configured by the self-hosted runner administrator
+2025-11-11T18:38:59.5646250Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-started.sh'
+2025-11-11T18:38:59.5683099Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:38:59.5684933Z ##[endgroup]
+2025-11-11T18:38:59.5875427Z Job started: Tue Nov 11 06:38:59 PM UTC 2025
+2025-11-11T18:38:59.5894075Z Available disk space: 9.6G
+2025-11-11T18:38:59.5927484Z WARNING: Disk usage is 81% - performing user-level cleanup
+2025-11-11T18:38:59.5930840Z Cleaning old work directories (user-level cleanup)...
+2025-11-11T18:38:59.6993858Z User-level cleanup completed. Disk usage: 81%
+2025-11-11T18:38:59.7355544Z ##[group]Run actions/checkout@v4
+2025-11-11T18:38:59.7356563Z with:
+2025-11-11T18:38:59.7357329Z   repository: BTCDecoded/bllvm-node
+2025-11-11T18:38:59.7359974Z   token: ***
+2025-11-11T18:38:59.7360721Z   ssh-strict: true
+2025-11-11T18:38:59.7361485Z   ssh-user: git
+2025-11-11T18:38:59.7362263Z   persist-credentials: true
+2025-11-11T18:38:59.7363168Z   clean: true
+2025-11-11T18:38:59.7363949Z   sparse-checkout-cone-mode: true
+2025-11-11T18:38:59.7365060Z   fetch-depth: 1
+2025-11-11T18:38:59.7365822Z   fetch-tags: false
+2025-11-11T18:38:59.7366605Z   show-progress: true
+2025-11-11T18:38:59.7367395Z   lfs: false
+2025-11-11T18:38:59.7368125Z   submodules: false
+2025-11-11T18:38:59.7368921Z   set-safe-directory: true
+2025-11-11T18:38:59.7369749Z env:
+2025-11-11T18:38:59.7370456Z   CARGO_TERM_COLOR: always
+2025-11-11T18:38:59.7371306Z ##[endgroup]
+2025-11-11T18:38:59.8785300Z Syncing repository: BTCDecoded/bllvm-node
+2025-11-11T18:38:59.8788564Z ##[group]Getting Git version info
+2025-11-11T18:38:59.8791410Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node'
+2025-11-11T18:38:59.8795402Z [command]/usr/bin/git version
+2025-11-11T18:38:59.8808743Z git version 2.43.0
+2025-11-11T18:38:59.8844885Z ##[endgroup]
+2025-11-11T18:38:59.8857970Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/42ccac18-ced3-4e02-9c2f-db741f4713fc/.gitconfig'
+2025-11-11T18:38:59.8883716Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/42ccac18-ced3-4e02-9c2f-db741f4713fc' before making global git config changes
+2025-11-11T18:38:59.8887422Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-11T18:38:59.8889872Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node
+2025-11-11T18:38:59.8939905Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-11T18:38:59.8967892Z https://github.com/BTCDecoded/bllvm-node
+2025-11-11T18:38:59.8994557Z ##[group]Removing previously created refs, to avoid conflicts
+2025-11-11T18:38:59.8998966Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2025-11-11T18:38:59.9027220Z refs/heads/main
+2025-11-11T18:38:59.9040583Z [command]/usr/bin/git checkout --detach
+2025-11-11T18:38:59.9224949Z HEAD is now at 3232342 Fix all compilation errors: BIP70 imports, node tests, property tests
+2025-11-11T18:38:59.9277136Z [command]/usr/bin/git branch --delete --force main
+2025-11-11T18:38:59.9311957Z Deleted branch main (was 3232342).
+2025-11-11T18:38:59.9359296Z ##[endgroup]
+2025-11-11T18:38:59.9360773Z [command]/usr/bin/git submodule status
+2025-11-11T18:38:59.9653130Z ##[group]Cleaning the repository
+2025-11-11T18:38:59.9656213Z [command]/usr/bin/git clean -ffdx
+2025-11-11T18:38:59.9727797Z Removing Cargo.lock
+2025-11-11T18:38:59.9729165Z Removing target/
+2025-11-11T18:38:59.9742269Z [command]/usr/bin/git reset --hard HEAD
+2025-11-11T18:38:59.9855586Z HEAD is now at 3232342 Fix all compilation errors: BIP70 imports, node tests, property tests
+2025-11-11T18:38:59.9862683Z ##[endgroup]
+2025-11-11T18:38:59.9864748Z ##[group]Disabling automatic garbage collection
+2025-11-11T18:38:59.9878369Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-11T18:38:59.9915948Z ##[endgroup]
+2025-11-11T18:38:59.9917265Z ##[group]Setting up auth
+2025-11-11T18:38:59.9922943Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-11T18:38:59.9959318Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-11T18:39:00.0266673Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-11T18:39:00.0303150Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-11T18:39:00.0579447Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-11T18:39:00.0623236Z ##[endgroup]
+2025-11-11T18:39:00.0624920Z ##[group]Fetching the repository
+2025-11-11T18:39:00.0633623Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +323234282f11af2c0ba5c1cb55313f583078f7b3:refs/remotes/origin/main
+2025-11-11T18:39:00.2910525Z ##[endgroup]
+2025-11-11T18:39:00.2912659Z ##[group]Determining the checkout info
+2025-11-11T18:39:00.2914177Z ##[endgroup]
+2025-11-11T18:39:00.2917355Z [command]/usr/bin/git sparse-checkout disable
+2025-11-11T18:39:00.2983547Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-11T18:39:00.3025354Z ##[group]Checking out the ref
+2025-11-11T18:39:00.3027863Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-11T18:39:00.3105742Z Switched to a new branch 'main'
+2025-11-11T18:39:00.3107485Z branch 'main' set up to track 'origin/main'.
+2025-11-11T18:39:00.3115319Z ##[endgroup]
+2025-11-11T18:39:00.3153076Z [command]/usr/bin/git log -1 --format=%H
+2025-11-11T18:39:00.3179656Z 323234282f11af2c0ba5c1cb55313f583078f7b3
+2025-11-11T18:39:00.3464276Z ##[group]Run actions/checkout@v4
+2025-11-11T18:39:00.3465384Z with:
+2025-11-11T18:39:00.3466136Z   repository: BTCDecoded/bllvm-protocol
+2025-11-11T18:39:00.3467639Z   path: _temp-protocol-engine
+2025-11-11T18:39:00.3469131Z   token: ***
+2025-11-11T18:39:00.3470111Z   ssh-strict: true
+2025-11-11T18:39:00.3470863Z   ssh-user: git
+2025-11-11T18:39:00.3471903Z   persist-credentials: true
+2025-11-11T18:39:00.3472756Z   clean: true
+2025-11-11T18:39:00.3473522Z   sparse-checkout-cone-mode: true
+2025-11-11T18:39:00.3474576Z   fetch-depth: 1
+2025-11-11T18:39:00.3475324Z   fetch-tags: false
+2025-11-11T18:39:00.3476089Z   show-progress: true
+2025-11-11T18:39:00.3476867Z   lfs: false
+2025-11-11T18:39:00.3478419Z   submodules: false
+2025-11-11T18:39:00.3481595Z   set-safe-directory: true
+2025-11-11T18:39:00.3483409Z env:
+2025-11-11T18:39:00.3485121Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:00.3486838Z ##[endgroup]
+2025-11-11T18:39:00.4727793Z Syncing repository: BTCDecoded/bllvm-protocol
+2025-11-11T18:39:00.4731658Z ##[group]Getting Git version info
+2025-11-11T18:39:00.4735592Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-protocol-engine'
+2025-11-11T18:39:00.4779470Z [command]/usr/bin/git version
+2025-11-11T18:39:00.4833864Z git version 2.43.0
+2025-11-11T18:39:00.4873026Z ##[endgroup]
+2025-11-11T18:39:00.4886892Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/d29001d1-af97-4232-9532-3ec7dc83f6ea/.gitconfig'
+2025-11-11T18:39:00.4901258Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/d29001d1-af97-4232-9532-3ec7dc83f6ea' before making global git config changes
+2025-11-11T18:39:00.4905257Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-11T18:39:00.4922138Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-protocol-engine
+2025-11-11T18:39:00.4961194Z ##[group]Initializing the repository
+2025-11-11T18:39:00.4968236Z [command]/usr/bin/git init /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-protocol-engine
+2025-11-11T18:39:00.5020625Z Initialized empty Git repository in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-protocol-engine/.git/
+2025-11-11T18:39:00.5034695Z [command]/usr/bin/git remote add origin https://github.com/BTCDecoded/bllvm-protocol
+2025-11-11T18:39:00.5083795Z ##[endgroup]
+2025-11-11T18:39:00.5087704Z ##[group]Disabling automatic garbage collection
+2025-11-11T18:39:00.5089701Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-11T18:39:00.5129267Z ##[endgroup]
+2025-11-11T18:39:00.5131638Z ##[group]Setting up auth
+2025-11-11T18:39:00.5137000Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-11T18:39:00.5182452Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-11T18:39:00.5460736Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-11T18:39:00.5500032Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-11T18:39:00.5778084Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-11T18:39:00.5824949Z ##[endgroup]
+2025-11-11T18:39:00.5827175Z ##[group]Determining the default branch
+2025-11-11T18:39:00.5831062Z Retrieving the default branch name
+2025-11-11T18:39:00.8633136Z Default branch 'main'
+2025-11-11T18:39:00.8636916Z ##[endgroup]
+2025-11-11T18:39:00.8641121Z ##[group]Fetching the repository
+2025-11-11T18:39:00.8646399Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+2025-11-11T18:39:02.9627598Z From https://github.com/BTCDecoded/bllvm-protocol
+2025-11-11T18:39:02.9628839Z  * [new branch]      main       -> origin/main
+2025-11-11T18:39:02.9653280Z ##[endgroup]
+2025-11-11T18:39:02.9653774Z ##[group]Determining the checkout info
+2025-11-11T18:39:02.9655579Z ##[endgroup]
+2025-11-11T18:39:02.9661857Z [command]/usr/bin/git sparse-checkout disable
+2025-11-11T18:39:02.9714841Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-11T18:39:02.9750271Z ##[group]Checking out the ref
+2025-11-11T18:39:02.9753546Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-11T18:39:03.6318982Z Reset branch 'main'
+2025-11-11T18:39:03.6319754Z branch 'main' set up to track 'origin/main'.
+2025-11-11T18:39:03.6391593Z ##[endgroup]
+2025-11-11T18:39:03.6445140Z [command]/usr/bin/git log -1 --format=%H
+2025-11-11T18:39:03.6477897Z d3ef0fb931aa9548b1543cf752e798bf799007c8
+2025-11-11T18:39:03.6720446Z ##[group]Run actions/checkout@v4
+2025-11-11T18:39:03.6720745Z with:
+2025-11-11T18:39:03.6721253Z   repository: BTCDecoded/bllvm-consensus
+2025-11-11T18:39:03.6721541Z   path: _temp-consensus-proof
+2025-11-11T18:39:03.6721960Z   token: ***
+2025-11-11T18:39:03.6722165Z   ssh-strict: true
+2025-11-11T18:39:03.6722362Z   ssh-user: git
+2025-11-11T18:39:03.6722573Z   persist-credentials: true
+2025-11-11T18:39:03.6722804Z   clean: true
+2025-11-11T18:39:03.6723015Z   sparse-checkout-cone-mode: true
+2025-11-11T18:39:03.6723263Z   fetch-depth: 1
+2025-11-11T18:39:03.6723468Z   fetch-tags: false
+2025-11-11T18:39:03.6723670Z   show-progress: true
+2025-11-11T18:39:03.6723880Z   lfs: false
+2025-11-11T18:39:03.6724068Z   submodules: false
+2025-11-11T18:39:03.6724286Z   set-safe-directory: true
+2025-11-11T18:39:03.6724705Z env:
+2025-11-11T18:39:03.6724886Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:03.6725101Z ##[endgroup]
+2025-11-11T18:39:03.7886401Z Syncing repository: BTCDecoded/bllvm-consensus
+2025-11-11T18:39:03.7895889Z ##[group]Getting Git version info
+2025-11-11T18:39:03.7896896Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-consensus-proof'
+2025-11-11T18:39:03.7950247Z [command]/usr/bin/git version
+2025-11-11T18:39:03.7998326Z git version 2.43.0
+2025-11-11T18:39:03.8028100Z ##[endgroup]
+2025-11-11T18:39:03.8039133Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/aabacc6b-ca78-4ed0-9366-b6eaee215905/.gitconfig'
+2025-11-11T18:39:03.8066455Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/aabacc6b-ca78-4ed0-9366-b6eaee215905' before making global git config changes
+2025-11-11T18:39:03.8068197Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-11T18:39:03.8074859Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-consensus-proof
+2025-11-11T18:39:03.8118395Z ##[group]Initializing the repository
+2025-11-11T18:39:03.8125464Z [command]/usr/bin/git init /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-consensus-proof
+2025-11-11T18:39:03.8173729Z Initialized empty Git repository in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/_temp-consensus-proof/.git/
+2025-11-11T18:39:03.8183952Z [command]/usr/bin/git remote add origin https://github.com/BTCDecoded/bllvm-consensus
+2025-11-11T18:39:03.8219019Z ##[endgroup]
+2025-11-11T18:39:03.8219787Z ##[group]Disabling automatic garbage collection
+2025-11-11T18:39:03.8223672Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-11T18:39:03.8263401Z ##[endgroup]
+2025-11-11T18:39:03.8264086Z ##[group]Setting up auth
+2025-11-11T18:39:03.8272030Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-11T18:39:03.8311453Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-11T18:39:03.8597469Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-11T18:39:03.8633805Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-11T18:39:03.8910089Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-11T18:39:03.8952813Z ##[endgroup]
+2025-11-11T18:39:03.8953454Z ##[group]Determining the default branch
+2025-11-11T18:39:03.8960770Z Retrieving the default branch name
+2025-11-11T18:39:04.1657789Z Default branch 'main'
+2025-11-11T18:39:04.1658657Z ##[endgroup]
+2025-11-11T18:39:04.1659204Z ##[group]Fetching the repository
+2025-11-11T18:39:04.1661707Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+2025-11-11T18:39:08.8623774Z From https://github.com/BTCDecoded/bllvm-consensus
+2025-11-11T18:39:08.8624855Z  * [new branch]      main       -> origin/main
+2025-11-11T18:39:08.8655202Z ##[endgroup]
+2025-11-11T18:39:08.8655902Z ##[group]Determining the checkout info
+2025-11-11T18:39:08.8657635Z ##[endgroup]
+2025-11-11T18:39:08.8665256Z [command]/usr/bin/git sparse-checkout disable
+2025-11-11T18:39:08.8711524Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-11T18:39:08.8747313Z ##[group]Checking out the ref
+2025-11-11T18:39:08.8750917Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-11T18:39:09.9027945Z Updating files:  67% (801/1180)
+2025-11-11T18:39:09.9289134Z Updating files:  68% (803/1180)
+2025-11-11T18:39:10.0535450Z Updating files:  69% (815/1180)
+2025-11-11T18:39:10.4366361Z Updating files:  70% (826/1180)
+2025-11-11T18:39:10.5334973Z Updating files:  71% (838/1180)
+2025-11-11T18:39:10.6148093Z Updating files:  72% (850/1180)
+2025-11-11T18:39:10.8522547Z Updating files:  73% (862/1180)
+2025-11-11T18:39:10.9086638Z Updating files:  74% (874/1180)
+2025-11-11T18:39:11.1512253Z Updating files:  74% (875/1180)
+2025-11-11T18:39:11.1518035Z Updating files:  75% (885/1180)
+2025-11-11T18:39:11.1532568Z Updating files:  76% (897/1180)
+2025-11-11T18:39:11.1552596Z Updating files:  77% (909/1180)
+2025-11-11T18:39:11.1566776Z Updating files:  78% (921/1180)
+2025-11-11T18:39:11.1575889Z Updating files:  79% (933/1180)
+2025-11-11T18:39:11.1581557Z Updating files:  80% (944/1180)
+2025-11-11T18:39:11.1586706Z Updating files:  81% (956/1180)
+2025-11-11T18:39:11.1593839Z Updating files:  82% (968/1180)
+2025-11-11T18:39:11.1599601Z Updating files:  83% (980/1180)
+2025-11-11T18:39:11.1606385Z Updating files:  84% (992/1180)
+2025-11-11T18:39:11.1934836Z Updating files:  85% (1003/1180)
+2025-11-11T18:39:11.2239598Z Updating files:  86% (1015/1180)
+2025-11-11T18:39:11.2490222Z Updating files:  87% (1027/1180)
+2025-11-11T18:39:11.2917510Z Updating files:  88% (1039/1180)
+2025-11-11T18:39:11.3084168Z Updating files:  89% (1051/1180)
+2025-11-11T18:39:11.3100391Z Updating files:  90% (1062/1180)
+2025-11-11T18:39:11.3105107Z Updating files:  91% (1074/1180)
+2025-11-11T18:39:11.3116217Z Updating files:  92% (1086/1180)
+2025-11-11T18:39:11.3127102Z Updating files:  93% (1098/1180)
+2025-11-11T18:39:11.3135603Z Updating files:  94% (1110/1180)
+2025-11-11T18:39:11.3146346Z Updating files:  95% (1121/1180)
+2025-11-11T18:39:11.3161086Z Updating files:  96% (1133/1180)
+2025-11-11T18:39:11.3167376Z Updating files:  97% (1145/1180)
+2025-11-11T18:39:11.3176809Z Updating files:  98% (1157/1180)
+2025-11-11T18:39:11.3185662Z Updating files:  99% (1169/1180)
+2025-11-11T18:39:11.3186347Z Updating files: 100% (1180/1180)
+2025-11-11T18:39:11.3186779Z Updating files: 100% (1180/1180), done.
+2025-11-11T18:39:11.3216499Z Reset branch 'main'
+2025-11-11T18:39:11.3218102Z branch 'main' set up to track 'origin/main'.
+2025-11-11T18:39:11.3382491Z ##[endgroup]
+2025-11-11T18:39:11.3427296Z [command]/usr/bin/git log -1 --format=%H
+2025-11-11T18:39:11.3455906Z e022725fb893c4603a99e14f34d9816d1bc4d0f0
+2025-11-11T18:39:11.3607799Z ##[group]Run if [ -d "../bllvm-protocol" ]; then rm -rf ../bllvm-protocol; fi
+2025-11-11T18:39:11.3608379Z [36;1mif [ -d "../bllvm-protocol" ]; then rm -rf ../bllvm-protocol; fi[0m
+2025-11-11T18:39:11.3608871Z [36;1mif [ -d "../bllvm-consensus" ]; then rm -rf ../bllvm-consensus; fi[0m
+2025-11-11T18:39:11.3609305Z [36;1mmv _temp-protocol-engine ../bllvm-protocol[0m
+2025-11-11T18:39:11.3609678Z [36;1mmv _temp-consensus-proof ../bllvm-consensus[0m
+2025-11-11T18:39:11.3641011Z shell: /usr/bin/bash -e {0}
+2025-11-11T18:39:11.3641252Z env:
+2025-11-11T18:39:11.3641446Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:11.3641676Z ##[endgroup]
+2025-11-11T18:39:11.5012343Z ##[group]Run dtolnay/rust-toolchain@master
+2025-11-11T18:39:11.5012650Z with:
+2025-11-11T18:39:11.5012833Z   toolchain: 1.88.0
+2025-11-11T18:39:11.5013034Z   components: rustfmt
+2025-11-11T18:39:11.5013225Z env:
+2025-11-11T18:39:11.5013400Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:11.5013607Z ##[endgroup]
+2025-11-11T18:39:11.5116515Z ##[group]Run : parse toolchain version
+2025-11-11T18:39:11.5116843Z [36;1m: parse toolchain version[0m
+2025-11-11T18:39:11.5117103Z [36;1mif [[ -z $toolchain ]]; then[0m
+2025-11-11T18:39:11.5117584Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2025-11-11T18:39:11.5118093Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2025-11-11T18:39:11.5118373Z [36;1m  exit 1[0m
+2025-11-11T18:39:11.5118674Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2025-11-11T18:39:11.5119060Z [36;1m  if [[ Linux == macOS ]]; then[0m
+2025-11-11T18:39:11.5119609Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-11T18:39:11.5120049Z [36;1m  else[0m
+2025-11-11T18:39:11.5120411Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2025-11-11T18:39:11.5120834Z [36;1m  fi[0m
+2025-11-11T18:39:11.5121106Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2025-11-11T18:39:11.5121590Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2025-11-11T18:39:11.5121998Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2025-11-11T18:39:11.5122457Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2025-11-11T18:39:11.5122890Z [36;1melse[0m
+2025-11-11T18:39:11.5123128Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+2025-11-11T18:39:11.5123397Z [36;1mfi[0m
+2025-11-11T18:39:11.5151630Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:11.5151963Z env:
+2025-11-11T18:39:11.5152144Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:11.5152371Z   toolchain: 1.88.0
+2025-11-11T18:39:11.5154781Z ##[endgroup]
+2025-11-11T18:39:11.5275097Z ##[group]Run : construct rustup command line
+2025-11-11T18:39:11.5275426Z [36;1m: construct rustup command line[0m
+2025-11-11T18:39:11.5275850Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+2025-11-11T18:39:11.5276432Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+2025-11-11T18:39:11.5276887Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+2025-11-11T18:39:11.5304293Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:11.5304851Z env:
+2025-11-11T18:39:11.5305049Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:11.5305285Z   targets: 
+2025-11-11T18:39:11.5305476Z   components: rustfmt
+2025-11-11T18:39:11.5305685Z ##[endgroup]
+2025-11-11T18:39:11.5386160Z ##[group]Run : set $CARGO_HOME
+2025-11-11T18:39:11.5386421Z [36;1m: set $CARGO_HOME[0m
+2025-11-11T18:39:11.5386739Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+2025-11-11T18:39:11.5414851Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:11.5415205Z env:
+2025-11-11T18:39:11.5415390Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:11.5415619Z ##[endgroup]
+2025-11-11T18:39:11.5569859Z ##[group]Run : install rustup if needed
+2025-11-11T18:39:11.5570197Z [36;1m: install rustup if needed[0m
+2025-11-11T18:39:11.5570495Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2025-11-11T18:39:11.5571267Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+2025-11-11T18:39:11.5572225Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+2025-11-11T18:39:11.5572515Z [36;1mfi[0m
+2025-11-11T18:39:11.5605951Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:11.5606271Z env:
+2025-11-11T18:39:11.5606449Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:11.5606686Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-11T18:39:11.5607100Z ##[endgroup]
+2025-11-11T18:39:11.7116660Z info: downloading installer
+2025-11-11T18:39:11.9664830Z warn: It looks like you have an existing rustup settings file at:
+2025-11-11T18:39:11.9665463Z warn: /home/jswift/.rustup/settings.toml
+2025-11-11T18:39:11.9666044Z warn: Rustup will install the default toolchain as specified in the settings file,
+2025-11-11T18:39:11.9666711Z warn: instead of the one inferred from the default host triple.
+2025-11-11T18:39:12.0056926Z info: profile set to 'default'
+2025-11-11T18:39:12.0057223Z 
+2025-11-11T18:39:12.0057663Z info: default host triple is x86_64-unknown-linux-gnu
+2025-11-11T18:39:12.0058698Z info: skipping toolchain installation
+2025-11-11T18:39:12.0060077Z 
+2025-11-11T18:39:12.0060447Z Rust is installed now. Great!
+2025-11-11T18:39:12.0060988Z 
+2025-11-11T18:39:12.0061321Z To get started you may need to restart your current shell.
+2025-11-11T18:39:12.0062335Z This would reload your PATH environment variable to include
+2025-11-11T18:39:12.0062980Z Cargo's bin directory ($HOME/.cargo/bin).
+2025-11-11T18:39:12.0063359Z 
+2025-11-11T18:39:12.0063589Z To configure your current shell, you need to source
+2025-11-11T18:39:12.0064194Z the corresponding env file under $HOME/.cargo.
+2025-11-11T18:39:12.0064805Z 
+2025-11-11T18:39:12.0065165Z This is usually done by running one of the following (note the leading DOT):
+2025-11-11T18:39:12.0065926Z . "$HOME/.cargo/env"            # For sh/bash/zsh/ash/dash/pdksh
+2025-11-11T18:39:12.0066510Z source "$HOME/.cargo/env.fish"  # For fish
+2025-11-11T18:39:12.0067065Z source $"($nu.home-path)/.cargo/env.nu"  # For nushell
+2025-11-11T18:39:12.0224898Z ##[group]Run rustup toolchain install 1.88.0 --component rustfmt --profile minimal --no-self-update
+2025-11-11T18:39:12.0225626Z [36;1mrustup toolchain install 1.88.0 --component rustfmt --profile minimal --no-self-update[0m
+2025-11-11T18:39:12.0261732Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:12.0262100Z env:
+2025-11-11T18:39:12.0262307Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:12.0262576Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-11T18:39:12.0262840Z ##[endgroup]
+2025-11-11T18:39:12.1149782Z info: syncing channel updates for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-11T18:39:12.1839394Z info: latest update on 2025-06-26, rust version 1.88.0 (6b00bc388 2025-06-23)
+2025-11-11T18:39:12.2144946Z info: component 'rustfmt' for target 'x86_64-unknown-linux-gnu' is up to date
+2025-11-11T18:39:12.2165003Z 
+2025-11-11T18:39:12.2289619Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-11T18:39:12.2290101Z 
+2025-11-11T18:39:12.2348558Z ##[group]Run rustup default 1.88.0
+2025-11-11T18:39:12.2348866Z [36;1mrustup default 1.88.0[0m
+2025-11-11T18:39:12.2377907Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:12.2378264Z env:
+2025-11-11T18:39:12.2378467Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:12.2378721Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-11T18:39:12.2378984Z ##[endgroup]
+2025-11-11T18:39:12.2500355Z info: using existing install for '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-11T18:39:12.2878053Z info: default toolchain set to '1.88.0-x86_64-unknown-linux-gnu'
+2025-11-11T18:39:12.2878574Z 
+2025-11-11T18:39:12.2997568Z   1.88.0-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-11T18:39:12.2998114Z 
+2025-11-11T18:39:12.2998770Z info: note that the toolchain '1.88.0-x86_64-unknown-linux-gnu' is currently in use (overridden by '/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/rust-toolchain.toml')
+2025-11-11T18:39:12.3056759Z ##[group]Run : create cachekey
+2025-11-11T18:39:12.3057058Z [36;1m: create cachekey[0m
+2025-11-11T18:39:12.3057771Z [36;1mDATE=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2025-11-11T18:39:12.3058383Z [36;1mHASH=$(rustc +1.88.0 --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2025-11-11T18:39:12.3058880Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2025-11-11T18:39:12.3088982Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:12.3089313Z env:
+2025-11-11T18:39:12.3089508Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:12.3089747Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-11T18:39:12.3089997Z ##[endgroup]
+2025-11-11T18:39:12.3609533Z ##[group]Run : disable incremental compilation
+2025-11-11T18:39:12.3609885Z [36;1m: disable incremental compilation[0m
+2025-11-11T18:39:12.3610206Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2025-11-11T18:39:12.3610539Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2025-11-11T18:39:12.3610810Z [36;1mfi[0m
+2025-11-11T18:39:12.3642423Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:12.3642789Z env:
+2025-11-11T18:39:12.3642994Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:12.3643246Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-11T18:39:12.3643503Z ##[endgroup]
+2025-11-11T18:39:12.3727708Z ##[group]Run : enable colors in Cargo output
+2025-11-11T18:39:12.3728043Z [36;1m: enable colors in Cargo output[0m
+2025-11-11T18:39:12.3728350Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2025-11-11T18:39:12.3728694Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2025-11-11T18:39:12.3728973Z [36;1mfi[0m
+2025-11-11T18:39:12.3756576Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:12.3756939Z env:
+2025-11-11T18:39:12.3757139Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:12.3757390Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-11T18:39:12.3757658Z   CARGO_INCREMENTAL: 0
+2025-11-11T18:39:12.3757871Z ##[endgroup]
+2025-11-11T18:39:12.3828708Z ##[group]Run : enable Cargo sparse registry
+2025-11-11T18:39:12.3829061Z [36;1m: enable Cargo sparse registry[0m
+2025-11-11T18:39:12.3829550Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2025-11-11T18:39:12.3832866Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2025-11-11T18:39:12.3833748Z [36;1m  if rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2025-11-11T18:39:12.3834645Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-11T18:39:12.3835332Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2025-11-11T18:39:12.3835847Z [36;1m  elif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2025-11-11T18:39:12.3836520Z [36;1m    touch "/home/jswift/actions-runner-org2/_work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2025-11-11T18:39:12.3837150Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2025-11-11T18:39:12.3837489Z [36;1m  fi[0m
+2025-11-11T18:39:12.3837666Z [36;1mfi[0m
+2025-11-11T18:39:12.3864994Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:12.3865330Z env:
+2025-11-11T18:39:12.3865521Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:12.3865763Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-11T18:39:12.3866017Z   CARGO_INCREMENTAL: 0
+2025-11-11T18:39:12.3866221Z ##[endgroup]
+2025-11-11T18:39:12.4357617Z ##[group]Run : work around spurious network errors in curl 8.0
+2025-11-11T18:39:12.4358134Z [36;1m: work around spurious network errors in curl 8.0[0m
+2025-11-11T18:39:12.4358789Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2025-11-11T18:39:12.4359472Z [36;1mif rustc +1.88.0 --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2025-11-11T18:39:12.4360177Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2025-11-11T18:39:12.4362265Z [36;1mfi[0m
+2025-11-11T18:39:12.4396063Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:12.4396447Z env:
+2025-11-11T18:39:12.4396659Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:12.4396942Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-11T18:39:12.4397417Z   CARGO_INCREMENTAL: 0
+2025-11-11T18:39:12.4397654Z ##[endgroup]
+2025-11-11T18:39:12.4698668Z ##[group]Run rustc +1.88.0 --version --verbose
+2025-11-11T18:39:12.4699262Z [36;1mrustc +1.88.0 --version --verbose[0m
+2025-11-11T18:39:12.4742066Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:12.4742630Z env:
+2025-11-11T18:39:12.4742959Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:12.4743372Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-11T18:39:12.4743804Z   CARGO_INCREMENTAL: 0
+2025-11-11T18:39:12.4744162Z ##[endgroup]
+2025-11-11T18:39:12.4995276Z rustc 1.88.0 (6b00bc388 2025-06-23)
+2025-11-11T18:39:12.4995827Z binary: rustc
+2025-11-11T18:39:12.4996356Z commit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc
+2025-11-11T18:39:12.4996970Z commit-date: 2025-06-23
+2025-11-11T18:39:12.4997402Z host: x86_64-unknown-linux-gnu
+2025-11-11T18:39:12.4997805Z release: 1.88.0
+2025-11-11T18:39:12.4998155Z LLVM version: 20.1.5
+2025-11-11T18:39:12.5079531Z ##[group]Run cargo fmt -- --check
+2025-11-11T18:39:12.5079849Z [36;1mcargo fmt -- --check[0m
+2025-11-11T18:39:12.5107369Z shell: /usr/bin/bash -e {0}
+2025-11-11T18:39:12.5107623Z env:
+2025-11-11T18:39:12.5107812Z   CARGO_TERM_COLOR: always
+2025-11-11T18:39:12.5108061Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-11T18:39:12.5110084Z   CARGO_INCREMENTAL: 0
+2025-11-11T18:39:12.5110304Z ##[endgroup]
+2025-11-11T18:39:13.0067909Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/async_routing_tests.rs:1:
+2025-11-11T18:39:13.0070431Z  //! Tests for async request-response routing enhancements
+2025-11-11T18:39:13.0070999Z  
+2025-11-11T18:39:13.0075812Z -use bllvm_node::network::{NetworkManager, transport::TransportPreference};
+2025-11-11T18:39:13.0076791Z +use bllvm_node::network::{transport::TransportPreference, NetworkManager};
+2025-11-11T18:39:13.0077474Z  use std::net::SocketAddr;
+2025-11-11T18:39:13.0077857Z  use std::sync::Arc;
+2025-11-11T18:39:13.0078309Z  use tokio::time::{sleep, Duration};
+2025-11-11T18:39:13.0079166Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/async_routing_tests.rs:9:
+2025-11-11T18:39:13.0080484Z  async fn test_request_id_matching() {
+2025-11-11T18:39:13.0081046Z      // Test that requests are matched by request_id, not FIFO
+2025-11-11T18:39:13.0081519Z      let listen_addr: SocketAddr = "127.0.0.1:0".parse().unwrap();
+2025-11-11T18:39:13.0082101Z -    let manager = NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0082593Z +    let manager =
+2025-11-11T18:39:13.0084620Z +        NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0085398Z  
+2025-11-11T18:39:13.0085693Z      let peer_addr: SocketAddr = "127.0.0.1:8333".parse().unwrap();
+2025-11-11T18:39:13.0086006Z  
+2025-11-11T18:39:13.0086405Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/async_routing_tests.rs:59:
+2025-11-11T18:39:13.0086858Z  #[tokio::test]
+2025-11-11T18:39:13.0087078Z  async fn test_request_cancellation() {
+2025-11-11T18:39:13.0087395Z      let listen_addr: SocketAddr = "127.0.0.1:0".parse().unwrap();
+2025-11-11T18:39:13.0087936Z -    let manager = NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0088408Z +    let manager =
+2025-11-11T18:39:13.0088786Z +        NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0089294Z      let peer_addr: SocketAddr = "127.0.0.1:8333".parse().unwrap();
+2025-11-11T18:39:13.0089680Z  
+2025-11-11T18:39:13.0089922Z      let (request_id, rx) = manager.register_request(peer_addr);
+2025-11-11T18:39:13.0090457Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/async_routing_tests.rs:77:
+2025-11-11T18:39:13.0091041Z  #[tokio::test]
+2025-11-11T18:39:13.0091253Z  async fn test_timestamp_cleanup() {
+2025-11-11T18:39:13.0091585Z      let listen_addr: SocketAddr = "127.0.0.1:0".parse().unwrap();
+2025-11-11T18:39:13.0092482Z -    let manager = NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0092955Z +    let manager =
+2025-11-11T18:39:13.0093342Z +        NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0093846Z      let peer_addr: SocketAddr = "127.0.0.1:8333".parse().unwrap();
+2025-11-11T18:39:13.0094154Z  
+2025-11-11T18:39:13.0095710Z      // Register a request
+2025-11-11T18:39:13.0096191Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/async_routing_tests.rs:94:
+2025-11-11T18:39:13.0096640Z  #[tokio::test]
+2025-11-11T18:39:13.0096895Z  async fn test_multiple_concurrent_requests_per_peer() {
+2025-11-11T18:39:13.0097272Z      let listen_addr: SocketAddr = "127.0.0.1:0".parse().unwrap();
+2025-11-11T18:39:13.0098067Z -    let manager = NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0098638Z +    let manager =
+2025-11-11T18:39:13.0099014Z +        NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0099514Z      let peer_addr: SocketAddr = "127.0.0.1:8333".parse().unwrap();
+2025-11-11T18:39:13.0099808Z  
+2025-11-11T18:39:13.0100009Z      // Register multiple requests from same peer
+2025-11-11T18:39:13.0100497Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/async_routing_tests.rs:123:
+2025-11-11T18:39:13.0100943Z  #[tokio::test]
+2025-11-11T18:39:13.0101148Z  async fn test_request_metrics() {
+2025-11-11T18:39:13.0101447Z      let listen_addr: SocketAddr = "127.0.0.1:0".parse().unwrap();
+2025-11-11T18:39:13.0101977Z -    let manager = NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0102430Z +    let manager =
+2025-11-11T18:39:13.0102809Z +        NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0103300Z      let peer_addr: SocketAddr = "127.0.0.1:8333".parse().unwrap();
+2025-11-11T18:39:13.0103587Z  
+2025-11-11T18:39:13.0103773Z      // Register and complete a request
+2025-11-11T18:39:13.0104240Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/async_routing_tests.rs:154:
+2025-11-11T18:39:13.0104963Z  #[tokio::test]
+2025-11-11T18:39:13.0105168Z  async fn test_request_priority() {
+2025-11-11T18:39:13.0105478Z      let listen_addr: SocketAddr = "127.0.0.1:0".parse().unwrap();
+2025-11-11T18:39:13.0106000Z -    let manager = NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0106460Z +    let manager =
+2025-11-11T18:39:13.0106830Z +        NetworkManager::with_transport_preference(listen_addr, 100, TransportPreference::TCP_ONLY);
+2025-11-11T18:39:13.0107382Z      let peer_addr: SocketAddr = "127.0.0.1:8333".parse().unwrap();
+2025-11-11T18:39:13.0107699Z  
+2025-11-11T18:39:13.0107913Z      // Register requests with different priorities
+2025-11-11T18:39:13.0112145Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/bip70_tests.rs:1:
+2025-11-11T18:39:13.0112992Z  //! Tests for BIP70 payment verification and signing
+2025-11-11T18:39:13.0113394Z  
+2025-11-11T18:39:13.0113697Z -use bllvm_protocol::serialization::transaction::serialize_transaction;
+2025-11-11T18:39:13.0114265Z -use bllvm_protocol::payment::{Payment, PaymentOutput, PaymentProtocolServer, PaymentRequest};
+2025-11-11T18:39:13.0125374Z  use bllvm_node::network::protocol::PaymentMessage;
+2025-11-11T18:39:13.0126254Z +use bllvm_protocol::payment::{Payment, PaymentOutput, PaymentProtocolServer, PaymentRequest};
+2025-11-11T18:39:13.0127028Z +use bllvm_protocol::serialization::transaction::serialize_transaction;
+2025-11-11T18:39:13.0127577Z  use bllvm_protocol::{OutPoint, Transaction, TransactionInput, TransactionOutput};
+2025-11-11T18:39:13.0128011Z  use secp256k1::{Secp256k1, SecretKey};
+2025-11-11T18:39:13.0128270Z  
+2025-11-11T18:39:13.0128875Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/bip70_tests.rs:105:
+2025-11-11T18:39:13.0129312Z  
+2025-11-11T18:39:13.0129509Z      // Process payment with merchant key
+2025-11-11T18:39:13.0129878Z      // Note: process_payment expects &Payment, not &PaymentMessage
+2025-11-11T18:39:13.0132556Z -    let result =
+2025-11-11T18:39:13.0133250Z -        PaymentProtocolServer::process_payment(&payment_msg.payment, &payment_request, Some(&merchant_key));
+2025-11-11T18:39:13.0133815Z +    let result = PaymentProtocolServer::process_payment(
+2025-11-11T18:39:13.0134129Z +        &payment_msg.payment,
+2025-11-11T18:39:13.0134583Z +        &payment_request,
+2025-11-11T18:39:13.0134877Z +        Some(&merchant_key),
+2025-11-11T18:39:13.0135101Z +    );
+2025-11-11T18:39:13.0135267Z  
+2025-11-11T18:39:13.0135431Z      assert!(result.is_ok());
+2025-11-11T18:39:13.0135664Z      let ack = result.unwrap();
+2025-11-11T18:39:13.0136338Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/common.rs:25:
+2025-11-11T18:39:13.0136795Z          let temp_dir = TempDir::new()?;
+2025-11-11T18:39:13.0137087Z          let db_path = temp_dir.path().join("test.db");
+2025-11-11T18:39:13.0137363Z  
+2025-11-11T18:39:13.0137660Z -        use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0138292Z -        let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0138882Z +        use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0139289Z +        let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0140366Z +            std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0142633Z          let utxo_store = UtxoStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0142965Z          let tx_index = TxIndex::new(db_arc.clone())?;
+2025-11-11T18:39:13.0143295Z          let block_store = BlockStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0147305Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/dandelion_relay_integration.rs:1:
+2025-11-11T18:39:13.0148079Z  #![cfg(feature = "dandelion")]
+2025-11-11T18:39:13.0148333Z -use bllvm_protocol::Hash;
+2025-11-11T18:39:13.0148629Z  use bllvm_node::network::relay::RelayManager;
+2025-11-11T18:39:13.0148919Z +use bllvm_protocol::Hash;
+2025-11-11T18:39:13.0149143Z  
+2025-11-11T18:39:13.0149331Z  fn hash_from_u8(v: u8) -> Hash {
+2025-11-11T18:39:13.0149565Z      [v; 32]
+2025-11-11T18:39:13.0229420Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/common.rs:25:
+2025-11-11T18:39:13.0230646Z          let temp_dir = TempDir::new()?;
+2025-11-11T18:39:13.0231122Z          let db_path = temp_dir.path().join("test.db");
+2025-11-11T18:39:13.0231491Z  
+2025-11-11T18:39:13.0231909Z -        use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0232674Z -        let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0233416Z +        use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0233932Z +        let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0234723Z +            std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0235245Z          let utxo_store = UtxoStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0235644Z          let tx_index = TxIndex::new(db_arc.clone())?;
+2025-11-11T18:39:13.0236050Z          let block_store = BlockStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0239262Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/mining_property_tests.rs:6:
+2025-11-11T18:39:13.0240142Z  use bllvm_node::rpc::mining::MiningRpc;
+2025-11-11T18:39:13.0240483Z  use bllvm_node::storage::Storage;
+2025-11-11T18:39:13.0240857Z  use bllvm_protocol::serialization::serialize_transaction;
+2025-11-11T18:39:13.0241451Z -use bllvm_protocol::types::{
+2025-11-11T18:39:13.0241839Z -    BlockHeader, OutPoint, TransactionInput, TransactionOutput,
+2025-11-11T18:39:13.0242231Z -};
+2025-11-11T18:39:13.0242651Z +use bllvm_protocol::types::{BlockHeader, OutPoint, TransactionInput, TransactionOutput};
+2025-11-11T18:39:13.0243168Z  use bllvm_protocol::Transaction;
+2025-11-11T18:39:13.0243455Z  use hex;
+2025-11-11T18:39:13.0243670Z  use proptest::prelude::*;
+2025-11-11T18:39:13.0244226Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/mining_property_tests.rs:24:
+2025-11-11T18:39:13.0245091Z          any::<u64>(), // version
+2025-11-11T18:39:13.0245372Z          prop::collection::vec(
+2025-11-11T18:39:13.0245639Z              (
+2025-11-11T18:39:13.0245873Z -                any::<[u8; 32]>(), // prevout hash
+2025-11-11T18:39:13.0246208Z -                any::<u64>(), // prevout index
+2025-11-11T18:39:13.0246714Z +                any::<[u8; 32]>(),                          // prevout hash
+2025-11-11T18:39:13.0247116Z +                any::<u64>(),                               // prevout index
+2025-11-11T18:39:13.0247496Z                  prop::collection::vec(any::<u8>(), 0..100), // script_sig
+2025-11-11T18:39:13.0247824Z -                any::<u64>(), // sequence
+2025-11-11T18:39:13.0248114Z +                any::<u64>(),                               // sequence
+2025-11-11T18:39:13.0248385Z              ),
+2025-11-11T18:39:13.0248578Z              0..10, // input count
+2025-11-11T18:39:13.0248803Z          ),
+2025-11-11T18:39:13.0249226Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/mining_property_tests.rs:34:
+2025-11-11T18:39:13.0249718Z          prop::collection::vec(
+2025-11-11T18:39:13.0249946Z              (
+2025-11-11T18:39:13.0250134Z -                any::<i64>(), // value
+2025-11-11T18:39:13.0250422Z +                any::<i64>(),                               // value
+2025-11-11T18:39:13.0250779Z                  prop::collection::vec(any::<u8>(), 0..100), // script_pubkey
+2025-11-11T18:39:13.0251092Z              ),
+2025-11-11T18:39:13.0251286Z              0..10, // output count
+2025-11-11T18:39:13.0276462Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/common.rs:25:
+2025-11-11T18:39:13.0277236Z          let temp_dir = TempDir::new()?;
+2025-11-11T18:39:13.0277594Z          let db_path = temp_dir.path().join("test.db");
+2025-11-11T18:39:13.0277862Z  
+2025-11-11T18:39:13.0278179Z -        use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0278764Z -        let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0279337Z +        use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0279740Z +        let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0280112Z +            std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0280515Z          let utxo_store = UtxoStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0280828Z          let tx_index = TxIndex::new(db_arc.clone())?;
+2025-11-11T18:39:13.0281166Z          let block_store = BlockStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0330863Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/common.rs:25:
+2025-11-11T18:39:13.0331577Z          let temp_dir = TempDir::new()?;
+2025-11-11T18:39:13.0331908Z          let db_path = temp_dir.path().join("test.db");
+2025-11-11T18:39:13.0332192Z  
+2025-11-11T18:39:13.0332514Z -        use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0333112Z -        let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0333703Z +        use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0334562Z +        let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0335114Z +            std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0335532Z          let utxo_store = UtxoStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0335861Z          let tx_index = TxIndex::new(db_arc.clone())?;
+2025-11-11T18:39:13.0336205Z          let block_store = BlockStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0388577Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/network_tests.rs:756:
+2025-11-11T18:39:13.0389508Z  
+2025-11-11T18:39:13.0389728Z  #[tokio::test]
+2025-11-11T18:39:13.0389996Z  async fn test_headers_message() {
+2025-11-11T18:39:13.0390335Z -    use bllvm_protocol::BlockHeader;
+2025-11-11T18:39:13.0392566Z      use bllvm_node::network::protocol::*;
+2025-11-11T18:39:13.0392919Z +    use bllvm_protocol::BlockHeader;
+2025-11-11T18:39:13.0393219Z  
+2025-11-11T18:39:13.0393643Z      let header1 = BlockHeader {
+2025-11-11T18:39:13.0393948Z          version: 1,
+2025-11-11T18:39:13.0416388Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/common.rs:25:
+2025-11-11T18:39:13.0417390Z          let temp_dir = TempDir::new()?;
+2025-11-11T18:39:13.0417836Z          let db_path = temp_dir.path().join("test.db");
+2025-11-11T18:39:13.0420143Z  
+2025-11-11T18:39:13.0420622Z -        use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0421518Z -        let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0422384Z +        use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0422999Z +        let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0423538Z +            std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0424117Z          let utxo_store = UtxoStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0424882Z          let tx_index = TxIndex::new(db_arc.clone())?;
+2025-11-11T18:39:13.0425352Z          let block_store = BlockStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0508088Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/common.rs:25:
+2025-11-11T18:39:13.0509069Z          let temp_dir = TempDir::new()?;
+2025-11-11T18:39:13.0509491Z          let db_path = temp_dir.path().join("test.db");
+2025-11-11T18:39:13.0509888Z  
+2025-11-11T18:39:13.0510318Z -        use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0511176Z -        let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0512010Z +        use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0512594Z +        let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0513137Z +            std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0513708Z          let utxo_store = UtxoStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0514167Z          let tx_index = TxIndex::new(db_arc.clone())?;
+2025-11-11T18:39:13.0514908Z          let block_store = BlockStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0598751Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/common.rs:25:
+2025-11-11T18:39:13.0599953Z          let temp_dir = TempDir::new()?;
+2025-11-11T18:39:13.0600476Z          let db_path = temp_dir.path().join("test.db");
+2025-11-11T18:39:13.0602854Z  
+2025-11-11T18:39:13.0603489Z -        use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0604906Z -        let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0605991Z +        use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0606724Z +        let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0607552Z +            std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0608109Z          let utxo_store = UtxoStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0608568Z          let tx_index = TxIndex::new(db_arc.clone())?;
+2025-11-11T18:39:13.0609020Z          let block_store = BlockStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0685208Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/storage_tests.rs:1:
+2025-11-11T18:39:13.0686262Z  //! Storage layer tests
+2025-11-11T18:39:13.0686566Z  
+2025-11-11T18:39:13.0686820Z -use bllvm_protocol::*;
+2025-11-11T18:39:13.0687136Z  use bllvm_node::storage::*;
+2025-11-11T18:39:13.0687492Z +use bllvm_protocol::*;
+2025-11-11T18:39:13.0687840Z  use tempfile::TempDir;
+2025-11-11T18:39:13.0688124Z  mod common;
+2025-11-11T18:39:13.0688672Z  use bllvm_node::storage::blockstore::BlockStore;
+2025-11-11T18:39:13.0689394Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/storage_tests.rs:588:
+2025-11-11T18:39:13.0690029Z  #[tokio::test]
+2025-11-11T18:39:13.0690342Z  async fn test_chainstate_work_accumulation() {
+2025-11-11T18:39:13.0690773Z      let temp_dir = TempDir::new().unwrap();
+2025-11-11T18:39:13.0691396Z -    use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0692338Z -    let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(temp_dir.path(), DatabaseBackend::Sled).unwrap());
+2025-11-11T18:39:13.0693254Z +    use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0693898Z +    let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0694813Z +        std::sync::Arc::from(create_database(temp_dir.path(), DatabaseBackend::Sled).unwrap());
+2025-11-11T18:39:13.0695466Z      let chainstate = ChainState::new(db_arc).unwrap();
+2025-11-11T18:39:13.0695880Z  
+2025-11-11T18:39:13.0696187Z      // Test work accumulation
+2025-11-11T18:39:13.0696823Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/storage_tests.rs:662:
+2025-11-11T18:39:13.0697459Z  #[tokio::test]
+2025-11-11T18:39:13.0697710Z  async fn test_utxostore_concurrent_operations() {
+2025-11-11T18:39:13.0698043Z      let temp_dir = TempDir::new().unwrap();
+2025-11-11T18:39:13.0698452Z -    use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0699103Z -    let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(temp_dir.path(), DatabaseBackend::Sled).unwrap());
+2025-11-11T18:39:13.0699746Z +    use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0702015Z +    let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0702426Z +        std::sync::Arc::from(create_database(temp_dir.path(), DatabaseBackend::Sled).unwrap());
+2025-11-11T18:39:13.0702871Z      let utxostore = UtxoStore::new(db_arc).unwrap();
+2025-11-11T18:39:13.0703148Z  
+2025-11-11T18:39:13.0703321Z      // Create multiple UTXOs
+2025-11-11T18:39:13.0703749Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/storage_tests.rs:712:
+2025-11-11T18:39:13.0704230Z  #[tokio::test]
+2025-11-11T18:39:13.0704726Z  async fn test_txindex_lookup_paths() {
+2025-11-11T18:39:13.0705191Z      let temp_dir = TempDir::new().unwrap();
+2025-11-11T18:39:13.0705799Z -    use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0706435Z -    let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(temp_dir.path(), DatabaseBackend::Sled).unwrap());
+2025-11-11T18:39:13.0707065Z +    use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0707477Z +    let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0707899Z +        std::sync::Arc::from(create_database(temp_dir.path(), DatabaseBackend::Sled).unwrap());
+2025-11-11T18:39:13.0708520Z      let txindex = TxIndex::new(db_arc).unwrap();
+2025-11-11T18:39:13.0708781Z  
+2025-11-11T18:39:13.0708967Z      // Create test transaction
+2025-11-11T18:39:13.0709406Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/storage_tests.rs:758:
+2025-11-11T18:39:13.0709841Z  #[tokio::test]
+2025-11-11T18:39:13.0710075Z  async fn test_storage_integration_workflow() {
+2025-11-11T18:39:13.0710379Z      let temp_dir = TempDir::new().unwrap();
+2025-11-11T18:39:13.0710778Z -    use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0711410Z -    let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(temp_dir.path(), DatabaseBackend::Sled).unwrap());
+2025-11-11T18:39:13.0712097Z +    use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0714679Z +    let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0715292Z +        std::sync::Arc::from(create_database(temp_dir.path(), DatabaseBackend::Sled).unwrap());
+2025-11-11T18:39:13.0715709Z  
+2025-11-11T18:39:13.0715894Z      // Initialize all storage components
+2025-11-11T18:39:13.0716227Z      let blockstore = BlockStore::new(db_arc.clone()).unwrap();
+2025-11-11T18:39:13.0716720Z Diff in /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/tests/common.rs:25:
+2025-11-11T18:39:13.0717153Z          let temp_dir = TempDir::new()?;
+2025-11-11T18:39:13.0717445Z          let db_path = temp_dir.path().join("test.db");
+2025-11-11T18:39:13.0717708Z  
+2025-11-11T18:39:13.0718009Z -        use bllvm_node::storage::database::{create_database, DatabaseBackend, Database};
+2025-11-11T18:39:13.0718583Z -        let db_arc: std::sync::Arc<dyn Database> = std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0719165Z +        use bllvm_node::storage::database::{create_database, Database, DatabaseBackend};
+2025-11-11T18:39:13.0719567Z +        let db_arc: std::sync::Arc<dyn Database> =
+2025-11-11T18:39:13.0719935Z +            std::sync::Arc::from(create_database(&db_path, DatabaseBackend::Sled)?);
+2025-11-11T18:39:13.0720320Z          let utxo_store = UtxoStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0720628Z          let tx_index = TxIndex::new(db_arc.clone())?;
+2025-11-11T18:39:13.0720945Z          let block_store = BlockStore::new(db_arc.clone())?;
+2025-11-11T18:39:13.0785001Z ##[error]Process completed with exit code 1.
+2025-11-11T18:39:13.0869075Z Post job cleanup.
+2025-11-11T18:39:13.2108766Z Post job cleanup.
+2025-11-11T18:39:13.3624960Z Post job cleanup.
+2025-11-11T18:39:13.4817726Z [command]/usr/bin/git version
+2025-11-11T18:39:13.4866730Z git version 2.43.0
+2025-11-11T18:39:13.4921319Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/67e6d478-69c7-433c-8975-c2c200e27afc/.gitconfig'
+2025-11-11T18:39:13.4932173Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/67e6d478-69c7-433c-8975-c2c200e27afc' before making global git config changes
+2025-11-11T18:39:13.4936186Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-11T18:39:13.4940230Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node
+2025-11-11T18:39:13.4987973Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-11T18:39:13.5032635Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-11T18:39:13.5326713Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-11T18:39:13.5351256Z http.https://github.com/.extraheader
+2025-11-11T18:39:13.5365395Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-11-11T18:39:13.5410085Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-11T18:39:13.5793321Z A job completed hook has been configured by the self-hosted runner administrator
+2025-11-11T18:39:13.5830892Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-completed.sh'
+2025-11-11T18:39:13.5856468Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-11-11T18:39:13.5856836Z ##[endgroup]
+2025-11-11T18:39:13.5921293Z Job completed: Tue Nov 11 06:39:13 PM UTC 2025
+2025-11-11T18:39:13.5953632Z Available disk space: 9.6G
+2025-11-11T18:39:13.5954075Z Cleaning up after job completion...
+2025-11-11T18:39:13.7226675Z Cleanup completed. Available disk space: 9.6G
+2025-11-11T18:39:13.7281010Z Cleaning up orphan processes

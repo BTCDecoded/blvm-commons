@@ -1,0 +1,1609 @@
+   Compiling foldhash v0.1.5
+   Compiling allocator-api2 v0.2.21
+   Compiling hashbrown v0.15.5
+   Compiling lru v0.12.5
+   Compiling consensus-proof v0.1.0 (/home/user/src/BTCDecoded/consensus-proof)
+warning: unexpected `cfg` condition name: `kani`
+  --> src/lib.rs:62:7
+   |
+62 | #[cfg(kani)]
+   |       ^^^^
+   |
+   = help: expected names are: `docsrs`, `feature`, and `test` and 31 more
+   = help: consider using a Cargo feature instead
+   = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+            [lints.rust]
+            unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+   = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+   = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+   = note: `#[warn(unexpected_cfgs)]` on by default
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/transaction.rs:259:7
+    |
+259 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/transaction.rs:721:7
+    |
+721 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/transaction_hash.rs:469:7
+    |
+469 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unused doc comment
+  --> src/script.rs:24:1
+   |
+24 | / /// Thread-local Secp256k1 context for signature verification
+25 | | /// Reference: Orange Paper Section 13.1 - Performance Considerations
+26 | | /// 
+27 | | /// Secp256k1 context is stateless and thread-safe for verification-only operations.
+28 | | /// Reusing a single context avoids the overhead of creating new contexts on every
+29 | | /// signature verification (major performance bottleneck identified in analysis).
+   | |_--------------------------------------------------------------------------------^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+   = note: `#[warn(unused_doc_comments)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused doc comment
+  --> src/script.rs:56:1
+   |
+56 | / /// Stack pool for VM optimization (production feature only)
+57 | | /// 
+58 | | /// Thread-local pool of pre-allocated Vec<ByteString> stacks to avoid allocation overhead.
+59 | | /// Stacks are reused across script executions, significantly reducing memory allocations.
+   | |_-----------------------------------------------------------------------------------------^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unexpected `cfg` condition name: `kani`
+    --> src/script.rs:1912:7
+     |
+1912 | #[cfg(kani)]
+     |       ^^^^
+     |
+     = help: consider using a Cargo feature instead
+     = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+              [lints.rust]
+              unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+     = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+     = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+    --> src/script.rs:2952:7
+     |
+2952 | #[cfg(kani)]
+     |       ^^^^
+     |
+     = help: consider using a Cargo feature instead
+     = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+              [lints.rust]
+              unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+     = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+     = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/block.rs:594:7
+    |
+594 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+    --> src/block.rs:1477:7
+     |
+1477 | #[cfg(kani)]
+     |       ^^^^
+     |
+     = help: consider using a Cargo feature instead
+     = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+              [lints.rust]
+              unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+     = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+     = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/bip113.rs:214:7
+    |
+214 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/locktime.rs:166:7
+    |
+166 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/witness.rs:262:7
+    |
+262 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/economic.rs:113:7
+    |
+113 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/pow.rs:506:7
+    |
+506 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/mempool.rs:599:7
+    |
+599 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+    --> src/mempool.rs:1420:7
+     |
+1420 | #[cfg(kani)]
+     |       ^^^^
+     |
+     = help: consider using a Cargo feature instead
+     = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+              [lints.rust]
+              unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+     = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+     = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/sigop.rs:431:7
+    |
+431 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/sequence_locks.rs:243:7
+    |
+243 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/mining.rs:973:7
+    |
+973 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/reorganization.rs:366:7
+    |
+366 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/reorganization.rs:815:7
+    |
+815 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+  --> src/segwit.rs:28:7
+   |
+28 | #[cfg(kani)]
+   |       ^^^^
+   |
+   = help: consider using a Cargo feature instead
+   = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+            [lints.rust]
+            unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+   = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+   = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+  --> src/segwit.rs:38:11
+   |
+38 | #[cfg(not(kani))]
+   |           ^^^^
+   |
+   = help: consider using a Cargo feature instead
+   = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+            [lints.rust]
+            unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+   = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+   = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+  --> src/segwit.rs:48:7
+   |
+48 | #[cfg(kani)]
+   |       ^^^^
+   |
+   = help: consider using a Cargo feature instead
+   = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+            [lints.rust]
+            unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+   = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+   = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+  --> src/segwit.rs:63:11
+   |
+63 | #[cfg(not(kani))]
+   |           ^^^^
+   |
+   = help: consider using a Cargo feature instead
+   = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+            [lints.rust]
+            unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+   = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+   = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+    --> src/segwit.rs:1125:7
+     |
+1125 | #[cfg(kani)]
+     |       ^^^^
+     |
+     = help: consider using a Cargo feature instead
+     = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+              [lints.rust]
+              unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+     = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+     = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+    --> src/taproot.rs:1216:7
+     |
+1216 | #[cfg(kani)]
+     |       ^^^^
+     |
+     = help: consider using a Cargo feature instead
+     = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+              [lints.rust]
+              unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+     = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+     = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/serialization/varint.rs:305:7
+    |
+305 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/serialization/transaction.rs:286:7
+    |
+286 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unexpected `cfg` condition name: `kani`
+   --> src/serialization/block.rs:277:7
+    |
+277 | #[cfg(kani)]
+    |       ^^^^
+    |
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(kani)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+
+warning: unused import: `encode_varint`
+ --> src/serialization/block.rs:9:21
+  |
+9 | use super::varint::{encode_varint, decode_varint};
+  |                     ^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `super::*`
+  --> src/optimizations.rs:45:9
+   |
+45 |     use super::*;
+   |         ^^^^^^^^
+
+warning: unused imports: `Digest` and `Sha256`
+   --> src/optimizations.rs:140:16
+    |
+140 |     use sha2::{Sha256, Digest};
+    |                ^^^^^^  ^^^^^^
+
+warning: unused doc comment
+   --> src/transaction.rs:571:5
+    |
+571 |     /// Property test: check_transaction validates structure correctly
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+    = note: `#[warn(unused_doc_comments)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused doc comment
+   --> src/transaction.rs:613:5
+    |
+613 |     /// Property test: check_tx_inputs handles coinbase correctly
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/transaction.rs:640:5
+    |
+640 |     /// Property test: is_coinbase correctly identifies coinbase transactions
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/transaction.rs:657:5
+    |
+657 |     /// Property test: calculate_transaction_size is consistent
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/transaction.rs:684:5
+    |
+684 |     /// Property test: output value bounds are respected
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+  --> src/script.rs:24:1
+   |
+24 | / /// Thread-local Secp256k1 context for signature verification
+25 | | /// Reference: Orange Paper Section 13.1 - Performance Considerations
+26 | | /// 
+27 | | /// Secp256k1 context is stateless and thread-safe for verification-only operations.
+28 | | /// Reusing a single context avoids the overhead of creating new contexts on every
+29 | | /// signature verification (major performance bottleneck identified in analysis).
+   | |_--------------------------------------------------------------------------------^
+   |   |
+   |   rustdoc does not generate documentation for macro invocations
+   |
+   = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/script.rs:2758:5
+     |
+2758 | /     /// Property test: eval_script respects operation limits
+2759 | |     /// 
+2760 | |     /// Mathematical specification:
+2761 | |     /// ∀ script ∈ ByteString: |script| > MAX_SCRIPT_OPS ⟹ eval_script fails
+     | |_____-----------------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/script.rs:2779:5
+     |
+2779 | /     /// Property test: verify_script is deterministic
+2780 | |     /// 
+2781 | |     /// Mathematical specification:
+2782 | |     /// ∀ inputs: verify_script(inputs) = verify_script(inputs)
+     | |_____----------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/script.rs:2801:5
+     |
+2801 | /     /// Property test: execute_opcode handles all opcodes without panicking
+2802 | |     /// 
+2803 | |     /// Mathematical specification:
+2804 | |     /// ∀ opcode ∈ {0..255}, stack ∈ Vec<ByteString>: execute_opcode(opcode, stack) ∈ {true, false}
+     | |_____----------------------------------------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/script.rs:2828:5
+     |
+2828 | /     /// Property test: stack operations preserve bounds
+2829 | |     /// 
+2830 | |     /// Mathematical specification:
+2831 | |     /// ∀ opcode ∈ {0..255}, stack ∈ Vec<ByteString>:
+2832 | |     /// - |stack| ≤ MAX_STACK_SIZE before and after execute_opcode
+2833 | |     /// - Stack operations are well-defined
+     | |_____--------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/script.rs:2873:5
+     |
+2873 | /     /// Property test: hash operations are deterministic
+2874 | |     /// 
+2875 | |     /// Mathematical specification:
+2876 | |     /// ∀ input ∈ ByteString: OP_HASH160(input) = OP_HASH160(input)
+     | |_____--------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/script.rs:2898:5
+     |
+2898 | /     /// Property test: equality operations are symmetric
+2899 | |     /// 
+2900 | |     /// Mathematical specification:
+2901 | |     /// ∀ a, b ∈ ByteString: OP_EQUAL(a, b) = OP_EQUAL(b, a)
+     | |_____-------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/script.rs:2928:5
+     |
+2928 | /     /// Property test: script execution terminates
+2929 | |     /// 
+2930 | |     /// Mathematical specification:
+2931 | |     /// ∀ script ∈ ByteString: eval_script(script) terminates (no infinite loops)
+     | |_____----------------------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/block.rs:1330:5
+     |
+1330 |     /// Property test: apply_transaction preserves UTXO set consistency
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/block.rs:1378:5
+     |
+1378 |     /// Property test: connect_block validates coinbase correctly
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/block.rs:1426:5
+     |
+1426 |     /// Property test: calculate_tx_id is deterministic
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/block.rs:1450:5
+     |
+1450 |     /// Property test: UTXO set operations are consistent
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/block.rs:1908:5
+     |
+1908 |     /// Property test: block header validation respects basic rules
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/economic.rs:440:5
+    |
+440 |     /// Property test: get_block_subsidy follows halving schedule
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/economic.rs:462:5
+    |
+462 |     /// Property test: total_supply is monotonically increasing
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/economic.rs:484:5
+    |
+484 |     /// Property test: supply limit is never exceeded
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/economic.rs:500:5
+    |
+500 |     /// Property test: subsidy decreases with halving periods
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/economic.rs:519:5
+    |
+519 |     /// Property test: calculate_fee handles coinbase correctly
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/pow.rs:882:5
+    |
+882 |     /// Property test: expand_target handles valid ranges
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/pow.rs:906:5
+    |
+906 |     /// Property test: check_proof_of_work is deterministic
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/pow.rs:925:5
+    |
+925 |     /// Property test: get_next_work_required respects bounds
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/pow.rs:954:5
+    |
+954 |     /// Property test: U256 operations are consistent
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/pow.rs:983:5
+    |
+983 |     /// Property test: U256 ordering is transitive
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/pow.rs:1004:5
+     |
+1004 |     /// Property test: serialize_header produces consistent length
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/reorganization.rs:509:5
+    |
+509 |     /// Property test: should_reorganize selects chain with maximum work
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/reorganization.rs:532:5
+    |
+532 |     /// Property test: calculate_chain_work is deterministic
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/reorganization.rs:550:5
+    |
+550 |     /// Property test: expand_target handles various difficulty values
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/reorganization.rs:570:5
+    |
+570 |     /// Property test: should_reorganize with equal length chains compares work
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/segwit.rs:846:5
+    |
+846 | /     /// Property test: transaction weight is non-negative
+847 | |     /// 
+848 | |     /// Mathematical specification:
+849 | |     /// ∀ tx ∈ Transaction, witness ∈ Option<Witness>: Weight(tx) ≥ 0
+    | |_____----------------------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/segwit.rs:861:5
+    |
+861 | /     /// Property test: transaction weight formula is correct
+862 | |     /// 
+863 | |     /// Mathematical specification:
+864 | |     /// ∀ tx ∈ Transaction, witness ∈ Option<Witness>:
+865 | |     /// Weight(tx) = 4 × base_size + total_size
+    | |_____------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/segwit.rs:881:5
+    |
+881 | /     /// Property test: block weight validation respects limits
+882 | |     /// 
+883 | |     /// Mathematical specification:
+884 | |     /// ∀ block ∈ Block, witnesses ∈ [Witness], max_weight ∈ ℕ:
+885 | |     /// If Σ tx_weight > max_weight then validate_segwit_block returns false
+    | |_____-----------------------------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/segwit.rs:902:5
+    |
+902 | /     /// Property test: witness commitment validation is deterministic
+903 | |     /// 
+904 | |     /// Mathematical specification:
+905 | |     /// ∀ coinbase_tx ∈ Transaction, witness_root ∈ Hash:
+906 | |     /// validate_witness_commitment(coinbase_tx, witness_root) is deterministic
+    | |_____--------------------------------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/segwit.rs:920:5
+    |
+920 | /     /// Property test: witness merkle root computation is deterministic
+921 | |     /// 
+922 | |     /// Mathematical specification:
+923 | |     /// ∀ block ∈ Block, witnesses ∈ [Witness]:
+924 | |     /// compute_witness_merkle_root(block, witnesses) is deterministic
+    | |_____-----------------------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/segwit.rs:943:5
+    |
+943 | /     /// Property test: SegWit transaction detection is consistent
+944 | |     /// 
+945 | |     /// Mathematical specification:
+946 | |     /// ∀ tx ∈ Transaction: is_segwit_transaction(tx) ∈ {true, false}
+    | |_____----------------------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/segwit.rs:957:5
+    |
+957 | /     /// Property test: witness hashing is deterministic
+958 | |     /// 
+959 | |     /// Mathematical specification:
+960 | |     /// ∀ witness ∈ Witness: hash_witness(witness) is deterministic
+    | |_____--------------------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/segwit.rs:974:5
+    |
+974 | /     /// Property test: merkle root computation handles single hash
+975 | |     /// 
+976 | |     /// Mathematical specification:
+977 | |     /// ∀ hash ∈ Hash: compute_merkle_root([hash]) = hash
+    | |_____----------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/segwit.rs:1002:5
+     |
+1002 | /     /// Property test: witness commitment extraction is deterministic
+1003 | |     /// 
+1004 | |     /// Mathematical specification:
+1005 | |     /// ∀ script ∈ ByteString: extract_witness_commitment(script) is deterministic
+     | |_____-----------------------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/segwit.rs:1021:5
+     |
+1021 | /     /// Property test: base size calculation is monotonic
+1022 | |     /// 
+1023 | |     /// Mathematical specification:
+1024 | |     /// ∀ tx1, tx2 ∈ Transaction: |tx1| ≤ |tx2| ⟹ base_size(tx1) ≤ base_size(tx2)
+     | |_____----------------------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/segwit.rs:1040:5
+     |
+1040 | /     /// Property test: total size with witness is greater than base size
+1041 | |     /// 
+1042 | |     /// Mathematical specification:
+1043 | |     /// ∀ tx ∈ Transaction, witness ∈ Witness: total_size(tx, witness) ≥ base_size(tx)
+     | |_____---------------------------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/taproot.rs:902:5
+    |
+902 | /     /// Property test: Taproot script validation is deterministic
+903 | |     /// 
+904 | |     /// Mathematical specification:
+905 | |     /// ∀ script ∈ ByteString: validate_taproot_script(script) is deterministic
+    | |_____--------------------------------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/taproot.rs:918:5
+    |
+918 | /     /// Property test: Taproot output key extraction is correct
+919 | |     /// 
+920 | |     /// Mathematical specification:
+921 | |     /// ∀ script ∈ ByteString: if validate_taproot_script(script) = true
+922 | |     /// then extract_taproot_output_key(script) returns Some(key)
+    | |_____------------------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/taproot.rs:941:5
+    |
+941 | /     /// Property test: Taproot key aggregation is deterministic
+942 | |     /// 
+943 | |     /// Mathematical specification:
+944 | |     /// ∀ internal_pubkey ∈ [u8; 32], merkle_root ∈ Hash:
+945 | |     /// compute_taproot_tweak(internal_pubkey, merkle_root) is deterministic
+    | |_____-----------------------------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/taproot.rs:962:5
+    |
+962 | /     /// Property test: Taproot script path validation is deterministic
+963 | |     /// 
+964 | |     /// Mathematical specification:
+965 | |     /// ∀ script ∈ ByteString, merkle_proof ∈ [Hash], merkle_root ∈ Hash:
+966 | |     /// validate_taproot_script_path(script, merkle_proof, merkle_root) is deterministic
+    | |_____-----------------------------------------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+   --> src/taproot.rs:984:5
+    |
+984 | /     /// Property test: Taproot signature hash computation is deterministic
+985 | |     /// 
+986 | |     /// Mathematical specification:
+987 | |     /// ∀ tx ∈ Transaction, input_index ∈ ℕ, prevouts ∈ [TransactionOutput], sighash_type ∈ ℕ:
+988 | |     /// compute_taproot_signature_hash(tx, input_index, prevouts, sighash_type) is deterministic
+    | |_____-------------------------------------------------------------------------------------------^
+    |       |
+    |       rustdoc does not generate documentation for macro invocations
+    |
+    = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/taproot.rs:1013:5
+     |
+1013 | /     /// Property test: Taproot output detection is consistent
+1014 | |     /// 
+1015 | |     /// Mathematical specification:
+1016 | |     /// ∀ output ∈ TransactionOutput: is_taproot_output(output) ∈ {true, false}
+     | |_____--------------------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/taproot.rs:1027:5
+     |
+1027 | /     /// Property test: Taproot transaction validation is deterministic
+1028 | |     /// 
+1029 | |     /// Mathematical specification:
+1030 | |     /// ∀ tx ∈ Transaction: validate_taproot_transaction(tx) is deterministic
+     | |_____------------------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/taproot.rs:1043:5
+     |
+1043 | /     /// Property test: Script hashing is deterministic
+1044 | |     /// 
+1045 | |     /// Mathematical specification:
+1046 | |     /// ∀ script ∈ ByteString: hash_script(script) is deterministic
+     | |_____--------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/taproot.rs:1060:5
+     |
+1060 | /     /// Property test: Hash pair operations are deterministic
+1061 | |     /// 
+1062 | |     /// Mathematical specification:
+1063 | |     /// ∀ left, right ∈ Hash: hash_pair(left, right) is deterministic
+     | |_____----------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/taproot.rs:1078:5
+     |
+1078 | /     /// Property test: Varint encoding is deterministic
+1079 | |     /// 
+1080 | |     /// Mathematical specification:
+1081 | |     /// ∀ value ∈ ℕ: encode_varint(value) is deterministic
+     | |_____-----------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/taproot.rs:1098:5
+     |
+1098 | /     /// Property test: Varint encoding preserves value
+1099 | |     /// 
+1100 | |     /// Mathematical specification:
+1101 | |     /// ∀ value ∈ ℕ: decode_varint(encode_varint(value)) = value
+     | |_____-----------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: unused doc comment
+    --> src/taproot.rs:1136:5
+     |
+1136 | /     /// Property test: Taproot script path validation with correct proof
+1137 | |     /// 
+1138 | |     /// Mathematical specification:
+1139 | |     /// ∀ script ∈ ByteString, merkle_proof ∈ [Hash]:
+1140 | |     /// If computed_root = compute_script_merkle_root(script, merkle_proof)
+1141 | |     /// then validate_taproot_script_path(script, merkle_proof, computed_root) = true
+     | |_____--------------------------------------------------------------------------------^
+     |       |
+     |       rustdoc does not generate documentation for macro invocations
+     |
+     = help: to document an item produced by a macro, the macro must produce the documentation as part of its expansion
+
+warning: use of deprecated function `mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead
+   --> src/mempool.rs:952:24
+    |
+952 |         mempool.insert(calculate_tx_id(&tx));
+    |                        ^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated function `mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead
+    --> src/mempool.rs:1310:21
+     |
+1310 |         let tx_id = calculate_tx_id(&tx);
+     |                     ^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead
+    --> src/mempool.rs:1316:22
+     |
+1316 |         let tx_id2 = calculate_tx_id(&tx);
+     |                      ^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead
+    --> src/mempool.rs:1326:19
+     |
+1326 |         let id1 = calculate_tx_id(&tx1);
+     |                   ^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead
+    --> src/mempool.rs:1327:19
+     |
+1327 |         let id2 = calculate_tx_id(&tx2);
+     |                   ^^^^^^^^^^^^^^^
+
+warning: unused variable: `prevouts`
+   --> src/transaction_hash.rs:307:5
+    |
+307 |     prevouts: &[TransactionOutput],
+    |     ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_prevouts`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `version`
+   --> src/witness.rs:122:53
+    |
+122 | pub fn extract_witness_program(script: &ByteString, version: WitnessVersion) -> Option<ByteString> {
+    |                                                     ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_version`
+
+warning: unused variable: `e`
+   --> src/pow.rs:166:17
+    |
+166 |             Err(e) => {
+    |                 ^ help: if this is intentional, prefix it with an underscore: `_e`
+
+warning: variable does not need to be mutable
+  --> src/mempool.rs:71:13
+   |
+71 |         let mut flags = calculate_script_flags(tx, witnesses);
+   |             ----^^^^^
+   |             |
+   |             help: remove this `mut`
+   |
+   = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `get_witnesses_for_block`
+  --> src/reorganization.rs:61:5
+   |
+61 |     get_witnesses_for_block: Option<impl Fn(&Block) -> Option<Vec<Witness>>>,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_get_witnesses_for_block`
+
+warning: unused variable: `get_headers_for_height`
+  --> src/reorganization.rs:62:5
+   |
+62 |     get_headers_for_height: Option<impl Fn(Natural) -> Option<Vec<BlockHeader>>>,
+   |     ^^^^^^^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_get_headers_for_height`
+
+warning: unused variable: `tx`
+   --> src/segwit.rs:200:13
+    |
+200 |     for (i, tx) in block.transactions.iter().enumerate() {
+    |             ^^ help: if this is intentional, prefix it with an underscore: `_tx`
+
+warning: function `eval_script_with_context` is never used
+   --> src/script.rs:371:4
+    |
+371 | fn eval_script_with_context(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `execute_opcode_with_context` is never used
+   --> src/script.rs:874:4
+    |
+874 | fn execute_opcode_with_context(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `SEQUENCE_LOCKTIME_DISABLE_FLAG` is never used
+  --> src/sequence_locks.rs:16:7
+   |
+16 | const SEQUENCE_LOCKTIME_DISABLE_FLAG: u32 = 0x80000000;
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `SEQUENCE_LOCKTIME_TYPE_FLAG` is never used
+  --> src/sequence_locks.rs:20:7
+   |
+20 | const SEQUENCE_LOCKTIME_TYPE_FLAG: u32 = 0x00400000;
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `SEQUENCE_LOCKTIME_MASK` is never used
+  --> src/sequence_locks.rs:24:7
+   |
+24 | const SEQUENCE_LOCKTIME_MASK: u32 = 0x0000ffff;
+   |       ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `calculate_tx_hash` is never used
+   --> src/mining.rs:328:4
+    |
+328 | fn calculate_tx_hash(tx: &Transaction) -> Hash {
+    |    ^^^^^^^^^^^^^^^^^
+
+warning: unused variable: `u256_value`
+   --> src/pow.rs:961:17
+    |
+961 |             let u256_value = U256::from_u32(value);
+    |                 ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_u256_value`
+
+warning: variable does not need to be mutable
+    --> src/mempool.rs:1108:13
+     |
+1108 |         let mut mempool = Mempool::new();
+     |             ----^^^^^^^
+     |             |
+     |             help: remove this `mut`
+
+warning: variable does not need to be mutable
+    --> src/mempool.rs:1129:13
+     |
+1129 |         let mut tx1 = create_valid_transaction();
+     |             ----^^^
+     |             |
+     |             help: remove this `mut`
+
+warning: `consensus-proof` (lib) generated 47 warnings (run `cargo fix --lib -p consensus-proof` to apply 4 suggestions)
+warning: unused import: `black_box`
+ --> benches/utxo_commitments.rs:1:17
+  |
+1 | use criterion::{black_box, criterion_group, criterion_main, Criterion};
+  |                 ^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0308]: mismatched types
+   --> benches/block_validation.rs:32:27
+    |
+ 32 |                 black_box(utxo_set.clone()),
+    |                 --------- ^^^^^^^^^^^^^^^^ expected `&[Vec<Vec<u8>>]`, found `HashMap<OutPoint, UTXO>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&[Vec<Vec<u8>>]`
+                  found struct `HashMap<OutPoint, UTXO>`
+help: the return type of this call is `HashMap<OutPoint, UTXO>` due to the type of the argument passed
+   --> benches/block_validation.rs:32:17
+    |
+ 32 |                 black_box(utxo_set.clone()),
+    |                 ^^^^^^^^^^----------------^
+    |                           |
+    |                           this argument influences the return type of `black_box`
+note: function defined here
+   --> /home/user/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/criterion-0.5.1/src/lib.rs:167:8
+    |
+167 | pub fn black_box<T>(dummy: T) -> T {
+    |        ^^^^^^^^^
+
+error[E0308]: mismatched types
+   --> benches/block_validation.rs:33:27
+    |
+ 33 |                 black_box(0)
+    |                 --------- ^ expected `HashMap<OutPoint, UTXO>`, found integer
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected struct `HashMap<OutPoint, UTXO>`
+                 found type `{integer}`
+help: the return type of this call is `{integer}` due to the type of the argument passed
+   --> benches/block_validation.rs:33:17
+    |
+ 33 |                 black_box(0)
+    |                 ^^^^^^^^^^-^
+    |                           |
+    |                           this argument influences the return type of `black_box`
+note: function defined here
+   --> /home/user/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/criterion-0.5.1/src/lib.rs:167:8
+    |
+167 | pub fn black_box<T>(dummy: T) -> T {
+    |        ^^^^^^^^^
+
+warning: unused imports: `BlockHeader`, `Hash`, and `Natural`
+ --> benches/utxo_commitments.rs:2:23
+  |
+2 | use consensus_proof::{BlockHeader, Hash, Natural};
+  |                       ^^^^^^^^^^^  ^^^^  ^^^^^^^
+
+error[E0061]: this function takes 5 arguments but 3 arguments were supplied
+  --> benches/block_validation.rs:30:27
+   |
+30 |               let _result = connect_block(
+   |  ___________________________^^^^^^^^^^^^^-
+31 | |                 black_box(&block),
+32 | |                 black_box(utxo_set.clone()),
+33 | |                 black_box(0)
+34 | |             );
+   | |_____________- two arguments of type `u64` and `Option<&[BlockHeader]>` are missing
+   |
+note: function defined here
+  --> /home/user/src/BTCDecoded/consensus-proof/src/block.rs:78:8
+   |
+78 | pub fn connect_block(
+   |        ^^^^^^^^^^^^^
+help: provide the arguments
+   |
+33 |             let _result = connect_block(
+34 |                 black_box(&block),
+35 |                 black_box(utxo_set.clone()),
+36 ~                 black_box(0),
+37 +                 /* u64 */,
+38 +                 /* Option<&[BlockHeader]> */,
+   |
+
+error[E0308]: mismatched types
+   --> benches/block_validation.rs:76:27
+    |
+ 76 |                 black_box(utxo_set.clone()),
+    |                 --------- ^^^^^^^^^^^^^^^^ expected `&[Vec<Vec<u8>>]`, found `HashMap<OutPoint, UTXO>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&[Vec<Vec<u8>>]`
+                  found struct `HashMap<OutPoint, UTXO>`
+help: the return type of this call is `HashMap<OutPoint, UTXO>` due to the type of the argument passed
+   --> benches/block_validation.rs:76:17
+    |
+ 76 |                 black_box(utxo_set.clone()),
+    |                 ^^^^^^^^^^----------------^
+    |                           |
+    |                           this argument influences the return type of `black_box`
+note: function defined here
+   --> /home/user/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/criterion-0.5.1/src/lib.rs:167:8
+    |
+167 | pub fn black_box<T>(dummy: T) -> T {
+    |        ^^^^^^^^^
+
+error[E0308]: mismatched types
+   --> benches/block_validation.rs:77:27
+    |
+ 77 |                 black_box(0)
+    |                 --------- ^ expected `HashMap<OutPoint, UTXO>`, found integer
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected struct `HashMap<OutPoint, UTXO>`
+                 found type `{integer}`
+help: the return type of this call is `{integer}` due to the type of the argument passed
+   --> benches/block_validation.rs:77:17
+    |
+ 77 |                 black_box(0)
+    |                 ^^^^^^^^^^-^
+    |                           |
+    |                           this argument influences the return type of `black_box`
+note: function defined here
+   --> /home/user/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/criterion-0.5.1/src/lib.rs:167:8
+    |
+167 | pub fn black_box<T>(dummy: T) -> T {
+    |        ^^^^^^^^^
+
+error[E0061]: this function takes 5 arguments but 3 arguments were supplied
+  --> benches/block_validation.rs:74:27
+   |
+74 |               let _result = connect_block(
+   |  ___________________________^^^^^^^^^^^^^-
+75 | |                 black_box(&block),
+76 | |                 black_box(utxo_set.clone()),
+77 | |                 black_box(0)
+78 | |             );
+   | |_____________- two arguments of type `u64` and `Option<&[BlockHeader]>` are missing
+   |
+note: function defined here
+  --> /home/user/src/BTCDecoded/consensus-proof/src/block.rs:78:8
+   |
+78 | pub fn connect_block(
+   |        ^^^^^^^^^^^^^
+help: provide the arguments
+   |
+77 |             let _result = connect_block(
+78 |                 black_box(&block),
+79 |                 black_box(utxo_set.clone()),
+80 ~                 black_box(0),
+81 +                 /* u64 */,
+82 +                 /* Option<&[BlockHeader]> */,
+   |
+
+error[E0308]: mismatched types
+   --> benches/mempool_operations.rs:57:27
+    |
+ 57 |                 black_box(&utxo_set),
+    |                 --------- ^^^^^^^^^ expected `Option<&[Vec<Vec<u8>>]>`, found `&HashMap<OutPoint, UTXO>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:   expected enum `Option<&[Vec<Vec<u8>>]>`
+            found reference `&HashMap<OutPoint, UTXO>`
+help: the return type of this call is `&HashMap<OutPoint, UTXO>` due to the type of the argument passed
+   --> benches/mempool_operations.rs:57:17
+    |
+ 57 |                 black_box(&utxo_set),
+    |                 ^^^^^^^^^^---------^
+    |                           |
+    |                           this argument influences the return type of `black_box`
+note: function defined here
+   --> /home/user/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/criterion-0.5.1/src/lib.rs:167:8
+    |
+167 | pub fn black_box<T>(dummy: T) -> T {
+    |        ^^^^^^^^^
+
+error[E0308]: mismatched types
+   --> benches/mempool_operations.rs:58:27
+    |
+ 58 |                 black_box(&mempool),
+    |                 --------- ^^^^^^^^ expected `&HashMap<OutPoint, UTXO>`, found `&HashSet<[u8; 32]>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&HashMap<OutPoint, UTXO>`
+               found reference `&HashSet<[u8; 32]>`
+help: the return type of this call is `&HashSet<[u8; 32]>` due to the type of the argument passed
+   --> benches/mempool_operations.rs:58:17
+    |
+ 58 |                 black_box(&mempool),
+    |                 ^^^^^^^^^^--------^
+    |                           |
+    |                           this argument influences the return type of `black_box`
+note: function defined here
+   --> /home/user/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/criterion-0.5.1/src/lib.rs:167:8
+    |
+167 | pub fn black_box<T>(dummy: T) -> T {
+    |        ^^^^^^^^^
+
+error[E0308]: mismatched types
+   --> benches/mempool_operations.rs:59:27
+    |
+ 59 |                 black_box(0),
+    |                 --------- ^ expected `&HashSet<[u8; 32]>`, found integer
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&HashSet<[u8; 32]>`
+                    found type `{integer}`
+help: the return type of this call is `{integer}` due to the type of the argument passed
+   --> benches/mempool_operations.rs:59:17
+    |
+ 59 |                 black_box(0),
+    |                 ^^^^^^^^^^-^
+    |                           |
+    |                           this argument influences the return type of `black_box`
+note: function defined here
+   --> /home/user/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/criterion-0.5.1/src/lib.rs:167:8
+    |
+167 | pub fn black_box<T>(dummy: T) -> T {
+    |        ^^^^^^^^^
+
+error[E0061]: this function takes 5 arguments but 4 arguments were supplied
+  --> benches/mempool_operations.rs:55:23
+   |
+55 |               black_box(accept_to_memory_pool(
+   |  _______________________^^^^^^^^^^^^^^^^^^^^^-
+56 | |                 black_box(&tx),
+57 | |                 black_box(&utxo_set),
+58 | |                 black_box(&mempool),
+59 | |                 black_box(0),
+60 | |             ))
+   | |_____________- argument #5 of type `u64` is missing
+   |
+note: function defined here
+  --> /home/user/src/BTCDecoded/consensus-proof/src/mempool.rs:30:8
+   |
+30 | pub fn accept_to_memory_pool(
+   |        ^^^^^^^^^^^^^^^^^^^^^
+help: provide the argument
+   |
+60 |             black_box(accept_to_memory_pool(
+...
+64 |                 black_box(0),
+65 ~                 /* u64 */,
+66 ~             ))
+   |
+
+error[E0308]: mismatched types
+   --> benches/mempool_operations.rs:74:27
+    |
+ 74 |                 black_box(&utxo_set),
+    |                 --------- ^^^^^^^^^ expected `Option<&[Vec<Vec<u8>>]>`, found `&HashMap<OutPoint, UTXO>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:   expected enum `Option<&[Vec<Vec<u8>>]>`
+            found reference `&HashMap<OutPoint, UTXO>`
+help: the return type of this call is `&HashMap<OutPoint, UTXO>` due to the type of the argument passed
+   --> benches/mempool_operations.rs:74:17
+    |
+ 74 |                 black_box(&utxo_set),
+    |                 ^^^^^^^^^^---------^
+    |                           |
+    |                           this argument influences the return type of `black_box`
+note: function defined here
+   --> /home/user/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/criterion-0.5.1/src/lib.rs:167:8
+    |
+167 | pub fn black_box<T>(dummy: T) -> T {
+    |        ^^^^^^^^^
+
+error[E0308]: mismatched types
+   --> benches/mempool_operations.rs:75:27
+    |
+ 75 |                 black_box(&mempool),
+    |                 --------- ^^^^^^^^ expected `&HashMap<OutPoint, UTXO>`, found `&HashSet<[u8; 32]>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&HashMap<OutPoint, UTXO>`
+               found reference `&HashSet<[u8; 32]>`
+help: the return type of this call is `&HashSet<[u8; 32]>` due to the type of the argument passed
+   --> benches/mempool_operations.rs:75:17
+    |
+ 75 |                 black_box(&mempool),
+    |                 ^^^^^^^^^^--------^
+    |                           |
+    |                           this argument influences the return type of `black_box`
+note: function defined here
+   --> /home/user/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/criterion-0.5.1/src/lib.rs:167:8
+    |
+167 | pub fn black_box<T>(dummy: T) -> T {
+    |        ^^^^^^^^^
+
+error[E0308]: mismatched types
+   --> benches/mempool_operations.rs:76:27
+    |
+ 76 |                 black_box(0),
+    |                 --------- ^ expected `&HashSet<[u8; 32]>`, found integer
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&HashSet<[u8; 32]>`
+                    found type `{integer}`
+help: the return type of this call is `{integer}` due to the type of the argument passed
+   --> benches/mempool_operations.rs:76:17
+    |
+ 76 |                 black_box(0),
+    |                 ^^^^^^^^^^-^
+    |                           |
+    |                           this argument influences the return type of `black_box`
+note: function defined here
+   --> /home/user/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/criterion-0.5.1/src/lib.rs:167:8
+    |
+167 | pub fn black_box<T>(dummy: T) -> T {
+    |        ^^^^^^^^^
+
+error[E0061]: this function takes 5 arguments but 4 arguments were supplied
+  --> benches/mempool_operations.rs:72:23
+   |
+72 |               black_box(accept_to_memory_pool(
+   |  _______________________^^^^^^^^^^^^^^^^^^^^^-
+73 | |                 black_box(&tx),
+74 | |                 black_box(&utxo_set),
+75 | |                 black_box(&mempool),
+76 | |                 black_box(0),
+77 | |             ))
+   | |_____________- argument #5 of type `u64` is missing
+   |
+note: function defined here
+  --> /home/user/src/BTCDecoded/consensus-proof/src/mempool.rs:30:8
+   |
+30 | pub fn accept_to_memory_pool(
+   |        ^^^^^^^^^^^^^^^^^^^^^
+help: provide the argument
+   |
+77 |             black_box(accept_to_memory_pool(
+...
+81 |                 black_box(0),
+82 ~                 /* u64 */,
+83 ~             ))
+   |
+
+error[E0308]: mismatched types
+   --> benches/mempool_operations.rs:106:27
+    |
+106 |                 black_box(&mempool),
+    |                 --------- ^^^^^^^^ expected `&HashMap<OutPoint, UTXO>`, found `&HashSet<[u8; 32]>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&HashMap<OutPoint, UTXO>`
+               found reference `&HashSet<[u8; 32]>`
+help: the return type of this call is `&HashSet<[u8; 32]>` due to the type of the argument passed
+   --> benches/mempool_operations.rs:106:17
+    |
+106 |                 black_box(&mempool),
+    |                 ^^^^^^^^^^--------^
+    |                           |
+    |                           this argument influences the return type of `black_box`
+note: function defined here
+   --> /home/user/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/criterion-0.5.1/src/lib.rs:167:8
+    |
+167 | pub fn black_box<T>(dummy: T) -> T {
+    |        ^^^^^^^^^
+
+error[E0061]: this function takes 4 arguments but 3 arguments were supplied
+   --> benches/mempool_operations.rs:103:23
+    |
+103 |               black_box(replacement_checks(
+    |  _______________________^^^^^^^^^^^^^^^^^^-
+104 | |                 black_box(&new_tx),
+105 | |                 black_box(&existing_tx),
+106 | |                 black_box(&mempool),
+107 | |             ))
+    | |_____________- argument #4 of type `&HashSet<[u8; 32]>` is missing
+    |
+note: function defined here
+   --> /home/user/src/BTCDecoded/consensus-proof/src/mempool.rs:203:8
+    |
+203 | pub fn replacement_checks(
+    |        ^^^^^^^^^^^^^^^^^^
+help: provide the argument
+    |
+107 |             black_box(replacement_checks(
+...
+110 |                 black_box(&mempool),
+111 ~                 /* &HashSet<[u8; 32]> */,
+112 ~             ))
+    |
+
+Some errors have detailed explanations: E0061, E0308.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `consensus-proof` (bench "block_validation") due to 6 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `consensus-proof` (bench "mempool_operations") due to 10 previous errors
+warning: comparison is useless due to type limits
+   --> src/reorganization.rs:546:26
+    |
+546 |             prop_assert!(work1 >= 0, "Chain work must be non-negative");
+    |                          ^^^^^^^^^^
+    |
+    = note: `#[warn(unused_comparisons)]` on by default
+
+warning: comparison is useless due to type limits
+   --> src/segwit.rs:857:21
+    |
+857 |             assert!(weight >= 0);
+    |                     ^^^^^^^^^^^
+
+warning: `consensus-proof` (bench "utxo_commitments") generated 2 warnings (run `cargo fix --bench "utxo_commitments"` to apply 2 suggestions)
+warning: `consensus-proof` (lib test) generated 110 warnings (44 duplicates) (run `cargo fix --lib -p consensus-proof --tests` to apply 2 suggestions)

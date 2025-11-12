@@ -1,0 +1,231 @@
+﻿2025-11-11T18:48:51.1136102Z ##[group]Run cargo doc --no-deps --document-private-items
+2025-11-11T18:48:51.1136580Z [36;1mcargo doc --no-deps --document-private-items[0m
+2025-11-11T18:48:51.1167037Z shell: /usr/bin/bash -e {0}
+2025-11-11T18:48:51.1167326Z env:
+2025-11-11T18:48:51.1167544Z   CARGO_TERM_COLOR: always
+2025-11-11T18:48:51.1169692Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-11T18:48:51.1169976Z   CARGO_INCREMENTAL: 0
+2025-11-11T18:48:51.1170221Z ##[endgroup]
+2025-11-11T18:48:51.4088713Z [0m[1m[33mwarning[0m[0m[1m: unused import: `ConsensusResult`[0m
+2025-11-11T18:48:51.4090840Z [0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/initial_sync.rs:21:22[0m
+2025-11-11T18:48:51.4092560Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4093769Z [0m[1m[38;5;12m21[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    ConsensusConfig, ConsensusResult, PeerConsensus, PeerInfo,[0m
+2025-11-11T18:48:51.4095548Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                      [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+2025-11-11T18:48:51.4096558Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4097451Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-11T18:48:51.4098181Z 
+2025-11-11T18:48:51.4099386Z [0m[1m[33mwarning[0m[0m[1m: unused imports: `TransactionInput` and `TransactionOutput`[0m
+2025-11-11T18:48:51.4101998Z [0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/spam_filter.rs:21:45[0m
+2025-11-11T18:48:51.4103897Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4106871Z [0m[1m[38;5;12m21[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::types::{ByteString, Transaction, TransactionInput, TransactionOutput};[0m
+2025-11-11T18:48:51.4108081Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                             [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m[0m  [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+2025-11-11T18:48:51.4108592Z 
+2025-11-11T18:48:51.4109143Z [0m[1m[33mwarning[0m[0m[1m: unused imports: `UtxoCommitmentError` and `UtxoCommitmentResult`[0m
+2025-11-11T18:48:51.4110619Z [0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/spam_filter.rs:23:48[0m
+2025-11-11T18:48:51.4111666Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4112867Z [0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::utxo_commitments::data_structures::{UtxoCommitmentError, UtxoCommitmentResult};[0m
+2025-11-11T18:48:51.4114187Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^[0m[0m  [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-11T18:48:51.4119187Z 
+2025-11-11T18:48:51.4119823Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `peers`[0m
+2025-11-11T18:48:51.4121501Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/peer_consensus.rs:180:9[0m
+2025-11-11T18:48:51.4122618Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4123327Z [0m[1m[38;5;12m180[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        peers: &[PeerInfo],[0m
+2025-11-11T18:48:51.4124660Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_peers`[0m
+2025-11-11T18:48:51.4125494Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4126933Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-11T18:48:51.4127417Z 
+2025-11-11T18:48:51.4127847Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `checkpoint_height`[0m
+2025-11-11T18:48:51.4129198Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/peer_consensus.rs:181:9[0m
+2025-11-11T18:48:51.4130681Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4131432Z [0m[1m[38;5;12m181[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        checkpoint_height: Natural,[0m
+2025-11-11T18:48:51.4132694Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_checkpoint_height`[0m
+2025-11-11T18:48:51.4133369Z 
+2025-11-11T18:48:51.4133775Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `checkpoint_hash`[0m
+2025-11-11T18:48:51.4135310Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/peer_consensus.rs:182:9[0m
+2025-11-11T18:48:51.4136389Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4137105Z [0m[1m[38;5;12m182[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        checkpoint_hash: Hash,[0m
+2025-11-11T18:48:51.4138337Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_checkpoint_hash`[0m
+2025-11-11T18:48:51.4139037Z 
+2025-11-11T18:48:51.4139433Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `seen_countries`[0m
+2025-11-11T18:48:51.4140755Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/peer_consensus.rs:115:17[0m
+2025-11-11T18:48:51.4141815Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4142843Z [0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut seen_countries: HashSet<String> = HashSet::new();[0m
+2025-11-11T18:48:51.4144171Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[33m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_seen_countries`[0m
+2025-11-11T18:48:51.4145076Z 
+2025-11-11T18:48:51.4145510Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-11T18:48:51.4146850Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/peer_consensus.rs:115:13[0m
+2025-11-11T18:48:51.4147885Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4148867Z [0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut seen_countries: HashSet<String> = HashSet::new();[0m
+2025-11-11T18:48:51.4149845Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+2025-11-11T18:48:51.4150603Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4151356Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-11T18:48:51.4151896Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4152577Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
+2025-11-11T18:48:51.4153304Z 
+2025-11-11T18:48:51.4153941Z [0m[1m[33mwarning[0m[0m[1m: type `U256` is more private than the item `pow::expand_target`[0m
+2025-11-11T18:48:51.4155518Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/pow.rs:389:1[0m
+2025-11-11T18:48:51.4156409Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4157241Z [0m[1m[38;5;12m389[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub fn expand_target(bits: Natural) -> Result<U256> {[0m
+2025-11-11T18:48:51.4158644Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mfunction `pow::expand_target` is reachable at visibility `pub`[0m
+2025-11-11T18:48:51.4159487Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4160213Z [0m[1m[38;5;10mnote[0m[0m: but type `U256` is only usable at visibility `pub(self)`[0m
+2025-11-11T18:48:51.4161375Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/pow.rs:187:1[0m
+2025-11-11T18:48:51.4162527Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4163283Z [0m[1m[38;5;12m187[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mstruct U256([u64; 4]); // 4 * 64 = 256 bits[0m
+2025-11-11T18:48:51.4164085Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;10m^^^^^^^^^^^[0m
+2025-11-11T18:48:51.4165137Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(private_interfaces)]` on by default[0m
+2025-11-11T18:48:51.4165606Z 
+2025-11-11T18:48:51.4165989Z [0m[1m[33mwarning[0m[0m[1m: field `utxo_index` is never read[0m
+2025-11-11T18:48:51.4167261Z [0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/merkle_tree.rs:79:5[0m
+2025-11-11T18:48:51.4168284Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4168976Z [0m[1m[38;5;12m77[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct UtxoMerkleTree {[0m
+2025-11-11T18:48:51.4169985Z [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m--------------[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
+2025-11-11T18:48:51.4171196Z [0m[1m[38;5;12m78[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    tree: SparseMerkleTree<UtxoHasher, UtxoValue, DefaultStore<UtxoValue>>,[0m
+2025-11-11T18:48:51.4172575Z [0m[1m[38;5;12m79[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    utxo_index: HashMap<OutPoint, usize>, // Map OutPoint to leaf position (if needed)[0m
+2025-11-11T18:48:51.4173531Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^[0m
+2025-11-11T18:48:51.4174086Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4174960Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+2025-11-11T18:48:51.4175398Z 
+2025-11-11T18:48:51.4176206Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (lib) generated 10 warnings (run `cargo fix --lib -p bllvm-consensus` to apply 4 suggestions)
+2025-11-11T18:48:51.4177401Z [0m[1m[33mwarning[0m[0m[1m: unused imports: `OutPoint` and `UTXO`[0m
+2025-11-11T18:48:51.4189507Z [0m [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-protocol/src/network.rs:9:30[0m
+2025-11-11T18:48:51.4190449Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4191433Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::types::{OutPoint, UtxoSet, UTXO};[0m
+2025-11-11T18:48:51.4192442Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[33m^^^^^^^^[0m[0m           [0m[0m[1m[33m^^^^[0m
+2025-11-11T18:48:51.4193087Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4195173Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-11T18:48:51.4195668Z 
+2025-11-11T18:48:51.4196033Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `peer_state`[0m
+2025-11-11T18:48:51.4197492Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-protocol/src/network.rs:443:45[0m
+2025-11-11T18:48:51.4198404Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4199545Z [0m[1m[38;5;12m443[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mfn process_ping_message(ping: &PingMessage, peer_state: &mut PeerState) -> Result<NetworkResponse> {[0m
+2025-11-11T18:48:51.4201133Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                             [0m[0m[1m[33m^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_peer_state`[0m
+2025-11-11T18:48:51.4202023Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4202735Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-11T18:48:51.4203194Z 
+2025-11-11T18:48:51.4203583Z [0m[1m[33mwarning[0m[0m[1m: method `bit_offset` is never used[0m
+2025-11-11T18:48:51.4204859Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-protocol/src/bip158.rs:156:8[0m
+2025-11-11T18:48:51.4205995Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4206702Z [0m[1m[38;5;12m122[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a> BitReader<'a> {[0m
+2025-11-11T18:48:51.4207743Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+2025-11-11T18:48:51.4208498Z [0m[1m[38;5;12m...[0m
+2025-11-11T18:48:51.4209200Z [0m[1m[38;5;12m156[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn bit_offset(&self) -> usize {[0m
+2025-11-11T18:48:51.4210003Z [0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^[0m
+2025-11-11T18:48:51.4210571Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:51.4211228Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+2025-11-11T18:48:51.4211683Z 
+2025-11-11T18:48:51.4212461Z [1m[33mwarning[0m[1m:[0m `bllvm-protocol` (lib) generated 3 warnings (run `cargo fix --lib -p bllvm-protocol` to apply 1 suggestion)
+2025-11-11T18:48:51.4214493Z [1m[32m Documenting[0m bllvm-node v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node)
+2025-11-11T18:48:53.4931927Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `command:12`[0m
+2025-11-11T18:48:53.4933214Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_adapter.rs:55:27[0m
+2025-11-11T18:48:53.4933795Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.4934879Z [0m[1m[38;5;12m55[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    /// Format: [magic:4][command:12][length:4][checksum:4][payload:var][0m
+2025-11-11T18:48:53.4935890Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                           [0m[0m[1m[33m^^^^^^^^^^[0m[0m [0m[0m[1m[33mno item named `command:12` in scope[0m
+2025-11-11T18:48:53.4936467Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.4937201Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-11T18:48:53.4938278Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::broken_intra_doc_links)]` on by default[0m
+2025-11-11T18:48:53.4938704Z 
+2025-11-11T18:48:53.4940897Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `checksum:4`[0m
+2025-11-11T18:48:53.4941544Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_adapter.rs:55:49[0m
+2025-11-11T18:48:53.4942033Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.4942751Z [0m[1m[38;5;12m55[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    /// Format: [magic:4][command:12][length:4][checksum:4][payload:var][0m
+2025-11-11T18:48:53.4943685Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                 [0m[0m[1m[33m^^^^^^^^^^[0m[0m [0m[0m[1m[33mno item named `checksum:4` in scope[0m
+2025-11-11T18:48:53.4944644Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.4945338Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-11T18:48:53.4945824Z 
+2025-11-11T18:48:53.4946097Z [0m[1m[33mwarning[0m[0m[1m: unresolved link to `payload:var`[0m
+2025-11-11T18:48:53.4946645Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_adapter.rs:55:61[0m
+2025-11-11T18:48:53.4947062Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.4947651Z [0m[1m[38;5;12m55[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    /// Format: [magic:4][command:12][length:4][checksum:4][payload:var][0m
+2025-11-11T18:48:53.4948449Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[33m^^^^^^^^^^^[0m[0m [0m[0m[1m[33mno item named `payload:var` in scope[0m
+2025-11-11T18:48:53.4950828Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.4951393Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to escape `[` and `]` characters, add '\' before them like `\[` or `\]`[0m
+2025-11-11T18:48:53.4951942Z 
+2025-11-11T18:48:53.5231222Z [0m[1m[33mwarning[0m[0m[1m: this URL is not a hyperlink[0m
+2025-11-11T18:48:53.5232056Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/bip21.rs:6:20[0m
+2025-11-11T18:48:53.5232578Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5233537Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! Specification: https://github.com/bitcoin/bips/blob/master/bip-0021.mediawiki[0m
+2025-11-11T18:48:53.5234773Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-11T18:48:53.5235368Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5236117Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: bare URLs are not automatically turned into clickable links[0m
+2025-11-11T18:48:53.5237184Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::bare_urls)]` on by default[0m
+2025-11-11T18:48:53.5237945Z [0m[1m[38;5;14mhelp[0m[0m: use an automatic link instead[0m
+2025-11-11T18:48:53.5238466Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5240183Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m| [0m[0m//! Specification: [0m[0m[38;5;10m<[0m[0mhttps://github.com/bitcoin/bips/blob/master/bip-0021.mediawiki[0m[0m[38;5;10m>[0m
+2025-11-11T18:48:53.5243851Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[38;5;10m+[0m[0m                                                              [0m[0m[38;5;10m+[0m
+2025-11-11T18:48:53.5244750Z 
+2025-11-11T18:48:53.5245292Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `address`[0m
+2025-11-11T18:48:53.5246340Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/bip21.rs:4:13[0m
+2025-11-11T18:48:53.5247151Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5248278Z [0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! bitcoin:<address>[?amount=<amount>][?label=<label>][?message=<message>][0m
+2025-11-11T18:48:53.5249306Z [0m  [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[33m^^^^^^^^^[0m
+2025-11-11T18:48:53.5249896Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5250773Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(rustdoc::invalid_html_tags)]` on by default[0m
+2025-11-11T18:48:53.5251313Z 
+2025-11-11T18:48:53.5251615Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `amount`[0m
+2025-11-11T18:48:53.5252085Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/bip21.rs:4:31[0m
+2025-11-11T18:48:53.5252458Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5253075Z [0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! bitcoin:<address>[?amount=<amount>][?label=<label>][?message=<message>][0m
+2025-11-11T18:48:53.5253742Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                               [0m[0m[1m[33m^^^^^^^^[0m
+2025-11-11T18:48:53.5254013Z 
+2025-11-11T18:48:53.5254691Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `message`[0m
+2025-11-11T18:48:53.5255184Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/bip21.rs:4:66[0m
+2025-11-11T18:48:53.5255538Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5256048Z [0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! bitcoin:<address>[?amount=<amount>][?label=<label>][?message=<message>][0m
+2025-11-11T18:48:53.5256629Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                                                  [0m[0m[1m[33m^^^^^^^^^[0m
+2025-11-11T18:48:53.5256870Z 
+2025-11-11T18:48:53.5257044Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `u8`[0m
+2025-11-11T18:48:53.5257455Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol.rs:562:18[0m
+2025-11-11T18:48:53.5257818Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5258346Z [0m[1m[38;5;12m562[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    /// Using Vec<u8> for serialized transactions (matches BIP 331 spec)[0m
+2025-11-11T18:48:53.5258885Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                  [0m[0m[1m[33m^^^^[0m
+2025-11-11T18:48:53.5259368Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5259705Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-11T18:48:53.5260025Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5260598Z [0m[1m[38;5;12m562[0m[0m [0m[0m[1m[38;5;12m| [0m[0m    /// Using [0m[0m[38;5;10m`[0m[0mVec<u8>[0m[0m[38;5;10m`[0m[0m for serialized transactions (matches BIP 331 spec)[0m
+2025-11-11T18:48:53.5261205Z [0m    [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[38;5;10m+[0m[0m       [0m[0m[38;5;10m+[0m
+2025-11-11T18:48:53.5261444Z 
+2025-11-11T18:48:53.5261617Z [0m[1m[33mwarning[0m[0m[1m: unclosed HTML tag `u8`[0m
+2025-11-11T18:48:53.5262015Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/transport.rs:131:5[0m
+2025-11-11T18:48:53.5262342Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5262789Z [0m[1m[38;5;12m131[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m    /// Receive data from the peer[0m
+2025-11-11T18:48:53.5263330Z [0m[1m[38;5;12m132[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    ///[0m
+2025-11-11T18:48:53.5263944Z [0m[1m[38;5;12m133[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    /// Returns Ok(Vec<u8>) with received data, or error on failure[0m
+2025-11-11T18:48:53.5264771Z [0m[1m[38;5;12m134[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    /// May return Ok(vec![]) if connection closed gracefully[0m
+2025-11-11T18:48:53.5265360Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_____________________________________________________________^[0m
+2025-11-11T18:48:53.5265723Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5266049Z [0m[1m[38;5;14mhelp[0m[0m: try marking as source code[0m
+2025-11-11T18:48:53.5266374Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5266805Z [0m[1m[38;5;12m131[0m[0m [0m[0m[38;5;10m~ [0m[0m    [0m[0m[38;5;10m`[0m[0m/// Receive data from the peer[0m
+2025-11-11T18:48:53.5268592Z [0m[1m[38;5;12m132[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     ///[0m
+2025-11-11T18:48:53.5269117Z [0m[1m[38;5;12m133[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     /// Returns Ok(Vec<u8>) with received data, or error on failure[0m
+2025-11-11T18:48:53.5269754Z [0m[1m[38;5;12m134[0m[0m [0m[0m[38;5;10m~ [0m[0m    /// May return Ok(vec![]) if connection closed gracefully[0m[0m[38;5;10m`[0m
+2025-11-11T18:48:53.5270185Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5270339Z 
+2025-11-11T18:48:53.5270530Z [0m[1m[33mwarning[0m[0m[1m: this URL is not a hyperlink[0m
+2025-11-11T18:48:53.5270953Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/compact_blocks.rs:7:20[0m
+2025-11-11T18:48:53.5271292Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5271856Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! Specification: https://github.com/bitcoin/bips/blob/master/bip-0152.mediawiki[0m
+2025-11-11T18:48:53.5272672Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-11T18:48:53.5273024Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5273477Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: bare URLs are not automatically turned into clickable links[0m
+2025-11-11T18:48:53.5273957Z [0m[1m[38;5;14mhelp[0m[0m: use an automatic link instead[0m
+2025-11-11T18:48:53.5274441Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5275120Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m| [0m[0m//! Specification: [0m[0m[38;5;10m<[0m[0mhttps://github.com/bitcoin/bips/blob/master/bip-0152.mediawiki[0m[0m[38;5;10m>[0m
+2025-11-11T18:48:53.5275873Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[38;5;10m+[0m[0m                                                              [0m[0m[38;5;10m+[0m
+2025-11-11T18:48:53.5276270Z 
+2025-11-11T18:48:53.5276458Z [0m[1m[33mwarning[0m[0m[1m: this URL is not a hyperlink[0m
+2025-11-11T18:48:53.5276871Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/package_relay.rs:3:20[0m
+2025-11-11T18:48:53.5277210Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5278217Z [0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m//! Specification: https://github.com/bitcoin/bips/blob/master/bip-0331.mediawiki[0m
+2025-11-11T18:48:53.5278849Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-11T18:48:53.5279201Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5279648Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: bare URLs are not automatically turned into clickable links[0m
+2025-11-11T18:48:53.5280126Z [0m[1m[38;5;14mhelp[0m[0m: use an automatic link instead[0m
+2025-11-11T18:48:53.5280446Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-11T18:48:53.5281103Z [0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m| [0m[0m//! Specification: [0m[0m[38;5;10m<[0m[0mhttps://github.com/bitcoin/bips/blob/master/bip-0331.mediawiki[0m[0m[38;5;10m>[0m
+2025-11-11T18:48:53.5281848Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[38;5;10m+[0m[0m                                                              [0m[0m[38;5;10m+[0m
+2025-11-11T18:48:53.5282104Z 
+2025-11-11T18:48:53.9547906Z [1m[33mwarning[0m[1m:[0m `bllvm-node` (lib doc) generated 11 warnings (run `cargo fix --lib -p bllvm-node` to apply 3 suggestions)
+2025-11-11T18:48:53.9549011Z [1m[32m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 2.78s
+2025-11-11T18:48:53.9706945Z [1m[32m   Generated[0m /home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node/target/doc/bllvm_node/index.html

@@ -1,0 +1,16 @@
+﻿2025-11-10T00:04:25.0519022Z Current runner version: '2.329.0'
+2025-11-10T00:04:25.0531165Z Runner name: 'linode-runner-02'
+2025-11-10T00:04:25.0532019Z Runner group name: 'default'
+2025-11-10T00:04:25.0533013Z Machine name: 'localhost'
+2025-11-10T00:04:25.0536408Z ##[group]GITHUB_TOKEN Permissions
+2025-11-10T00:04:25.0538706Z Contents: read
+2025-11-10T00:04:25.0539350Z Metadata: read
+2025-11-10T00:04:25.0539959Z Packages: read
+2025-11-10T00:04:25.0540581Z ##[endgroup]
+2025-11-10T00:04:25.0542739Z Secret source: Actions
+2025-11-10T00:04:25.0543550Z Prepare workflow directory
+2025-11-10T00:04:25.1222592Z Prepare all required actions
+2025-11-10T00:04:25.1272140Z Getting action download info
+2025-11-10T00:04:25.4066013Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-10T00:04:25.8273564Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:6d653acede28d24f02e3cd41383119e8b1b35921)
+2025-11-10T00:04:26.2062686Z Complete job name: Rustfmt

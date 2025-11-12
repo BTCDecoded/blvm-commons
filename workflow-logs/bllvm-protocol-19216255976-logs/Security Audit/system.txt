@@ -1,0 +1,4 @@
+2025-11-09T23:42:20.0070000Z Requested labels: self-hosted, linux, x64
+2025-11-09T23:42:20.0070000Z Job defined at: BTCDecoded/bllvm-protocol/.github/workflows/ci.yml@refs/heads/main
+2025-11-09T23:42:20.0070000Z Waiting for a runner to pick up this job...
+2025-11-09T23:51:32.0660000Z Job is about to start running on the runner: linode-runner-02

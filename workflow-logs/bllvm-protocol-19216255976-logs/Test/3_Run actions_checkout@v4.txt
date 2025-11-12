@@ -1,0 +1,80 @@
+﻿2025-11-09T23:43:00.6748234Z ##[group]Run actions/checkout@v4
+2025-11-09T23:43:00.6748677Z with:
+2025-11-09T23:43:00.6749002Z   repository: BTCDecoded/bllvm-protocol
+2025-11-09T23:43:00.6749556Z   token: ***
+2025-11-09T23:43:00.6749865Z   ssh-strict: true
+2025-11-09T23:43:00.6750224Z   ssh-user: git
+2025-11-09T23:43:00.6750542Z   persist-credentials: true
+2025-11-09T23:43:00.6750879Z   clean: true
+2025-11-09T23:43:00.6751200Z   sparse-checkout-cone-mode: true
+2025-11-09T23:43:00.6751566Z   fetch-depth: 1
+2025-11-09T23:43:00.6751867Z   fetch-tags: false
+2025-11-09T23:43:00.6752172Z   show-progress: true
+2025-11-09T23:43:00.6752483Z   lfs: false
+2025-11-09T23:43:00.6752776Z   submodules: false
+2025-11-09T23:43:00.6753091Z   set-safe-directory: true
+2025-11-09T23:43:00.6753411Z env:
+2025-11-09T23:43:00.6753698Z   CARGO_TERM_COLOR: always
+2025-11-09T23:43:00.6754014Z ##[endgroup]
+2025-11-09T23:43:00.8080251Z Syncing repository: BTCDecoded/bllvm-protocol
+2025-11-09T23:43:00.8082836Z ##[group]Getting Git version info
+2025-11-09T23:43:00.8084156Z Working directory is '/home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol'
+2025-11-09T23:43:00.8087506Z [command]/usr/bin/git version
+2025-11-09T23:43:00.8095450Z git version 2.43.0
+2025-11-09T23:43:00.8131477Z ##[endgroup]
+2025-11-09T23:43:00.8146256Z Copying '/home/jswift/.gitconfig' to '/home/jswift/actions-runner-org2/_work/_temp/717521a6-3f70-46c0-b94b-fef4aa48b7f6/.gitconfig'
+2025-11-09T23:43:00.8164504Z Temporarily overriding HOME='/home/jswift/actions-runner-org2/_work/_temp/717521a6-3f70-46c0-b94b-fef4aa48b7f6' before making global git config changes
+2025-11-09T23:43:00.8168015Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-09T23:43:00.8182382Z [command]/usr/bin/git config --global --add safe.directory /home/jswift/actions-runner-org2/_work/bllvm-protocol/bllvm-protocol
+2025-11-09T23:43:00.8228450Z [command]/usr/bin/git config --local --get remote.origin.url
+2025-11-09T23:43:00.8254468Z https://github.com/BTCDecoded/bllvm-protocol
+2025-11-09T23:43:00.8278331Z ##[group]Removing previously created refs, to avoid conflicts
+2025-11-09T23:43:00.8281774Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2025-11-09T23:43:00.8314536Z refs/heads/main
+2025-11-09T23:43:00.8357258Z [command]/usr/bin/git checkout --detach
+2025-11-09T23:43:00.8406123Z HEAD is now at 2a58c93 Fix compilation errors after separation of concerns refactoring
+2025-11-09T23:43:00.8458186Z [command]/usr/bin/git branch --delete --force main
+2025-11-09T23:43:00.8493242Z Deleted branch main (was 2a58c93).
+2025-11-09T23:43:00.8547003Z ##[endgroup]
+2025-11-09T23:43:00.8551908Z [command]/usr/bin/git submodule status
+2025-11-09T23:43:00.8840419Z ##[group]Cleaning the repository
+2025-11-09T23:43:00.8844560Z [command]/usr/bin/git clean -ffdx
+2025-11-09T23:43:00.8900788Z [command]/usr/bin/git reset --hard HEAD
+2025-11-09T23:43:00.8972157Z HEAD is now at 2a58c93 Fix compilation errors after separation of concerns refactoring
+2025-11-09T23:43:00.8980851Z ##[endgroup]
+2025-11-09T23:43:00.8982166Z ##[group]Disabling automatic garbage collection
+2025-11-09T23:43:00.8986603Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-09T23:43:00.9034972Z ##[endgroup]
+2025-11-09T23:43:00.9036007Z ##[group]Setting up auth
+2025-11-09T23:43:00.9043659Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-09T23:43:00.9079105Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-09T23:43:00.9354877Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-09T23:43:00.9391189Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-09T23:43:00.9669204Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-09T23:43:00.9712427Z ##[endgroup]
+2025-11-09T23:43:00.9713481Z ##[group]Fetching the repository
+2025-11-09T23:43:00.9723548Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f5f0b046e78292228238657d2073c8b6558f8ab4:refs/remotes/origin/main
+2025-11-09T23:43:01.1769627Z From https://github.com/BTCDecoded/bllvm-protocol
+2025-11-09T23:43:01.1770942Z  + 2a58c93...f5f0b04 f5f0b046e78292228238657d2073c8b6558f8ab4 -> origin/main  (forced update)
+2025-11-09T23:43:01.1797201Z ##[endgroup]
+2025-11-09T23:43:01.1799635Z ##[group]Determining the checkout info
+2025-11-09T23:43:01.1801722Z ##[endgroup]
+2025-11-09T23:43:01.1807473Z [command]/usr/bin/git sparse-checkout disable
+2025-11-09T23:43:01.1860143Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-09T23:43:01.1892784Z ##[group]Checking out the ref
+2025-11-09T23:43:01.1897652Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-09T23:43:01.1980909Z Warning: you are leaving 1 commit behind, not connected to
+2025-11-09T23:43:01.1981782Z any of your branches:
+2025-11-09T23:43:01.1982187Z 
+2025-11-09T23:43:01.1983233Z   2a58c93 Fix compilation errors after separation of concerns refactoring
+2025-11-09T23:43:01.1984475Z 
+2025-11-09T23:43:01.1985219Z If you want to keep it by creating a new branch, this may be a good time
+2025-11-09T23:43:01.1986049Z to do so with:
+2025-11-09T23:43:01.1986331Z 
+2025-11-09T23:43:01.1986618Z  git branch <new-branch-name> 2a58c93
+2025-11-09T23:43:01.1987029Z 
+2025-11-09T23:43:01.1991264Z Switched to a new branch 'main'
+2025-11-09T23:43:01.1994600Z branch 'main' set up to track 'origin/main'.
+2025-11-09T23:43:01.2003845Z ##[endgroup]
+2025-11-09T23:43:01.2050279Z [command]/usr/bin/git log -1 --format=%H
+2025-11-09T23:43:01.2081503Z f5f0b046e78292228238657d2073c8b6558f8ab4

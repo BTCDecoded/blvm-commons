@@ -1,0 +1,284 @@
+﻿2025-11-10T00:24:40.5540137Z ##[group]Run cargo test --no-run --release
+2025-11-10T00:24:40.5540785Z [36;1mcargo test --no-run --release[0m
+2025-11-10T00:24:40.5582359Z shell: /usr/bin/bash -e {0}
+2025-11-10T00:24:40.5582808Z env:
+2025-11-10T00:24:40.5583144Z   CARGO_TERM_COLOR: always
+2025-11-10T00:24:40.5583608Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:24:40.5584064Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:24:40.5585164Z ##[endgroup]
+2025-11-10T00:24:40.7773993Z [1m[32m   Compiling[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus)
+2025-11-10T00:24:42.1122709Z [0m[1m[33mwarning[0m[0m[1m: unnecessary `unsafe` block[0m
+2025-11-10T00:24:42.1123691Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/simd_bytes.rs:76:9[0m
+2025-11-10T00:24:42.1124643Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:42.1125394Z [0m[1m[38;5;12m76[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        unsafe {[0m
+2025-11-10T00:24:42.1126544Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33munnecessary `unsafe` block[0m
+2025-11-10T00:24:42.1127383Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:42.1128092Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_unsafe)]` on by default[0m
+2025-11-10T00:24:42.1128591Z 
+2025-11-10T00:24:42.1129283Z [0m[1m[33mwarning[0m[0m[1m: unnecessary `unsafe` block[0m
+2025-11-10T00:24:42.1134240Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/simd_bytes.rs:86:9[0m
+2025-11-10T00:24:42.1140054Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:42.1140781Z [0m[1m[38;5;12m86[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        unsafe {[0m
+2025-11-10T00:24:42.1141715Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33munnecessary `unsafe` block[0m
+2025-11-10T00:24:42.1142226Z 
+2025-11-10T00:24:42.1146796Z [0m[1m[33mwarning[0m[0m[1m: unnecessary `unsafe` block[0m
+2025-11-10T00:24:42.1152997Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/simd_bytes.rs:96:9[0m
+2025-11-10T00:24:42.1153641Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:42.1154277Z [0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        unsafe {[0m
+2025-11-10T00:24:42.1155413Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33munnecessary `unsafe` block[0m
+2025-11-10T00:24:42.1155887Z 
+2025-11-10T00:24:42.1716976Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `shifted_back`[0m
+2025-11-10T00:24:42.1719606Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:1099:21[0m
+2025-11-10T00:24:42.1720293Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:42.1722823Z [0m[1m[38;5;12m1099[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let shifted_back = shifted_right.shl(shift);[0m
+2025-11-10T00:24:42.1724220Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[33m^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_shifted_back`[0m
+2025-11-10T00:24:42.1725439Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:42.1726239Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:24:42.1726751Z 
+2025-11-10T00:24:42.2880879Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `weight`[0m
+2025-11-10T00:24:42.2883206Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/segwit.rs:868:17[0m
+2025-11-10T00:24:42.2883910Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:42.2885215Z [0m[1m[38;5;12m868[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let weight = calculate_transaction_weight(&tx, witness.as_ref()).unwrap();[0m
+2025-11-10T00:24:42.2886715Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_weight`[0m
+2025-11-10T00:24:42.2887396Z 
+2025-11-10T00:24:57.8147306Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `weight_no`[0m
+2025-11-10T00:24:57.8150508Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/block_weight_edge_cases.rs:98:9[0m
+2025-11-10T00:24:57.8151182Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:57.8152002Z [0m[1m[38;5;12m98[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let weight_no = weight_no_witness.unwrap();[0m
+2025-11-10T00:24:57.8153257Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_weight_no`[0m
+2025-11-10T00:24:57.8154178Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:57.8155074Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:24:57.8155560Z 
+2025-11-10T00:24:57.8155929Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `weight_with`[0m
+2025-11-10T00:24:57.8157075Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/block_weight_edge_cases.rs:99:9[0m
+2025-11-10T00:24:57.8157732Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:57.8158582Z [0m[1m[38;5;12m99[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let weight_with = weight_with_witness.unwrap();[0m
+2025-11-10T00:24:57.8159778Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_weight_with`[0m
+2025-11-10T00:24:57.8160395Z 
+2025-11-10T00:24:57.8186938Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `pre_segwit_height`[0m
+2025-11-10T00:24:57.8187929Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/block_weight_edge_cases.rs:162:9[0m
+2025-11-10T00:24:57.8188601Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:57.8189372Z [0m[1m[38;5;12m162[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let pre_segwit_height = 481823;[0m
+2025-11-10T00:24:57.8190695Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_pre_segwit_height`[0m
+2025-11-10T00:24:57.8191433Z 
+2025-11-10T00:24:57.8191859Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `post_segwit_height`[0m
+2025-11-10T00:24:57.8193337Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/block_weight_edge_cases.rs:163:9[0m
+2025-11-10T00:24:57.8194076Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:24:57.8195102Z [0m[1m[38;5;12m163[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let post_segwit_height = 481824;[0m
+2025-11-10T00:24:57.8197018Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_post_segwit_height`[0m
+2025-11-10T00:24:57.8197793Z 
+2025-11-10T00:25:09.0630358Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "block_weight_edge_cases") generated 4 warnings
+2025-11-10T00:25:09.1318465Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `utxo_set`[0m
+2025-11-10T00:25:09.1319755Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/coinbase_maturity.rs:37:9[0m
+2025-11-10T00:25:09.1320694Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:09.1328899Z [0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let utxo_set = UtxoSet::new();[0m
+2025-11-10T00:25:09.1330158Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_utxo_set`[0m
+2025-11-10T00:25:09.1331054Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:09.1331774Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:25:09.1332254Z 
+2025-11-10T00:25:09.1332685Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `coinbase_outpoint`[0m
+2025-11-10T00:25:09.1333550Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/coinbase_maturity.rs:38:9[0m
+2025-11-10T00:25:09.1334186Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:09.1335285Z [0m[1m[38;5;12m38[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let coinbase_outpoint = OutPoint {[0m
+2025-11-10T00:25:09.1336937Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_coinbase_outpoint`[0m
+2025-11-10T00:25:09.1337661Z 
+2025-11-10T00:25:20.1986708Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "coinbase_maturity") generated 2 warnings
+2025-11-10T00:25:39.5776608Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `i`[0m
+2025-11-10T00:25:39.5777916Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:26:18[0m
+2025-11-10T00:25:39.5778899Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:39.5780646Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            for (i, case) in cases.iter().enumerate() {[0m
+2025-11-10T00:25:39.5782022Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                  [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_i`[0m
+2025-11-10T00:25:39.5784996Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:39.5785827Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:25:39.5786355Z 
+2025-11-10T00:25:39.5786764Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `prevouts`[0m
+2025-11-10T00:25:39.5787643Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:33:49[0m
+2025-11-10T00:25:39.5788362Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:39.5789790Z [0m[1m[38;5;12m33[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   if let Value::Array(prevouts) = &test_case[0] {[0m
+2025-11-10T00:25:39.5793096Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_prevouts`[0m
+2025-11-10T00:25:39.5793821Z 
+2025-11-10T00:25:39.5794253Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `tx_hex`[0m
+2025-11-10T00:25:39.5795297Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:34:54[0m
+2025-11-10T00:25:39.5795982Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:39.5797111Z [0m[1m[38;5;12m34[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   if let Value::String(tx_hex) = &test_case[1] {[0m
+2025-11-10T00:25:39.5798988Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                            [0m[0m[1m[33m^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_tx_hex`[0m
+2025-11-10T00:25:39.5799721Z 
+2025-11-10T00:25:39.5800121Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `flags`[0m
+2025-11-10T00:25:39.5800968Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:36:41[0m
+2025-11-10T00:25:39.5801653Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:39.5802608Z [0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   let flags = parse_flags(&test_case[2]);[0m
+2025-11-10T00:25:39.5805737Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                           [0m[0m[1m[33m^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_flags`[0m
+2025-11-10T00:25:39.5806464Z 
+2025-11-10T00:25:39.5838827Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `i`[0m
+2025-11-10T00:25:39.5839703Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:74:18[0m
+2025-11-10T00:25:39.5840330Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:39.5841156Z [0m[1m[38;5;12m74[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            for (i, case) in cases.iter().enumerate() {[0m
+2025-11-10T00:25:39.5842347Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                  [0m[0m[1m[33m^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_i`[0m
+2025-11-10T00:25:39.5842981Z 
+2025-11-10T00:25:39.5844800Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `script_sig_str`[0m
+2025-11-10T00:25:39.5866242Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:79:46[0m
+2025-11-10T00:25:39.5866992Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:39.5868031Z [0m[1m[38;5;12m79[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        if let Value::String(script_sig_str) = &test_case[0] {[0m
+2025-11-10T00:25:39.5869489Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[33m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_script_sig_str`[0m
+2025-11-10T00:25:39.5870215Z 
+2025-11-10T00:25:39.5870639Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `script_pubkey_str`[0m
+2025-11-10T00:25:39.5871486Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:80:50[0m
+2025-11-10T00:25:39.5872589Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:39.5873709Z [0m[1m[38;5;12m80[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   if let Value::String(script_pubkey_str) = &test_case[1] {[0m
+2025-11-10T00:25:39.5875409Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_script_pubkey_str`[0m
+2025-11-10T00:25:39.5877207Z 
+2025-11-10T00:25:39.5877568Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `flags`[0m
+2025-11-10T00:25:39.5889611Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:83:41[0m
+2025-11-10T00:25:39.5890299Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:39.5891241Z [0m[1m[38;5;12m83[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   let flags = parse_flag_string(flags_str);[0m
+2025-11-10T00:25:39.5892550Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                           [0m[0m[1m[33m^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_flags`[0m
+2025-11-10T00:25:39.5893221Z 
+2025-11-10T00:25:39.5893593Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `expected`[0m
+2025-11-10T00:25:39.5894659Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/core_vector_extractor.rs:86:41[0m
+2025-11-10T00:25:39.5895329Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:39.5896189Z [0m[1m[38;5;12m86[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   let expected = test_case[0m
+2025-11-10T00:25:39.5897806Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                           [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_expected`[0m
+2025-11-10T00:25:39.5898512Z 
+2025-11-10T00:25:43.8760836Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:25:43.8763206Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:13:1[0m
+2025-11-10T00:25:43.8765236Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8768971Z [0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: BIP65 + BIP112 in same script[0m
+2025-11-10T00:25:43.8770145Z [0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:25:43.8771396Z [0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that CLTV and CSV can be used together in a single script[0m
+2025-11-10T00:25:43.8772711Z [0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// and both validations work correctly.[0m
+2025-11-10T00:25:43.8773862Z [0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m---------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:25:43.8774934Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8776320Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:25:43.8777146Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8778288Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:25:43.8779634Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_doc_comments)]` on by default[0m
+2025-11-10T00:25:43.8780189Z 
+2025-11-10T00:25:43.8780588Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:25:43.8781385Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:61:1[0m
+2025-11-10T00:25:43.8782055Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8782957Z [0m[1m[38;5;12m61[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: BIP113 + BIP65 validation[0m
+2025-11-10T00:25:43.8784017Z [0m[1m[38;5;12m62[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:25:43.8785653Z [0m[1m[38;5;12m63[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that median time-past (BIP113) is correctly used for timestamp CLTV validation (BIP65).[0m
+2025-11-10T00:25:43.8787344Z [0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m------------------------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:25:43.8788447Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8789506Z [0m   [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:25:43.8790392Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8791615Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:25:43.8792477Z 
+2025-11-10T00:25:43.8792850Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:25:43.8793677Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:107:1[0m
+2025-11-10T00:25:43.8794507Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8795344Z [0m[1m[38;5;12m107[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: SegWit + Taproot combinations[0m
+2025-11-10T00:25:43.8796637Z [0m[1m[38;5;12m108[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:25:43.8797937Z [0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that SegWit witness validation (BIP141) and Taproot validation (BIP340/341/342)[0m
+2025-11-10T00:25:43.8799418Z [0m[1m[38;5;12m110[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// work correctly when both are present in different transactions.[0m
+2025-11-10T00:25:43.8800694Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:25:43.8801545Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8802421Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:25:43.8803164Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8804288Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:25:43.8805254Z 
+2025-11-10T00:25:43.8805578Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:25:43.8806349Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:160:1[0m
+2025-11-10T00:25:43.8807266Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8808331Z [0m[1m[38;5;12m160[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: BIP125 RBF + BIP152 Compact Blocks coordination[0m
+2025-11-10T00:25:43.8809484Z [0m[1m[38;5;12m161[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:25:43.8810880Z [0m[1m[38;5;12m162[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that RBF conflict detection works correctly during compact block reconstruction.[0m
+2025-11-10T00:25:43.8812476Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m-----------------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:25:43.8813492Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8814632Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:25:43.8815504Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8816652Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:25:43.8817505Z 
+2025-11-10T00:25:43.8817856Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:25:43.8818693Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:222:1[0m
+2025-11-10T00:25:43.8819389Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8820403Z [0m[1m[38;5;12m222[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: Locktime shared logic consistency[0m
+2025-11-10T00:25:43.8821501Z [0m[1m[38;5;12m223[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:25:43.8823400Z [0m[1m[38;5;12m224[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that BIP65 (CLTV) and BIP112 (CSV) use shared locktime logic consistently.[0m
+2025-11-10T00:25:43.8825221Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m-----------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:25:43.8826276Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8827567Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:25:43.8828418Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8829641Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:25:43.8830502Z 
+2025-11-10T00:25:43.8830865Z [0m[1m[33mwarning[0m[0m[1m: unused doc comment[0m
+2025-11-10T00:25:43.8833553Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:253:1[0m
+2025-11-10T00:25:43.8834233Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8835422Z [0m[1m[38;5;12m253[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m/// Property test: Witness framework consistency[0m
+2025-11-10T00:25:43.8836569Z [0m[1m[38;5;12m254[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///[0m
+2025-11-10T00:25:43.8837949Z [0m[1m[38;5;12m255[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m/// Tests that unified witness framework correctly handles both SegWit and Taproot.[0m
+2025-11-10T00:25:43.8839461Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_[0m[0m[1m[38;5;12m----------------------------------------------------------------------------------[0m[0m[1m[33m^[0m
+2025-11-10T00:25:43.8840426Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8841512Z [0m    [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12mrustdoc does not generate documentation for macro invocations[0m
+2025-11-10T00:25:43.8956827Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.8957935Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to document an item produced by a macro, the macro must produce the documentation as part of its expansion[0m
+2025-11-10T00:25:43.8958695Z 
+2025-11-10T00:25:43.9228945Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `tx`[0m
+2025-11-10T00:25:43.9229913Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/cross_bip_property_tests.rs:26:13[0m
+2025-11-10T00:25:43.9230555Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.9231258Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let tx = Transaction {[0m
+2025-11-10T00:25:43.9232893Z [0m   [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[33m^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_tx`[0m
+2025-11-10T00:25:43.9235930Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:43.9236722Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:25:43.9237212Z 
+2025-11-10T00:25:51.2922217Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "core_vector_extractor") generated 9 warnings
+2025-11-10T00:25:59.0867366Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (lib test) generated 5 warnings
+2025-11-10T00:25:59.1707491Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `pre_cltv_height`[0m
+2025-11-10T00:25:59.1708961Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/time_based_consensus.rs:248:9[0m
+2025-11-10T00:25:59.1709975Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:59.1711015Z [0m[1m[38;5;12m248[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let pre_cltv_height = 419327;[0m
+2025-11-10T00:25:59.1712602Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_pre_cltv_height`[0m
+2025-11-10T00:25:59.1713826Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:59.1714966Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:25:59.1715638Z 
+2025-11-10T00:25:59.1735379Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `post_cltv_height`[0m
+2025-11-10T00:25:59.1737128Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/time_based_consensus.rs:270:9[0m
+2025-11-10T00:25:59.1766375Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:25:59.1767212Z [0m[1m[38;5;12m270[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let post_cltv_height = 419328;[0m
+2025-11-10T00:25:59.1768494Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_post_cltv_height`[0m
+2025-11-10T00:25:59.1769243Z 
+2025-11-10T00:26:02.1288721Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "cross_bip_property_tests") generated 7 warnings
+2025-11-10T00:26:10.2244767Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "time_based_consensus") generated 2 warnings
+2025-11-10T00:26:14.3955362Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `segwit_activation_height`[0m
+2025-11-10T00:26:14.3956907Z [0m  [0m[0m[1m[38;5;12m--> [0m[0mtests/witness_commitment.rs:65:9[0m
+2025-11-10T00:26:14.3957721Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:26:14.3988291Z [0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let segwit_activation_height = 481824;[0m
+2025-11-10T00:26:14.3989670Z [0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_segwit_activation_height`[0m
+2025-11-10T00:26:14.3990641Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:26:14.3991379Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:26:14.3992232Z 
+2025-11-10T00:26:14.3992634Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `witness_root`[0m
+2025-11-10T00:26:14.3993442Z [0m   [0m[0m[1m[38;5;12m--> [0m[0mtests/witness_commitment.rs:173:9[0m
+2025-11-10T00:26:14.3994073Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:26:14.3995301Z [0m[1m[38;5;12m173[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let witness_root = compute_witness_merkle_root(&block, &witnesses).unwrap();[0m
+2025-11-10T00:26:14.3996776Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_witness_root`[0m
+2025-11-10T00:26:14.3997463Z 
+2025-11-10T00:26:25.0709660Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (test "witness_commitment") generated 2 warnings
+2025-11-10T00:26:25.5313679Z [1m[32m    Finished[0m `release` profile [optimized] target(s) in 1m 44s
+2025-11-10T00:26:25.5481298Z [1m[32m  Executable[0m unittests src/lib.rs (target/release/deps/bllvm_consensus-8e253cb2cbcd3eb9)
+2025-11-10T00:26:25.5482985Z [1m[32m  Executable[0m tests/api_tests.rs (target/release/deps/api_tests-5dd5d74d02fd7baf)
+2025-11-10T00:26:25.5485028Z [1m[32m  Executable[0m tests/block_weight_edge_cases.rs (target/release/deps/block_weight_edge_cases-714ccf5f058b45b5)
+2025-11-10T00:26:25.5486937Z [1m[32m  Executable[0m tests/coinbase_maturity.rs (target/release/deps/coinbase_maturity-9a76f29e6045541c)
+2025-11-10T00:26:25.5488924Z [1m[32m  Executable[0m tests/comprehensive_unit_tests.rs (target/release/deps/comprehensive_unit_tests-10fdb476978629a5)
+2025-11-10T00:26:25.5490676Z [1m[32m  Executable[0m tests/consensus_flags.rs (target/release/deps/consensus_flags-260218e9a6f85940)
+2025-11-10T00:26:25.5491815Z [1m[32m  Executable[0m tests/core_vector_extractor.rs (target/release/deps/core_vector_extractor-f79f36b1c035e06d)
+2025-11-10T00:26:25.5493027Z [1m[32m  Executable[0m tests/cross_bip_property_tests.rs (target/release/deps/cross_bip_property_tests-d7e699b71aa7c955)
+2025-11-10T00:26:25.5494171Z [1m[32m  Executable[0m tests/error_path_tests.rs (target/release/deps/error_path_tests-7eaf1789c19dfb82)
+2025-11-10T00:26:25.5495212Z [1m[32m  Executable[0m tests/historical_consensus.rs (target/release/deps/historical_consensus-fc9e3ee4055038b1)
+2025-11-10T00:26:25.5496111Z [1m[32m  Executable[0m tests/integration_opportunities.rs (target/release/deps/integration_opportunities-d1704f350eec7ab4)
+2025-11-10T00:26:25.5497816Z [1m[32m  Executable[0m tests/integration_tests.rs (target/release/deps/integration_tests-0ccb2d019d97c23c)
+2025-11-10T00:26:25.5499784Z [1m[32m  Executable[0m tests/mainnet_blocks.rs (target/release/deps/mainnet_blocks-4e8bbae6c6abebce)
+2025-11-10T00:26:25.5500522Z [1m[32m  Executable[0m tests/mempool_helper_tests.rs (target/release/deps/mempool_helper_tests-3098dc96c348a98b)
+2025-11-10T00:26:25.5501309Z [1m[32m  Executable[0m tests/mempool_rbf_edge_cases.rs (target/release/deps/mempool_rbf_edge_cases-687c687bd0678332)
+2025-11-10T00:26:25.5502039Z [1m[32m  Executable[0m tests/network_tests.rs (target/release/deps/network_tests-26d33fd51a784978)
+2025-11-10T00:26:25.5502769Z [1m[32m  Executable[0m tests/p2sh_redeem_script.rs (target/release/deps/p2sh_redeem_script-8f99e2296c4075b5)
+2025-11-10T00:26:25.5503524Z [1m[32m  Executable[0m tests/script_opcode_tests.rs (target/release/deps/script_opcode_tests-ba8dc076ef376acb)
+2025-11-10T00:26:25.5504558Z [1m[32m  Executable[0m tests/script_opcodes_exhaustive.rs (target/release/deps/script_opcodes_exhaustive-2e5bf52345c1dce3)
+2025-11-10T00:26:25.5505517Z [1m[32m  Executable[0m tests/signature_validation_edge_cases.rs (target/release/deps/signature_validation_edge_cases-7458599550515927)
+2025-11-10T00:26:25.5506370Z [1m[32m  Executable[0m tests/soft_fork_activation.rs (target/release/deps/soft_fork_activation-2ca2f39a29a7475f)
+2025-11-10T00:26:25.5507135Z [1m[32m  Executable[0m tests/taproot_script_path.rs (target/release/deps/taproot_script_path-9cf33ed2175b97d1)
+2025-11-10T00:26:25.5508037Z [1m[32m  Executable[0m tests/test_helpers.rs (target/release/deps/test_helpers-b2632c1a96649a9a)
+2025-11-10T00:26:25.5508757Z [1m[32m  Executable[0m tests/time_based_consensus.rs (target/release/deps/time_based_consensus-e65b6cae0ce3878d)
+2025-11-10T00:26:25.5509521Z [1m[32m  Executable[0m tests/witness_commitment.rs (target/release/deps/witness_commitment-733bc46837f4e180)
+2025-11-10T00:26:25.5510262Z [1m[32m  Executable[0m tests/witness_stack_size.rs (target/release/deps/witness_stack_size-487c68b2204c7097)

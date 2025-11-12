@@ -1,0 +1,1508 @@
+﻿2025-11-10T00:05:03.9670158Z ##[group]Run cargo clippy -- -D warnings
+2025-11-10T00:05:03.9670504Z [36;1mcargo clippy -- -D warnings[0m
+2025-11-10T00:05:03.9699351Z shell: /usr/bin/bash -e {0}
+2025-11-10T00:05:03.9699608Z env:
+2025-11-10T00:05:03.9699795Z   CARGO_TERM_COLOR: always
+2025-11-10T00:05:03.9700038Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-10T00:05:03.9700280Z   CARGO_INCREMENTAL: 0
+2025-11-10T00:05:03.9700486Z ##[endgroup]
+2025-11-10T00:05:04.1341908Z [1m[32m    Updating[0m crates.io index
+2025-11-10T00:05:06.3161256Z [1m[32m     Locking[0m 646 packages to latest compatible versions
+2025-11-10T00:05:06.3200601Z [1m[36m      Adding[0m anyhow v1.0.93 [1m[33m(available: v1.0.100)[0m
+2025-11-10T00:05:06.3221515Z [1m[36m      Adding[0m async-trait v0.1.75 [1m[33m(available: v0.1.89)[0m
+2025-11-10T00:05:06.3335279Z [1m[36m      Adding[0m bech32 v0.9.1 [1m[33m(available: v0.11.0)[0m
+2025-11-10T00:05:06.3342271Z [1m[36m      Adding[0m bincode v1.3.3 [1m[33m(available: v2.0.1)[0m
+2025-11-10T00:05:06.3432603Z [1m[36m      Adding[0m bytes v1.5.0 [1m[33m(available: v1.10.1)[0m
+2025-11-10T00:05:06.3433493Z [1m[36m      Adding[0m camino v1.1.12 [1m[33m(available: v1.2.1)[0m
+2025-11-10T00:05:06.3434629Z [1m[36m      Adding[0m cargo-platform v0.1.7 [1m[33m(available: v0.1.9)[0m
+2025-11-10T00:05:06.3487580Z [1m[36m      Adding[0m cargo-tarpaulin v0.27.3 [1m[33m(available: v0.34.1)[0m
+2025-11-10T00:05:06.3602843Z [1m[36m      Adding[0m clap v4.4.11 [1m[33m(available: v4.5.51)[0m
+2025-11-10T00:05:06.3639139Z [1m[36m      Adding[0m clap_builder v4.4.11 [1m[33m(available: v4.5.51)[0m
+2025-11-10T00:05:06.3652521Z [1m[36m      Adding[0m clap_derive v4.4.7 [1m[33m(available: v4.5.49)[0m
+2025-11-10T00:05:06.3690605Z [1m[36m      Adding[0m criterion v0.5.1 [1m[33m(available: v0.7.0)[0m
+2025-11-10T00:05:06.3782960Z [1m[36m      Adding[0m deranged v0.5.3 [1m[33m(available: v0.5.5)[0m
+2025-11-10T00:05:06.3913003Z [1m[36m      Adding[0m futures v0.3.30 [1m[33m(available: v0.3.31)[0m
+2025-11-10T00:05:06.4029663Z [1m[36m      Adding[0m http v1.1.0 [1m[33m(available: v1.3.1)[0m
+2025-11-10T00:05:06.4031122Z [1m[36m      Adding[0m http-body-util v0.1.1 [1m[33m(available: v0.1.3)[0m
+2025-11-10T00:05:06.4102727Z [1m[36m      Adding[0m hyper v1.3.1 [1m[33m(available: v1.7.0)[0m
+2025-11-10T00:05:06.4123367Z [1m[36m      Adding[0m hyper-util v0.1.5 [1m[33m(available: v0.1.17)[0m
+2025-11-10T00:05:06.4160654Z [1m[36m      Adding[0m indexmap v1.8.2 [1m[33m(available: v1.9.3)[0m
+2025-11-10T00:05:06.4237543Z [1m[36m      Adding[0m iroh-net v0.12.0 [1m[33m(available: v0.28.2)[0m
+2025-11-10T00:05:06.4384078Z [1m[36m      Adding[0m netlink-sys v0.8.6 [1m[33m(available: v0.8.7)[0m
+2025-11-10T00:05:06.4401629Z [1m[36m      Adding[0m nix v0.28.0 [1m[33m(available: v0.30.1)[0m
+2025-11-10T00:05:06.4524035Z [1m[36m      Adding[0m pem v3.0.5 [1m[33m(available: v3.0.6)[0m
+2025-11-10T00:05:06.4717255Z [1m[36m      Adding[0m rand v0.8.5 [1m[33m(available: v0.9.2)[0m
+2025-11-10T00:05:06.4747491Z [1m[36m      Adding[0m rcgen v0.11.3 [1m[33m(available: v0.14.5)[0m
+2025-11-10T00:05:06.4765607Z [1m[36m      Adding[0m redb v1.5.2 [1m[33m(available: v2.6.3)[0m
+2025-11-10T00:05:06.5166831Z [1m[36m      Adding[0m secp256k1 v0.28.2 [1m[33m(available: v0.31.1)[0m
+2025-11-10T00:05:06.5184002Z [1m[36m      Adding[0m semver v1.0.20 [1m[33m(available: v1.0.27)[0m
+2025-11-10T00:05:06.5195902Z [1m[36m      Adding[0m serde v1.0.193 [1m[33m(available: v1.0.228)[0m
+2025-11-10T00:05:06.5199350Z [1m[36m      Adding[0m serde_bytes v0.11.14 [1m[33m(available: v0.11.19)[0m
+2025-11-10T00:05:06.5209604Z [1m[36m      Adding[0m serde_derive v1.0.193 [1m[33m(available: v1.0.228)[0m
+2025-11-10T00:05:06.5218614Z [1m[36m      Adding[0m serde_json v1.0.108 [1m[33m(available: v1.0.145)[0m
+2025-11-10T00:05:06.5247062Z [1m[36m      Adding[0m siphasher v0.3.11 [1m[33m(available: v1.0.1)[0m
+2025-11-10T00:05:06.5323977Z [1m[36m      Adding[0m surge-ping v0.8.0 [1m[33m(available: v0.8.3)[0m
+2025-11-10T00:05:06.5410074Z [1m[36m      Adding[0m sysinfo v0.30.13 [1m[33m(available: v0.37.2)[0m
+2025-11-10T00:05:06.5416660Z [1m[36m      Adding[0m tempfile v3.8.1 [1m[33m(available: v3.23.0)[0m
+2025-11-10T00:05:06.5419295Z [1m[36m      Adding[0m thiserror v1.0.69 [1m[33m(available: v2.0.17)[0m
+2025-11-10T00:05:06.5487330Z [1m[36m      Adding[0m tokio v1.35.1 [1m[33m(available: v1.48.0)[0m
+2025-11-10T00:05:06.5497668Z [1m[36m      Adding[0m tokio-macros v2.2.0 [1m[33m(available: v2.6.0)[0m
+2025-11-10T00:05:06.5524785Z [1m[36m      Adding[0m tokio-util v0.7.10 [1m[33m(available: v0.7.17)[0m
+2025-11-10T00:05:06.5534775Z [1m[36m      Adding[0m toml v0.8.2 [1m[33m(available: v0.8.23)[0m
+2025-11-10T00:05:06.5535686Z [1m[36m      Adding[0m toml_datetime v0.7.0 [1m[33m(available: v0.7.3)[0m
+2025-11-10T00:05:06.5562228Z [1m[36m      Adding[0m toml_edit v0.23.4 [1m[33m(available: v0.23.7)[0m
+2025-11-10T00:05:06.5565665Z [1m[36m      Adding[0m tracing v0.1.40 [1m[33m(available: v0.1.41)[0m
+2025-11-10T00:05:06.5599117Z [1m[36m      Adding[0m tracing-subscriber v0.3.18 [1m[33m(available: v0.3.20)[0m
+2025-11-10T00:05:06.5703445Z [1m[36m      Adding[0m uuid v1.6.0 [1m[33m(available: v1.18.1)[0m
+2025-11-10T00:05:06.7069443Z [1m[32m   Compiling[0m quote v1.0.42
+2025-11-10T00:05:06.7070374Z [1m[32m   Compiling[0m libc v0.2.177
+2025-11-10T00:05:06.7072722Z [1m[32m   Compiling[0m cc v1.2.45
+2025-11-10T00:05:06.7073367Z [1m[32m    Checking[0m smallvec v1.15.1
+2025-11-10T00:05:06.8965783Z [1m[32m    Checking[0m crossbeam-epoch v0.9.18
+2025-11-10T00:05:07.1195961Z [1m[32m    Checking[0m fnv v1.0.7
+2025-11-10T00:05:07.1682327Z [1m[32m   Compiling[0m rayon-core v1.13.0
+2025-11-10T00:05:07.3134169Z [1m[32m   Compiling[0m syn v2.0.109
+2025-11-10T00:05:07.3819971Z [1m[32m    Checking[0m http v1.1.0
+2025-11-10T00:05:08.2632705Z [1m[32m    Checking[0m crossbeam-deque v0.8.6
+2025-11-10T00:05:08.3487314Z [1m[32m   Compiling[0m sha2-asm v0.6.4
+2025-11-10T00:05:08.4444213Z [1m[32m   Compiling[0m secp256k1-sys v0.9.2
+2025-11-10T00:05:08.6729790Z [1m[32m   Compiling[0m blake2b-rs v0.2.0
+2025-11-10T00:05:08.7690472Z [1m[32m    Checking[0m futures-channel v0.3.31
+2025-11-10T00:05:09.0420574Z [1m[32m    Checking[0m parking_lot_core v0.9.12
+2025-11-10T00:05:09.2095125Z [1m[32m    Checking[0m parking_lot v0.12.5
+2025-11-10T00:05:09.3831213Z [1m[32m    Checking[0m mio v0.8.11
+2025-11-10T00:05:09.4885737Z [1m[32m    Checking[0m signal-hook-registry v1.4.6
+2025-11-10T00:05:09.6218489Z [1m[32m    Checking[0m socket2 v0.5.10
+2025-11-10T00:05:09.7171176Z [1m[32m    Checking[0m num_cpus v1.17.0
+2025-11-10T00:05:09.8476146Z [1m[32m    Checking[0m getrandom v0.2.16
+2025-11-10T00:05:10.0588852Z [1m[32m   Compiling[0m sparse-merkle-tree v0.6.1
+2025-11-10T00:05:10.2663820Z [1m[32m    Checking[0m cty v0.2.2
+2025-11-10T00:05:10.3109074Z [1m[32m    Checking[0m either v1.15.0
+2025-11-10T00:05:10.3564502Z [1m[32m    Checking[0m foldhash v0.1.5
+2025-11-10T00:05:10.4573120Z [1m[32m   Compiling[0m httparse v1.10.1
+2025-11-10T00:05:10.4715360Z [1m[32m    Checking[0m allocator-api2 v0.2.21
+2025-11-10T00:05:10.7973142Z [1m[32m    Checking[0m hashbrown v0.15.5
+2025-11-10T00:05:10.8620434Z [1m[32m    Checking[0m rayon v1.11.0
+2025-11-10T00:05:11.5383285Z [1m[32m   Compiling[0m libmimalloc-sys v0.1.44
+2025-11-10T00:05:11.9073777Z [1m[32m    Checking[0m http-body v1.0.1
+2025-11-10T00:05:12.0123385Z [1m[32m    Checking[0m cfg-if v0.1.10
+2025-11-10T00:05:12.0541118Z [1m[32m   Compiling[0m cfg_aliases v0.1.1
+2025-11-10T00:05:12.1045196Z [1m[32m    Checking[0m atomic-waker v1.1.2
+2025-11-10T00:05:12.1618593Z [1m[32m   Compiling[0m nix v0.28.0
+2025-11-10T00:05:12.6125108Z [1m[32m    Checking[0m sha2 v0.10.9
+2025-11-10T00:05:12.9323673Z [1m[32m    Checking[0m secp256k1 v0.28.2
+2025-11-10T00:05:13.1016704Z [1m[32m    Checking[0m lru v0.12.5
+2025-11-10T00:05:13.2895763Z [1m[32m    Checking[0m rand_core v0.6.4
+2025-11-10T00:05:13.4396489Z [1m[32m    Checking[0m httpdate v1.0.3
+2025-11-10T00:05:13.4573073Z [1m[32m   Compiling[0m redb v1.5.2
+2025-11-10T00:05:13.5625303Z [1m[32m    Checking[0m rand_chacha v0.3.1
+2025-11-10T00:05:13.5788290Z [1m[32m   Compiling[0m serde_derive v1.0.193
+2025-11-10T00:05:13.6695664Z [1m[32m   Compiling[0m tracing-attributes v0.1.30
+2025-11-10T00:05:13.7687498Z [1m[32m   Compiling[0m tokio-macros v2.2.0
+2025-11-10T00:05:14.3497080Z [1m[32m   Compiling[0m futures-macro v0.3.31
+2025-11-10T00:05:14.6876733Z [1m[32m    Checking[0m tokio v1.35.1
+2025-11-10T00:05:15.4383431Z [1m[32m    Checking[0m tracing v0.1.40
+2025-11-10T00:05:15.5126088Z [1m[32m    Checking[0m futures-util v0.3.31
+2025-11-10T00:05:15.6009138Z [1m[32m   Compiling[0m thiserror-impl v1.0.69
+2025-11-10T00:05:17.3632096Z [1m[32m    Checking[0m thiserror v1.0.69
+2025-11-10T00:05:17.4775395Z [1m[32m   Compiling[0m clap_derive v4.4.7
+2025-11-10T00:05:17.7803867Z [1m[32m    Checking[0m serde v1.0.193
+2025-11-10T00:05:18.4969441Z [1m[32m    Checking[0m futures-executor v0.3.31
+2025-11-10T00:05:18.7255543Z [1m[32m    Checking[0m tokio-util v0.7.10
+2025-11-10T00:05:19.1449313Z [1m[32m    Checking[0m tracing-subscriber v0.3.18
+2025-11-10T00:05:19.2934867Z [1m[32m    Checking[0m h2 v0.4.12
+2025-11-10T00:05:20.1491775Z [1m[32m    Checking[0m clap v4.4.11
+2025-11-10T00:05:20.1960048Z [1m[32m    Checking[0m futures v0.3.30
+2025-11-10T00:05:20.3580399Z [1m[32m    Checking[0m mimalloc v0.1.48
+2025-11-10T00:05:20.4060282Z [1m[32m    Checking[0m rand v0.8.5
+2025-11-10T00:05:20.5420523Z [1m[32m    Checking[0m serde_spanned v0.6.9
+2025-11-10T00:05:20.6275084Z [1m[32m    Checking[0m bincode v1.3.3
+2025-11-10T00:05:21.0405836Z [1m[32m    Checking[0m toml_datetime v0.6.11
+2025-11-10T00:05:21.1418410Z [1m[32m    Checking[0m serde_json v1.0.108
+2025-11-10T00:05:21.2122102Z [1m[32m    Checking[0m toml_edit v0.20.7
+2025-11-10T00:05:21.9539345Z [1m[32m    Checking[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus)
+2025-11-10T00:05:22.0146510Z [1m[32m    Checking[0m hyper v1.3.1
+2025-11-10T00:05:22.2970638Z [0m[1m[33mwarning[0m[0m[1m: unused import: `ConsensusResult`[0m
+2025-11-10T00:05:22.2974501Z [0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/initial_sync.rs:21:22[0m
+2025-11-10T00:05:22.2977864Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:22.2980681Z [0m[1m[38;5;12m21[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    ConsensusConfig, ConsensusResult, PeerConsensus, PeerInfo,[0m
+2025-11-10T00:05:22.2983172Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                      [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:22.2985406Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:22.2987556Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:05:22.2997538Z 
+2025-11-10T00:05:22.2998232Z [0m[1m[33mwarning[0m[0m[1m: unused imports: `TransactionInput` and `TransactionOutput`[0m
+2025-11-10T00:05:22.2999789Z [0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/spam_filter.rs:21:45[0m
+2025-11-10T00:05:22.3002739Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:22.3011379Z [0m[1m[38;5;12m21[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::types::{ByteString, Transaction, TransactionInput, TransactionOutput};[0m
+2025-11-10T00:05:22.3012726Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                             [0m[0m[1m[33m^^^^^^^^^^^^^^^^[0m[0m  [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:22.3013227Z 
+2025-11-10T00:05:22.3013847Z [0m[1m[33mwarning[0m[0m[1m: unused imports: `UtxoCommitmentError` and `UtxoCommitmentResult`[0m
+2025-11-10T00:05:22.3015616Z [0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/spam_filter.rs:23:48[0m
+2025-11-10T00:05:22.3017158Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:22.3018466Z [0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::utxo_commitments::data_structures::{UtxoCommitmentError, UtxoCommitmentResult};[0m
+2025-11-10T00:05:22.3019849Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^[0m[0m  [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:22.3021892Z 
+2025-11-10T00:05:22.3533997Z [1m[32m    Checking[0m serde_bytes v0.11.14
+2025-11-10T00:05:22.4776819Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `peers`[0m
+2025-11-10T00:05:22.4778297Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/peer_consensus.rs:180:9[0m
+2025-11-10T00:05:22.4779697Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:22.4780482Z [0m[1m[38;5;12m180[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        peers: &[PeerInfo],[0m
+2025-11-10T00:05:22.4781669Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_peers`[0m
+2025-11-10T00:05:22.4782523Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:22.4783255Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:05:22.4783749Z 
+2025-11-10T00:05:22.4784152Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `checkpoint_height`[0m
+2025-11-10T00:05:22.4785746Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/peer_consensus.rs:181:9[0m
+2025-11-10T00:05:22.4786916Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:22.4787646Z [0m[1m[38;5;12m181[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        checkpoint_height: Natural,[0m
+2025-11-10T00:05:22.4788921Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_checkpoint_height`[0m
+2025-11-10T00:05:22.4789660Z 
+2025-11-10T00:05:22.4790431Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `checkpoint_hash`[0m
+2025-11-10T00:05:22.4793630Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/peer_consensus.rs:182:9[0m
+2025-11-10T00:05:22.4795182Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:22.4796108Z [0m[1m[38;5;12m182[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        checkpoint_hash: Hash,[0m
+2025-11-10T00:05:22.4797544Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_checkpoint_hash`[0m
+2025-11-10T00:05:22.4798416Z 
+2025-11-10T00:05:22.5097970Z [1m[32m   Compiling[0m async-trait v0.1.75
+2025-11-10T00:05:22.8529501Z [1m[32m    Checking[0m toml v0.8.2
+2025-11-10T00:05:22.9039869Z [1m[32m    Checking[0m hyper-util v0.1.5
+2025-11-10T00:05:23.1296794Z [1m[32m    Checking[0m sysinfo v0.30.13
+2025-11-10T00:05:23.2182273Z [1m[32m    Checking[0m http-body-util v0.1.1
+2025-11-10T00:05:23.4340977Z [1m[32m    Checking[0m uuid v1.6.0
+2025-11-10T00:05:23.4638666Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `seen_countries`[0m
+2025-11-10T00:05:23.4644254Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/peer_consensus.rs:115:17[0m
+2025-11-10T00:05:23.4650744Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:23.4653616Z [0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut seen_countries: HashSet<String> = HashSet::new();[0m
+2025-11-10T00:05:23.4656904Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[33m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_seen_countries`[0m
+2025-11-10T00:05:23.4675363Z 
+2025-11-10T00:05:23.4678844Z [0m[1m[33mwarning[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:05:23.4684691Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/peer_consensus.rs:115:13[0m
+2025-11-10T00:05:23.4687087Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:23.4688565Z [0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut seen_countries: HashSet<String> = HashSet::new();[0m
+2025-11-10T00:05:23.4690031Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m----[0m[0m[1m[33m^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:23.4690957Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:23.4692045Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:05:23.4692871Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:23.4693853Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_mut)]` on by default[0m
+2025-11-10T00:05:23.4694656Z 
+2025-11-10T00:05:23.5180985Z [0m[1m[33mwarning[0m[0m[1m: field `utxo_index` is never read[0m
+2025-11-10T00:05:23.5182775Z [0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-consensus/src/utxo_commitments/merkle_tree.rs:79:5[0m
+2025-11-10T00:05:23.5184091Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:23.5185181Z [0m[1m[38;5;12m77[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct UtxoMerkleTree {[0m
+2025-11-10T00:05:23.5186358Z [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[38;5;12m--------------[0m[0m [0m[0m[1m[38;5;12mfield in this struct[0m
+2025-11-10T00:05:23.5187845Z [0m[1m[38;5;12m78[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    tree: SparseMerkleTree<UtxoHasher, UtxoValue, DefaultStore<UtxoValue>>,[0m
+2025-11-10T00:05:23.5189386Z [0m[1m[38;5;12m79[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    utxo_index: HashMap<OutPoint, usize>, // Map OutPoint to leaf position (if needed)[0m
+2025-11-10T00:05:23.5191365Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^[0m
+2025-11-10T00:05:23.5191970Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:23.5192639Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+2025-11-10T00:05:23.5193071Z 
+2025-11-10T00:05:23.6165821Z [1m[33mwarning[0m[1m:[0m `bllvm-consensus` (lib) generated 9 warnings (run `cargo clippy --fix --lib -p bllvm-consensus` to apply 4 suggestions)
+2025-11-10T00:05:23.6185029Z [1m[32m    Checking[0m bllvm-protocol v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-protocol)
+2025-11-10T00:05:23.7646583Z [0m[1m[33mwarning[0m[0m[1m: unused imports: `OutPoint` and `UTXO`[0m
+2025-11-10T00:05:23.7647972Z [0m [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-protocol/src/network.rs:9:30[0m
+2025-11-10T00:05:23.7649881Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:23.7654199Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_consensus::types::{OutPoint, UTXO, UtxoSet};[0m
+2025-11-10T00:05:23.7656453Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[33m^^^^^^^^[0m[0m  [0m[0m[1m[33m^^^^[0m
+2025-11-10T00:05:23.7658239Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:23.7659696Z [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
+2025-11-10T00:05:23.7661869Z 
+2025-11-10T00:05:24.0304003Z [0m[1m[33mwarning[0m[0m[1m: unused variable: `peer_state`[0m
+2025-11-10T00:05:24.0305681Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-protocol/src/network.rs:450:5[0m
+2025-11-10T00:05:24.0306979Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.0307638Z [0m[1m[38;5;12m450[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    peer_state: &mut PeerState,[0m
+2025-11-10T00:05:24.0308641Z [0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: if this is intentional, prefix it with an underscore: `_peer_state`[0m
+2025-11-10T00:05:24.0309366Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.0309960Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_variables)]` on by default[0m
+2025-11-10T00:05:24.0310357Z 
+2025-11-10T00:05:24.2239302Z [0m[1m[33mwarning[0m[0m[1m: method `bit_offset` is never used[0m
+2025-11-10T00:05:24.2240913Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-protocol/src/bip158.rs:156:8[0m
+2025-11-10T00:05:24.2242114Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.2243014Z [0m[1m[38;5;12m122[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl<'a> BitReader<'a> {[0m
+2025-11-10T00:05:24.2244277Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
+2025-11-10T00:05:24.2246129Z [0m[1m[38;5;12m...[0m
+2025-11-10T00:05:24.2246923Z [0m[1m[38;5;12m156[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn bit_offset(&self) -> usize {[0m
+2025-11-10T00:05:24.2247826Z [0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^[0m
+2025-11-10T00:05:24.2248507Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.2249259Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+2025-11-10T00:05:24.2249768Z 
+2025-11-10T00:05:24.2645657Z [1m[33mwarning[0m[1m:[0m `bllvm-protocol` (lib) generated 3 warnings (run `cargo clippy --fix --lib -p bllvm-protocol` to apply 1 suggestion)
+2025-11-10T00:05:24.2648148Z [1m[32m    Checking[0m bllvm-node v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-node/bllvm-node)
+2025-11-10T00:05:24.9881041Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9882342Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/commitment_store.rs:9:21[0m
+2025-11-10T00:05:24.9882904Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.9883922Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::utxo_commitments::data_structures::UtxoCommitment;[0m
+2025-11-10T00:05:24.9885392Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9885934Z 
+2025-11-10T00:05:24.9891586Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9893160Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:605:29[0m
+2025-11-10T00:05:24.9894581Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.9896322Z [0m[1m[38;5;12m605[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use bllvm_protocol::utxo_commitments::merkle_tree::UtxoMerkleTree;[0m
+2025-11-10T00:05:24.9897451Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9898164Z 
+2025-11-10T00:05:24.9898616Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9899289Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:654:29[0m
+2025-11-10T00:05:24.9899715Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.9900434Z [0m[1m[38;5;12m654[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use bllvm_protocol::utxo_commitments::merkle_tree::UtxoMerkleTree;[0m
+2025-11-10T00:05:24.9901325Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9901906Z 
+2025-11-10T00:05:24.9902321Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9903010Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_extensions.rs:14:21[0m
+2025-11-10T00:05:24.9903450Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.9904130Z [0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::utxo_commitments::merkle_tree::UtxoMerkleTree;[0m
+2025-11-10T00:05:24.9905226Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9905641Z 
+2025-11-10T00:05:24.9906076Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9906664Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_extensions.rs:16:21[0m
+2025-11-10T00:05:24.9907039Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.9907668Z [0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::utxo_commitments::spam_filter::{SpamFilter, SpamFilterConfig};[0m
+2025-11-10T00:05:24.9908436Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9908763Z 
+2025-11-10T00:05:24.9909096Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9911609Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:24:21[0m
+2025-11-10T00:05:24.9911998Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.9912589Z [0m[1m[38;5;12m24[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::utxo_commitments::data_structures::UtxoCommitment;[0m
+2025-11-10T00:05:24.9913311Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9913636Z 
+2025-11-10T00:05:24.9913982Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9914696Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:26:21[0m
+2025-11-10T00:05:24.9915064Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.9915659Z [0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentResult;[0m
+2025-11-10T00:05:24.9916391Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9916720Z 
+2025-11-10T00:05:24.9917056Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9917619Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:28:21[0m
+2025-11-10T00:05:24.9917983Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:24.9918703Z [0m[1m[38;5;12m28[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::utxo_commitments::network_integration::{[0m
+2025-11-10T00:05:24.9919383Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:24.9919712Z 
+2025-11-10T00:05:25.0245141Z [0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `bllvm_protocol::pow::expand_target`[0m
+2025-11-10T00:05:25.0246349Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/blockchain.rs:7:5[0m
+2025-11-10T00:05:25.0246845Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0247540Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::pow::expand_target;[0m
+2025-11-10T00:05:25.0248388Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mno `expand_target` in `pow`[0m
+2025-11-10T00:05:25.0248811Z 
+2025-11-10T00:05:25.0263728Z [0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `bllvm_protocol::pow::expand_target`[0m
+2025-11-10T00:05:25.0264733Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mining.rs:14:5[0m
+2025-11-10T00:05:25.0265102Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0265646Z [0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::pow::expand_target;[0m
+2025-11-10T00:05:25.0266302Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mno `expand_target` in `pow`[0m
+2025-11-10T00:05:25.0266663Z 
+2025-11-10T00:05:25.0510022Z [0m[1m[38;5;9merror[0m[0m[1m: cannot find macro `debug` in this scope[0m
+2025-11-10T00:05:25.0510957Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:729:17[0m
+2025-11-10T00:05:25.0511454Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0512160Z [0m[1m[38;5;12m729[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                debug!("Failed to connect to {}: {}", socket, e);[0m
+2025-11-10T00:05:25.0512929Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.0513425Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0513922Z [0m[1m[38;5;14mhelp[0m[0m: consider importing this macro[0m
+2025-11-10T00:05:25.0514628Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0515296Z [0m[1m[38;5;12m52[0m[0m  [0m[0m[38;5;10m+ use tracing::debug;[0m
+2025-11-10T00:05:25.0515804Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0516035Z 
+2025-11-10T00:05:25.0608329Z [0m[1m[38;5;9merror[0m[0m[1m: cannot find macro `debug` in this scope[0m
+2025-11-10T00:05:25.0609465Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:1330:21[0m
+2025-11-10T00:05:25.0610090Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0611066Z [0m[1m[38;5;12m1330[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    debug!("Cleaned up {} stale pending requests (older than {}s)", removed, timeout_seconds);[0m
+2025-11-10T00:05:25.0612054Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.0612599Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0613123Z [0m[1m[38;5;14mhelp[0m[0m: consider importing this macro[0m
+2025-11-10T00:05:25.0613620Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0614275Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use tracing::debug;[0m
+2025-11-10T00:05:25.0615069Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0615352Z 
+2025-11-10T00:05:25.0694624Z [0m[1m[38;5;9merror[0m[0m[1m: cannot find macro `debug` in this scope[0m
+2025-11-10T00:05:25.0695981Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:1333:21[0m
+2025-11-10T00:05:25.0696616Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0697487Z [0m[1m[38;5;12m1333[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    debug!("Pending requests: {}", pending.len());[0m
+2025-11-10T00:05:25.0698752Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.0699358Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0699970Z [0m[1m[38;5;14mhelp[0m[0m: consider importing this macro[0m
+2025-11-10T00:05:25.0700555Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0701275Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use tracing::debug;[0m
+2025-11-10T00:05:25.0702228Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0702523Z 
+2025-11-10T00:05:25.0783140Z [0m[1m[38;5;9merror[0m[0m[1m: cannot find macro `debug` in this scope[0m
+2025-11-10T00:05:25.0784517Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:1390:21[0m
+2025-11-10T00:05:25.0785081Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0785887Z [0m[1m[38;5;12m1390[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    debug!("Cleaned up expired ban for {}", addr);[0m
+2025-11-10T00:05:25.0786630Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.0787115Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0787595Z [0m[1m[38;5;14mhelp[0m[0m: consider importing this macro[0m
+2025-11-10T00:05:25.0788064Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0788650Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use tracing::debug;[0m
+2025-11-10T00:05:25.0789129Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0789354Z 
+2025-11-10T00:05:25.0875481Z [0m[1m[38;5;9merror[0m[0m[1m: cannot find macro `debug` in this scope[0m
+2025-11-10T00:05:25.0876474Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2148:33[0m
+2025-11-10T00:05:25.0876948Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0877762Z [0m[1m[38;5;12m2148[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   debug!("Sent protocol response message to {}", peer_addr);[0m
+2025-11-10T00:05:25.0881047Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.0881563Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0882054Z [0m[1m[38;5;14mhelp[0m[0m: consider importing this macro[0m
+2025-11-10T00:05:25.0882529Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0883115Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use tracing::debug;[0m
+2025-11-10T00:05:25.0883584Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0883818Z 
+2025-11-10T00:05:25.0963556Z [0m[1m[38;5;9merror[0m[0m[1m: cannot find macro `debug` in this scope[0m
+2025-11-10T00:05:25.0964817Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2159:13[0m
+2025-11-10T00:05:25.0965632Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0967015Z [0m[1m[38;5;12m2159[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            debug!("Protocol layer dependencies not set, skipping protocol processing");[0m
+2025-11-10T00:05:25.0968330Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.0968820Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0969311Z [0m[1m[38;5;14mhelp[0m[0m: consider importing this macro[0m
+2025-11-10T00:05:25.0969782Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0970362Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use tracing::debug;[0m
+2025-11-10T00:05:25.0970842Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.0971074Z 
+2025-11-10T00:05:25.1059420Z [0m[1m[38;5;9merror[0m[0m[1m: cannot find macro `debug` in this scope[0m
+2025-11-10T00:05:25.1060350Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2721:9[0m
+2025-11-10T00:05:25.1060827Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1061558Z [0m[1m[38;5;12m2721[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        debug!("GetBanList request from {}: full={}, min_duration={}", [0m
+2025-11-10T00:05:25.1062660Z [0m     [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.1063138Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1063619Z [0m[1m[38;5;14mhelp[0m[0m: consider importing this macro[0m
+2025-11-10T00:05:25.1064084Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1064961Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use tracing::debug;[0m
+2025-11-10T00:05:25.1065504Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1065916Z 
+2025-11-10T00:05:25.1144737Z [0m[1m[38;5;9merror[0m[0m[1m: cannot find macro `debug` in this scope[0m
+2025-11-10T00:05:25.1145715Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2788:9[0m
+2025-11-10T00:05:25.1146200Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1146936Z [0m[1m[38;5;12m2788[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        debug!("Sent BanList response to {}: {} entries", peer_addr, [0m
+2025-11-10T00:05:25.1147715Z [0m     [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.1148182Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1148669Z [0m[1m[38;5;14mhelp[0m[0m: consider importing this macro[0m
+2025-11-10T00:05:25.1149143Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1149709Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use tracing::debug;[0m
+2025-11-10T00:05:25.1150183Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1235554Z 
+2025-11-10T00:05:25.1236173Z [0m[1m[38;5;9merror[0m[0m[1m: cannot find macro `debug` in this scope[0m
+2025-11-10T00:05:25.1237239Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2803:9[0m
+2025-11-10T00:05:25.1237835Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1238552Z [0m[1m[38;5;12m2803[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        debug!("BanList received from {}: full={}, {} entries", [0m
+2025-11-10T00:05:25.1239305Z [0m     [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.1239789Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1240284Z [0m[1m[38;5;14mhelp[0m[0m: consider importing this macro[0m
+2025-11-10T00:05:25.1240760Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1241335Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use tracing::debug;[0m
+2025-11-10T00:05:25.1241814Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1242033Z 
+2025-11-10T00:05:25.1315178Z [0m[1m[38;5;9merror[0m[0m[1m: cannot find macro `debug` in this scope[0m
+2025-11-10T00:05:25.1316255Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2816:13[0m
+2025-11-10T00:05:25.1316845Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1317907Z [0m[1m[38;5;12m2816[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            debug!("Received hash-only ban list from {}, skipping merge", peer_addr);[0m
+2025-11-10T00:05:25.1318585Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.1318974Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1319638Z [0m[1m[38;5;14mhelp[0m[0m: consider importing this macro[0m
+2025-11-10T00:05:25.1320016Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1320495Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use tracing::debug;[0m
+2025-11-10T00:05:25.1320869Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1321042Z 
+2025-11-10T00:05:25.1394615Z [0m[1m[38;5;9merror[0m[0m[1m: cannot find macro `debug` in this scope[0m
+2025-11-10T00:05:25.1395600Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2868:9[0m
+2025-11-10T00:05:25.1396082Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1396835Z [0m[1m[38;5;12m2868[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        debug!("Merged {} ban entries from {}", merged_count, peer_addr);[0m
+2025-11-10T00:05:25.1397595Z [0m     [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.1398306Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1398793Z [0m[1m[38;5;14mhelp[0m[0m: consider importing this macro[0m
+2025-11-10T00:05:25.1399271Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1399849Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use tracing::debug;[0m
+2025-11-10T00:05:25.1400318Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1400540Z 
+2025-11-10T00:05:25.1558629Z [0m[1m[38;5;9merror[E0106][0m[0m[1m: missing lifetime specifier[0m
+2025-11-10T00:05:25.1559879Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/database.rs:317:35[0m
+2025-11-10T00:05:25.1560372Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1561101Z [0m[1m[38;5;12m317[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        table_def: TableDefinition<&'static [u8], &'static [u8]>,[0m
+2025-11-10T00:05:25.1562028Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                   [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9mexpected named lifetime parameter[0m
+2025-11-10T00:05:25.1562624Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1563179Z [0m[1m[38;5;14mhelp[0m[0m: consider introducing a named lifetime parameter[0m
+2025-11-10T00:05:25.1563705Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1564568Z [0m[1m[38;5;12m315[0m[0m [0m[0m[38;5;10m~ [0m[0m    struct RedbTree[0m[0m[38;5;10m<'a>[0m[0m {[0m
+2025-11-10T00:05:25.1565327Z [0m[1m[38;5;12m316[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         db: Arc<RedbDb>,[0m
+2025-11-10T00:05:25.1566350Z [0m[1m[38;5;12m317[0m[0m [0m[0m[38;5;10m~ [0m[0m        table_def: TableDefinition<[0m[0m[38;5;10m'a, [0m[0m&'static [u8], &'static [u8]>,[0m
+2025-11-10T00:05:25.1567058Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1567280Z 
+2025-11-10T00:05:25.1899531Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.1901024Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_extensions.rs:152:46[0m
+2025-11-10T00:05:25.1901873Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1903408Z [0m[1m[38;5;12m152[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let spam_filter_config = bllvm_protocol::utxo_commitments::spam_filter::SpamFilterConfig {[0m
+2025-11-10T00:05:25.1904895Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.1905419Z 
+2025-11-10T00:05:25.1986039Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.1987466Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:135:48[0m
+2025-11-10T00:05:25.1988340Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.1989775Z [0m[1m[38;5;12m135[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Err(bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.1991079Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.1991587Z 
+2025-11-10T00:05:25.2030111Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2031420Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:146:48[0m
+2025-11-10T00:05:25.2032206Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2033775Z [0m[1m[38;5;12m146[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Err(bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2035338Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2036030Z 
+2025-11-10T00:05:25.2076536Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2077649Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:185:44[0m
+2025-11-10T00:05:25.2078204Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2079785Z [0m[1m[38;5;12m185[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                return Err(bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::VerificationFailed([0m
+2025-11-10T00:05:25.2081051Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                            [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2081566Z 
+2025-11-10T00:05:25.2124773Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2126160Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:203:46[0m
+2025-11-10T00:05:25.2126720Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2127804Z [0m[1m[38;5;12m203[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                .map_err(|e| bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2129087Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2129589Z 
+2025-11-10T00:05:25.2173413Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2174487Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:211:50[0m
+2025-11-10T00:05:25.2174963Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2175903Z [0m[1m[38;5;12m211[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    .map_err(|e| bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2176981Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2177416Z 
+2025-11-10T00:05:25.2225997Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2227251Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:224:62[0m
+2025-11-10T00:05:25.2227815Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2228995Z [0m[1m[38;5;12m224[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   .map_err(|e| bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2230603Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                    [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2231118Z 
+2025-11-10T00:05:25.2275596Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2276750Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:231:70[0m
+2025-11-10T00:05:25.2277264Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2278251Z [0m[1m[38;5;12m231[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   let commitment = bllvm_protocol::utxo_commitments::data_structures::UtxoCommitment {[0m
+2025-11-10T00:05:25.2282123Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2282591Z 
+2025-11-10T00:05:25.2328650Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2329844Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:240:58[0m
+2025-11-10T00:05:25.2330604Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2331748Z [0m[1m[38;5;12m240[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   _ => Err(bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2333082Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2333607Z 
+2025-11-10T00:05:25.2378272Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2381942Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:245:55[0m
+2025-11-10T00:05:25.2382553Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2383887Z [0m[1m[38;5;12m245[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Err(_) => Err(bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2385569Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2386093Z 
+2025-11-10T00:05:25.2427498Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2428619Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:257:41[0m
+2025-11-10T00:05:25.2429176Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2430539Z [0m[1m[38;5;12m257[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    Err(bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2431781Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2432294Z 
+2025-11-10T00:05:25.2474684Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2476118Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:325:48[0m
+2025-11-10T00:05:25.2476747Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2477994Z [0m[1m[38;5;12m325[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Err(bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2479672Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2480252Z 
+2025-11-10T00:05:25.2516922Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2518105Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:336:48[0m
+2025-11-10T00:05:25.2518659Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2519752Z [0m[1m[38;5;12m336[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    return Err(bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2521250Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2521755Z 
+2025-11-10T00:05:25.2565949Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2567375Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:371:46[0m
+2025-11-10T00:05:25.2567924Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2569005Z [0m[1m[38;5;12m371[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                .map_err(|e| bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2571558Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2572231Z 
+2025-11-10T00:05:25.2615072Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2616320Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:379:50[0m
+2025-11-10T00:05:25.2616907Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2618073Z [0m[1m[38;5;12m379[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    .map_err(|e| bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2619421Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2620088Z 
+2025-11-10T00:05:25.2665712Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2667121Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:392:62[0m
+2025-11-10T00:05:25.2667764Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2668995Z [0m[1m[38;5;12m392[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   .map_err(|e| bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2670378Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                    [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2670900Z 
+2025-11-10T00:05:25.2712513Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2713792Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:402:74[0m
+2025-11-10T00:05:25.2714593Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2716065Z [0m[1m[38;5;12m402[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   utxo_commitment: bllvm_protocol::utxo_commitments::data_structures::UtxoCommitment {[0m
+2025-11-10T00:05:25.2717333Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2717855Z 
+2025-11-10T00:05:25.2761865Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2763067Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:410:61[0m
+2025-11-10T00:05:25.2763609Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2765273Z [0m[1m[38;5;12m410[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   bllvm_protocol::utxo_commitments::network_integration::Bip158FilterData {[0m
+2025-11-10T00:05:25.2766555Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2767061Z 
+2025-11-10T00:05:25.2812051Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2813499Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:418:58[0m
+2025-11-10T00:05:25.2814222Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2815812Z [0m[1m[38;5;12m418[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   _ => Err(bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2817114Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2817617Z 
+2025-11-10T00:05:25.2857990Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2859331Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:423:55[0m
+2025-11-10T00:05:25.2859987Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2861210Z [0m[1m[38;5;12m423[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        Err(_) => Err(bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2862627Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2863198Z 
+2025-11-10T00:05:25.2903837Z [0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: could not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2905375Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:435:41[0m
+2025-11-10T00:05:25.2906015Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.2907203Z [0m[1m[38;5;12m435[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    Err(bllvm_protocol::utxo_commitments::data_structures::UtxoCommitmentError::SerializationError([0m
+2025-11-10T00:05:25.2908599Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mcould not find `utxo_commitments` in `bllvm_protocol`[0m
+2025-11-10T00:05:25.2909163Z 
+2025-11-10T00:05:25.4017510Z [0m[1m[38;5;9merror[E0412][0m[0m[1m: cannot find type `AddrMessage` in this scope[0m
+2025-11-10T00:05:25.4018371Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2494:61[0m
+2025-11-10T00:05:25.4018873Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4019736Z [0m[1m[38;5;12m2494[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    async fn handle_addr(&self, peer_addr: SocketAddr, msg: AddrMessage) -> Result<()> {[0m
+2025-11-10T00:05:25.4021149Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[38;5;9m^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mnot found in this scope[0m
+2025-11-10T00:05:25.4021743Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4022274Z [0m[1m[38;5;14mhelp[0m[0m: consider importing one of these structs[0m
+2025-11-10T00:05:25.4022792Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4023539Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use crate::network::protocol::AddrMessage;[0m
+2025-11-10T00:05:25.4024519Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4025159Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use bllvm_protocol::network::AddrMessage;[0m
+2025-11-10T00:05:25.4025702Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4025927Z 
+2025-11-10T00:05:25.4099012Z [0m[1m[38;5;9merror[E0412][0m[0m[1m: cannot find type `NetworkAddress` in this scope[0m
+2025-11-10T00:05:25.4102164Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2524:22[0m
+2025-11-10T00:05:25.4102679Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4103535Z [0m[1m[38;5;12m2524[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        addresses: &[NetworkAddress],[0m
+2025-11-10T00:05:25.4104508Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                      [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mnot found in this scope[0m
+2025-11-10T00:05:25.4105074Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4105611Z [0m[1m[38;5;14mhelp[0m[0m: consider importing one of these structs[0m
+2025-11-10T00:05:25.4106131Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4106872Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use crate::network::protocol::NetworkAddress;[0m
+2025-11-10T00:05:25.4107757Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4108476Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use bllvm_protocol::network::NetworkAddress;[0m
+2025-11-10T00:05:25.4119556Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4119831Z 
+2025-11-10T00:05:25.4145484Z [0m[1m[38;5;9merror[E0412][0m[0m[1m: cannot find type `NetworkAddress` in this scope[0m
+2025-11-10T00:05:25.4146398Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2561:37[0m
+2025-11-10T00:05:25.4146956Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4147743Z [0m[1m[38;5;12m2561[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let addresses_to_relay: Vec<NetworkAddress> = filtered.into_iter().take(1000).collect();[0m
+2025-11-10T00:05:25.4148660Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mnot found in this scope[0m
+2025-11-10T00:05:25.4149152Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4149615Z [0m[1m[38;5;14mhelp[0m[0m: consider importing one of these structs[0m
+2025-11-10T00:05:25.4151598Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4152191Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use crate::network::protocol::NetworkAddress;[0m
+2025-11-10T00:05:25.4152673Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4153221Z [0m[1m[38;5;12m52[0m[0m   [0m[0m[38;5;10m+ use bllvm_protocol::network::NetworkAddress;[0m
+2025-11-10T00:05:25.4153717Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4153922Z 
+2025-11-10T00:05:25.4807907Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.4809006Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:15:7[0m
+2025-11-10T00:05:25.4809778Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4810764Z [0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m#[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.4811831Z [0m   [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.4812566Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4815375Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.4817373Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.4819305Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.4820775Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D unexpected-cfgs` implied by `-D warnings`[0m
+2025-11-10T00:05:25.4821557Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(unexpected_cfgs)]`[0m
+2025-11-10T00:05:25.4821987Z 
+2025-11-10T00:05:25.4822328Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.4822916Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:48:11[0m
+2025-11-10T00:05:25.4823541Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4824068Z [0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    #[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.4824923Z [0m   [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.4825379Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4826371Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.4827286Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.4828233Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.4828826Z 
+2025-11-10T00:05:25.4829066Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.4829509Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:63:19[0m
+2025-11-10T00:05:25.4829848Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4830262Z [0m[1m[38;5;12m63[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            #[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.4830739Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.4831087Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4831884Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.4832748Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.4833678Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.4834254Z 
+2025-11-10T00:05:25.4834702Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.4835165Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:82:19[0m
+2025-11-10T00:05:25.4835506Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4835922Z [0m[1m[38;5;12m82[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            #[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.4836401Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.4836739Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4837529Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.4838400Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.4839328Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.4842001Z 
+2025-11-10T00:05:25.4842248Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.4842687Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:96:15[0m
+2025-11-10T00:05:25.4843023Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4843425Z [0m[1m[38;5;12m96[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        #[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.4843896Z [0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.4844556Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4845360Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.4846238Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.4847175Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.4847759Z 
+2025-11-10T00:05:25.4847992Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.4848429Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:106:19[0m
+2025-11-10T00:05:25.4848767Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4849191Z [0m[1m[38;5;12m106[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            #[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.4851828Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.4852473Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4853295Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.4854174Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.4855426Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.4856021Z 
+2025-11-10T00:05:25.4856279Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.4856775Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:462:23[0m
+2025-11-10T00:05:25.4857110Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4857535Z [0m[1m[38;5;12m462[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                #[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.4858013Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.4858354Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4859137Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.4859996Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.4861476Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.4862078Z 
+2025-11-10T00:05:25.4862762Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.4863247Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:543:23[0m
+2025-11-10T00:05:25.4863783Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4864206Z [0m[1m[38;5;12m543[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                #[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.4865072Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.4865414Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4866194Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.4867284Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.4868207Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.4868785Z 
+2025-11-10T00:05:25.4874781Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `bllvm_protocol::block::connect_block`[0m
+2025-11-10T00:05:25.4875691Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:606:13[0m
+2025-11-10T00:05:25.4876162Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4876692Z [0m[1m[38;5;12m606[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use bllvm_protocol::block::connect_block;[0m
+2025-11-10T00:05:25.4877230Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.4877602Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4878038Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D unused-imports` implied by `-D warnings`[0m
+2025-11-10T00:05:25.4878623Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(unused_imports)]`[0m
+2025-11-10T00:05:25.4879169Z 
+2025-11-10T00:05:25.4879473Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `bllvm_protocol::segwit::Witness`[0m
+2025-11-10T00:05:25.4879947Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/storage/pruning.rs:607:13[0m
+2025-11-10T00:05:25.4880287Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4880751Z [0m[1m[38;5;12m607[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use bllvm_protocol::segwit::Witness;[0m
+2025-11-10T00:05:25.4881249Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.4881493Z 
+2025-11-10T00:05:25.4983311Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Block`[0m
+2025-11-10T00:05:25.4984265Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/chain_access.rs:8:22[0m
+2025-11-10T00:05:25.4985136Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4985893Z [0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::{Block, BlockHeader, Hash, Transaction};[0m
+2025-11-10T00:05:25.4986518Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                      [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.4986772Z 
+2025-11-10T00:05:25.4989365Z [0m[1m[38;5;9merror[0m[0m[1m: unused imports: `IpAddr` and `ToSocketAddrs`[0m
+2025-11-10T00:05:25.4990145Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/dns_seeds.rs:7:16[0m
+2025-11-10T00:05:25.4990550Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.4991134Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::net::{IpAddr, SocketAddr, ToSocketAddrs};[0m
+2025-11-10T00:05:25.4991791Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;9m^^^^^^[0m[0m              [0m[0m[1m[38;5;9m^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.4992090Z 
+2025-11-10T00:05:25.5031180Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `std::sync::Arc`[0m
+2025-11-10T00:05:25.5031692Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/peer.rs:10:5[0m
+2025-11-10T00:05:25.5032057Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5032734Z [0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::sync::Arc;[0m
+2025-11-10T00:05:25.5033204Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5033438Z 
+2025-11-10T00:05:25.5066895Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `bllvm_protocol::bip157::NODE_COMPACT_FILTERS`[0m
+2025-11-10T00:05:25.5067868Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol.rs:5:5[0m
+2025-11-10T00:05:25.5068591Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5071603Z [0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::bip157::NODE_COMPACT_FILTERS;[0m
+2025-11-10T00:05:25.5072820Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5073415Z 
+2025-11-10T00:05:25.5667324Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Transport`[0m
+2025-11-10T00:05:25.5668508Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_adapter.rs:6:33[0m
+2025-11-10T00:05:25.5669291Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5672163Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::network::transport::{Transport, TransportType};[0m
+2025-11-10T00:05:25.5673289Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;9m^^^^^^^^^[0m
+2025-11-10T00:05:25.5673847Z 
+2025-11-10T00:05:25.5674814Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `crate::network::protocol::ProtocolParser`[0m
+2025-11-10T00:05:25.5675937Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_adapter.rs:57:13[0m
+2025-11-10T00:05:25.5676663Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5677636Z [0m[1m[38;5;12m57[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use crate::network::protocol::ProtocolParser;[0m
+2025-11-10T00:05:25.5678642Z [0m   [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5679381Z 
+2025-11-10T00:05:25.5680936Z [0m[1m[38;5;9merror[0m[0m[1m: unused imports: `NetworkAddress as ConsensusNetworkAddress`, `PingMessage as ConsensusPingMessage`, `PongMessage as ConsensusPongMessage`, and `VersionMessage as ConsensusVersionMessage`[0m
+2025-11-10T00:05:25.5682765Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_adapter.rs:156:13[0m
+2025-11-10T00:05:25.5683433Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5684739Z [0m[1m[38;5;12m156[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            NetworkAddress as ConsensusNetworkAddress, PingMessage as ConsensusPingMessage,[0m
+2025-11-10T00:05:25.5686935Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5688305Z [0m[1m[38;5;12m157[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            PongMessage as ConsensusPongMessage, VersionMessage as ConsensusVersionMessage,[0m
+2025-11-10T00:05:25.5689659Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5690158Z 
+2025-11-10T00:05:25.5691184Z [0m[1m[38;5;9merror[0m[0m[1m: unused imports: `PingMessage as ProtoPingMessage`, `PongMessage as ProtoPongMessage`, and `VersionMessage as ProtoVersionMessage`[0m
+2025-11-10T00:05:25.5692536Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_adapter.rs:200:13[0m
+2025-11-10T00:05:25.5693151Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5694231Z [0m[1m[38;5;12m200[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            PingMessage as ProtoPingMessage, PongMessage as ProtoPongMessage, ProtocolMessage,[0m
+2025-11-10T00:05:25.5695712Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5697072Z [0m[1m[38;5;12m201[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            VersionMessage as ProtoVersionMessage,[0m
+2025-11-10T00:05:25.5698031Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5698460Z 
+2025-11-10T00:05:25.5699015Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `bllvm_protocol::network::*`[0m
+2025-11-10T00:05:25.5699886Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_adapter.rs:245:13[0m
+2025-11-10T00:05:25.5700758Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5701596Z [0m[1m[38;5;12m245[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use bllvm_protocol::network::*;[0m
+2025-11-10T00:05:25.5702459Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5702867Z 
+2025-11-10T00:05:25.5703368Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `bllvm_protocol::BlockHeader`[0m
+2025-11-10T00:05:25.5704219Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_extensions.rs:119:9[0m
+2025-11-10T00:05:25.5705052Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5705923Z [0m[1m[38;5;12m119[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    use bllvm_protocol::BlockHeader;[0m
+2025-11-10T00:05:25.5706772Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5707187Z 
+2025-11-10T00:05:25.5707536Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `BanEntry`[0m
+2025-11-10T00:05:25.5708265Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/ban_list_signing.rs:5:48[0m
+2025-11-10T00:05:25.5708868Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5709787Z [0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::network::protocol::{BanListMessage, BanEntry};[0m
+2025-11-10T00:05:25.5710792Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[38;5;9m^^^^^^^^[0m
+2025-11-10T00:05:25.5711210Z 
+2025-11-10T00:05:25.5714290Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `anyhow::Result`[0m
+2025-11-10T00:05:25.5715546Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/dos_protection.rs:6:5[0m
+2025-11-10T00:05:25.5716415Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5717422Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse anyhow::Result;[0m
+2025-11-10T00:05:25.5718277Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5718609Z 
+2025-11-10T00:05:25.5718883Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `SocketAddr`[0m
+2025-11-10T00:05:25.5719500Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/dos_protection.rs:8:24[0m
+2025-11-10T00:05:25.5720000Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5720638Z [0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::net::{IpAddr, SocketAddr};[0m
+2025-11-10T00:05:25.5721318Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;9m^^^^^^^^^^[0m
+2025-11-10T00:05:25.5721653Z 
+2025-11-10T00:05:25.5721955Z [0m[1m[38;5;9merror[0m[0m[1m: unused imports: `debug` and `error`[0m
+2025-11-10T00:05:25.5722676Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/dos_protection.rs:12:15[0m
+2025-11-10T00:05:25.5723460Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5725127Z [0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tracing::{debug, warn, error};[0m
+2025-11-10T00:05:25.5725963Z [0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[38;5;9m^^^^^[0m[0m        [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.5726270Z 
+2025-11-10T00:05:25.5747687Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `info`[0m
+2025-11-10T00:05:25.5748242Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/relay.rs:13:22[0m
+2025-11-10T00:05:25.5748916Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5751266Z [0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tracing::{debug, info};[0m
+2025-11-10T00:05:25.5751840Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                      [0m[0m[1m[38;5;9m^^^^[0m
+2025-11-10T00:05:25.5752133Z 
+2025-11-10T00:05:25.5773105Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `warn`[0m
+2025-11-10T00:05:25.5773689Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/tcp_transport.rs:12:29[0m
+2025-11-10T00:05:25.5774527Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5775319Z [0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tracing::{debug, error, warn};[0m
+2025-11-10T00:05:25.5775867Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;9m^^^^[0m
+2025-11-10T00:05:25.5776145Z 
+2025-11-10T00:05:25.5844582Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `crate::network::peer::Peer`[0m
+2025-11-10T00:05:25.5846567Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:11:5[0m
+2025-11-10T00:05:25.5847210Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5847996Z [0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::network::peer::Peer;[0m
+2025-11-10T00:05:25.5848851Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5851178Z 
+2025-11-10T00:05:25.5851701Z [0m[1m[38;5;9merror[0m[0m[1m: unused imports: `FilteredBlockMessage` and `UTXOSetMessage`[0m
+2025-11-10T00:05:25.5852677Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:14:16[0m
+2025-11-10T00:05:25.5853330Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5854801Z [0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    protocol::{FilteredBlockMessage, GetFilteredBlockMessage, GetUTXOSetMessage, UTXOSetMessage},[0m
+2025-11-10T00:05:25.5856212Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^[0m[0m                                              [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5856707Z 
+2025-11-10T00:05:25.5857149Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `anyhow::Result`[0m
+2025-11-10T00:05:25.5857956Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/utxo_commitments_client.rs:20:5[0m
+2025-11-10T00:05:25.5858599Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5861257Z [0m[1m[38;5;12m20[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse anyhow::Result;[0m
+2025-11-10T00:05:25.5862047Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5862444Z 
+2025-11-10T00:05:25.5917789Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Transaction`[0m
+2025-11-10T00:05:25.5918646Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/filter_service.rs:9:48[0m
+2025-11-10T00:05:25.5919233Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5920243Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::{Block, BlockHeader, Hash, Transaction};[0m
+2025-11-10T00:05:25.5921243Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                                [0m[0m[1m[38;5;9m^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5921662Z 
+2025-11-10T00:05:25.5932800Z [0m[1m[38;5;9merror[0m[0m[1m: unused imports: `PaymentProtocolClient` and `PaymentProtocolServer`[0m
+2025-11-10T00:05:25.5933850Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/bip70_handler.rs:6:43[0m
+2025-11-10T00:05:25.5934565Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5935671Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::payment::{Bip70Error, PaymentProtocolClient, PaymentProtocolServer, PaymentRequest};[0m
+2025-11-10T00:05:25.5936835Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^[0m[0m  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5937583Z 
+2025-11-10T00:05:25.5938090Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `ProtocolMessage`[0m
+2025-11-10T00:05:25.5939163Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/network/bip70_handler.rs:9:5[0m
+2025-11-10T00:05:25.5939955Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5940733Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    ProtocolMessage,[0m
+2025-11-10T00:05:25.5941379Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.5941886Z 
+2025-11-10T00:05:25.5942164Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Sha256`[0m
+2025-11-10T00:05:25.5942740Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/fibre.rs:16:20[0m
+2025-11-10T00:05:25.5943211Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5943857Z [0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse sha2::{Digest, Sha256};[0m
+2025-11-10T00:05:25.5944657Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;9m^^^^^^[0m
+2025-11-10T00:05:25.5944993Z 
+2025-11-10T00:05:25.5945234Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `warn`[0m
+2025-11-10T00:05:25.5945793Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/fibre.rs:19:28[0m
+2025-11-10T00:05:25.5946237Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5946705Z [0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tracing::{debug, info, warn};[0m
+2025-11-10T00:05:25.5947189Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;9m^^^^[0m
+2025-11-10T00:05:25.5947453Z 
+2025-11-10T00:05:25.5995077Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `PackageId`[0m
+2025-11-10T00:05:25.5995655Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/package_relay_handler.rs:10:5[0m
+2025-11-10T00:05:25.5996077Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.5996695Z [0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    PackageId, PackageRejectReason, PackageRelay, TransactionPackage,[0m
+2025-11-10T00:05:25.5997331Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^[0m
+2025-11-10T00:05:25.5997578Z 
+2025-11-10T00:05:25.6094765Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `crate::network::peer::Peer`[0m
+2025-11-10T00:05:25.6095487Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:928:37[0m
+2025-11-10T00:05:25.6095959Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6096733Z [0m[1m[38;5;12m928[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   use crate::network::peer::Peer;[0m
+2025-11-10T00:05:25.6097515Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                           [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.6097913Z 
+2025-11-10T00:05:25.6142074Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `crate::network::peer::Peer`[0m
+2025-11-10T00:05:25.6143263Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:1548:13[0m
+2025-11-10T00:05:25.6144133Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6145577Z [0m[1m[38;5;12m1548[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use crate::network::peer::Peer;[0m
+2025-11-10T00:05:25.6146809Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.6147355Z 
+2025-11-10T00:05:25.6148065Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `crate::network::transport::TransportAddr`[0m
+2025-11-10T00:05:25.6149174Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:1549:13[0m
+2025-11-10T00:05:25.6149906Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6151073Z [0m[1m[38;5;12m1549[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use crate::network::transport::TransportAddr;[0m
+2025-11-10T00:05:25.6153740Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.6154766Z 
+2025-11-10T00:05:25.6162406Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `crate::network::peer::Peer`[0m
+2025-11-10T00:05:25.6163260Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:1647:13[0m
+2025-11-10T00:05:25.6163856Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6164899Z [0m[1m[38;5;12m1647[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use crate::network::peer::Peer;[0m
+2025-11-10T00:05:25.6165784Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.6166444Z 
+2025-11-10T00:05:25.6283074Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `crate::network::protocol::NetworkAddress`[0m
+2025-11-10T00:05:25.6284671Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2495:13[0m
+2025-11-10T00:05:25.6285561Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6286875Z [0m[1m[38;5;12m2495[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use crate::network::protocol::NetworkAddress;[0m
+2025-11-10T00:05:25.6288304Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.6290585Z 
+2025-11-10T00:05:25.6351664Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `UtxoSet`[0m
+2025-11-10T00:05:25.6354210Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/blockchain.rs:8:35[0m
+2025-11-10T00:05:25.6355185Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6356081Z [0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::{BlockHeader, UtxoSet};[0m
+2025-11-10T00:05:25.6357008Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                   [0m[0m[1m[38;5;9m^^^^^^^[0m
+2025-11-10T00:05:25.6357424Z 
+2025-11-10T00:05:25.6358448Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Sha256`[0m
+2025-11-10T00:05:25.6359187Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/blockchain.rs:93:20[0m
+2025-11-10T00:05:25.6359790Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6360530Z [0m[1m[38;5;12m93[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use sha2::{Sha256, Digest};[0m
+2025-11-10T00:05:25.6361269Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;9m^^^^^^[0m
+2025-11-10T00:05:25.6361629Z 
+2025-11-10T00:05:25.6557560Z [0m[1m[38;5;9merror[0m[0m[1m: unused imports: `Duration`, `SystemTime`, and `UNIX_EPOCH`[0m
+2025-11-10T00:05:25.6558576Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/control.rs:14:17[0m
+2025-11-10T00:05:25.6560744Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6561558Z [0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};[0m
+2025-11-10T00:05:25.6562495Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^[0m[0m           [0m[0m[1m[38;5;9m^^^^^^^^^^[0m[0m  [0m[0m[1m[38;5;9m^^^^^^^^^^[0m
+2025-11-10T00:05:25.6562916Z 
+2025-11-10T00:05:25.6563170Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Level`[0m
+2025-11-10T00:05:25.6563739Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/control.rs:16:22[0m
+2025-11-10T00:05:25.6564197Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6565053Z [0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tracing::{debug, Level};[0m
+2025-11-10T00:05:25.6565709Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                      [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.6566038Z 
+2025-11-10T00:05:25.6682613Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Hash`[0m
+2025-11-10T00:05:25.6683979Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mining.rs:10:102[0m
+2025-11-10T00:05:25.6685184Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6686644Z [0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::{ConsensusProof, types::{BlockHeader, Transaction, UtxoSet, Natural, ByteString, Hash}, ValidationResult};[0m
+2025-11-10T00:05:25.6687981Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                                                                      [0m[0m[1m[38;5;9m^^^^[0m
+2025-11-10T00:05:25.6688613Z 
+2025-11-10T00:05:25.6728426Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `sigop`[0m
+2025-11-10T00:05:25.6729536Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mining.rs:453:15[0m
+2025-11-10T00:05:25.6730081Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6730758Z [0m[1m[38;5;12m453[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        #[cfg(feature = "sigop")][0m
+2025-11-10T00:05:25.6731732Z [0m    [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.6732278Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6733603Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.6735617Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `sigop` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.6737187Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.6738165Z 
+2025-11-10T00:05:25.6738534Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `sigop`[0m
+2025-11-10T00:05:25.6739245Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mining.rs:476:19[0m
+2025-11-10T00:05:25.6739757Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6740425Z [0m[1m[38;5;12m476[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        #[cfg(not(feature = "sigop"))][0m
+2025-11-10T00:05:25.6741190Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.6741727Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6743023Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.6744582Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `sigop` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.6746260Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.6746943Z 
+2025-11-10T00:05:25.6961847Z [0m[1m[38;5;9merror[0m[0m[1m: unused imports: `AsyncReadExt` and `AsyncWriteExt`[0m
+2025-11-10T00:05:25.6962948Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/server.rs:17:17[0m
+2025-11-10T00:05:25.6963444Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6964180Z [0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tokio::io::{AsyncReadExt, AsyncWriteExt};[0m
+2025-11-10T00:05:25.6965221Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^^^^^[0m[0m  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.6965678Z 
+2025-11-10T00:05:25.6965981Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `TcpStream`[0m
+2025-11-10T00:05:25.6966950Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/server.rs:18:31[0m
+2025-11-10T00:05:25.6967477Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.6968244Z [0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tokio::net::{TcpListener, TcpStream};[0m
+2025-11-10T00:05:25.6970912Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                               [0m[0m[1m[38;5;9m^^^^^^^^^[0m
+2025-11-10T00:05:25.6971282Z 
+2025-11-10T00:05:25.7283666Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Hash`[0m
+2025-11-10T00:05:25.7284977Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/node/block_processor.rs:10:59[0m
+2025-11-10T00:05:25.7285890Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7288904Z [0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::{segwit::Witness, Block, BlockHeader, Hash, UtxoSet, ValidationResult};[0m
+2025-11-10T00:05:25.7290492Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                                           [0m[0m[1m[38;5;9m^^^^[0m
+2025-11-10T00:05:25.7290993Z 
+2025-11-10T00:05:25.7291385Z [0m[1m[38;5;9merror[0m[0m[1m: unused imports: `EventMessage` and `ModuleMessage`[0m
+2025-11-10T00:05:25.7292274Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/node/event_publisher.rs:9:36[0m
+2025-11-10T00:05:25.7292767Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7293642Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::module::ipc::protocol::{EventMessage, EventPayload, ModuleMessage};[0m
+2025-11-10T00:05:25.7294829Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                    [0m[0m[1m[38;5;9m^^^^^^^^^^^^[0m[0m                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.7295231Z 
+2025-11-10T00:05:25.7392953Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `segwit::Witness`[0m
+2025-11-10T00:05:25.7393747Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/node/sync.rs:14:22[0m
+2025-11-10T00:05:25.7394277Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7395571Z [0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::{segwit::Witness, Block, BlockHeader, UtxoSet, ValidationResult};[0m
+2025-11-10T00:05:25.7396587Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                      [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.7396965Z 
+2025-11-10T00:05:25.7420766Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Duration`[0m
+2025-11-10T00:05:25.7421454Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/node/metrics.rs:7:17[0m
+2025-11-10T00:05:25.7422008Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7423133Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::time::{Duration, SystemTime, UNIX_EPOCH};[0m
+2025-11-10T00:05:25.7424150Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^[0m
+2025-11-10T00:05:25.7424728Z 
+2025-11-10T00:05:25.7563994Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Duration`[0m
+2025-11-10T00:05:25.7565192Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/node/health.rs:6:17[0m
+2025-11-10T00:05:25.7565729Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7566545Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::time::{Duration, SystemTime, UNIX_EPOCH};[0m
+2025-11-10T00:05:25.7567364Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^[0m
+2025-11-10T00:05:25.7567731Z 
+2025-11-10T00:05:25.7798176Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.7799099Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/config/mod.rs:543:7[0m
+2025-11-10T00:05:25.7799927Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7812760Z [0m[1m[38;5;12m543[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m#[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.7814039Z [0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.7814732Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7816403Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.7817464Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.7818585Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.7821260Z 
+2025-11-10T00:05:25.7821527Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.7822028Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/config/mod.rs:559:7[0m
+2025-11-10T00:05:25.7822398Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7822842Z [0m[1m[38;5;12m559[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m#[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.7823354Z [0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.7823912Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7824958Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.7826109Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.7827248Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.7827890Z 
+2025-11-10T00:05:25.7828154Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.7828614Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/config/mod.rs:564:7[0m
+2025-11-10T00:05:25.7828954Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7831200Z [0m[1m[38;5;12m564[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m#[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.7831668Z [0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.7832020Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7832861Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.7833820Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.7834947Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.7835651Z 
+2025-11-10T00:05:25.7835896Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.7836363Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/config/mod.rs:451:11[0m
+2025-11-10T00:05:25.7836693Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7837108Z [0m[1m[38;5;12m451[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    #[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.7839474Z [0m    [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.7839819Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7840611Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.7841509Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.7842454Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.7843060Z 
+2025-11-10T00:05:25.7975493Z [0m[1m[38;5;9merror[0m[0m[1m: unexpected `cfg` condition value: `bip158`[0m
+2025-11-10T00:05:25.7976823Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/config/mod.rs:498:19[0m
+2025-11-10T00:05:25.7977315Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7978148Z [0m[1m[38;5;12m498[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            #[cfg(feature = "bip158")][0m
+2025-11-10T00:05:25.7979135Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                   [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.7979624Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.7980800Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected values for `feature` are: `dandelion`, `default`, `iroh`, `libc`, `nix`, `production`, `quinn`, `redb`, `sled`, `stratum-v2`, `sysinfo`, and `utxo-commitments`[0m
+2025-11-10T00:05:25.7984277Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: consider adding `bip158` as a feature in `Cargo.toml`[0m
+2025-11-10T00:05:25.7985917Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration[0m
+2025-11-10T00:05:25.7986817Z 
+2025-11-10T00:05:25.8026497Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `BlockHeader`[0m
+2025-11-10T00:05:25.8027619Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/validation/mod.rs:16:29[0m
+2025-11-10T00:05:25.8028175Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8029167Z [0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse bllvm_protocol::{Block, BlockHeader, UtxoSet, ValidationResult};[0m
+2025-11-10T00:05:25.8030095Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;9m^^^^^^^^^^^[0m
+2025-11-10T00:05:25.8030471Z 
+2025-11-10T00:05:25.8038770Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `std::collections::VecDeque`[0m
+2025-11-10T00:05:25.8039735Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/module/api/events.rs:6:5[0m
+2025-11-10T00:05:25.8040234Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8040877Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::collections::VecDeque;[0m
+2025-11-10T00:05:25.8041580Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.8041939Z 
+2025-11-10T00:05:25.8057185Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `std::collections::HashMap`[0m
+2025-11-10T00:05:25.8059714Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/module/api/hub.rs:6:5[0m
+2025-11-10T00:05:25.8060416Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8061081Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::collections::HashMap;[0m
+2025-11-10T00:05:25.8061757Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.8062112Z 
+2025-11-10T00:05:25.8062366Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `warn`[0m
+2025-11-10T00:05:25.8062927Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/module/api/hub.rs:9:28[0m
+2025-11-10T00:05:25.8063396Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8064033Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tracing::{debug, info, warn};[0m
+2025-11-10T00:05:25.8065026Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;9m^^^^[0m
+2025-11-10T00:05:25.8065365Z 
+2025-11-10T00:05:25.8066349Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `ModuleMessage`[0m
+2025-11-10T00:05:25.8066968Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/module/api/hub.rs:12:5[0m
+2025-11-10T00:05:25.8067406Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8068184Z [0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    ModuleMessage, RequestMessage, RequestPayload, ResponseMessage, ResponsePayload,[0m
+2025-11-10T00:05:25.8069353Z [0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.8069751Z 
+2025-11-10T00:05:25.8070007Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `EventType`[0m
+2025-11-10T00:05:25.8070545Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/module/api/hub.rs:15:29[0m
+2025-11-10T00:05:25.8070978Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8071918Z [0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::module::traits::{EventType, ModuleError, NodeAPI};[0m
+2025-11-10T00:05:25.8072636Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;9m^^^^^^^^^[0m
+2025-11-10T00:05:25.8072936Z 
+2025-11-10T00:05:25.8125745Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `std::collections::HashMap`[0m
+2025-11-10T00:05:25.8126509Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/module/ipc/protocol.rs:7:5[0m
+2025-11-10T00:05:25.8127123Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8127631Z [0m[1m[38;5;12m7[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::collections::HashMap;[0m
+2025-11-10T00:05:25.8128165Z [0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.8128435Z 
+2025-11-10T00:05:25.8399956Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `debug`[0m
+2025-11-10T00:05:25.8400901Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/module/manager.rs:10:15[0m
+2025-11-10T00:05:25.8403217Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8403927Z [0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tracing::{debug, error, info, warn};[0m
+2025-11-10T00:05:25.8404853Z [0m   [0m[0m[1m[38;5;12m|[0m[0m               [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.8405186Z 
+2025-11-10T00:05:25.8405588Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `DiscoveredModule`[0m
+2025-11-10T00:05:25.8406212Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/module/manager.rs:20:31[0m
+2025-11-10T00:05:25.8406690Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8407609Z [0m[1m[38;5;12m20[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::module::registry::{DiscoveredModule, ModuleDependencies, ModuleDiscovery};[0m
+2025-11-10T00:05:25.8408521Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                               [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.8408871Z 
+2025-11-10T00:05:25.8444267Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Permission`[0m
+2025-11-10T00:05:25.8445313Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/module/manager.rs:311:52[0m
+2025-11-10T00:05:25.8445813Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8446723Z [0m[1m[38;5;12m311[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use crate::module::security::permissions::{Permission, PermissionSet};[0m
+2025-11-10T00:05:25.8447963Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                    [0m[0m[1m[38;5;9m^^^^^^^^^^[0m
+2025-11-10T00:05:25.8448315Z 
+2025-11-10T00:05:25.8456804Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `ModuleState`[0m
+2025-11-10T00:05:25.8457816Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/module/process/monitor.rs:10:42[0m
+2025-11-10T00:05:25.8458331Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8459102Z [0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::module::traits::{ModuleError, ModuleState};[0m
+2025-11-10T00:05:25.8459896Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                          [0m[0m[1m[38;5;9m^^^^^^^^^^^[0m
+2025-11-10T00:05:25.8460240Z 
+2025-11-10T00:05:25.8460495Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `Mutex`[0m
+2025-11-10T00:05:25.8461097Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/module/process/monitor.rs:11:22[0m
+2025-11-10T00:05:25.8461594Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8462209Z [0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::sync::{Arc, Mutex};[0m
+2025-11-10T00:05:25.8462869Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                      [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.8463215Z 
+2025-11-10T00:05:25.8513600Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `error`[0m
+2025-11-10T00:05:25.8514864Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/module/process/spawner.rs:9:22[0m
+2025-11-10T00:05:25.8515397Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8516342Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tracing::{debug, error, info, warn};[0m
+2025-11-10T00:05:25.8517042Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                      [0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:25.8517430Z 
+2025-11-10T00:05:25.8544513Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `HashSet`[0m
+2025-11-10T00:05:25.8545535Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/module/registry/dependencies.rs:5:33[0m
+2025-11-10T00:05:25.8546143Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8547251Z [0m[1m[38;5;12m5[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::collections::{HashMap, HashSet, VecDeque};[0m
+2025-11-10T00:05:25.8548009Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;9m^^^^^^^[0m
+2025-11-10T00:05:25.8548349Z 
+2025-11-10T00:05:25.8548593Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `warn`[0m
+2025-11-10T00:05:25.8549216Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/module/registry/dependencies.rs:6:22[0m
+2025-11-10T00:05:25.8551568Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8552171Z [0m[1m[38;5;12m6[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tracing::{debug, warn};[0m
+2025-11-10T00:05:25.8552806Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                      [0m[0m[1m[38;5;9m^^^^[0m
+2025-11-10T00:05:25.8553124Z 
+2025-11-10T00:05:25.8553415Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `ModuleMetadata`[0m
+2025-11-10T00:05:25.8554052Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/module/registry/dependencies.rs:9:42[0m
+2025-11-10T00:05:25.8554873Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8555768Z [0m[1m[38;5;12m9[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse crate::module::traits::{ModuleError, ModuleMetadata};[0m
+2025-11-10T00:05:25.8556525Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                                          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.8556794Z 
+2025-11-10T00:05:25.8590512Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `PathBuf`[0m
+2025-11-10T00:05:25.8591444Z [0m [0m[0m[1m[38;5;12m--> [0m[0msrc/module/registry/manifest.rs:8:23[0m
+2025-11-10T00:05:25.8592013Z [0m  [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8592617Z [0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::path::{Path, PathBuf};[0m
+2025-11-10T00:05:25.8593219Z [0m  [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;9m^^^^^^^[0m
+2025-11-10T00:05:25.8593520Z 
+2025-11-10T00:05:25.8640382Z [0m[1m[38;5;9merror[0m[0m[1m: unused import: `warn`[0m
+2025-11-10T00:05:25.8641398Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/module/sandbox/process.rs:10:22[0m
+2025-11-10T00:05:25.8641977Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.8642640Z [0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse tracing::{debug, warn};[0m
+2025-11-10T00:05:25.8643299Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                      [0m[0m[1m[38;5;9m^^^^[0m
+2025-11-10T00:05:25.8643635Z 
+2025-11-10T00:05:25.9486242Z [0m[1m[38;5;9merror[0m[0m[1m: integer literal is too large[0m
+2025-11-10T00:05:25.9487308Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/blockchain.rs:42:34[0m
+2025-11-10T00:05:25.9487820Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.9488746Z [0m[1m[38;5;12m42[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        const MAX_TARGET: u128 = 0x00000000FFFF0000000000000000000000000000000000000000000000000000u128;[0m
+2025-11-10T00:05:25.9489801Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.9490463Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.9491204Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: value exceeds limit of `0xffffffffffffffffffffffffffffffff`[0m
+2025-11-10T00:05:25.9491697Z 
+2025-11-10T00:05:25.9610680Z [0m[1m[38;5;9merror[0m[0m[1m: integer literal is too large[0m
+2025-11-10T00:05:25.9611873Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mining.rs:287:34[0m
+2025-11-10T00:05:25.9612365Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.9613429Z [0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        const MAX_TARGET: u128 = 0x00000000FFFF0000000000000000000000000000000000000000000000000000u128;[0m
+2025-11-10T00:05:25.9615018Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:25.9615770Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:25.9616474Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: value exceeds limit of `0xffffffffffffffffffffffffffffffff`[0m
+2025-11-10T00:05:25.9616965Z 
+2025-11-10T00:05:26.2345875Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2347532Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mempool.rs:83:42[0m
+2025-11-10T00:05:26.2348575Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2350000Z [0m[1m[38;5;12m83[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2351304Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2351817Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2352419Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D deprecated` implied by `-D warnings`[0m
+2025-11-10T00:05:26.2353217Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(deprecated)]`[0m
+2025-11-10T00:05:26.2353650Z 
+2025-11-10T00:05:26.2354544Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2355495Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mempool.rs:310:46[0m
+2025-11-10T00:05:26.2355963Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2356570Z [0m[1m[38;5;12m310[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2357125Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2357358Z 
+2025-11-10T00:05:26.2357865Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2358517Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mempool.rs:474:42[0m
+2025-11-10T00:05:26.2358842Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2359343Z [0m[1m[38;5;12m474[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2359864Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2360097Z 
+2025-11-10T00:05:26.2360590Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2361222Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mempool.rs:509:42[0m
+2025-11-10T00:05:26.2361550Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2362044Z [0m[1m[38;5;12m509[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2362551Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2362779Z 
+2025-11-10T00:05:26.2364737Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2365845Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mempool.rs:89:32[0m
+2025-11-10T00:05:26.2366216Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2366972Z [0m[1m[38;5;12m89[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    let txid = calculate_tx_id(&tx);[0m
+2025-11-10T00:05:26.2367881Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2368295Z 
+2025-11-10T00:05:26.2371064Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2372463Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mempool.rs:130:32[0m
+2025-11-10T00:05:26.2373028Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2373777Z [0m[1m[38;5;12m130[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    let txid = calculate_tx_id(tx);[0m
+2025-11-10T00:05:26.2374825Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2375258Z 
+2025-11-10T00:05:26.2376269Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2377450Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mempool.rs:313:43[0m
+2025-11-10T00:05:26.2378042Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2379213Z [0m[1m[38;5;12m313[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    let descendant_hash = calculate_tx_id(&descendant_tx);[0m
+2025-11-10T00:05:26.2381419Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2381677Z 
+2025-11-10T00:05:26.2382622Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2383695Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mempool.rs:479:41[0m
+2025-11-10T00:05:26.2384026Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2384645Z [0m[1m[38;5;12m479[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    let ancestor_hash = calculate_tx_id(&ancestor_tx);[0m
+2025-11-10T00:05:26.2385248Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2385631Z 
+2025-11-10T00:05:26.2386312Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2386976Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mempool.rs:512:39[0m
+2025-11-10T00:05:26.2387313Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2389348Z [0m[1m[38;5;12m512[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let descendant_hash = calculate_tx_id(&descendant_tx);[0m
+2025-11-10T00:05:26.2389905Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2390137Z 
+2025-11-10T00:05:26.2390676Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2391317Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:76:42[0m
+2025-11-10T00:05:26.2391639Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2392132Z [0m[1m[38;5;12m76[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2392644Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                          [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2392868Z 
+2025-11-10T00:05:26.2393366Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2394205Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:169:38[0m
+2025-11-10T00:05:26.2394708Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2395402Z [0m[1m[38;5;12m169[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2395933Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                      [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2396371Z 
+2025-11-10T00:05:26.2396875Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2397505Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:236:38[0m
+2025-11-10T00:05:26.2397828Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2398311Z [0m[1m[38;5;12m236[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2398815Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                      [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2399039Z 
+2025-11-10T00:05:26.2399532Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2400221Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:300:50[0m
+2025-11-10T00:05:26.2400783Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2401637Z [0m[1m[38;5;12m300[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2402181Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2402413Z 
+2025-11-10T00:05:26.2402917Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2403558Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:427:62[0m
+2025-11-10T00:05:26.2403886Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2404934Z [0m[1m[38;5;12m427[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2405513Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                    [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2405755Z 
+2025-11-10T00:05:26.2406265Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2407041Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:474:38[0m
+2025-11-10T00:05:26.2407363Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2407859Z [0m[1m[38;5;12m474[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2408376Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                      [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2408601Z 
+2025-11-10T00:05:26.2409098Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2409844Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:580:58[0m
+2025-11-10T00:05:26.2410172Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2410715Z [0m[1m[38;5;12m580[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2411267Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                    [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2411687Z 
+2025-11-10T00:05:26.2412195Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2412948Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:599:46[0m
+2025-11-10T00:05:26.2413274Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2413780Z [0m[1m[38;5;12m599[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2414444Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2414855Z 
+2025-11-10T00:05:26.2415388Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2416030Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:692:46[0m
+2025-11-10T00:05:26.2416350Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2416863Z [0m[1m[38;5;12m692[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2419519Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2419760Z 
+2025-11-10T00:05:26.2420265Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2420903Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:77:24[0m
+2025-11-10T00:05:26.2421227Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2421879Z [0m[1m[38;5;12m77[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let txid = calculate_tx_id(&tx);[0m
+2025-11-10T00:05:26.2422714Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2423107Z 
+2025-11-10T00:05:26.2423685Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2424448Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:170:20[0m
+2025-11-10T00:05:26.2424793Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2425224Z [0m[1m[38;5;12m170[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let txid = calculate_tx_id(&tx);[0m
+2025-11-10T00:05:26.2425704Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2425948Z 
+2025-11-10T00:05:26.2426451Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2427083Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:237:20[0m
+2025-11-10T00:05:26.2427400Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2427813Z [0m[1m[38;5;12m237[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let txid = calculate_tx_id(&tx);[0m
+2025-11-10T00:05:26.2428281Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                    [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2430360Z 
+2025-11-10T00:05:26.2431041Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2432143Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:301:43[0m
+2025-11-10T00:05:26.2432714Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2433224Z [0m[1m[38;5;12m301[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    let calculated_txid = calculate_tx_id(&tx);[0m
+2025-11-10T00:05:26.2433740Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2433967Z 
+2025-11-10T00:05:26.2434610Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2435481Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:428:44[0m
+2025-11-10T00:05:26.2435814Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2436276Z [0m[1m[38;5;12m428[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   let txid = calculate_tx_id(tx);[0m
+2025-11-10T00:05:26.2436788Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2439055Z 
+2025-11-10T00:05:26.2439557Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2440185Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:483:23[0m
+2025-11-10T00:05:26.2440503Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2440922Z [0m[1m[38;5;12m483[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            .map(|tx| calculate_tx_id(tx))[0m
+2025-11-10T00:05:26.2441399Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2441622Z 
+2025-11-10T00:05:26.2442119Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2442738Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:582:44[0m
+2025-11-10T00:05:26.2443048Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2443505Z [0m[1m[38;5;12m582[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   let txid = calculate_tx_id(tx);[0m
+2025-11-10T00:05:26.2444012Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                  [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2444240Z 
+2025-11-10T00:05:26.2444855Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2445479Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:602:32[0m
+2025-11-10T00:05:26.2445791Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2446214Z [0m[1m[38;5;12m602[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    let txid = calculate_tx_id(tx);[0m
+2025-11-10T00:05:26.2446695Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2446926Z 
+2025-11-10T00:05:26.2447418Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2448032Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/rawtx.rs:694:43[0m
+2025-11-10T00:05:26.2448343Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2450703Z [0m[1m[38;5;12m694[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    .map(|tx| hex::encode(calculate_tx_id(tx)))[0m
+2025-11-10T00:05:26.2451379Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                           [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2451610Z 
+2025-11-10T00:05:26.2452124Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2452757Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/node/mempool.rs:119:38[0m
+2025-11-10T00:05:26.2453087Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2453571Z [0m[1m[38;5;12m119[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        use bllvm_protocol::mempool::calculate_tx_id;[0m
+2025-11-10T00:05:26.2454081Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                      [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2454438Z 
+2025-11-10T00:05:26.2454942Z [0m[1m[38;5;9merror[0m[0m[1m: use of deprecated function `bllvm_protocol::mempool::calculate_tx_id`: Use crate::block::calculate_tx_id instead[0m
+2025-11-10T00:05:26.2455734Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/node/mempool.rs:120:23[0m
+2025-11-10T00:05:26.2456055Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.2456464Z [0m[1m[38;5;12m120[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let tx_hash = calculate_tx_id(&tx);[0m
+2025-11-10T00:05:26.2456929Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.2457273Z 
+2025-11-10T00:05:26.3886176Z [0m[1m[38;5;9merror[E0382][0m[0m[1m: borrow of moved value: `addresses`[0m
+2025-11-10T00:05:26.3887044Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:549:57[0m
+2025-11-10T00:05:26.3887589Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.3888635Z [0m[1m[38;5;12m539[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let addresses = dns_seeds::resolve_dns_seeds(seeds, port, 100).await;[0m
+2025-11-10T00:05:26.3890426Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12mmove occurs because `addresses` has type `std::vec::Vec<network::protocol::NetworkAddress>`, which does not implement the `Copy` trait[0m
+2025-11-10T00:05:26.3891557Z [0m[1m[38;5;12m...[0m
+2025-11-10T00:05:26.3892184Z [0m[1m[38;5;12m544[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            for addr in addresses {[0m
+2025-11-10T00:05:26.3893293Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12m`addresses` moved due to this implicit call to `.into_iter()`[0m
+2025-11-10T00:05:26.3894730Z [0m[1m[38;5;12m...[0m
+2025-11-10T00:05:26.3895559Z [0m[1m[38;5;12m549[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        info!("Discovered {} addresses from DNS seeds", addresses.len());[0m
+2025-11-10T00:05:26.3896531Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                         [0m[0m[1m[38;5;9m^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mvalue borrowed here after move[0m
+2025-11-10T00:05:26.3897034Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.3897783Z [0m[1m[38;5;10mnote[0m[0m: `std::iter::IntoIterator::into_iter` takes ownership of the receiver `self`, which moves `addresses`[0m
+2025-11-10T00:05:26.3898863Z [0m   [0m[0m[1m[38;5;12m--> [0m[0m/rustc/6b00bc3880198600130e1cf62b8f8a93494488cc/library/core/src/iter/traits/collect.rs:313:18[0m
+2025-11-10T00:05:26.3900262Z [0m[1m[38;5;14mhelp[0m[0m: consider iterating over a slice of the `std::vec::Vec<network::protocol::NetworkAddress>`'s content to avoid moving into the `for` loop[0m
+2025-11-10T00:05:26.3901063Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.3901610Z [0m[1m[38;5;12m544[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            for addr in [0m[0m[38;5;10m&[0m[0maddresses {[0m
+2025-11-10T00:05:26.3902195Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[38;5;10m+[0m
+2025-11-10T00:05:26.3902482Z 
+2025-11-10T00:05:26.4077722Z [0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+2025-11-10T00:05:26.4078743Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:791:16[0m
+2025-11-10T00:05:26.4079643Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.4080511Z [0m[1m[38;5;12m791[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if let Some(ref persistent_peers) = config.persistent_peers {[0m
+2025-11-10T00:05:26.4082193Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m   [0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `std::vec::Vec<std::net::SocketAddr>`[0m
+2025-11-10T00:05:26.4083250Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;9m|[0m
+2025-11-10T00:05:26.4084071Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[38;5;9mexpected `Vec<SocketAddr>`, found `Option<_>`[0m
+2025-11-10T00:05:26.4085192Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.4086082Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected struct `std::[0m[0m[1m[35mvec::Vec<std::net::SocketAddr>[0m[0m`[0m
+2025-11-10T00:05:26.4086932Z [0m                 found enum `std::[0m[0m[1m[35moption::Option<_>[0m[0m`[0m
+2025-11-10T00:05:26.4087286Z 
+2025-11-10T00:05:26.4291624Z [0m[1m[38;5;9merror[0m[0m[1m: unreachable pattern[0m
+2025-11-10T00:05:26.4292445Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:879:33[0m
+2025-11-10T00:05:26.4293396Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.4294765Z [0m[1m[38;5;12m878[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   TransportAddr::Tcp(addr) => addr,[0m
+2025-11-10T00:05:26.4295988Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;12m------------------------[0m[0m [0m[0m[1m[38;5;12mmatches all the relevant values[0m
+2025-11-10T00:05:26.4297083Z [0m[1m[38;5;12m879[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   _ => {[0m
+2025-11-10T00:05:26.4298078Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[38;5;9m^[0m[0m [0m[0m[1m[38;5;9mno value can reach this[0m
+2025-11-10T00:05:26.4298787Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.4299809Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D unreachable-patterns` implied by `-D warnings`[0m
+2025-11-10T00:05:26.4301113Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(unreachable_patterns)]`[0m
+2025-11-10T00:05:26.4302059Z 
+2025-11-10T00:05:26.5447799Z [0m[1m[38;5;9merror[0m[0m[1m: value assigned to `message_count` is never read[0m
+2025-11-10T00:05:26.5462605Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:1791:21[0m
+2025-11-10T00:05:26.5463296Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.5464104Z [0m[1m[38;5;12m1791[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    message_count = 0;[0m
+2025-11-10T00:05:26.5465211Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^^^^^^^^^[0m
+2025-11-10T00:05:26.5465860Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.5466636Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: maybe it is overwritten before being read?[0m
+2025-11-10T00:05:26.5467634Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D unused-assignments` implied by `-D warnings`[0m
+2025-11-10T00:05:26.5468743Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(unused_assignments)]`[0m
+2025-11-10T00:05:26.5469313Z 
+2025-11-10T00:05:26.6155214Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `mempool_manager`[0m
+2025-11-10T00:05:26.6156196Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2303:25[0m
+2025-11-10T00:05:26.6156897Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.6157854Z [0m[1m[38;5;12m2303[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if let Some(ref mempool_manager) = self.mempool_manager {[0m
+2025-11-10T00:05:26.6159356Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_mempool_manager`[0m
+2025-11-10T00:05:26.6162219Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.6163078Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D unused-variables` implied by `-D warnings`[0m
+2025-11-10T00:05:26.6164238Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(unused_variables)]`[0m
+2025-11-10T00:05:26.6165032Z 
+2025-11-10T00:05:26.6190357Z [0m[1m[38;5;9merror[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:05:26.6192362Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2311:21[0m
+2025-11-10T00:05:26.6193450Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.6194166Z [0m[1m[38;5;12m2311[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let mut utxo_lock = self[0m
+2025-11-10T00:05:26.6195229Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12m----[0m[0m[1m[38;5;9m^^^^^^^^^[0m
+2025-11-10T00:05:26.6195946Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.6196613Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:05:26.6197313Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.6197902Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D unused-mut` implied by `-D warnings`[0m
+2025-11-10T00:05:26.6198721Z [0m     [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(unused_mut)]`[0m
+2025-11-10T00:05:26.6199157Z 
+2025-11-10T00:05:26.6199463Z [0m[1m[38;5;9merror[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:05:26.6200078Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2325:17[0m
+2025-11-10T00:05:26.6200543Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.6201493Z [0m[1m[38;5;12m2325[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let mut utxo_lock = self[0m
+2025-11-10T00:05:26.6202226Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m----[0m[0m[1m[38;5;9m^^^^^^^^^[0m
+2025-11-10T00:05:26.6204293Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.6205183Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:05:26.6205533Z 
+2025-11-10T00:05:26.6285937Z [0m[1m[38;5;9merror[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:05:26.6286846Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2478:17[0m
+2025-11-10T00:05:26.6287507Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.6288408Z [0m[1m[38;5;12m2478[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let mut db = self.address_database.lock().unwrap();[0m
+2025-11-10T00:05:26.6291137Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m----[0m[0m[1m[38;5;9m^^[0m
+2025-11-10T00:05:26.6291930Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.6292806Z [0m     [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:05:26.6293281Z 
+2025-11-10T00:05:26.6585636Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `resource_metrics`[0m
+2025-11-10T00:05:26.6586571Z [0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/network/mod.rs:2884:13[0m
+2025-11-10T00:05:26.6587199Z [0m     [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.6588163Z [0m[1m[38;5;12m2884[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let resource_metrics = self.dos_protection.get_metrics().await;[0m
+2025-11-10T00:05:26.6589665Z [0m     [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_resource_metrics`[0m
+2025-11-10T00:05:26.6590384Z 
+2025-11-10T00:05:26.7525087Z [0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+2025-11-10T00:05:26.7526135Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network/protocol_extensions.rs:212:24[0m
+2025-11-10T00:05:26.7526944Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.7527804Z [0m[1m[38;5;12m212[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                index: output_idx as u32,[0m
+2025-11-10T00:05:26.7529003Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                        [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mexpected `u64`, found `u32`[0m
+2025-11-10T00:05:26.7529901Z 
+2025-11-10T00:05:26.7973073Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `key`[0m
+2025-11-10T00:05:26.7974059Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/network/bip70_handler.rs:55:13[0m
+2025-11-10T00:05:26.7974967Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.7976152Z [0m[1m[38;5;12m55[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let key = format!("{}_{}", hex::encode(&payment_msg.payment_id), "");[0m
+2025-11-10T00:05:26.7979674Z [0m   [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_key`[0m
+2025-11-10T00:05:26.7980858Z 
+2025-11-10T00:05:26.9702228Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `height`[0m
+2025-11-10T00:05:26.9703181Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/blockchain.rs:341:50[0m
+2025-11-10T00:05:26.9703823Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:26.9705064Z [0m[1m[38;5;12m341[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    let mediantime = if let Some(height) = block_height {[0m
+2025-11-10T00:05:26.9706564Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                                                  [0m[0m[1m[38;5;9m^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_height`[0m
+2025-11-10T00:05:26.9707270Z 
+2025-11-10T00:05:27.0075904Z [0m[1m[38;5;9merror[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:05:27.0076804Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/blockchain.rs:560:17[0m
+2025-11-10T00:05:27.0077480Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:27.0078338Z [0m[1m[38;5;12m560[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let mut utxo_set = storage.utxos().get_all_utxos()[0m
+2025-11-10T00:05:27.0079559Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m----[0m[0m[1m[38;5;9m^^^^^^^^[0m
+2025-11-10T00:05:27.0080390Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:27.0081239Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:05:27.0081699Z 
+2025-11-10T00:05:27.2373568Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `verbose`[0m
+2025-11-10T00:05:27.2374766Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mempool.rs:392:13[0m
+2025-11-10T00:05:27.2375439Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:27.2376484Z [0m[1m[38;5;12m392[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let verbose = params.get(1).and_then(|p| p.as_bool()).unwrap_or(false);[0m
+2025-11-10T00:05:27.2378060Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_verbose`[0m
+2025-11-10T00:05:27.2379108Z 
+2025-11-10T00:05:27.3248386Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `is_added`[0m
+2025-11-10T00:05:27.3250424Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/network.rs:461:17[0m
+2025-11-10T00:05:27.3251149Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:27.3252035Z [0m[1m[38;5;12m461[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let is_added = persistent_peers.contains(&addr);[0m
+2025-11-10T00:05:27.3253391Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_is_added`[0m
+2025-11-10T00:05:27.3254080Z 
+2025-11-10T00:05:27.3686245Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `witnesses`[0m
+2025-11-10T00:05:27.3687190Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mining.rs:554:21[0m
+2025-11-10T00:05:27.3687859Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:27.3688937Z [0m[1m[38;5;12m554[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let (block, witnesses) = deserialize_block_with_witnesses(&block_bytes)[0m
+2025-11-10T00:05:27.3690898Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                     [0m[0m[1m[38;5;9m^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_witnesses`[0m
+2025-11-10T00:05:27.3691637Z 
+2025-11-10T00:05:27.3767927Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `utxo_set`[0m
+2025-11-10T00:05:27.3768766Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/mining.rs:615:17[0m
+2025-11-10T00:05:27.3769401Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:27.3770214Z [0m[1m[38;5;12m615[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let utxo_set = self.get_utxo_set()?;[0m
+2025-11-10T00:05:27.3771812Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                 [0m[0m[1m[38;5;9m^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_utxo_set`[0m
+2025-11-10T00:05:27.3773043Z 
+2025-11-10T00:05:27.4373812Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `include`[0m
+2025-11-10T00:05:27.4375174Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/control.rs:249:13[0m
+2025-11-10T00:05:27.4375871Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:27.4376648Z [0m[1m[38;5;12m249[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let include = params[0m
+2025-11-10T00:05:27.4377886Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;9m^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_include`[0m
+2025-11-10T00:05:27.4378639Z 
+2025-11-10T00:05:27.4911052Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `network`[0m
+2025-11-10T00:05:27.4913824Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/rpc/network.rs:303:25[0m
+2025-11-10T00:05:27.4914797Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:27.4915755Z [0m[1m[38;5;12m303[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if let Some(ref network) = self.network_manager {[0m
+2025-11-10T00:05:27.4917045Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                         [0m[0m[1m[38;5;9m^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_network`[0m
+2025-11-10T00:05:27.4917766Z 
+2025-11-10T00:05:27.5569534Z [0m[1m[38;5;9merror[E0308][0m[0m[1m: mismatched types[0m
+2025-11-10T00:05:27.5570460Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/node/mod.rs:307:28[0m
+2025-11-10T00:05:27.5571082Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:27.5572011Z [0m[1m[38;5;12m307[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                    if let Some(ref persistent_peers) = config.persistent_peers {[0m
+2025-11-10T00:05:27.5573883Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m   [0m[0m[1m[38;5;12m-----------------------[0m[0m [0m[0m[1m[38;5;12mthis expression has type `std::vec::Vec<std::net::SocketAddr>`[0m
+2025-11-10T00:05:27.5575502Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;9m|[0m
+2025-11-10T00:05:27.5576470Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                            [0m[0m[1m[38;5;9mexpected `Vec<SocketAddr>`, found `Option<_>`[0m
+2025-11-10T00:05:27.5577185Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:27.5578180Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: expected struct `std::[0m[0m[1m[35mvec::Vec<std::net::SocketAddr>[0m[0m`[0m
+2025-11-10T00:05:27.5579525Z [0m                 found enum `std::[0m[0m[1m[35moption::Option<_>[0m[0m`[0m
+2025-11-10T00:05:27.5579976Z 
+2025-11-10T00:05:27.8971357Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `event_mgr`[0m
+2025-11-10T00:05:27.8972139Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/module/ipc/server.rs:429:29[0m
+2025-11-10T00:05:27.8972681Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:27.8973378Z [0m[1m[38;5;12m429[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                if let Some(event_mgr) = &self.event_manager {[0m
+2025-11-10T00:05:27.8974877Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;9m^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_event_mgr`[0m
+2025-11-10T00:05:27.8976329Z 
+2025-11-10T00:05:28.0588545Z [0m[1m[38;5;9merror[0m[0m[1m: variable does not need to be mutable[0m
+2025-11-10T00:05:28.0589362Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/module/process/spawner.rs:110:13[0m
+2025-11-10T00:05:28.0591781Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:28.0592455Z [0m[1m[38;5;12m110[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let mut child = command.spawn().map_err(|e| {[0m
+2025-11-10T00:05:28.0593541Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m----[0m[0m[1m[38;5;9m^^^^^[0m
+2025-11-10T00:05:28.0594153Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:28.0595077Z [0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;12mhelp: remove this `mut`[0m
+2025-11-10T00:05:28.0595450Z 
+2025-11-10T00:05:28.0768529Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `utime`[0m
+2025-11-10T00:05:28.0769584Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/module/sandbox/process.rs:192:29[0m
+2025-11-10T00:05:28.0770185Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:28.0770992Z [0m[1m[38;5;12m192[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        let utime: u64 = fields.get(13).and_then(|s| s.parse().ok()).unwrap_or(0);[0m
+2025-11-10T00:05:28.0772118Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_utime`[0m
+2025-11-10T00:05:28.0772686Z 
+2025-11-10T00:05:28.0772948Z [0m[1m[38;5;9merror[0m[0m[1m: unused variable: `stime`[0m
+2025-11-10T00:05:28.0773556Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/module/sandbox/process.rs:193:29[0m
+2025-11-10T00:05:28.0774060Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-10T00:05:28.0775184Z [0m[1m[38;5;12m193[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                        let stime: u64 = fields.get(14).and_then(|s| s.parse().ok()).unwrap_or(0);[0m
+2025-11-10T00:05:28.0776479Z [0m    [0m[0m[1m[38;5;12m|[0m[0m                             [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: if this is intentional, prefix it with an underscore: `_stime`[0m
+2025-11-10T00:05:28.0777022Z 
+2025-11-10T00:05:28.1609018Z [0m[1mSome errors have detailed explanations: E0106, E0308, E0382, E0412, E0432, E0433.[0m
+2025-11-10T00:05:28.1610561Z [0m[1mFor more information about an error, try `rustc --explain E0106`.[0m
+2025-11-10T00:05:28.1966178Z [1m[31merror[0m[1m:[0m could not compile `bllvm-node` (lib) due to 178 previous errors
+2025-11-10T00:05:28.3145907Z ##[error]Process completed with exit code 101.

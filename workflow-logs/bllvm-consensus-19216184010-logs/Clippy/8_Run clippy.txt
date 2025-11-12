@@ -1,0 +1,816 @@
+﻿2025-11-09T23:41:43.0390907Z ##[group]Run cargo clippy -- -D warnings
+2025-11-09T23:41:43.0391311Z [36;1mcargo clippy -- -D warnings[0m
+2025-11-09T23:41:43.0422989Z shell: /usr/bin/bash -e {0}
+2025-11-09T23:41:43.0423292Z env:
+2025-11-09T23:41:43.0423517Z   CARGO_TERM_COLOR: always
+2025-11-09T23:41:43.0423798Z   CARGO_HOME: /home/jswift/.cargo
+2025-11-09T23:41:43.0424087Z   CARGO_INCREMENTAL: 0
+2025-11-09T23:41:43.0424544Z ##[endgroup]
+2025-11-09T23:41:43.4097927Z [1m[32m    Checking[0m bllvm-consensus v0.1.0 (/home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus)
+2025-11-09T23:41:44.2522728Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.2523527Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/transaction.rs:109:55[0m
+2025-11-09T23:41:44.2524039Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2530082Z [0m[1m[38;5;12m109[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m                ConsensusError::TransactionValidation(format!([0m
+2025-11-09T23:41:44.2531081Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m _______________________________________________________^[0m
+2025-11-09T23:41:44.2531993Z [0m[1m[38;5;12m110[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                    "Output value sum overflow at index {}",[0m
+2025-11-09T23:41:44.2532857Z [0m[1m[38;5;12m111[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                    i[0m
+2025-11-09T23:41:44.2533646Z [0m[1m[38;5;12m112[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                ))[0m
+2025-11-09T23:41:44.2534291Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_________________^[0m
+2025-11-09T23:41:44.2534922Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2535674Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.2536589Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D clippy::uninlined-format-args` implied by `-D warnings`[0m
+2025-11-09T23:41:44.2537328Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(clippy::uninlined_format_args)]`[0m
+2025-11-09T23:41:44.2537824Z 
+2025-11-09T23:41:44.2538341Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.2539211Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/transaction.rs:118:45[0m
+2025-11-09T23:41:44.2539792Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2540415Z [0m[1m[38;5;12m118[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m        return Ok(ValidationResult::Invalid(format!([0m
+2025-11-09T23:41:44.2540970Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m _____________________________________________^[0m
+2025-11-09T23:41:44.2541602Z [0m[1m[38;5;12m119[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            "Total output value {} exceeds maximum money supply",[0m
+2025-11-09T23:41:44.2542551Z [0m[1m[38;5;12m120[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            total_output_value[0m
+2025-11-09T23:41:44.2543105Z [0m[1m[38;5;12m121[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m        )));[0m
+2025-11-09T23:41:44.2543565Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_________^[0m
+2025-11-09T23:41:44.2543902Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2544835Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.2545335Z 
+2025-11-09T23:41:44.2545642Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.2546293Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/transaction.rs:143:45[0m
+2025-11-09T23:41:44.2547285Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2548129Z [0m[1m[38;5;12m143[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m        return Ok(ValidationResult::Invalid(format!([0m
+2025-11-09T23:41:44.2548673Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m _____________________________________________^[0m
+2025-11-09T23:41:44.2549239Z [0m[1m[38;5;12m144[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            "Transaction too large: {} bytes",[0m
+2025-11-09T23:41:44.2549818Z [0m[1m[38;5;12m145[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            tx_size[0m
+2025-11-09T23:41:44.2550353Z [0m[1m[38;5;12m146[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m        )));[0m
+2025-11-09T23:41:44.2550801Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_________^[0m
+2025-11-09T23:41:44.2551130Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2551820Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.2552584Z 
+2025-11-09T23:41:44.2553112Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.2553958Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/transaction.rs:156:49[0m
+2025-11-09T23:41:44.2554538Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2555078Z [0m[1m[38;5;12m156[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m            return Ok(ValidationResult::Invalid(format!([0m
+2025-11-09T23:41:44.2555614Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m _________________________________________________^[0m
+2025-11-09T23:41:44.2556191Z [0m[1m[38;5;12m157[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                "Duplicate input prevout at index {}",[0m
+2025-11-09T23:41:44.2556776Z [0m[1m[38;5;12m158[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                i[0m
+2025-11-09T23:41:44.2557300Z [0m[1m[38;5;12m159[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            )));[0m
+2025-11-09T23:41:44.2557750Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_____________^[0m
+2025-11-09T23:41:44.2558084Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2558749Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.2559237Z 
+2025-11-09T23:41:44.2559504Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.2559977Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/transaction.rs:168:49[0m
+2025-11-09T23:41:44.2560315Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2560826Z [0m[1m[38;5;12m168[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m            return Ok(ValidationResult::Invalid(format!([0m
+2025-11-09T23:41:44.2561942Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m _________________________________________________^[0m
+2025-11-09T23:41:44.2562596Z [0m[1m[38;5;12m169[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                "Coinbase scriptSig length {} must be between 2 and 100 bytes",[0m
+2025-11-09T23:41:44.2563245Z [0m[1m[38;5;12m170[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                script_sig_len[0m
+2025-11-09T23:41:44.2563787Z [0m[1m[38;5;12m171[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            )));[0m
+2025-11-09T23:41:44.2564245Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_____________^[0m
+2025-11-09T23:41:44.2564713Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2565544Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.2566026Z 
+2025-11-09T23:41:44.2583985Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.2584854Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/transaction.rs:233:55[0m
+2025-11-09T23:41:44.2585212Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2585772Z [0m[1m[38;5;12m233[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m                ConsensusError::TransactionValidation(format!([0m
+2025-11-09T23:41:44.2586347Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m _______________________________________________________^[0m
+2025-11-09T23:41:44.2586928Z [0m[1m[38;5;12m234[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                    "Input value overflow at input {}",[0m
+2025-11-09T23:41:44.2589403Z [0m[1m[38;5;12m235[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                    i[0m
+2025-11-09T23:41:44.2589940Z [0m[1m[38;5;12m236[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                ))[0m
+2025-11-09T23:41:44.2590518Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_________________^[0m
+2025-11-09T23:41:44.2590891Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2591565Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.2592043Z 
+2025-11-09T23:41:44.2601217Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.2601847Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/transaction.rs:260:39[0m
+2025-11-09T23:41:44.2602201Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2602739Z [0m[1m[38;5;12m260[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m            ValidationResult::Invalid(format!([0m
+2025-11-09T23:41:44.2603252Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m _______________________________________^[0m
+2025-11-09T23:41:44.2603861Z [0m[1m[38;5;12m261[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                "Total output value {} exceeds maximum money supply",[0m
+2025-11-09T23:41:44.2604737Z [0m[1m[38;5;12m262[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                total_output_value[0m
+2025-11-09T23:41:44.2605301Z [0m[1m[38;5;12m263[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            )),[0m
+2025-11-09T23:41:44.2605756Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_____________^[0m
+2025-11-09T23:41:44.2606088Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.2608635Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.2609387Z 
+2025-11-09T23:41:44.3473111Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3473981Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/block.rs:567:59[0m
+2025-11-09T23:41:44.3474791Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3475911Z [0m[1m[38;5;12m567[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m[1m[38;5;12m...[0m[0m                   ValidationResult::Invalid(format!([0m
+2025-11-09T23:41:44.3478555Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m _________________________________________________^[0m
+2025-11-09T23:41:44.3479519Z [0m[1m[38;5;12m568[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                       "Invalid script at transaction {}, input {}",[0m
+2025-11-09T23:41:44.3480830Z [0m[1m[38;5;12m569[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                       i, j[0m
+2025-11-09T23:41:44.3481732Z [0m[1m[38;5;12m570[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   )),[0m
+2025-11-09T23:41:44.3482454Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_______________________^[0m
+2025-11-09T23:41:44.3482956Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3483967Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3484764Z 
+2025-11-09T23:41:44.3497431Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3498089Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/block.rs:622:43[0m
+2025-11-09T23:41:44.3498487Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3499138Z [0m[1m[38;5;12m622[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m                ValidationResult::Invalid(format!([0m
+2025-11-09T23:41:44.3499777Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m ___________________________________________^[0m
+2025-11-09T23:41:44.3500548Z [0m[1m[38;5;12m623[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                    "Coinbase output {} exceeds maximum money supply",[0m
+2025-11-09T23:41:44.3501340Z [0m[1m[38;5;12m624[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                    coinbase_output[0m
+2025-11-09T23:41:44.3502043Z [0m[1m[38;5;12m625[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                )),[0m
+2025-11-09T23:41:44.3502614Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_________________^[0m
+2025-11-09T23:41:44.3503023Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3504088Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3505317Z 
+2025-11-09T23:41:44.3505847Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3506462Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/block.rs:637:43[0m
+2025-11-09T23:41:44.3506881Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3507534Z [0m[1m[38;5;12m637[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m                ValidationResult::Invalid(format!([0m
+2025-11-09T23:41:44.3509507Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m ___________________________________________^[0m
+2025-11-09T23:41:44.3510312Z [0m[1m[38;5;12m638[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                    "Coinbase output {} exceeds fees {} + subsidy {}",[0m
+2025-11-09T23:41:44.3511202Z [0m[1m[38;5;12m639[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                    coinbase_output, total_fees, subsidy[0m
+2025-11-09T23:41:44.3512195Z [0m[1m[38;5;12m640[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                )),[0m
+2025-11-09T23:41:44.3512810Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_________________^[0m
+2025-11-09T23:41:44.3513249Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3514559Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3515334Z 
+2025-11-09T23:41:44.3529363Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3531669Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/block.rs:687:39[0m
+2025-11-09T23:41:44.3532026Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3532799Z [0m[1m[38;5;12m687[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m            ValidationResult::Invalid(format!([0m
+2025-11-09T23:41:44.3533326Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m _______________________________________^[0m
+2025-11-09T23:41:44.3533903Z [0m[1m[38;5;12m688[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                "Block sigop cost {} exceeds maximum {}",[0m
+2025-11-09T23:41:44.3534700Z [0m[1m[38;5;12m689[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                total_sigop_cost, MAX_BLOCK_SIGOPS_COST[0m
+2025-11-09T23:41:44.3535289Z [0m[1m[38;5;12m690[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            )),[0m
+2025-11-09T23:41:44.3535745Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_____________^[0m
+2025-11-09T23:41:44.3536082Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3536779Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3537279Z 
+2025-11-09T23:41:44.3657256Z [0m[1m[38;5;9merror[0m[0m[1m: the loop variable `i` is used to index `words`[0m
+2025-11-09T23:41:44.3659852Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:191:14[0m
+2025-11-09T23:41:44.3660424Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3661059Z [0m[1m[38;5;12m191[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    for i in 0..8 {[0m
+2025-11-09T23:41:44.3661825Z [0m    [0m[0m[1m[38;5;12m|[0m[0m              [0m[0m[1m[38;5;9m^^^^[0m
+2025-11-09T23:41:44.3662372Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3663500Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_range_loop[0m
+2025-11-09T23:41:44.3665229Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D clippy::needless-range-loop` implied by `-D warnings`[0m
+2025-11-09T23:41:44.3666293Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(clippy::needless_range_loop)]`[0m
+2025-11-09T23:41:44.3667135Z [0m[1m[38;5;14mhelp[0m[0m: consider using an iterator and enumerate()[0m
+2025-11-09T23:41:44.3667673Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3668323Z [0m[1m[38;5;12m191[0m[0m [0m[0m[38;5;9m- [0m[0m    for [0m[0m[38;5;9mi[0m[0m in [0m[0m[38;5;9m0..8[0m[0m {[0m
+2025-11-09T23:41:44.3669320Z [0m[1m[38;5;12m191[0m[0m [0m[0m[38;5;10m+ [0m[0m    for [0m[0m[38;5;10m(i, <item>)[0m[0m in [0m[0m[38;5;10mwords.iter_mut().enumerate()[0m[0m {[0m
+2025-11-09T23:41:44.3670006Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3670236Z 
+2025-11-09T23:41:44.3816964Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3827682Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:287:9[0m
+2025-11-09T23:41:44.3829005Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3830280Z [0m[1m[38;5;12m287[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG Transform 1 initial state: a=0x{:08x} (expected 0x6a09e667), h=0x{:08x} (expected 0x5be0cd19)", a_init, h_init);[0m
+2025-11-09T23:41:44.3831538Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.3832112Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3833149Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3834512Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.3835157Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3836018Z [0m[1m[38;5;12m287[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 1 initial state: a=0x{:08x} (expected 0x6a09e667), h=0x{:08x} (expected 0x5be0cd19)"[0m[0m[38;5;9m, a_init, h_init[0m[0m);[0m
+2025-11-09T23:41:44.3837297Z [0m[1m[38;5;12m287[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 1 initial state: a=0x{[0m[0m[38;5;10ma_init[0m[0m:08x} (expected 0x6a09e667), h=0x{[0m[0m[38;5;10mh_init[0m[0m:08x} (expected 0x5be0cd19)");[0m
+2025-11-09T23:41:44.3838043Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3838215Z 
+2025-11-09T23:41:44.3838524Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3839187Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:315:9[0m
+2025-11-09T23:41:44.3839822Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3840921Z [0m[1m[38;5;12m315[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG: w0 after read8 and shuffle: index 0 = 0x{:08x}, index 7 = 0x{:08x}", w0_val, w0_val_7);[0m
+2025-11-09T23:41:44.3841709Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.3842113Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3842832Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3843505Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.3843824Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3844628Z [0m[1m[38;5;12m315[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG: w0 after read8 and shuffle: index 0 = 0x{:08x}, index 7 = 0x{:08x}"[0m[0m[38;5;9m, w0_val, w0_val_7[0m[0m);[0m
+2025-11-09T23:41:44.3845606Z [0m[1m[38;5;12m315[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG: w0 after read8 and shuffle: index 0 = 0x{[0m[0m[38;5;10mw0_val[0m[0m:08x}, index 7 = 0x{[0m[0m[38;5;10mw0_val_7[0m[0m:08x}");[0m
+2025-11-09T23:41:44.3846213Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3846373Z 
+2025-11-09T23:41:44.3846659Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3847147Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:325:9[0m
+2025-11-09T23:41:44.3847483Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3848039Z [0m[1m[38;5;12m325[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG After round 0: a=0x{:08x}, h=0x{:08x}", a_after_round0, h_after_round0);[0m
+2025-11-09T23:41:44.3848674Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.3849046Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3849890Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3850524Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.3850840Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3851906Z [0m[1m[38;5;12m325[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG After round 0: a=0x{:08x}, h=0x{:08x}"[0m[0m[38;5;9m, a_after_round0, h_after_round0[0m[0m);[0m
+2025-11-09T23:41:44.3853287Z [0m[1m[38;5;12m325[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG After round 0: a=0x{[0m[0m[38;5;10ma_after_round0[0m[0m:08x}, h=0x{[0m[0m[38;5;10mh_after_round0[0m[0m:08x}");[0m
+2025-11-09T23:41:44.3853859Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3854013Z 
+2025-11-09T23:41:44.3854423Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3855105Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:333:9[0m
+2025-11-09T23:41:44.3855447Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3855996Z [0m[1m[38;5;12m333[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG After round 1: a=0x{:08x}, h=0x{:08x}", a_after_round1, h_after_round1);[0m
+2025-11-09T23:41:44.3856634Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.3856996Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3857658Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3858288Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.3858596Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3859179Z [0m[1m[38;5;12m333[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG After round 1: a=0x{:08x}, h=0x{:08x}"[0m[0m[38;5;9m, a_after_round1, h_after_round1[0m[0m);[0m
+2025-11-09T23:41:44.3860051Z [0m[1m[38;5;12m333[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG After round 1: a=0x{[0m[0m[38;5;10ma_after_round1[0m[0m:08x}, h=0x{[0m[0m[38;5;10mh_after_round1[0m[0m:08x}");[0m
+2025-11-09T23:41:44.3860600Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3860752Z 
+2025-11-09T23:41:44.3891188Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3891852Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:352:9[0m
+2025-11-09T23:41:44.3892217Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3892849Z [0m[1m[38;5;12m352[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG After round 7: a=0x{:08x}, b=0x{:08x}, h=0x{:08x}", a_after_round7, b_after_round7, h_after_round7);[0m
+2025-11-09T23:41:44.3893570Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.3893951Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3894880Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3895532Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.3895878Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3896532Z [0m[1m[38;5;12m352[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG After round 7: a=0x{:08x}, b=0x{:08x}, h=0x{:08x}"[0m[0m[38;5;9m, a_after_round7, b_after_round7, h_after_round7[0m[0m);[0m
+2025-11-09T23:41:44.3897562Z [0m[1m[38;5;12m352[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG After round 7: a=0x{[0m[0m[38;5;10ma_after_round7[0m[0m:08x}, b=0x{[0m[0m[38;5;10mb_after_round7[0m[0m:08x}, h=0x{[0m[0m[38;5;10mh_after_round7[0m[0m:08x}");[0m
+2025-11-09T23:41:44.3898445Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3898612Z 
+2025-11-09T23:41:44.3940803Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3941486Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:374:9[0m
+2025-11-09T23:41:44.3941863Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3942446Z [0m[1m[38;5;12m374[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG After round 15: a=0x{:08x}, h=0x{:08x}", a_after_round15, h_after_round15);[0m
+2025-11-09T23:41:44.3943095Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.3943466Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3944622Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3945309Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.3945628Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3946234Z [0m[1m[38;5;12m374[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG After round 15: a=0x{:08x}, h=0x{:08x}"[0m[0m[38;5;9m, a_after_round15, h_after_round15[0m[0m);[0m
+2025-11-09T23:41:44.3947138Z [0m[1m[38;5;12m374[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG After round 15: a=0x{[0m[0m[38;5;10ma_after_round15[0m[0m:08x}, h=0x{[0m[0m[38;5;10mh_after_round15[0m[0m:08x}");[0m
+2025-11-09T23:41:44.3947697Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3947854Z 
+2025-11-09T23:41:44.3949561Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3950432Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:385:9[0m
+2025-11-09T23:41:44.3950815Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3951490Z [0m[1m[38;5;12m385[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG Round 16 before inc4: w0=0x{:08x}, w14=0x{:08x}, w9=0x{:08x}, w1=0x{:08x}", w0_before, w14_val, w9_val, w1_val);[0m
+2025-11-09T23:41:44.3952243Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.3952628Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3953721Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3954651Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.3955006Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3955702Z [0m[1m[38;5;12m385[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Round 16 before inc4: w0=0x{:08x}, w14=0x{:08x}, w9=0x{:08x}, w1=0x{:08x}"[0m[0m[38;5;9m, w0_before, w14_val, w9_val, w1_val[0m[0m);[0m
+2025-11-09T23:41:44.3956840Z [0m[1m[38;5;12m385[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Round 16 before inc4: w0=0x{[0m[0m[38;5;10mw0_before[0m[0m:08x}, w14=0x{[0m[0m[38;5;10mw14_val[0m[0m:08x}, w9=0x{[0m[0m[38;5;10mw9_val[0m[0m:08x}, w1=0x{[0m[0m[38;5;10mw1_val[0m[0m:08x}");[0m
+2025-11-09T23:41:44.3957697Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3957962Z 
+2025-11-09T23:41:44.3958493Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3959299Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:391:9[0m
+2025-11-09T23:41:44.3959658Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3960209Z [0m[1m[38;5;12m391[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG After inc4 w0 (round 16): w0=0x{:08x}", w0_after_inc);[0m
+2025-11-09T23:41:44.3961023Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.3961391Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3962059Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3962699Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.3963010Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3963562Z [0m[1m[38;5;12m391[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG After inc4 w0 (round 16): w0=0x{:08x}"[0m[0m[38;5;9m, w0_after_inc[0m[0m);[0m
+2025-11-09T23:41:44.3964448Z [0m[1m[38;5;12m391[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG After inc4 w0 (round 16): w0=0x{[0m[0m[38;5;10mw0_after_inc[0m[0m:08x}");[0m
+2025-11-09T23:41:44.3965147Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3965311Z 
+2025-11-09T23:41:44.3973103Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.3973653Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:404:9[0m
+2025-11-09T23:41:44.3974015Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3975040Z [0m[1m[38;5;12m404[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m/[0m[0m [0m[0m        println!("DEBUG After round 16: a=0x{:08x} b=0x{:08x} c=0x{:08x} d=0x{:08x} e=0x{:08x} f=0x{:08x} g=0x{:08x} h=0x{:08x}", [0m
+2025-11-09T23:41:44.3975939Z [0m[1m[38;5;12m405[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                 a_after_round16, b_after_round16, c_after_round16, d_after_round16,[0m
+2025-11-09T23:41:44.3978508Z [0m[1m[38;5;12m406[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                 e_after_round16, f_after_round16, g_after_round16, h_after_round16);[0m
+2025-11-09T23:41:44.3979194Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|____________________________________________________________________________________^[0m
+2025-11-09T23:41:44.3979606Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.3980274Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.3980769Z 
+2025-11-09T23:41:44.4002087Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4003113Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:415:9[0m
+2025-11-09T23:41:44.4003785Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4005014Z [0m[1m[38;5;12m415[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG After round 18: a=0x{:08x}", a_after_round18);[0m
+2025-11-09T23:41:44.4006224Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4006970Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4010302Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4011642Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4012263Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4013337Z [0m[1m[38;5;12m415[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG After round 18: a=0x{:08x}"[0m[0m[38;5;9m, a_after_round18[0m[0m);[0m
+2025-11-09T23:41:44.4015240Z [0m[1m[38;5;12m415[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG After round 18: a=0x{[0m[0m[38;5;10ma_after_round18[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4016132Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4016693Z 
+2025-11-09T23:41:44.4025603Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4026538Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:424:9[0m
+2025-11-09T23:41:44.4027152Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4028067Z [0m[1m[38;5;12m424[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG After round 20: a=0x{:08x}", a_after_round20);[0m
+2025-11-09T23:41:44.4029134Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4031660Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4032896Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4034076Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4035177Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4036156Z [0m[1m[38;5;12m424[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG After round 20: a=0x{:08x}"[0m[0m[38;5;9m, a_after_round20[0m[0m);[0m
+2025-11-09T23:41:44.4037477Z [0m[1m[38;5;12m424[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG After round 20: a=0x{[0m[0m[38;5;10ma_after_round20[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4038326Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4038614Z 
+2025-11-09T23:41:44.4098106Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4099047Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:449:9[0m
+2025-11-09T23:41:44.4099761Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4100719Z [0m[1m[38;5;12m449[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG After round 30: a=0x{:08x}", a_after_round30);[0m
+2025-11-09T23:41:44.4101810Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4102477Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4103697Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4105074Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4105631Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4106597Z [0m[1m[38;5;12m449[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG After round 30: a=0x{:08x}"[0m[0m[38;5;9m, a_after_round30[0m[0m);[0m
+2025-11-09T23:41:44.4107926Z [0m[1m[38;5;12m449[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG After round 30: a=0x{[0m[0m[38;5;10ma_after_round30[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4110381Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4110680Z 
+2025-11-09T23:41:44.4112123Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4112997Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:462:9[0m
+2025-11-09T23:41:44.4113792Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4115211Z [0m[1m[38;5;12m462[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m/[0m[0m [0m[0m        println!("DEBUG Before round 31: a=0x{:08x} b=0x{:08x} c=0x{:08x} d=0x{:08x} e=0x{:08x} f=0x{:08x} g=0x{:08x} h=0x{:08x}", [0m
+2025-11-09T23:41:44.4116835Z [0m[1m[38;5;12m463[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                 a_before_round31, b_before_round31, c_before_round31, d_before_round31,[0m
+2025-11-09T23:41:44.4120101Z [0m[1m[38;5;12m464[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                 e_before_round31, f_before_round31, g_before_round31, h_before_round31);[0m
+2025-11-09T23:41:44.4121439Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|________________________________________________________________________________________^[0m
+2025-11-09T23:41:44.4122455Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4123670Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4124719Z 
+2025-11-09T23:41:44.4135342Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4136399Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:471:9[0m
+2025-11-09T23:41:44.4136945Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4137956Z [0m[1m[38;5;12m471[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG w15 before inc4: 0x{:08x}, w13: 0x{:08x}, w8: 0x{:08x}, w0: 0x{:08x}", w15_before, w13_val, w8_val, w0_val);[0m
+2025-11-09T23:41:44.4139345Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4139938Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4141588Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4142766Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4143247Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4144552Z [0m[1m[38;5;12m471[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG w15 before inc4: 0x{:08x}, w13: 0x{:08x}, w8: 0x{:08x}, w0: 0x{:08x}"[0m[0m[38;5;9m, w15_before, w13_val, w8_val, w0_val[0m[0m);[0m
+2025-11-09T23:41:44.4146277Z [0m[1m[38;5;12m471[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG w15 before inc4: 0x{[0m[0m[38;5;10mw15_before[0m[0m:08x}, w13: 0x{[0m[0m[38;5;10mw13_val[0m[0m:08x}, w8: 0x{[0m[0m[38;5;10mw8_val[0m[0m:08x}, w0: 0x{[0m[0m[38;5;10mw0_val[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4147434Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4147859Z 
+2025-11-09T23:41:44.4148503Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4149438Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:472:9[0m
+2025-11-09T23:41:44.4151389Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4152121Z [0m[1m[38;5;12m472[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG w11: 0x{:08x}, w6: 0x{:08x}", w11_val, w6_val);[0m
+2025-11-09T23:41:44.4152968Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4153501Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4154755Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4156120Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4156689Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4157469Z [0m[1m[38;5;12m472[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG w11: 0x{:08x}, w6: 0x{:08x}"[0m[0m[38;5;9m, w11_val, w6_val[0m[0m);[0m
+2025-11-09T23:41:44.4160045Z [0m[1m[38;5;12m472[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG w11: 0x{[0m[0m[38;5;10mw11_val[0m[0m:08x}, w6: 0x{[0m[0m[38;5;10mw6_val[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4160548Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4160746Z 
+2025-11-09T23:41:44.4161257Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4162116Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:475:9[0m
+2025-11-09T23:41:44.4162715Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4163538Z [0m[1m[38;5;12m475[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG sigma1_small(w13): 0x{:08x}, sigma0_small(w0): 0x{:08x}", sigma1_w13, sigma0_w0);[0m
+2025-11-09T23:41:44.4164250Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4164910Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4165606Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4166254Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4166571Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4167223Z [0m[1m[38;5;12m475[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG sigma1_small(w13): 0x{:08x}, sigma0_small(w0): 0x{:08x}"[0m[0m[38;5;9m, sigma1_w13, sigma0_w0[0m[0m);[0m
+2025-11-09T23:41:44.4168387Z [0m[1m[38;5;12m475[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG sigma1_small(w13): 0x{[0m[0m[38;5;10msigma1_w13[0m[0m:08x}, sigma0_small(w0): 0x{[0m[0m[38;5;10msigma0_w0[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4168990Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4169146Z 
+2025-11-09T23:41:44.4169425Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4169918Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:481:9[0m
+2025-11-09T23:41:44.4170252Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4170732Z [0m[1m[38;5;12m481[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG w15 after inc4: 0x{:08x}", w15_after);[0m
+2025-11-09T23:41:44.4171285Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4171654Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4172328Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4172963Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4173273Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4173787Z [0m[1m[38;5;12m481[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG w15 after inc4: 0x{:08x}"[0m[0m[38;5;9m, w15_after[0m[0m);[0m
+2025-11-09T23:41:44.4174710Z [0m[1m[38;5;12m481[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG w15 after inc4: 0x{[0m[0m[38;5;10mw15_after[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4175212Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4175487Z 
+2025-11-09T23:41:44.4175983Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4176868Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:483:9[0m
+2025-11-09T23:41:44.4177382Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4177849Z [0m[1m[38;5;12m483[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG K_ARRAY.0[31] = 0x{:08x}", k31);[0m
+2025-11-09T23:41:44.4178382Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4178739Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4179399Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4181125Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4181431Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4181926Z [0m[1m[38;5;12m483[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG K_ARRAY.0[31] = 0x{:08x}"[0m[0m[38;5;9m, k31[0m[0m);[0m
+2025-11-09T23:41:44.4182584Z [0m[1m[38;5;12m483[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG K_ARRAY.0[31] = 0x{[0m[0m[38;5;10mk31[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4183179Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4183337Z 
+2025-11-09T23:41:44.4183999Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4184918Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:496:9[0m
+2025-11-09T23:41:44.4185277Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4185959Z [0m[1m[38;5;12m496[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m/[0m[0m [0m[0m        println!("DEBUG After round 31: a=0x{:08x} b=0x{:08x} c=0x{:08x} d=0x{:08x} e=0x{:08x} f=0x{:08x} g=0x{:08x} h=0x{:08x}", [0m
+2025-11-09T23:41:44.4186815Z [0m[1m[38;5;12m497[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                 a_after_round31, b_after_round31, c_after_round31, d_after_round31,[0m
+2025-11-09T23:41:44.4187778Z [0m[1m[38;5;12m498[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                 e_after_round31, f_after_round31, g_after_round31, h_after_round31);[0m
+2025-11-09T23:41:44.4190644Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|____________________________________________________________________________________^[0m
+2025-11-09T23:41:44.4191219Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4191907Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4192399Z 
+2025-11-09T23:41:44.4384126Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4385350Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:574:9[0m
+2025-11-09T23:41:44.4385882Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4386919Z [0m[1m[38;5;12m574[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m/[0m[0m [0m[0m        println!("DEBUG After round 63: a=0x{:08x} b=0x{:08x} c=0x{:08x} d=0x{:08x} e=0x{:08x} f=0x{:08x} g=0x{:08x} h=0x{:08x}", [0m
+2025-11-09T23:41:44.4388221Z [0m[1m[38;5;12m575[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            a_after_round63, b_after_round63, c_after_round63, d_after_round63,[0m
+2025-11-09T23:41:44.4389377Z [0m[1m[38;5;12m576[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            e_after_round63, f_after_round63, g_after_round63, h_after_round63);[0m
+2025-11-09T23:41:44.4392852Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_______________________________________________________________________________^[0m
+2025-11-09T23:41:44.4393540Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4394800Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4395588Z 
+2025-11-09T23:41:44.4403828Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4404943Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:589:9[0m
+2025-11-09T23:41:44.4405360Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4406098Z [0m[1m[38;5;12m589[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG Transform 1 before adding initial hash: a=0x{:08x}, h=0x{:08x}", a_before, h_before);[0m
+2025-11-09T23:41:44.4406925Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4407346Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4409813Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4410763Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4411105Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4411863Z [0m[1m[38;5;12m589[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 1 before adding initial hash: a=0x{:08x}, h=0x{:08x}"[0m[0m[38;5;9m, a_before, h_before[0m[0m);[0m
+2025-11-09T23:41:44.4413029Z [0m[1m[38;5;12m589[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 1 before adding initial hash: a=0x{[0m[0m[38;5;10ma_before[0m[0m:08x}, h=0x{[0m[0m[38;5;10mh_before[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4413968Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4414150Z 
+2025-11-09T23:41:44.4423204Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4423789Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:604:9[0m
+2025-11-09T23:41:44.4424624Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4425384Z [0m[1m[38;5;12m604[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG Transform 1 after adding initial hash: a=0x{:08x}, h=0x{:08x}", a_after, h_after);[0m
+2025-11-09T23:41:44.4426146Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4426540Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4427264Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4427942Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4428268Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4429144Z [0m[1m[38;5;12m604[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 1 after adding initial hash: a=0x{:08x}, h=0x{:08x}"[0m[0m[38;5;9m, a_after, h_after[0m[0m);[0m
+2025-11-09T23:41:44.4431036Z [0m[1m[38;5;12m604[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 1 after adding initial hash: a=0x{[0m[0m[38;5;10ma_after[0m[0m:08x}, h=0x{[0m[0m[38;5;10mh_after[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4431721Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4431890Z 
+2025-11-09T23:41:44.4432194Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4432712Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:613:9[0m
+2025-11-09T23:41:44.4433071Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4433709Z [0m[1m[38;5;12m613[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG Transform 2 starting state: a=0x{:08x}, b=0x{:08x}", a_before_t2, b_before_t2);[0m
+2025-11-09T23:41:44.4434574Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4434966Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4435634Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4436272Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4436600Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4439096Z [0m[1m[38;5;12m613[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 2 starting state: a=0x{:08x}, b=0x{:08x}"[0m[0m[38;5;9m, a_before_t2, b_before_t2[0m[0m);[0m
+2025-11-09T23:41:44.4440435Z [0m[1m[38;5;12m613[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 2 starting state: a=0x{[0m[0m[38;5;10ma_before_t2[0m[0m:08x}, b=0x{[0m[0m[38;5;10mb_before_t2[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4441043Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4441399Z 
+2025-11-09T23:41:44.4712776Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4714117Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:700:9[0m
+2025-11-09T23:41:44.4715005Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4716600Z [0m[1m[38;5;12m700[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m   println!("DEBUG Before combining: t0=0x{:08x}, t1=0x{:08x}, Transform2_a=0x{:08x}, Transform2_b=0x{:08x}", t0_val, t1_val, a_t2_val, b_t2_val);[0m
+2025-11-09T23:41:44.4718399Z [0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4719195Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4720578Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4722342Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4722972Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4724626Z [0m[1m[38;5;12m700[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Before combining: t0=0x{:08x}, t1=0x{:08x}, Transform2_a=0x{:08x}, Transform2_b=0x{:08x}"[0m[0m[38;5;9m, t0_val, t1_val, a_t2_val, b_t2_val[0m[0m);[0m
+2025-11-09T23:41:44.4727042Z [0m[1m[38;5;12m700[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Before combining: t0=0x{[0m[0m[38;5;10mt0_val[0m[0m:08x}, t1=0x{[0m[0m[38;5;10mt1_val[0m[0m:08x}, Transform2_a=0x{[0m[0m[38;5;10ma_t2_val[0m[0m:08x}, Transform2_b=0x{[0m[0m[38;5;10mb_t2_val[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4728462Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4728762Z 
+2025-11-09T23:41:44.4729268Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4730175Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:714:9[0m
+2025-11-09T23:41:44.4730785Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4731919Z [0m[1m[38;5;12m714[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG After combining Transform 1 and 2: w0=0x{:08x}, w1=0x{:08x}", w0_combined, w1_combined);[0m
+2025-11-09T23:41:44.4733213Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4733888Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4735616Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4736788Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4737351Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4738559Z [0m[1m[38;5;12m714[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG After combining Transform 1 and 2: w0=0x{:08x}, w1=0x{:08x}"[0m[0m[38;5;9m, w0_combined, w1_combined[0m[0m);[0m
+2025-11-09T23:41:44.4740401Z [0m[1m[38;5;12m714[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG After combining Transform 1 and 2: w0=0x{[0m[0m[38;5;10mw0_combined[0m[0m:08x}, w1=0x{[0m[0m[38;5;10mw1_combined[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4741539Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4741837Z 
+2025-11-09T23:41:44.4744956Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4745880Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:733:9[0m
+2025-11-09T23:41:44.4746492Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4747506Z [0m[1m[38;5;12m733[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG Transform 3 input w0=0x{:08x}, w1=0x{:08x}", w0_t3, w1_t3);[0m
+2025-11-09T23:41:44.4748922Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4749592Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4750817Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4751969Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4752513Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4753549Z [0m[1m[38;5;12m733[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 3 input w0=0x{:08x}, w1=0x{:08x}"[0m[0m[38;5;9m, w0_t3, w1_t3[0m[0m);[0m
+2025-11-09T23:41:44.4755289Z [0m[1m[38;5;12m733[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 3 input w0=0x{[0m[0m[38;5;10mw0_t3[0m[0m:08x}, w1=0x{[0m[0m[38;5;10mw1_t3[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4756568Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4756860Z 
+2025-11-09T23:41:44.4759798Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4760724Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:740:9[0m
+2025-11-09T23:41:44.4761345Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4762696Z [0m[1m[38;5;12m740[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m   println!("DEBUG Transform 3 after round 0: a=0x{:08x} (old), h=0x{:08x} (new a for next round)", a_after_t3_round0, h_after_t3_round0);[0m
+2025-11-09T23:41:44.4764192Z [0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4765114Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4766365Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4767516Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4768072Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4769402Z [0m[1m[38;5;12m740[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 3 after round 0: a=0x{:08x} (old), h=0x{:08x} (new a for next round)"[0m[0m[38;5;9m, a_after_t3_round0, h_after_t3_round0[0m[0m);[0m
+2025-11-09T23:41:44.4771468Z [0m[1m[38;5;12m740[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 3 after round 0: a=0x{[0m[0m[38;5;10ma_after_t3_round0[0m[0m:08x} (old), h=0x{[0m[0m[38;5;10mh_after_t3_round0[0m[0m:08x} (new a for next round)");[0m
+2025-11-09T23:41:44.4772692Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4772970Z 
+2025-11-09T23:41:44.4804742Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4805700Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:753:9[0m
+2025-11-09T23:41:44.4806313Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4807366Z [0m[1m[38;5;12m753[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG Transform 3 after round 7: h (new a)=0x{:08x}", h_after_t3_round7);[0m
+2025-11-09T23:41:44.4808559Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4809230Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4810459Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4811617Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4812159Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4813772Z [0m[1m[38;5;12m753[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 3 after round 7: h (new a)=0x{:08x}"[0m[0m[38;5;9m, h_after_t3_round7[0m[0m);[0m
+2025-11-09T23:41:44.4815574Z [0m[1m[38;5;12m753[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 3 after round 7: h (new a)=0x{[0m[0m[38;5;10mh_after_t3_round7[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4816523Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4816813Z 
+2025-11-09T23:41:44.4850070Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4851115Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:781:9[0m
+2025-11-09T23:41:44.4851609Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4852646Z [0m[1m[38;5;12m781[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m   println!("DEBUG Transform 3 after round 15: a=0x{:08x}, b=0x{:08x}, c=0x{:08x}, d=0x{:08x}", a_after_15, b_after_15, c_after_15, d_after_15);[0m
+2025-11-09T23:41:44.4854139Z [0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4854987Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4856509Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4857685Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4858108Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4859090Z [0m[1m[38;5;12m781[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 3 after round 15: a=0x{:08x}, b=0x{:08x}, c=0x{:08x}, d=0x{:08x}"[0m[0m[38;5;9m, a_after_15, b_after_15, c_after_15, d_after_15[0m[0m);[0m
+2025-11-09T23:41:44.4861198Z [0m[1m[38;5;12m781[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 3 after round 15: a=0x{[0m[0m[38;5;10ma_after_15[0m[0m:08x}, b=0x{[0m[0m[38;5;10mb_after_15[0m[0m:08x}, c=0x{[0m[0m[38;5;10mc_after_15[0m[0m:08x}, d=0x{[0m[0m[38;5;10md_after_15[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4862187Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4871855Z 
+2025-11-09T23:41:44.4872500Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4873183Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:782:9[0m
+2025-11-09T23:41:44.4873574Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4874177Z [0m[1m[38;5;12m782[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("  e=0x{:08x}, f=0x{:08x}, g=0x{:08x}, h=0x{:08x}", e_after_15, f_after_15, g_after_15, h_after_15);[0m
+2025-11-09T23:41:44.4875014Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4875433Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4876128Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4876780Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4877105Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4879739Z [0m[1m[38;5;12m782[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("  e=0x{:08x}, f=0x{:08x}, g=0x{:08x}, h=0x{:08x}"[0m[0m[38;5;9m, e_after_15, f_after_15, g_after_15, h_after_15[0m[0m);[0m
+2025-11-09T23:41:44.4881353Z [0m[1m[38;5;12m782[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("  e=0x{[0m[0m[38;5;10me_after_15[0m[0m:08x}, f=0x{[0m[0m[38;5;10mf_after_15[0m[0m:08x}, g=0x{[0m[0m[38;5;10mg_after_15[0m[0m:08x}, h=0x{[0m[0m[38;5;10mh_after_15[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4882225Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4882387Z 
+2025-11-09T23:41:44.4882689Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4883184Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:798:9[0m
+2025-11-09T23:41:44.4883519Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4884286Z [0m[1m[38;5;12m798[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m   println!("DEBUG Transform 3 before round 16: a=0x{:08x}, b=0x{:08x}, c=0x{:08x}, d=0x{:08x}", a_before_16, b_before_16, c_before_16, d_before_16);[0m
+2025-11-09T23:41:44.4887081Z [0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4887467Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4888310Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4888973Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4889286Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4890020Z [0m[1m[38;5;12m798[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 3 before round 16: a=0x{:08x}, b=0x{:08x}, c=0x{:08x}, d=0x{:08x}"[0m[0m[38;5;9m, a_before_16, b_before_16, c_before_16, d_before_16[0m[0m);[0m
+2025-11-09T23:41:44.4891498Z [0m[1m[38;5;12m798[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 3 before round 16: a=0x{[0m[0m[38;5;10ma_before_16[0m[0m:08x}, b=0x{[0m[0m[38;5;10mb_before_16[0m[0m:08x}, c=0x{[0m[0m[38;5;10mc_before_16[0m[0m:08x}, d=0x{[0m[0m[38;5;10md_before_16[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4892857Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4893066Z 
+2025-11-09T23:41:44.4893352Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4893857Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:799:9[0m
+2025-11-09T23:41:44.4894255Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4894991Z [0m[1m[38;5;12m799[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("  e=0x{:08x}, f=0x{:08x}, g=0x{:08x}, h=0x{:08x}", e_before_16, f_before_16, g_before_16, h_before_16);[0m
+2025-11-09T23:41:44.4895676Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4896055Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4898619Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4899254Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4899568Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4900183Z [0m[1m[38;5;12m799[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("  e=0x{:08x}, f=0x{:08x}, g=0x{:08x}, h=0x{:08x}"[0m[0m[38;5;9m, e_before_16, f_before_16, g_before_16, h_before_16[0m[0m);[0m
+2025-11-09T23:41:44.4901510Z [0m[1m[38;5;12m799[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("  e=0x{[0m[0m[38;5;10me_before_16[0m[0m:08x}, f=0x{[0m[0m[38;5;10mf_before_16[0m[0m:08x}, g=0x{[0m[0m[38;5;10mg_before_16[0m[0m:08x}, h=0x{[0m[0m[38;5;10mh_before_16[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4902651Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4902830Z 
+2025-11-09T23:41:44.4903123Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4903619Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:803:9[0m
+2025-11-09T23:41:44.4903980Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4904957Z [0m[1m[38;5;12m803[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG Transform 3 round 16 before inc: w0=0x{:08x}, w1=0x{:08x}", w0_before_t3_round16, w1_before_t3_round16);[0m
+2025-11-09T23:41:44.4905703Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4906082Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4906752Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4907396Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4907704Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4909842Z [0m[1m[38;5;12m803[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 3 round 16 before inc: w0=0x{:08x}, w1=0x{:08x}"[0m[0m[38;5;9m, w0_before_t3_round16, w1_before_t3_round16[0m[0m);[0m
+2025-11-09T23:41:44.4911352Z [0m[1m[38;5;12m803[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 3 round 16 before inc: w0=0x{[0m[0m[38;5;10mw0_before_t3_round16[0m[0m:08x}, w1=0x{[0m[0m[38;5;10mw1_before_t3_round16[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4912549Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4912748Z 
+2025-11-09T23:41:44.4913034Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4913746Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:814:9[0m
+2025-11-09T23:41:44.4914089Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4915572Z [0m[1m[38;5;12m814[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m   println!("DEBUG Transform 3 round 16: d before = 0x{:08x} (expected 0x3c3a4027), w0=0x{:08x}, w1=0x{:08x}", d_before_16, w0_before, w1_before);[0m
+2025-11-09T23:41:44.4916474Z [0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4916865Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4919329Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4920251Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4920834Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4921857Z [0m[1m[38;5;12m814[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 3 round 16: d before = 0x{:08x} (expected 0x3c3a4027), w0=0x{:08x}, w1=0x{:08x}"[0m[0m[38;5;9m, d_before_16, w0_before, w1_before[0m[0m);[0m
+2025-11-09T23:41:44.4923341Z [0m[1m[38;5;12m814[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 3 round 16: d before = 0x{[0m[0m[38;5;10md_before_16[0m[0m:08x} (expected 0x3c3a4027), w0=0x{[0m[0m[38;5;10mw0_before[0m[0m:08x}, w1=0x{[0m[0m[38;5;10mw1_before[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4924098Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4924255Z 
+2025-11-09T23:41:44.4924704Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4925196Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:821:9[0m
+2025-11-09T23:41:44.4925528Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4926071Z [0m[1m[38;5;12m821[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG T3 R16 before: w0=0x{:08x} w1=0x{:08x}", w0_before, w1_before);[0m
+2025-11-09T23:41:44.4926697Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4927071Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4927937Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4928575Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4928886Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4929728Z [0m[1m[38;5;12m821[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG T3 R16 before: w0=0x{:08x} w1=0x{:08x}"[0m[0m[38;5;9m, w0_before, w1_before[0m[0m);[0m
+2025-11-09T23:41:44.4931175Z [0m[1m[38;5;12m821[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG T3 R16 before: w0=0x{[0m[0m[38;5;10mw0_before[0m[0m:08x} w1=0x{[0m[0m[38;5;10mw1_before[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4932079Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4932340Z 
+2025-11-09T23:41:44.4932622Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4933314Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:827:9[0m
+2025-11-09T23:41:44.4933663Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4934162Z [0m[1m[38;5;12m827[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG T3 R16 after inc: w0=0x{:08x}", w0_after);[0m
+2025-11-09T23:41:44.4935060Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4935422Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4936089Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4936724Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4937038Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4937564Z [0m[1m[38;5;12m827[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG T3 R16 after inc: w0=0x{:08x}"[0m[0m[38;5;9m, w0_after[0m[0m);[0m
+2025-11-09T23:41:44.4938280Z [0m[1m[38;5;12m827[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG T3 R16 after inc: w0=0x{[0m[0m[38;5;10mw0_after[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4938740Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4938893Z 
+2025-11-09T23:41:44.4939188Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4939865Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:833:9[0m
+2025-11-09T23:41:44.4940499Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4941362Z [0m[1m[38;5;12m833[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG T3 R16 after round: a=0x{:08x}", a_after);[0m
+2025-11-09T23:41:44.4941951Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4942320Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4942998Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4943638Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4943968Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4944633Z [0m[1m[38;5;12m833[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG T3 R16 after round: a=0x{:08x}"[0m[0m[38;5;9m, a_after[0m[0m);[0m
+2025-11-09T23:41:44.4945342Z [0m[1m[38;5;12m833[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG T3 R16 after round: a=0x{[0m[0m[38;5;10ma_after[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4945800Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4945957Z 
+2025-11-09T23:41:44.4946235Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.4946712Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:840:9[0m
+2025-11-09T23:41:44.4947227Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4947686Z [0m[1m[38;5;12m840[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG T3 R17 after: g=0x{:08x}", g_after);[0m
+2025-11-09T23:41:44.4948221Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.4948768Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4949484Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.4950211Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.4950514Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4951010Z [0m[1m[38;5;12m840[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG T3 R17 after: g=0x{:08x}"[0m[0m[38;5;9m, g_after[0m[0m);[0m
+2025-11-09T23:41:44.4951855Z [0m[1m[38;5;12m840[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG T3 R17 after: g=0x{[0m[0m[38;5;10mg_after[0m[0m:08x}");[0m
+2025-11-09T23:41:44.4952304Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.4952452Z 
+2025-11-09T23:41:44.5032152Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.5032720Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:875:9[0m
+2025-11-09T23:41:44.5033087Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5033586Z [0m[1m[38;5;12m875[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG T3 R32 before: a=0x{:08x}", a_before_32);[0m
+2025-11-09T23:41:44.5034154Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.5034824Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5035534Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.5036203Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.5036517Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5037044Z [0m[1m[38;5;12m875[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG T3 R32 before: a=0x{:08x}"[0m[0m[38;5;9m, a_before_32[0m[0m);[0m
+2025-11-09T23:41:44.5037742Z [0m[1m[38;5;12m875[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG T3 R32 before: a=0x{[0m[0m[38;5;10ma_before_32[0m[0m:08x}");[0m
+2025-11-09T23:41:44.5038190Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5038344Z 
+2025-11-09T23:41:44.5042343Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.5042893Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:882:9[0m
+2025-11-09T23:41:44.5043248Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5043747Z [0m[1m[38;5;12m882[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG T3 R32 after: a=0x{:08x}", a_after_32);[0m
+2025-11-09T23:41:44.5044545Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.5044964Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5045646Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.5046284Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.5046593Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5047119Z [0m[1m[38;5;12m882[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG T3 R32 after: a=0x{:08x}"[0m[0m[38;5;9m, a_after_32[0m[0m);[0m
+2025-11-09T23:41:44.5047815Z [0m[1m[38;5;12m882[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG T3 R32 after: a=0x{[0m[0m[38;5;10ma_after_32[0m[0m:08x}");[0m
+2025-11-09T23:41:44.5048489Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5048652Z 
+2025-11-09T23:41:44.5098131Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.5098915Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:904:9[0m
+2025-11-09T23:41:44.5099363Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5100051Z [0m[1m[38;5;12m904[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG T3 R40 after: a=0x{:08x}, h=0x{:08x}", a_after_40, h_after_40);[0m
+2025-11-09T23:41:44.5100829Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.5101295Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5102151Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.5103210Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.5103611Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5104246Z [0m[1m[38;5;12m904[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG T3 R40 after: a=0x{:08x}, h=0x{:08x}"[0m[0m[38;5;9m, a_after_40, h_after_40[0m[0m);[0m
+2025-11-09T23:41:44.5105449Z [0m[1m[38;5;12m904[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG T3 R40 after: a=0x{[0m[0m[38;5;10ma_after_40[0m[0m:08x}, h=0x{[0m[0m[38;5;10mh_after_40[0m[0m:08x}");[0m
+2025-11-09T23:41:44.5106030Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5106196Z 
+2025-11-09T23:41:44.5155269Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.5155958Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:925:9[0m
+2025-11-09T23:41:44.5156406Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5157070Z [0m[1m[38;5;12m925[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG T3 R48 after: a=0x{:08x}", a_after_48);[0m
+2025-11-09T23:41:44.5159515Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.5159997Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5160917Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.5161776Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.5162180Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5162865Z [0m[1m[38;5;12m925[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG T3 R48 after: a=0x{:08x}"[0m[0m[38;5;9m, a_after_48[0m[0m);[0m
+2025-11-09T23:41:44.5163793Z [0m[1m[38;5;12m925[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG T3 R48 after: a=0x{[0m[0m[38;5;10ma_after_48[0m[0m:08x}");[0m
+2025-11-09T23:41:44.5164652Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5164869Z 
+2025-11-09T23:41:44.5209941Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.5210724Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:946:9[0m
+2025-11-09T23:41:44.5211225Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5211934Z [0m[1m[38;5;12m946[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG T3 R56 after: a=0x{:08x}", a_after_56);[0m
+2025-11-09T23:41:44.5212756Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.5213299Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5214877Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.5216094Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.5216553Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5217320Z [0m[1m[38;5;12m946[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG T3 R56 after: a=0x{:08x}"[0m[0m[38;5;9m, a_after_56[0m[0m);[0m
+2025-11-09T23:41:44.5218344Z [0m[1m[38;5;12m946[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG T3 R56 after: a=0x{[0m[0m[38;5;10ma_after_56[0m[0m:08x}");[0m
+2025-11-09T23:41:44.5219008Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5219234Z 
+2025-11-09T23:41:44.5257556Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.5258234Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:979:9[0m
+2025-11-09T23:41:44.5258681Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5259686Z [0m[1m[38;5;12m979[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m   println!("DEBUG Transform 3 after round 63: a=0x{:08x}, b=0x{:08x}, c=0x{:08x}, d=0x{:08x}", a_before_final, b_before_final, c_before_final, d_before_final);[0m
+2025-11-09T23:41:44.5261029Z [0m    [0m[0m[1m[38;5;12m|[0m[0m       [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.5261523Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5262390Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.5263502Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.5264153Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5265428Z [0m[1m[38;5;12m979[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 3 after round 63: a=0x{:08x}, b=0x{:08x}, c=0x{:08x}, d=0x{:08x}"[0m[0m[38;5;9m, a_before_final, b_before_final, c_before_final, d_before_final[0m[0m);[0m
+2025-11-09T23:41:44.5267132Z [0m[1m[38;5;12m979[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 3 after round 63: a=0x{[0m[0m[38;5;10ma_before_final[0m[0m:08x}, b=0x{[0m[0m[38;5;10mb_before_final[0m[0m:08x}, c=0x{[0m[0m[38;5;10mc_before_final[0m[0m:08x}, d=0x{[0m[0m[38;5;10md_before_final[0m[0m:08x}");[0m
+2025-11-09T23:41:44.5270011Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5270204Z 
+2025-11-09T23:41:44.5270524Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.5271089Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:980:9[0m
+2025-11-09T23:41:44.5271476Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5272201Z [0m[1m[38;5;12m980[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("  e=0x{:08x}, f=0x{:08x}, g=0x{:08x}, h=0x{:08x}", e_before_final, f_before_final, g_before_final, h_before_final);[0m
+2025-11-09T23:41:44.5273506Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.5274244Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5275250Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.5275892Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.5276205Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5276866Z [0m[1m[38;5;12m980[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("  e=0x{:08x}, f=0x{:08x}, g=0x{:08x}, h=0x{:08x}"[0m[0m[38;5;9m, e_before_final, f_before_final, g_before_final, h_before_final[0m[0m);[0m
+2025-11-09T23:41:44.5279551Z [0m[1m[38;5;12m980[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("  e=0x{[0m[0m[38;5;10me_before_final[0m[0m:08x}, f=0x{[0m[0m[38;5;10mf_before_final[0m[0m:08x}, g=0x{[0m[0m[38;5;10mg_before_final[0m[0m:08x}, h=0x{[0m[0m[38;5;10mh_before_final[0m[0m:08x}");[0m
+2025-11-09T23:41:44.5280596Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5280886Z 
+2025-11-09T23:41:44.5281377Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.5282170Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:981:9[0m
+2025-11-09T23:41:44.5282514Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5283169Z [0m[1m[38;5;12m981[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG Transform 3 before adding initial hash: a=0x{:08x} (expected 0x78ec3678)", a_before_final);[0m
+2025-11-09T23:41:44.5283917Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.5284751Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5285438Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.5286076Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.5286388Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5287097Z [0m[1m[38;5;12m981[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 3 before adding initial hash: a=0x{:08x} (expected 0x78ec3678)"[0m[0m[38;5;9m, a_before_final[0m[0m);[0m
+2025-11-09T23:41:44.5288113Z [0m[1m[38;5;12m981[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 3 before adding initial hash: a=0x{[0m[0m[38;5;10ma_before_final[0m[0m:08x} (expected 0x78ec3678)");[0m
+2025-11-09T23:41:44.5288712Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5288870Z 
+2025-11-09T23:41:44.5289164Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.5289653Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha256_avx2.rs:988:9[0m
+2025-11-09T23:41:44.5289986Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5290746Z [0m[1m[38;5;12m988[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        println!("DEBUG Transform 3 final a (after adding initial): 0x{:08x}", a_final_val);[0m
+2025-11-09T23:41:44.5291404Z [0m    [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+2025-11-09T23:41:44.5291770Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5292437Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.5293069Z [0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+2025-11-09T23:41:44.5293382Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5294008Z [0m[1m[38;5;12m988[0m[0m [0m[0m[38;5;9m- [0m[0m        println!("DEBUG Transform 3 final a (after adding initial): 0x{:08x}"[0m[0m[38;5;9m, a_final_val[0m[0m);[0m
+2025-11-09T23:41:44.5295293Z [0m[1m[38;5;12m988[0m[0m [0m[0m[38;5;10m+ [0m[0m        println!("DEBUG Transform 3 final a (after adding initial): 0x{[0m[0m[38;5;10ma_final_val[0m[0m:08x}");[0m
+2025-11-09T23:41:44.5296029Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5296185Z 
+2025-11-09T23:41:44.5341714Z [0m[1m[38;5;9merror[0m[0m[1m: manually reimplementing `div_ceil`[0m
+2025-11-09T23:41:44.5342205Z [0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/crypto/sha_ni.rs:73:41[0m
+2025-11-09T23:41:44.5342555Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5343248Z [0m[1m[38;5;12m73[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let mut padded = Vec::with_capacity(((data.len() + 9 + 63) / 64) * 64);[0m
+2025-11-09T23:41:44.5344041Z [0m   [0m[0m[1m[38;5;12m|[0m[0m                                         [0m[0m[1m[38;5;9m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[38;5;9mhelp: consider using `.div_ceil()`: `(data.len() + 9).div_ceil(64)`[0m
+2025-11-09T23:41:44.5345060Z [0m   [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5345726Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#manual_div_ceil[0m
+2025-11-09T23:41:44.5346538Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `-D clippy::manual-div-ceil` implied by `-D warnings`[0m
+2025-11-09T23:41:44.5349051Z [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to override `-D warnings` add `#[allow(clippy::manual_div_ceil)]`[0m
+2025-11-09T23:41:44.5349375Z 
+2025-11-09T23:41:44.5685422Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.5686194Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/mempool.rs:143:59[0m
+2025-11-09T23:41:44.5686996Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5689759Z [0m[1m[38;5;12m143[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m                        return Ok(MempoolResult::Rejected(format!([0m
+2025-11-09T23:41:44.5690613Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m ___________________________________________________________^[0m
+2025-11-09T23:41:44.5691491Z [0m[1m[38;5;12m144[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                            "Invalid script at input {}",[0m
+2025-11-09T23:41:44.5692360Z [0m[1m[38;5;12m145[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                            i[0m
+2025-11-09T23:41:44.5693175Z [0m[1m[38;5;12m146[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                        )));[0m
+2025-11-09T23:41:44.5693891Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_________________________^[0m
+2025-11-09T23:41:44.5694592Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.5697226Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.5697975Z 
+2025-11-09T23:41:44.6022328Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.6023065Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/pow.rs:506:55[0m
+2025-11-09T23:41:44.6023546Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.6024670Z [0m[1m[38;5;12m506[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m        return Err(ConsensusError::InvalidProofOfWork(format!([0m
+2025-11-09T23:41:44.6025726Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m _______________________________________________________^[0m
+2025-11-09T23:41:44.6026634Z [0m[1m[38;5;12m507[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            "Target too large: exponent {} exceeds maximum 29",[0m
+2025-11-09T23:41:44.6029384Z [0m[1m[38;5;12m508[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            n_size_final[0m
+2025-11-09T23:41:44.6030243Z [0m[1m[38;5;12m509[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m        )));[0m
+2025-11-09T23:41:44.6030895Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_________^[0m
+2025-11-09T23:41:44.6031368Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.6032534Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.6033274Z 
+2025-11-09T23:41:44.6633777Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.6634920Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/network.rs:301:43[0m
+2025-11-09T23:41:44.6635673Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.6636519Z [0m[1m[38;5;12m301[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m        return Ok(NetworkResponse::Reject(format!([0m
+2025-11-09T23:41:44.6637304Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m ___________________________________________^[0m
+2025-11-09T23:41:44.6638109Z [0m[1m[38;5;12m302[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            "Invalid transaction: {}",[0m
+2025-11-09T23:41:44.6638920Z [0m[1m[38;5;12m303[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m            e[0m
+2025-11-09T23:41:44.6639672Z [0m[1m[38;5;12m304[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m        )));[0m
+2025-11-09T23:41:44.6640307Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_________^[0m
+2025-11-09T23:41:44.6640778Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.6641950Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.6642691Z 
+2025-11-09T23:41:44.6765326Z [0m[1m[38;5;9merror[0m[0m[1m: variables can be used directly in the `format!` string[0m
+2025-11-09T23:41:44.6766292Z [0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/reorganization.rs:113:17[0m
+2025-11-09T23:41:44.6768632Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.6769540Z [0m[1m[38;5;12m113[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m/[0m[0m [0m[0m                format!([0m
+2025-11-09T23:41:44.6773209Z [0m[1m[38;5;12m114[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                    "Invalid block at height {} during reorganization",[0m
+2025-11-09T23:41:44.6774646Z [0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                    new_height[0m
+2025-11-09T23:41:44.6775734Z [0m[1m[38;5;12m116[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|[0m[0m [0m[0m                ),[0m
+2025-11-09T23:41:44.6776617Z [0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m|_________________^[0m
+2025-11-09T23:41:44.6777203Z [0m    [0m[0m[1m[38;5;12m|[0m
+2025-11-09T23:41:44.6778458Z [0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#uninlined_format_args[0m
+2025-11-09T23:41:44.6779325Z 
+2025-11-09T23:41:44.7878876Z [1m[31merror[0m[1m:[0m could not compile `bllvm-consensus` (lib) due to 64 previous errors
+2025-11-09T23:41:44.8003334Z ##[error]Process completed with exit code 101.
