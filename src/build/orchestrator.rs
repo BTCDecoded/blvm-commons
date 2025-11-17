@@ -250,7 +250,7 @@ impl BuildOrchestrator {
                         .upload_release_asset(
                             &self.organization,
                             "bllvm",
-                            release_id,
+                            release.id.0,
                             &asset_name,
                             data,
                             &artifact.content_type,
