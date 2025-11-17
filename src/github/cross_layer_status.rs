@@ -146,7 +146,7 @@ impl CrossLayerStatusChecker {
                 content_hash_status,
                 version_pinning_status,
                 equivalence_proof_status,
-                overall_sync_status: self.map_status_to_sync_status(overall_status),
+                overall_sync_status: self.map_status_to_sync_status(overall_status.clone()),
                 recommendations,
             },
         };

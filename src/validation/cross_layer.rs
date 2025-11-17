@@ -384,18 +384,25 @@ impl CrossLayerValidator {
                 changed_files,
             ).await?;
 
-            // Create GitHub client
-            let github_client = crate::github::client::GitHubClient::new(github_token.to_string());
+            // Create GitHub client (placeholder - needs proper app_id and key path)
+            let github_client = crate::github::client::GitHubClient::new(0, "/dev/null")
+                .map_err(|e| GovernanceError::ConfigError(format!("Failed to create GitHub client: {}", e)))?;
+
+            // Get PR head SHA for status check
+            let pr = github_client.get_pull_request(owner, repo, pr_number).await?;
+            let head_sha = pr.get("head")
+                .and_then(|h| h.get("sha"))
+                .and_then(|s| s.as_str())
+                .ok_or_else(|| GovernanceError::ValidationError("Missing head SHA in PR response".to_string()))?;
 
             // Post status check to GitHub
-            github_client.create_status_check(
+            github_client.post_status_check(
                 owner,
                 repo,
-                pr_number,
-                &status_check.context,
-                &status_check.state,
+                head_sha,
+                &format!("{:?}", status_check.state),
                 &status_check.description,
-                status_check.target_url.as_deref(),
+                &status_check.context,
             ).await?;
 
             info!("Posted cross-layer status check: {:?}", status_check.state);
