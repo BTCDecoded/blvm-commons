@@ -15,8 +15,8 @@ This guide provides information for developers who want to contribute to the BTC
 ### Clone and Setup
 
 ```bash
-git clone https://github.com/BTCDecoded/governance-app.git
-cd governance-app
+git clone https://github.com/BTCDecoded/bllvm-commons.git
+cd bllvm-commons
 cargo build
 ```
 
@@ -34,7 +34,7 @@ cargo install cargo-tarpaulin
 ## Project Structure
 
 ```
-governance-app/
+bllvm-commons/
 ├── src/
 │   ├── main.rs                 # Application entry point
 │   ├── lib.rs                  # Library root
@@ -114,16 +114,16 @@ cargo outdated
 
 ```bash
 # Create new migration
-cargo run --bin governance-app -- create-migration migration_name
+cargo run --bin bllvm-commons -- create-migration migration_name
 
 # Run migrations
-cargo run --bin governance-app -- migrate
+cargo run --bin bllvm-commons -- migrate
 
 # Rollback migration
-cargo run --bin governance-app -- rollback
+cargo run --bin bllvm-commons -- rollback
 
 # Check migration status
-cargo run --bin governance-app -- migrate-status
+cargo run --bin bllvm-commons -- migrate-status
 ```
 
 ## Code Standards
@@ -448,7 +448,7 @@ COPY . .
 RUN cargo build --release
 
 EXPOSE 3000
-CMD ["./target/release/governance-app"]
+CMD ["./target/release/bllvm-commons"]
 ```
 
 ### Environment Configuration

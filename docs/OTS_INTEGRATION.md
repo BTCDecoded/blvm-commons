@@ -406,7 +406,7 @@ else
 fi
 
 # Verify registry structure
-if governance-app registry verify --registry "$REGISTRY_FILE"; then
+if bllvm-commons registry verify --registry "$REGISTRY_FILE"; then
     echo "✓ Registry structure verified"
 else
     echo "✗ Registry structure verification failed"
@@ -415,7 +415,7 @@ fi
 
 # Verify audit log merkle root
 AUDIT_ROOT=$(jq -r '.audit_logs."'$MONTH'".merkle_root' "$REGISTRY_FILE")
-if governance-app audit verify-merkle --log-path /var/lib/governance/audit-log.jsonl --merkle-root "$AUDIT_ROOT"; then
+if bllvm-commons audit verify-merkle --log-path /var/lib/governance/audit-log.jsonl --merkle-root "$AUDIT_ROOT"; then
     echo "✓ Audit log merkle root verified"
 else
     echo "✗ Audit log merkle root verification failed"
@@ -498,10 +498,10 @@ proofs_path = "/var/lib/governance/ots-proofs"
 ls -la /var/lib/governance/registries/
 
 # Check latest registry
-governance-app registry status --latest
+bllvm-commons registry status --latest
 
 # Verify all registries
-governance-app registry verify-all
+bllvm-commons registry verify-all
 ```
 
 **Programmatic Monitoring**:
@@ -569,26 +569,26 @@ rsync -av /var/lib/governance/registries/ backup-server:/backups/governance/regi
 
 ```bash
 # Test OTS server connectivity
-governance-app ots test --server https://alice.btc.calendar.opentimestamps.org
+bllvm-commons ots test --server https://alice.btc.calendar.opentimestamps.org
 
 # Generate test proof
-governance-app ots stamp --data test.txt --output test.txt.ots
+bllvm-commons ots stamp --data test.txt --output test.txt.ots
 
 # Verify test proof
-governance-app ots verify --data test.txt --proof test.txt.ots
+bllvm-commons ots verify --data test.txt --proof test.txt.ots
 ```
 
 ### Log Analysis
 
 ```bash
 # Check OTS logs
-sudo journalctl -u governance-app | grep ots
+sudo journalctl -u bllvm-commons | grep ots
 
 # Check registry generation
-sudo journalctl -u governance-app | grep "registry.*generated"
+sudo journalctl -u bllvm-commons | grep "registry.*generated"
 
 # Check proof verification
-sudo journalctl -u governance-app | grep "proof.*verified"
+sudo journalctl -u bllvm-commons | grep "proof.*verified"
 ```
 
 ## Best Practices

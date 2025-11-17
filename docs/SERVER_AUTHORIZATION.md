@@ -82,7 +82,7 @@ Server authorization serves as a **security boundary mechanism** by:
 **CLI Commands**:
 ```bash
 # Add new server
-governance-app server add \
+bllvm-commons server add \
   --server-id governance-02 \
   --operator-name "Bob Johnson" \
   --jurisdiction "Switzerland" \
@@ -94,7 +94,7 @@ governance-app server add \
   --ots-enabled
 
 # Verify server addition
-governance-app server verify --server-id governance-02
+bllvm-commons server verify --server-id governance-02
 ```
 
 **Programmatic Addition**:
@@ -134,13 +134,13 @@ async fn add_server(
 **CLI Commands**:
 ```bash
 # Remove server gracefully
-governance-app server remove \
+bllvm-commons server remove \
   --server-id governance-02 \
   --reason "Planned decommissioning" \
   --grace-period 30
 
 # Force remove server
-governance-app server remove \
+bllvm-commons server remove \
   --server-id governance-02 \
   --reason "Security incident" \
   --force
@@ -149,7 +149,7 @@ governance-app server remove \
 **Emergency Revocation**:
 ```bash
 # Emergency revocation
-governance-app server compromise \
+bllvm-commons server compromise \
   --server-id governance-02 \
   --reason "Suspected key compromise" \
   --emergency
@@ -166,13 +166,13 @@ governance-app server compromise \
 **Status Updates**:
 ```bash
 # Update server status
-governance-app server status \
+bllvm-commons server status \
   --server-id governance-02 \
   --status inactive \
   --reason "Maintenance window"
 
 # Reactivate server
-governance-app server status \
+bllvm-commons server status \
   --server-id governance-02 \
   --status active \
   --reason "Maintenance completed"
@@ -192,13 +192,13 @@ governance-app server status \
 **CLI Verification**:
 ```bash
 # Verify server authorization
-governance-app server verify --server-id governance-01
+bllvm-commons server verify --server-id governance-01
 
 # List all authorized servers
-governance-app server list
+bllvm-commons server list
 
 # Check server status
-governance-app server status --server-id governance-01
+bllvm-commons server status --server-id governance-01
 ```
 
 **Programmatic Verification**:
@@ -367,13 +367,13 @@ async fn create_server_status_check(
 **Health Checks**:
 ```bash
 # Check server health
-governance-app server health --server-id governance-01
+bllvm-commons server health --server-id governance-01
 
 # Monitor server operations
-governance-app server operations --server-id governance-01 --limit 10
+bllvm-commons server operations --server-id governance-01 --limit 10
 
 # Check server compliance
-governance-app server compliance --server-id governance-01
+bllvm-commons server compliance --server-id governance-01
 ```
 
 **Programmatic Monitoring**:
@@ -483,25 +483,25 @@ sudo ufw deny from any to any port 8080
 **Compromise Detection**:
 ```bash
 # Detect compromised server
-governance-app server compromise \
+bllvm-commons server compromise \
   --server-id governance-02 \
   --reason "Suspected key compromise" \
   --evidence "Unauthorized access detected"
 
 # Isolate compromised server
-governance-app server isolate --server-id governance-02
+bllvm-commons server isolate --server-id governance-02
 ```
 
 **Recovery Procedures**:
 ```bash
 # Generate new keys for compromised server
-governance-app server regenerate-keys --server-id governance-02
+bllvm-commons server regenerate-keys --server-id governance-02
 
 # Verify new keys
-governance-app server verify --server-id governance-02
+bllvm-commons server verify --server-id governance-02
 
 # Reactivate server
-governance-app server status --server-id governance-02 --status active
+bllvm-commons server status --server-id governance-02 --status active
 ```
 
 ## Troubleshooting
@@ -527,26 +527,26 @@ governance-app server status --server-id governance-02 --status active
 
 ```bash
 # Debug server authorization
-governance-app server debug --server-id governance-01
+bllvm-commons server debug --server-id governance-01
 
 # Check server operations
-governance-app server operations --server-id governance-01 --limit 5
+bllvm-commons server operations --server-id governance-01 --limit 5
 
 # Verify server keys
-governance-app server verify-keys --server-id governance-01
+bllvm-commons server verify-keys --server-id governance-01
 ```
 
 ### Log Analysis
 
 ```bash
 # Check server authorization logs
-sudo journalctl -u governance-app | grep "server.*authorization"
+sudo journalctl -u bllvm-commons | grep "server.*authorization"
 
 # Check server operations
-sudo journalctl -u governance-app | grep "server.*operation"
+sudo journalctl -u bllvm-commons | grep "server.*operation"
 
 # Check server status changes
-sudo journalctl -u governance-app | grep "server.*status"
+sudo journalctl -u bllvm-commons | grep "server.*status"
 ```
 
 ## Best Practices

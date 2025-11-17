@@ -37,7 +37,7 @@ println!("Public key: {}", public_key);
 Or use the `key-manager` CLI tool:
 
 ```bash
-cd governance-app
+cd bllvm-commons
 cargo run --bin key-manager generate
 ```
 
@@ -87,8 +87,8 @@ cargo test --test signature_verification
 
 ## Related Code
 
-- Key generation: `governance-app/src/bin/key_manager.rs`
-- Signature verification: `governance-app/src/validation/emergency.rs:262`
+- Key generation: `bllvm-commons/src/bin/key_manager.rs`
+- Signature verification: `bllvm-commons/src/validation/emergency.rs:262`
 - Public key parsing: `bllvm-sdk/src/governance/keys.rs`
 
 ## See Also

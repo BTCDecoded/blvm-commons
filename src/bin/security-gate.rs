@@ -10,7 +10,7 @@ use std::fs;
 use std::path::Path;
 use tracing::{error, info, warn};
 
-use governance_app::validation::security_controls::{SecurityControlValidator, SecurityImpact};
+use bllvm_commons::validation::security_controls::{SecurityControlValidator, SecurityImpact};
 
 #[derive(Parser)]
 #[command(name = "security-gate")]
@@ -219,19 +219,19 @@ async fn check_pr_impact(pr_number: u32, format: &str) -> Result<()> {
             println!();
 
             match impact.impact_level {
-                governance_app::validation::security_controls::ImpactLevel::Critical => {
+                bllvm_commons::validation::security_controls::ImpactLevel::Critical => {
                     println!("🚨 CRITICAL IMPACT - Multiple P0 security controls affected");
                 }
-                governance_app::validation::security_controls::ImpactLevel::High => {
+                bllvm_commons::validation::security_controls::ImpactLevel::High => {
                     println!("🔴 HIGH IMPACT - P0 security controls affected");
                 }
-                governance_app::validation::security_controls::ImpactLevel::Medium => {
+                bllvm_commons::validation::security_controls::ImpactLevel::Medium => {
                     println!("🟡 MEDIUM IMPACT - P1 security controls affected");
                 }
-                governance_app::validation::security_controls::ImpactLevel::Low => {
+                bllvm_commons::validation::security_controls::ImpactLevel::Low => {
                     println!("🟢 LOW IMPACT - P2 security controls affected");
                 }
-                governance_app::validation::security_controls::ImpactLevel::None => {
+                bllvm_commons::validation::security_controls::ImpactLevel::None => {
                     println!("✅ NO IMPACT - No security controls affected");
                 }
             }
@@ -491,7 +491,7 @@ async fn get_pr_changed_files(pr_number: u32) -> Result<Vec<String>> {
     // For now, return some example files
     Ok(vec![
         "bllvm-protocol/src/lib.rs".to_string(),
-        "governance-app/src/validation/emergency.rs".to_string(),
+        "bllvm-commons/src/validation/emergency.rs".to_string(),
     ])
 }
 
@@ -499,7 +499,7 @@ async fn get_git_changed_files() -> Result<Vec<String>> {
     // Simplified implementation - in reality would use git diff
     Ok(vec![
         "bllvm-protocol/src/lib.rs".to_string(),
-        "governance-app/src/database/queries.rs".to_string(),
+        "bllvm-commons/src/database/queries.rs".to_string(),
     ])
 }
 

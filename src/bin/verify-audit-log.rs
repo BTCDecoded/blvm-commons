@@ -3,7 +3,7 @@ use clap::{Arg, Command};
 use std::path::Path;
 use tracing::{info, error};
 
-use governance_app::audit::{AuditLogger, verify_audit_log, build_merkle_tree, verify_merkle_root};
+use bllvm_commons::audit::{AuditLogger, verify_audit_log, build_merkle_tree, verify_merkle_root};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -143,7 +143,7 @@ async fn verify_audit_log_file(
     Ok(())
 }
 
-fn check_audit_log_health(entries: &[governance_app::audit::entry::AuditLogEntry], verbose: bool) -> Result<()> {
+fn check_audit_log_health(entries: &[bllvm_commons::audit::entry::AuditLogEntry], verbose: bool) -> Result<()> {
     info!("Checking audit log health");
 
     // Check for duplicate job IDs

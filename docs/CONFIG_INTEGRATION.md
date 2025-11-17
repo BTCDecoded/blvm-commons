@@ -2,7 +2,7 @@
 
 ## Overview
 
-The BTCDecoded governance system integrates with configuration files from the governance repository to ensure that the governance-app behavior matches the documented governance rules. This document explains how the app loads and uses these configuration files.
+The BTCDecoded governance system integrates with configuration files from the governance repository to ensure that the bllvm-commons behavior matches the documented governance rules. This document explains how the app loads and uses these configuration files.
 
 ## Configuration File Structure
 
@@ -582,26 +582,26 @@ impl AppConfig {
 
 ```bash
 # Validate configuration
-governance-app config validate --config-path governance/config
+bllvm-commons config validate --config-path governance/config
 
 # Test configuration loading
-governance-app config test --config-path governance/config
+bllvm-commons config test --config-path governance/config
 
 # Show configuration
-governance-app config show --config-path governance/config
+bllvm-commons config show --config-path governance/config
 ```
 
 ### Log Analysis
 
 ```bash
 # Check configuration loading logs
-sudo journalctl -u governance-app | grep "config.*load"
+sudo journalctl -u bllvm-commons | grep "config.*load"
 
 # Check configuration validation
-sudo journalctl -u governance-app | grep "config.*validate"
+sudo journalctl -u bllvm-commons | grep "config.*validate"
 
 # Check configuration errors
-sudo journalctl -u governance-app | grep "config.*error"
+sudo journalctl -u bllvm-commons | grep "config.*error"
 ```
 
 ## Best Practices

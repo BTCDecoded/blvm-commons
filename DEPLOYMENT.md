@@ -250,7 +250,7 @@ sudo chown governance:governance /etc/governance/servers
 
 ```bash
 # Add this server to authorized registry
-governance-app server add \
+bllvm-commons server add \
   --server-id governance-01 \
   --operator-name "BTCDecoded Foundation" \
   --jurisdiction "United States" \
@@ -263,7 +263,7 @@ governance-app server add \
 
 ```bash
 # Verify server is authorized
-governance-app server verify --server-id governance-01
+bllvm-commons server verify --server-id governance-01
 ```
 
 ## Application Deployment
@@ -273,14 +273,14 @@ governance-app server verify --server-id governance-01
 ```bash
 # Clone repository
 git clone https://github.com/btcdecoded/governance-system.git
-cd governance-system/governance-app
+cd governance-system/bllvm-commons
 
 # Build for production
 cargo build --release
 
 # Install binary
-sudo cp target/release/governance-app /usr/local/bin/
-sudo chmod +x /usr/local/bin/governance-app
+sudo cp target/release/bllvm-commons /usr/local/bin/
+sudo chmod +x /usr/local/bin/bllvm-commons
 ```
 
 ### 2. Create System User
@@ -294,11 +294,11 @@ sudo chown governance:governance /var/lib/governance
 
 ### 3. Create Systemd Service
 
-Create `/etc/systemd/system/governance-app.service`:
+Create `/etc/systemd/system/bllvm-commons.service`:
 
 ```ini
 [Unit]
-Description=BTCDecoded Governance App
+Description=Bitcoin Commons (bllvm-commons)
 After=network.target postgresql.service
 
 [Service]
@@ -306,7 +306,7 @@ Type=simple
 User=governance
 Group=governance
 WorkingDirectory=/var/lib/governance
-ExecStart=/usr/local/bin/governance-app
+ExecStart=/usr/local/bin/bllvm-commons
 Restart=always
 RestartSec=5
 Environment=RUST_LOG=info
@@ -323,13 +323,13 @@ WantedBy=multi-user.target
 sudo systemctl daemon-reload
 
 # Enable service
-sudo systemctl enable governance-app
+sudo systemctl enable bllvm-commons
 
 # Start service
-sudo systemctl start governance-app
+sudo systemctl start bllvm-commons
 
 # Check status
-sudo systemctl status governance-app
+sudo systemctl status bllvm-commons
 ```
 
 ## Monitoring and Health Checks
@@ -352,13 +352,13 @@ Detailed status information:
 
 ```bash
 # View application logs
-sudo journalctl -u governance-app -f
+sudo journalctl -u bllvm-commons -f
 
 # View specific log levels
-sudo journalctl -u governance-app -p err
+sudo journalctl -u bllvm-commons -p err
 
 # View logs from specific time
-sudo journalctl -u governance-app --since "2024-01-15 10:00:00"
+sudo journalctl -u bllvm-commons --since "2024-01-15 10:00:00"
 ```
 
 ### 4. Database Monitoring
@@ -496,13 +496,13 @@ server {
 
 ```bash
 # Check for errors
-sudo journalctl -u governance-app -p err --since "1 hour ago"
+sudo journalctl -u bllvm-commons -p err --since "1 hour ago"
 
 # Check for specific errors
-sudo journalctl -u governance-app | grep "ERROR"
+sudo journalctl -u bllvm-commons | grep "ERROR"
 
 # Check database errors
-sudo journalctl -u governance-app | grep "database"
+sudo journalctl -u bllvm-commons | grep "database"
 ```
 
 ## References

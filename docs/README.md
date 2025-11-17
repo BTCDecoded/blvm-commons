@@ -1,6 +1,6 @@
-# Governance App Documentation
+# Bitcoin Commons (bllvm-commons) Documentation
 
-This directory contains comprehensive documentation for the BTCDecoded governance application.
+This directory contains comprehensive documentation for Bitcoin Commons governance enforcement.
 
 ## Available Documents
 
@@ -12,7 +12,7 @@ This directory contains comprehensive documentation for the BTCDecoded governanc
 
 ## Documentation Overview
 
-The BTCDecoded governance application is a Rust-based GitHub App that enforces cryptographic governance rules across all BTCDecoded repositories. This documentation covers:
+Bitcoin Commons (bllvm-commons) is a Rust-based GitHub App that enforces cryptographic governance rules across all BTCDecoded repositories. This documentation covers:
 
 ### User Documentation
 - **Getting Started**: Quick setup and first steps

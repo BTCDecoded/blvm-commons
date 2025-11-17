@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides comprehensive documentation for the cross-layer validation system implemented in the governance-app. The system ensures cryptographic synchronization between the Orange Paper (Layer 1) and Consensus Proof (Layer 2) repositories.
+This document provides comprehensive documentation for the cross-layer validation system implemented in the bllvm-commons. The system ensures cryptographic synchronization between the Orange Paper (Layer 1) and Consensus Proof (Layer 2) repositories.
 
 ## System Architecture
 
@@ -590,7 +590,7 @@ Set up alerts for:
 Enable debug logging:
 
 ```bash
-RUST_LOG=debug cargo run --bin governance-app
+RUST_LOG=debug cargo run --bin bllvm-commons
 ```
 
 ### Manual Verification

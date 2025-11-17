@@ -3,8 +3,8 @@
 //! Command-line tool for managing keys in the BTCDecoded Governance System
 
 use clap::{Parser, Subcommand};
-use governance_app::crypto::key_management::{KeyManagementConfig, KeyManager, KeyStatus, KeyType};
-use governance_app::database::Database;
+use bllvm_commons::crypto::key_management::{KeyManagementConfig, KeyManager, KeyStatus, KeyType};
+use bllvm_commons::database::Database;
 use std::collections::HashMap;
 
 #[derive(Parser)]
@@ -299,7 +299,7 @@ fn parse_metadata(metadata: Vec<String>) -> Result<HashMap<String, String>, Stri
     Ok(map)
 }
 
-fn print_keys(keys: &[governance_app::crypto::key_management::KeyMetadata]) {
+fn print_keys(keys: &[bllvm_commons::crypto::key_management::KeyMetadata]) {
     if keys.is_empty() {
         println!("No keys found");
         return;
@@ -323,7 +323,7 @@ fn print_keys(keys: &[governance_app::crypto::key_management::KeyMetadata]) {
     }
 }
 
-fn print_key_details(key: &governance_app::crypto::key_management::KeyMetadata) {
+fn print_key_details(key: &bllvm_commons::crypto::key_management::KeyMetadata) {
     println!("Key Details:");
     println!("  Key ID: {}", key.key_id);
     println!("  Type: {:?}", key.key_type);

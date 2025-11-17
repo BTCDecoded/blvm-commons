@@ -373,10 +373,10 @@ async fn rotate_audit_log(logger: &AuditLogger) -> Result<(), Error> {
 **Manual Rotation**:
 ```bash
 # Rotate audit log manually
-governance-app audit rotate --log-path /var/lib/governance/audit-log.jsonl
+bllvm-commons audit rotate --log-path /var/lib/governance/audit-log.jsonl
 
 # Archive old logs
-governance-app audit archive --log-path /var/lib/governance/audit-log.jsonl --archive-dir /var/lib/governance/archives/
+bllvm-commons audit archive --log-path /var/lib/governance/audit-log.jsonl --archive-dir /var/lib/governance/archives/
 ```
 
 ## Verification and Validation
@@ -386,22 +386,22 @@ governance-app audit archive --log-path /var/lib/governance/audit-log.jsonl --ar
 **Verify Audit Log**:
 ```bash
 # Verify complete audit log
-governance-app audit verify --log-path /var/lib/governance/audit-log.jsonl
+bllvm-commons audit verify --log-path /var/lib/governance/audit-log.jsonl
 
 # Verify specific entry
-governance-app audit verify-entry --log-path /var/lib/governance/audit-log.jsonl --entry-id "pr_approval_1705320000_123"
+bllvm-commons audit verify-entry --log-path /var/lib/governance/audit-log.jsonl --entry-id "pr_approval_1705320000_123"
 
 # Verify hash chain
-governance-app audit verify-chain --log-path /var/lib/governance/audit-log.jsonl
+bllvm-commons audit verify-chain --log-path /var/lib/governance/audit-log.jsonl
 ```
 
 **Calculate Merkle Root**:
 ```bash
 # Calculate Merkle root
-governance-app audit merkle-root --log-path /var/lib/governance/audit-log.jsonl
+bllvm-commons audit merkle-root --log-path /var/lib/governance/audit-log.jsonl
 
 # Verify Merkle root
-governance-app audit verify-merkle --log-path /var/lib/governance/audit-log.jsonl --merkle-root "sha256:abc123..."
+bllvm-commons audit verify-merkle --log-path /var/lib/governance/audit-log.jsonl --merkle-root "sha256:abc123..."
 ```
 
 ### Programmatic Verification
@@ -512,7 +512,7 @@ gpg --symmetric --cipher-algo AES256 /var/lib/governance/audit-log.jsonl
 **Log Health Checks**:
 ```bash
 # Check audit log health
-governance-app audit health --log-path /var/lib/governance/audit-log.jsonl
+bllvm-commons audit health --log-path /var/lib/governance/audit-log.jsonl
 
 # Monitor log growth
 watch -n 60 'wc -l /var/lib/governance/audit-log.jsonl'
@@ -568,13 +568,13 @@ async fn monitor_audit_log_health(logger: &AuditLogger) -> Result<(), Error> {
 
 ```bash
 # Debug audit log
-governance-app audit debug --log-path /var/lib/governance/audit-log.jsonl
+bllvm-commons audit debug --log-path /var/lib/governance/audit-log.jsonl
 
 # Check specific entry
-governance-app audit inspect --log-path /var/lib/governance/audit-log.jsonl --entry-id "pr_approval_1705320000_123"
+bllvm-commons audit inspect --log-path /var/lib/governance/audit-log.jsonl --entry-id "pr_approval_1705320000_123"
 
 # Validate log format
-governance-app audit validate --log-path /var/lib/governance/audit-log.jsonl
+bllvm-commons audit validate --log-path /var/lib/governance/audit-log.jsonl
 ```
 
 ## References

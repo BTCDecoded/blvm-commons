@@ -1,13 +1,13 @@
 # BTCDecoded Governance App - Production Configuration
 
 [app]
-name = "governance-app"
+name = "bllvm-commons"
 version = "0.1.0"
 environment = "production"
 log_level = "info"
 
 [database]
-url = "sqlite:///opt/governance-app/data/governance.db"
+url = "sqlite:///opt/bllvm-commons/data/governance.db"
 max_connections = 10
 min_connections = 1
 acquire_timeout_seconds = 30
@@ -24,13 +24,13 @@ foreign_keys = true
 
 [github]
 app_id = 12345
-private_key_path = "/opt/governance-app/keys/app-private-key.pem"
+private_key_path = "/opt/bllvm-commons/keys/app-private-key.pem"
 webhook_secret = "your-webhook-secret-here"
 base_url = "https://api.github.com"
 
 [backup]
 enabled = true
-directory = "/opt/governance-app/backups"
+directory = "/opt/bllvm-commons/backups"
 retention_days = 30
 compression = true
 schedule = "0 2 * * *"  # Daily at 2 AM
@@ -149,7 +149,7 @@ adoption_tracking_enabled = true
 dashboard_enabled = true
 
 # Export settings
-export_directory = "/opt/governance-app/exports"
+export_directory = "/opt/bllvm-commons/exports"
 export_retention_days = 90
 export_compression = true
 
@@ -158,12 +158,12 @@ export_compression = true
 level = "info"
 format = "json"
 output = "file"
-file_path = "/opt/governance-app/logs/governance-app.log"
+file_path = "/opt/bllvm-commons/logs/governance-app.log"
 max_file_size_mb = 100
 max_files = 10
 
 # Structured logging fields
-service_name = "governance-app"
+service_name = "bllvm-commons"
 service_version = "0.1.0"
 environment = "production"
 

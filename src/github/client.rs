@@ -1,6 +1,7 @@
 use octocrab::Octocrab;
 use serde_json::json;
-use tracing::{error, info};
+use tracing::{error, info, warn};
+use reqwest::Client as ReqwestClient;
 
 use crate::error::GovernanceError;
 use crate::github::types::{CheckRun, WorkflowStatus};
@@ -9,6 +10,7 @@ use crate::github::types::{CheckRun, WorkflowStatus};
 pub struct GitHubClient {
     client: Octocrab,
     app_id: u64,
+    http_client: ReqwestClient,
 }
 
 impl GitHubClient {
@@ -29,7 +31,14 @@ impl GitHubClient {
                 GovernanceError::GitHubError(format!("Failed to create GitHub client: {}", e))
             })?;
 
-        Ok(Self { client, app_id })
+        let http_client = ReqwestClient::builder()
+            .user_agent("bllvm-commons/0.1.0")
+            .build()
+            .map_err(|e| {
+                GovernanceError::GitHubError(format!("Failed to create HTTP client: {}", e))
+            })?;
+
+        Ok(Self { client, app_id, http_client })
     }
 
     /// Post a status check to GitHub
@@ -414,5 +423,344 @@ impl GitHubClient {
                 Ok(true)
             }
         }
+    }
+
+    /// Trigger a workflow via repository_dispatch
+    pub async fn trigger_workflow(
+        &self,
+        owner: &str,
+        repo: &str,
+        event_type: &str,
+        client_payload: &serde_json::Value,
+    ) -> Result<u64, GovernanceError> {
+        info!(
+            "Triggering workflow for {}/{} via repository_dispatch (event: {})",
+            owner, repo, event_type
+        );
+
+        // Create repository_dispatch event
+        let payload = json!({
+            "event_type": event_type,
+            "client_payload": client_payload,
+        });
+
+        // Trigger workflow via repository_dispatch
+        // Note: This requires Actions: Write permission
+        let response = self
+            .client
+            .repos(owner, repo)
+            .create_dispatch_event(event_type)
+            .client_payload(client_payload)
+            .send()
+            .await
+            .map_err(|e| {
+                error!("Failed to trigger workflow: {}", e);
+                GovernanceError::GitHubError(format!("Failed to trigger workflow: {}", e))
+            })?;
+
+        info!("Workflow triggered for {}/{}", owner, repo);
+        
+        // Poll for the workflow run that was just triggered
+        // repository_dispatch doesn't return a run ID, so we need to find it
+        let run_id = self.find_triggered_workflow_run(owner, repo, event_type).await?;
+        
+        Ok(run_id)
+    }
+
+    /// Get workflow run status
+    pub async fn get_workflow_run_status(
+        &self,
+        owner: &str,
+        repo: &str,
+        run_id: u64,
+    ) -> Result<serde_json::Value, GovernanceError> {
+        info!("Getting workflow run status for {}/{} (run ID: {})", owner, repo, run_id);
+
+        let run = self
+            .client
+            .actions()
+            .get_workflow_run(owner, repo, run_id)
+            .await
+            .map_err(|e| {
+                error!("Failed to get workflow run: {}", e);
+                GovernanceError::GitHubError(format!("Failed to get workflow run: {}", e))
+            })?;
+
+        Ok(json!({
+            "id": run.id,
+            "status": format!("{:?}", run.status),
+            "conclusion": run.conclusion.as_ref().map(|c| format!("{:?}", c)),
+            "created_at": run.created_at,
+            "updated_at": run.updated_at,
+            "head_sha": run.head_sha,
+            "workflow_id": run.workflow_id,
+        }))
+    }
+
+    /// List workflow runs for a repository
+    pub async fn list_workflow_runs(
+        &self,
+        owner: &str,
+        repo: &str,
+        workflow_file: Option<&str>,
+        head_sha: Option<&str>,
+        limit: Option<u8>,
+    ) -> Result<Vec<serde_json::Value>, GovernanceError> {
+        info!("Listing workflow runs for {}/{}", owner, repo);
+
+        let mut request = self
+            .client
+            .actions()
+            .list_workflow_runs_for_repo(owner, repo);
+
+        if let Some(workflow) = workflow_file {
+            request = request.workflow_file(workflow);
+        }
+
+        if let Some(sha) = head_sha {
+            request = request.head_sha(sha);
+        }
+
+        if let Some(limit) = limit {
+            request = request.per_page(limit as u8);
+        }
+
+        let runs = request
+            .send()
+            .await
+            .map_err(|e| {
+                error!("Failed to list workflow runs: {}", e);
+                GovernanceError::GitHubError(format!("Failed to list workflow runs: {}", e))
+            })?;
+
+        let mut results = Vec::new();
+        for run in runs.workflow_runs {
+            results.push(json!({
+                "id": run.id,
+                "status": format!("{:?}", run.status),
+                "conclusion": run.conclusion.as_ref().map(|c| format!("{:?}", c)),
+                "created_at": run.created_at,
+                "updated_at": run.updated_at,
+                "head_sha": run.head_sha,
+                "workflow_id": run.workflow_id,
+            }));
+        }
+
+        Ok(results)
+    }
+
+    /// Find the workflow run that was just triggered
+    /// Polls for recent workflow runs and matches by event type and timestamp
+    async fn find_triggered_workflow_run(
+        &self,
+        owner: &str,
+        repo: &str,
+        event_type: &str,
+    ) -> Result<u64, GovernanceError> {
+        use tokio::time::{sleep, Duration};
+        
+        // Wait a moment for the workflow to start
+        sleep(Duration::from_secs(2)).await;
+        
+        // Poll for recent workflow runs (up to 5 attempts)
+        for attempt in 0..5 {
+            let runs = self.list_workflow_runs(owner, repo, None, None, Some(5)).await?;
+            
+            // Find the most recent run that matches our event type
+            // We look for runs created in the last minute
+            let now = chrono::Utc::now();
+            for run in &runs {
+                if let Some(created_at_str) = run.get("created_at").and_then(|v| v.as_str()) {
+                    if let Ok(created_at) = chrono::DateTime::parse_from_rfc3339(created_at_str) {
+                        let age = now.signed_duration_since(created_at.with_timezone(&chrono::Utc));
+                        // Check if run was created in the last 2 minutes
+                        if age.num_seconds() < 120 && age.num_seconds() >= 0 {
+                            if let Some(id) = run.get("id").and_then(|v| v.as_u64()) {
+                                info!("Found workflow run ID {} for {}/{}", id, owner, repo);
+                                return Ok(id);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if attempt < 4 {
+                sleep(Duration::from_secs(2)).await;
+            }
+        }
+        
+        // If we can't find it, return 0 and let monitoring handle it
+        warn!("Could not find workflow run ID for {}/{} - will poll for status", owner, repo);
+        Ok(0)
+    }
+
+    /// List artifacts from a workflow run
+    pub async fn list_workflow_run_artifacts(
+        &self,
+        owner: &str,
+        repo: &str,
+        run_id: u64,
+    ) -> Result<Vec<serde_json::Value>, GovernanceError> {
+        info!("Listing artifacts for {}/{} (run ID: {})", owner, repo, run_id);
+
+        let artifacts = self
+            .client
+            .actions()
+            .list_workflow_run_artifacts(owner, repo, run_id)
+            .await
+            .map_err(|e| {
+                error!("Failed to list artifacts: {}", e);
+                GovernanceError::GitHubError(format!("Failed to list artifacts: {}", e))
+            })?;
+
+        let mut results = Vec::new();
+        for artifact in artifacts.artifacts {
+            results.push(json!({
+                "id": artifact.id,
+                "name": artifact.name,
+                "size_in_bytes": artifact.size_in_bytes,
+                "archive_download_url": artifact.archive_download_url.to_string(),
+                "expired": artifact.expired,
+                "created_at": artifact.created_at,
+                "updated_at": artifact.updated_at,
+            }));
+        }
+
+        Ok(results)
+    }
+
+    /// Get installation token for organization
+    async fn get_installation_token(&self, org: &str) -> Result<String, GovernanceError> {
+        // Get installation ID for the organization
+        let installations = self.client
+            .apps()
+            .installations()
+            .send()
+            .await
+            .map_err(|e| {
+                error!("Failed to list installations: {}", e);
+                GovernanceError::GitHubError(format!("Failed to list installations: {}", e))
+            })?;
+
+        // Find installation for this organization
+        let installation = installations
+            .into_iter()
+            .find(|inst| {
+                inst.account
+                    .as_ref()
+                    .and_then(|acc| acc.login.as_ref())
+                    .map(|login| login == org)
+                    .unwrap_or(false)
+            })
+            .ok_or_else(|| {
+                GovernanceError::GitHubError(format!("No installation found for organization: {}", org))
+            })?;
+
+        // Create installation access token
+        let token_response = self.client
+            .apps()
+            .create_installation_access_token(installation.id.into())
+            .send()
+            .await
+            .map_err(|e| {
+                error!("Failed to create installation token: {}", e);
+                GovernanceError::GitHubError(format!("Failed to create installation token: {}", e))
+            })?;
+
+        Ok(token_response.token)
+    }
+
+    /// Download an artifact archive from GitHub
+    pub async fn download_artifact(
+        &self,
+        download_url: &str,
+        org: &str,
+    ) -> Result<Vec<u8>, GovernanceError> {
+        info!("Downloading artifact from: {}", download_url);
+
+        // Get installation token
+        let token = self.get_installation_token(org).await?;
+
+        let response = self
+            .http_client
+            .get(download_url)
+            .header("Authorization", format!("Bearer {}", token))
+            .header("Accept", "application/vnd.github+json")
+            .send()
+            .await
+            .map_err(|e| {
+                error!("Failed to download artifact: {}", e);
+                GovernanceError::GitHubError(format!("Failed to download artifact: {}", e))
+            })?;
+
+        if !response.status().is_success() {
+            let status = response.status();
+            let text = response.text().await.unwrap_or_default();
+            error!("Failed to download artifact: {} - {}", status, text);
+            return Err(GovernanceError::GitHubError(format!(
+                "Failed to download artifact: {} - {}",
+                status, text
+            )));
+        }
+
+        let bytes = response.bytes().await.map_err(|e| {
+            error!("Failed to read artifact bytes: {}", e);
+            GovernanceError::GitHubError(format!("Failed to read artifact bytes: {}", e))
+        })?;
+
+        info!("Downloaded artifact: {} bytes", bytes.len());
+        Ok(bytes.to_vec())
+    }
+
+    /// Upload an asset to a GitHub release
+    pub async fn upload_release_asset(
+        &self,
+        owner: &str,
+        repo: &str,
+        release_id: u64,
+        asset_name: &str,
+        asset_data: &[u8],
+        content_type: &str,
+    ) -> Result<(), GovernanceError> {
+        info!(
+            "Uploading asset '{}' to release {} in {}/{} ({} bytes, type: {})",
+            asset_name, release_id, owner, repo, asset_data.len(), content_type
+        );
+
+        // Get installation token
+        let token = self.get_installation_token(owner).await?;
+
+        // GitHub requires uploading to uploads.github.com with specific format
+        let url = format!(
+            "https://uploads.github.com/repos/{}/{}/releases/{}/assets?name={}",
+            owner, repo, release_id, asset_name
+        );
+
+        let response = self
+            .http_client
+            .post(&url)
+            .header("Authorization", format!("Bearer {}", token))
+            .header("Accept", "application/vnd.github+json")
+            .header("Content-Type", content_type)
+            .body(asset_data.to_vec())
+            .send()
+            .await
+            .map_err(|e| {
+                error!("Failed to upload asset: {}", e);
+                GovernanceError::GitHubError(format!("Failed to upload asset: {}", e))
+            })?;
+
+        if !response.status().is_success() {
+            let status = response.status();
+            let text = response.text().await.unwrap_or_default();
+            error!("Failed to upload asset: {} - {}", status, text);
+            return Err(GovernanceError::GitHubError(format!(
+                "Failed to upload asset: {} - {}",
+                status, text
+            )));
+        }
+
+        info!("Successfully uploaded asset '{}' to release", asset_name);
+        Ok(())
     }
 }

@@ -9,7 +9,7 @@ use std::path::Path;
 use clap::{Parser, Subcommand};
 use serde_json::json;
 
-use governance_app::crypto::signatures::SignatureManager;
+use bllvm_commons::crypto::signatures::SignatureManager;
 
 #[derive(Parser)]
 #[command(name = "sign-pr")]

@@ -1,4 +1,4 @@
-# Bitcoin Commons Governance App
+# Bitcoin Commons (bllvm-commons)
 
 Rust-based GitHub App for enforcing cryptographic governance rules across all Bitcoin Commons repositories.
 
@@ -94,7 +94,7 @@ Rust-based GitHub App for enforcing cryptographic governance rules across all Bi
 ```bash
 # Clone the repository
 git clone https://github.com/btcdecoded/governance-system.git
-cd governance-system/governance-app
+cd governance-system/bllvm-commons
 
 # Install dependencies
 cargo build
@@ -108,7 +108,7 @@ cargo build --bin verify-audit-log
 
 ### Configuration
 
-Create a `.env` file in the governance-app directory:
+Create a `.env` file in the bllvm-commons directory:
 
 ```bash
 # Database
@@ -359,7 +359,7 @@ ots info /var/lib/governance/ots-proofs/2024-01.json.ots
 cargo build
 
 # Run with development configuration
-cargo run --bin governance-app
+cargo run --bin bllvm-commons
 ```
 
 ### Production Deployment (Phase 2+)

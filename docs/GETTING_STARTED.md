@@ -1,6 +1,6 @@
-# Getting Started with Governance App
+# Getting Started with Bitcoin Commons (bllvm-commons)
 
-This guide will help you get started with the BTCDecoded governance application.
+This guide will help you get started with Bitcoin Commons governance enforcement.
 
 ## Prerequisites
 
@@ -17,8 +17,8 @@ Before you begin, ensure you have:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/BTCDecoded/governance-app.git
-cd governance-app
+git clone https://github.com/BTCDecoded/bllvm-commons.git
+cd bllvm-commons
 ```
 
 ### 2. Install Dependencies
@@ -37,13 +37,13 @@ cp config/app.toml.example config/app.toml
 ### 4. Run Database Migrations
 
 ```bash
-cargo run --bin governance-app -- migrate
+cargo run --bin bllvm-commons -- migrate
 ```
 
 ### 5. Start the Application
 
 ```bash
-cargo run --bin governance-app
+cargo run --bin bllvm-commons
 ```
 
 ## Configuration
@@ -119,7 +119,7 @@ Create a test pull request to verify webhook integration.
 Monitor the application logs:
 
 ```bash
-tail -f logs/governance-app.log
+tail -f logs/bllvm-commons.log
 ```
 
 ## Common Issues

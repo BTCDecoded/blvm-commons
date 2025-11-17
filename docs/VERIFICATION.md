@@ -133,7 +133,7 @@ async fn verify_ots_proof(proof_path: &str, data_path: &str) -> Result<bool, Err
 curl -o registry.json https://github.com/BTCDecoded/governance/releases/download/v0.1.0/registry-2024-01.json
 
 # Verify registry signature
-governance-app registry verify --registry registry.json
+bllvm-commons registry verify --registry registry.json
 
 # Verify OTS proof
 ots verify registry.json.ots
@@ -172,10 +172,10 @@ async fn verify_registry(registry_path: &str, proof_path: &str) -> Result<bool, 
 **Using CLI Tool**:
 ```bash
 # Verify audit log integrity
-governance-app audit verify --log-path /var/lib/governance/audit-log.jsonl
+bllvm-commons audit verify --log-path /var/lib/governance/audit-log.jsonl
 
 # Verify specific entry
-governance-app audit verify-entry --log-path /var/lib/governance/audit-log.jsonl --entry-id "job_123"
+bllvm-commons audit verify-entry --log-path /var/lib/governance/audit-log.jsonl --entry-id "job_123"
 ```
 
 **Programmatic Verification**:
@@ -201,10 +201,10 @@ async fn verify_audit_log_integrity(log_path: &str) -> Result<(), Error> {
 **Calculate Merkle Root**:
 ```bash
 # Calculate Merkle root for audit log
-governance-app audit merkle-root --log-path /var/lib/governance/audit-log.jsonl
+bllvm-commons audit merkle-root --log-path /var/lib/governance/audit-log.jsonl
 
 # Verify against published registry
-governance-app audit verify-merkle --log-path /var/lib/governance/audit-log.jsonl --registry registry.json
+bllvm-commons audit verify-merkle --log-path /var/lib/governance/audit-log.jsonl --registry registry.json
 ```
 
 **Programmatic Verification**:
@@ -238,13 +238,13 @@ async fn verify_merkle_root(log_path: &str, claimed_root: &str) -> Result<bool, 
 **Using CLI Tool**:
 ```bash
 # Verify server is authorized
-governance-app server verify --server-id governance-01
+bllvm-commons server verify --server-id governance-01
 
 # List all authorized servers
-governance-app server list
+bllvm-commons server list
 
 # Check server status
-governance-app server status --server-id governance-01
+bllvm-commons server status --server-id governance-01
 ```
 
 **Programmatic Verification**:
@@ -284,10 +284,10 @@ async fn verify_server(server_id: &str, nostr_npub: &str) -> Result<bool, Error>
 **Check Server Operations**:
 ```bash
 # List recent operations by server
-governance-app server operations --server-id governance-01 --limit 10
+bllvm-commons server operations --server-id governance-01 --limit 10
 
 # Verify specific operation
-governance-app server verify-operation --operation-id "op_123"
+bllvm-commons server verify-operation --operation-id "op_123"
 ```
 
 **Programmatic Verification**:
@@ -358,7 +358,7 @@ echo "Verifying audit log..."
 AUDIT_LOG_FILE=$(mktemp)
 curl -s "$AUDIT_LOG_URL/latest.jsonl" -o "$AUDIT_LOG_FILE"
 
-if governance-app audit verify --log-path "$AUDIT_LOG_FILE"; then
+if bllvm-commons audit verify --log-path "$AUDIT_LOG_FILE"; then
     echo "✓ Audit log integrity verified"
 else
     echo "✗ Audit log verification failed"
@@ -391,7 +391,7 @@ NOSTR_NPUB=${2:-""}
 echo "Verifying server: $SERVER_ID"
 
 # Verify server authorization
-if governance-app server verify --server-id "$SERVER_ID"; then
+if bllvm-commons server verify --server-id "$SERVER_ID"; then
     echo "✓ Server is authorized"
 else
     echo "✗ Server is not authorized"
@@ -399,7 +399,7 @@ else
 fi
 
 # Verify server operations
-if governance-app server operations --server-id "$SERVER_ID" --limit 5; then
+if bllvm-commons server operations --server-id "$SERVER_ID" --limit 5; then
     echo "✓ Server operations verified"
 else
     echo "✗ Server operations verification failed"
@@ -514,12 +514,12 @@ echo "Server verification completed successfully!"
 ```bash
 # Enable debug logging
 export RUST_LOG=debug
-governance-app verify --debug
+bllvm-commons verify --debug
 
 # Check specific component
-governance-app nostr test --relay wss://relay.damus.io
-governance-app ots test --server https://alice.btc.calendar.opentimestamps.org
-governance-app audit test --log-path /var/lib/governance/audit-log.jsonl
+bllvm-commons nostr test --relay wss://relay.damus.io
+bllvm-commons ots test --server https://alice.btc.calendar.opentimestamps.org
+bllvm-commons audit test --log-path /var/lib/governance/audit-log.jsonl
 ```
 
 ## References

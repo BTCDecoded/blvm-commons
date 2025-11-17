@@ -103,7 +103,7 @@ nostr-keygen --pubkey < /etc/governance/server.nsec
 **Add to Server Registry**:
 ```bash
 # Add server to authorized registry
-governance-app server add \
+bllvm-commons server add \
   --server-id governance-01 \
   --nostr-npub "npub1..." \
   --operator-name "BTCDecoded Foundation" \
@@ -140,7 +140,7 @@ governance-app server add \
 nostr-cli --relay wss://relay.damus.io --pubkey <your-pubkey>
 
 # Monitor relay performance
-governance-app nostr monitor --relay wss://relay.damus.io
+bllvm-commons nostr monitor --relay wss://relay.damus.io
 ```
 
 **Programmatic Monitoring**:
@@ -416,26 +416,26 @@ async fn monitor_governance_events() -> Result<(), Error> {
 
 ```bash
 # Test relay connectivity
-governance-app nostr test --relay wss://relay.damus.io
+bllvm-commons nostr test --relay wss://relay.damus.io
 
 # Publish test event
-governance-app nostr publish-test --content "test event"
+bllvm-commons nostr publish-test --content "test event"
 
 # Monitor relay performance
-governance-app nostr monitor --relay wss://relay.damus.io --duration 60
+bllvm-commons nostr monitor --relay wss://relay.damus.io --duration 60
 ```
 
 ### Log Analysis
 
 ```bash
 # Check Nostr logs
-sudo journalctl -u governance-app | grep nostr
+sudo journalctl -u bllvm-commons | grep nostr
 
 # Check for relay errors
-sudo journalctl -u governance-app | grep "relay.*error"
+sudo journalctl -u bllvm-commons | grep "relay.*error"
 
 # Check event publishing
-sudo journalctl -u governance-app | grep "published.*event"
+sudo journalctl -u bllvm-commons | grep "published.*event"
 ```
 
 ## Best Practices

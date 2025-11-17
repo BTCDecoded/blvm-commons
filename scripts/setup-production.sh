@@ -8,13 +8,13 @@ set -euo pipefail
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-APP_DIR="$PROJECT_ROOT/governance-app"
+APP_DIR="$PROJECT_ROOT/bllvm-commons"
 CONFIG_DIR="$APP_DIR/config"
 BACKUP_DIR="/opt/backups"
-LOG_DIR="/var/log/governance-app"
-DATA_DIR="/opt/governance-app/data"
-KEYS_DIR="/opt/governance-app/keys"
-SSL_DIR="/opt/governance-app/ssl"
+LOG_DIR="/var/log/bllvm-commons"
+DATA_DIR="/opt/bllvm-commons/data"
+KEYS_DIR="/opt/bllvm-commons/keys"
+SSL_DIR="/opt/bllvm-commons/ssl"
 
 # Colors for output
 RED='\033[0;31m'
@@ -138,7 +138,7 @@ create_system_user() {
     if id "governance" &>/dev/null; then
         log_info "User 'governance' already exists"
     else
-        sudo useradd -r -s /bin/false -d /opt/governance-app governance
+        sudo useradd -r -s /bin/false -d /opt/bllvm-commons governance
         log_success "User 'governance' created"
     fi
 }
@@ -155,8 +155,8 @@ create_directories() {
     sudo mkdir -p "$LOG_DIR"
     
     # Set permissions
-    sudo chown -R governance:governance /opt/governance-app
-    sudo chmod 755 /opt/governance-app
+    sudo chown -R governance:governance /opt/bllvm-commons
+    sudo chmod 755 /opt/bllvm-commons
     sudo chmod 700 "$KEYS_DIR"
     sudo chmod 755 "$DATA_DIR"
     sudo chmod 755 "$LOG_DIR"
@@ -177,7 +177,7 @@ configure_firewall() {
     sudo ufw allow ssh
     sudo ufw allow 80/tcp
     sudo ufw allow 443/tcp
-    sudo ufw allow 8080/tcp  # governance-app
+    sudo ufw allow 8080/tcp  # bllvm-commons
     sudo ufw allow 9090/tcp  # Prometheus metrics
     
     # Check status
@@ -209,7 +209,7 @@ port = http,https
 logpath = /var/log/nginx/error.log
 maxretry = 3
 
-[governance-app]
+[bllvm-commons]
 enabled = true
 port = 8080
 logpath = $LOG_DIR/application.log
@@ -273,7 +273,7 @@ install_nginx() {
     sudo apt install -y nginx
     
     # Create Nginx configuration
-    sudo tee /etc/nginx/sites-available/governance-app > /dev/null <<EOF
+    sudo tee /etc/nginx/sites-available/bllvm-commons > /dev/null <<EOF
 server {
     listen 80;
     server_name your-domain.com;  # Replace with your domain
@@ -336,7 +336,7 @@ server {
 EOF
     
     # Enable site
-    sudo ln -sf /etc/nginx/sites-available/governance-app /etc/nginx/sites-enabled/
+    sudo ln -sf /etc/nginx/sites-available/bllvm-commons /etc/nginx/sites-enabled/
     sudo rm -f /etc/nginx/sites-enabled/default
     
     # Test configuration
@@ -395,15 +395,15 @@ build_application() {
     cargo build --release
     
     # Copy binary to production location
-    sudo cp target/release/governance-app /opt/governance-app/
-    sudo chown governance:governance /opt/governance-app/governance-app
-    sudo chmod +x /opt/governance-app/governance-app
+    sudo cp target/release/governance-app /opt/bllvm-commons/
+    sudo chown governance:governance /opt/bllvm-commons/governance-app
+    sudo chmod +x /opt/bllvm-commons/governance-app
     
     # Copy configuration files
-    sudo cp -r config /opt/governance-app/
-    sudo cp -r migrations /opt/governance-app/
-    sudo chown -R governance:governance /opt/governance-app/config
-    sudo chown -R governance:governance /opt/governance-app/migrations
+    sudo cp -r config /opt/bllvm-commons/
+    sudo cp -r migrations /opt/bllvm-commons/
+    sudo chown -R governance:governance /opt/bllvm-commons/config
+    sudo chown -R governance:governance /opt/bllvm-commons/migrations
     
     log_success "Application built successfully"
 }
@@ -412,9 +412,9 @@ build_application() {
 create_systemd_service() {
     log_info "Creating systemd service..."
     
-    sudo tee /etc/systemd/system/governance-app.service > /dev/null <<EOF
+    sudo tee /etc/systemd/system/bllvm-commons.service > /dev/null <<EOF
 [Unit]
-Description=BTCDecoded Governance App
+Description=Bitcoin Commons (bllvm-commons)
 After=network.target postgresql.service
 Requires=postgresql.service
 
@@ -422,8 +422,8 @@ Requires=postgresql.service
 Type=simple
 User=governance
 Group=governance
-WorkingDirectory=/opt/governance-app
-ExecStart=/opt/governance-app/governance-app --config /opt/governance-app/config/production.toml
+WorkingDirectory=/opt/bllvm-commons
+ExecStart=/opt/bllvm-commons/bllvm-commons --config /opt/bllvm-commons/config/production.toml
 Restart=always
 RestartSec=5
 Environment=RUST_LOG=info
@@ -434,8 +434,8 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/governance-app/data
-ReadWritePaths=/var/log/governance-app
+ReadWritePaths=/opt/bllvm-commons/data
+ReadWritePaths=/var/log/bllvm-commons
 ReadWritePaths=/opt/backups
 
 # Resource limits
@@ -448,7 +448,7 @@ EOF
     
     # Reload systemd and enable service
     sudo systemctl daemon-reload
-    sudo systemctl enable governance-app
+    sudo systemctl enable bllvm-commons
     
     log_success "Systemd service created successfully"
 }
@@ -458,7 +458,7 @@ create_backup_scripts() {
     log_info "Creating backup scripts..."
     
     # Database backup script
-    sudo tee /opt/governance-app/scripts/backup-database.sh > /dev/null <<'EOF'
+    sudo tee /opt/bllvm-commons/scripts/backup-database.sh > /dev/null <<'EOF'
 #!/bin/bash
 BACKUP_DIR="/opt/backups/database"
 DATE=$(date +%Y%m%d_%H%M%S)
@@ -491,9 +491,9 @@ echo "Database backup completed: governance_$DATE.backup.gz"
 EOF
     
     # Application backup script
-    sudo tee /opt/governance-app/scripts/backup-application.sh > /dev/null <<'EOF'
+    sudo tee /opt/bllvm-commons/scripts/backup-application.sh > /dev/null <<'EOF'
 #!/bin/bash
-APP_DIR="/opt/governance-app"
+APP_DIR="/opt/bllvm-commons"
 BACKUP_DIR="/opt/backups/application"
 DATE=$(date +%Y%m%d_%H%M%S)
 
@@ -513,9 +513,9 @@ echo "Application backup completed: governance-app_$DATE.tar.gz"
 EOF
     
     # Make scripts executable
-    sudo chmod +x /opt/governance-app/scripts/backup-database.sh
-    sudo chmod +x /opt/governance-app/scripts/backup-application.sh
-    sudo chown -R governance:governance /opt/governance-app/scripts
+    sudo chmod +x /opt/bllvm-commons/scripts/backup-database.sh
+    sudo chmod +x /opt/bllvm-commons/scripts/backup-application.sh
+    sudo chown -R governance:governance /opt/bllvm-commons/scripts
     
     log_success "Backup scripts created successfully"
 }
@@ -663,17 +663,17 @@ main() {
     
     echo
     log_info "Next steps:"
-    echo "1. Update /opt/governance-app/config/production.toml with your production values"
+    echo "1. Update /opt/bllvm-commons/config/production.toml with your production values"
     echo "2. Generate and install SSL certificates: sudo certbot --nginx -d your-domain.com"
     echo "3. Generate production keys and update configuration"
     echo "4. Start the application: sudo systemctl start governance-app"
     echo "5. Verify the application is running: curl http://localhost:8080/health"
     echo
     log_info "Important files:"
-    echo "- Configuration: /opt/governance-app/config/production.toml"
+    echo "- Configuration: /opt/bllvm-commons/config/production.toml"
     echo "- Logs: /var/log/governance-app/"
-    echo "- Data: /opt/governance-app/data/"
-    echo "- Keys: /opt/governance-app/keys/"
+    echo "- Data: /opt/bllvm-commons/data/"
+    echo "- Keys: /opt/bllvm-commons/keys/"
     echo "- Backups: /opt/backups/"
     echo
     log_warning "Remember to:"

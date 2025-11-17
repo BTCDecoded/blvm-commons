@@ -40,6 +40,9 @@ pub enum GovernanceError {
 
     #[error("Threshold not satisfied: {0}")]
     ThresholdError(String),
+
+    #[error("Build orchestration error: {0}")]
+    BuildError(String),
 }
 
 // Type alias for compatibility with emergency module

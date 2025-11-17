@@ -255,7 +255,7 @@ impl ForkExecutor {
             event_id: uuid::Uuid::new_v4().to_string(),
             event_type: ForkEventType::GovernanceFork,
             ruleset_id: target_ruleset_id.to_string(),
-            node_id: "governance-app".to_string(),
+            node_id: "bllvm-commons".to_string(),
             details: serde_json::json!({
                 "from_ruleset": self.current_ruleset.as_ref().map(|r| &r.id),
                 "to_ruleset": target_ruleset_id,
@@ -322,9 +322,9 @@ impl ForkExecutor {
         
         // Notify adoption tracker
         self.adoption_tracker.record_fork_decision(
-            "governance-app".to_string(),
+            "bllvm-commons".to_string(),
             target_ruleset.id.clone(),
-            "Fork executed by governance-app".to_string(),
+            "Fork executed by bllvm-commons".to_string(),
             1.0,
         ).await?;
         

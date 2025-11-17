@@ -24,6 +24,7 @@ mod nostr;
 mod ots;
 mod audit;
 mod authorization;
+mod build;
 
 use config::AppConfig;
 use database::Database;
@@ -37,12 +38,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "governance_app=debug,tower_http=debug".into()),
+                .unwrap_or_else(|_| "bllvm_commons=debug,tower_http=debug".into()),
         )
         .with(tracing_subscriber::fmt::layer())
         .init();
 
-    info!("Starting BTCDecoded Governance App");
+    info!("Starting Bitcoin Commons (bllvm-commons)");
 
     // Load configuration
     let config = AppConfig::load()?;
@@ -171,7 +172,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_state((config, database));
 
     // Start server
-    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
+    let port = config.server_port;
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     info!("Server listening on {}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
@@ -183,7 +185,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 async fn health_check() -> Json<serde_json::Value> {
     Json(serde_json::json!({
         "status": "healthy",
-        "service": "governance-app",
+        "service": "bllvm-commons",
         "timestamp": chrono::Utc::now()
     }))
 }
@@ -191,7 +193,7 @@ async fn health_check() -> Json<serde_json::Value> {
 async fn status_endpoint(State((config, database)): State<(AppConfig, Database)>) -> Json<serde_json::Value> {
     let mut status = serde_json::json!({
         "status": "healthy",
-        "service": "governance-app",
+        "service": "bllvm-commons",
         "timestamp": chrono::Utc::now(),
         "server_id": config.server_id,
         "features": {

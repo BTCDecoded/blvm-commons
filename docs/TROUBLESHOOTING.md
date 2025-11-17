@@ -45,10 +45,10 @@ sqlite3 governance.db "SELECT 1;"
 
 ```bash
 # Run migrations manually
-cargo run --bin governance-app -- migrate
+cargo run --bin bllvm-commons -- migrate
 
 # Check migration status
-cargo run --bin governance-app -- migrate-status
+cargo run --bin bllvm-commons -- migrate-status
 ```
 
 ### GitHub API Issues
@@ -112,7 +112,7 @@ ngrok http 3000
 
 ```bash
 # Validate configuration
-cargo run --bin governance-app -- validate-config
+cargo run --bin bllvm-commons -- validate-config
 
 # Check configuration file
 toml-cli validate config/app.toml
@@ -158,10 +158,10 @@ export GITHUB_APP_ID="123456"
 ```bash
 # Monitor memory usage
 htop
-ps aux | grep governance-app
+ps aux | grep bllvm-commons
 
 # Check connection pool
-cargo run --bin governance-app -- stats
+cargo run --bin bllvm-commons -- stats
 ```
 
 #### Slow Database Queries
@@ -205,7 +205,7 @@ sqlite3 governance.db "EXPLAIN QUERY PLAN SELECT * FROM pull_requests;"
 
 ```bash
 # Test signature verification
-cargo run --bin governance-app -- test-signature
+cargo run --bin bllvm-commons -- test-signature
 
 # Check public key format
 openssl rsa -pubin -in public_key.pem -text
@@ -226,10 +226,10 @@ openssl rsa -pubin -in public_key.pem -text
 
 ```bash
 # List all keys
-cargo run --bin governance-app -- list-keys
+cargo run --bin bllvm-commons -- list-keys
 
 # Check key status
-cargo run --bin governance-app -- key-status <key_id>
+cargo run --bin bllvm-commons -- key-status <key_id>
 ```
 
 ## Debugging
@@ -240,36 +240,36 @@ cargo run --bin governance-app -- key-status <key_id>
 [logging]
 level = "debug"
 format = "json"
-file = "/var/log/governance-app.log"
+file = "/var/log/bllvm-commons.log"
 ```
 
 ### Check Application Logs
 
 ```bash
 # Follow logs
-tail -f /var/log/governance-app.log
+tail -f /var/log/bllvm-commons.log
 
 # Filter by level
-grep "ERROR" /var/log/governance-app.log
+grep "ERROR" /var/log/bllvm-commons.log
 
 # Filter by component
-grep "database" /var/log/governance-app.log
+grep "database" /var/log/bllvm-commons.log
 ```
 
 ### Test Individual Components
 
 ```bash
 # Test database connection
-cargo run --bin governance-app -- test-database
+cargo run --bin bllvm-commons -- test-database
 
 # Test GitHub API
-cargo run --bin governance-app -- test-github
+cargo run --bin bllvm-commons -- test-github
 
 # Test signature verification
-cargo run --bin governance-app -- test-signatures
+cargo run --bin bllvm-commons -- test-signatures
 
 # Test webhook validation
-cargo run --bin governance-app -- test-webhook
+cargo run --bin bllvm-commons -- test-webhook
 ```
 
 ### Monitor System Resources
@@ -282,7 +282,7 @@ htop
 df -h
 
 # Monitor network connections
-netstat -tulpn | grep governance-app
+netstat -tulpn | grep bllvm-commons
 
 # Monitor database connections
 sqlite3 governance.db "PRAGMA database_list;"
@@ -317,7 +317,7 @@ worker_threads = 16
 [logging]
 level = "info"
 format = "json"
-file = "/var/log/governance-app.log"
+file = "/var/log/bllvm-commons.log"
 max_size = 104857600
 max_files = 10
 ```
@@ -361,7 +361,7 @@ curl http://localhost:9090/metrics/app
 
 ### Check Logs
 
-1. Application logs: `/var/log/governance-app.log`
+1. Application logs: `/var/log/bllvm-commons.log`
 2. System logs: `/var/log/syslog`
 3. Database logs: Check SQLite journal files
 

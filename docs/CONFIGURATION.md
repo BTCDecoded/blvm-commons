@@ -76,7 +76,7 @@ max_request_size = 1048576
 [logging]
 level = "info"
 format = "json"
-file = "/var/log/governance-app.log"
+file = "/var/log/bllvm-commons.log"
 max_size = 10485760
 max_files = 5
 ```
@@ -139,7 +139,7 @@ SERVER_MAX_REQUEST_SIZE="1048576"
 ```bash
 LOG_LEVEL="info"
 LOG_FORMAT="json"
-LOG_FILE="/var/log/governance-app.log"
+LOG_FILE="/var/log/bllvm-commons.log"
 LOG_MAX_SIZE="10485760"
 LOG_MAX_FILES="5"
 ```
@@ -259,7 +259,7 @@ max_request_size = 2097152
 [logging]
 level = "info"
 format = "json"
-file = "/var/log/governance-app.log"
+file = "/var/log/bllvm-commons.log"
 max_size = 104857600
 max_files = 10
 

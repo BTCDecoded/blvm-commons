@@ -155,7 +155,7 @@ fn submit_veto(
     
     println!("");
     println!("📤 To submit to governance system:");
-    println!("  curl -X POST http://governance-app:8080/api/veto \\");
+    println!("  curl -X POST http://bllvm-commons:8080/api/veto \\");
     println!("    -H 'Content-Type: application/json' \\");
     println!("    -d @{}", veto_file);
     
