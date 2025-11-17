@@ -35,8 +35,14 @@ impl OtsClient {
         hasher.update(data);
         let hash = hasher.finalize();
 
-        // For now, return a mock proof
-        // In a real implementation, this would submit to OpenTimestamps
+        // TODO: Replace with real OpenTimestamps protocol implementation
+        // The OpenTimestamps protocol uses HTTP POST to calendar servers
+        // See: https://github.com/opentimestamps/opentimestamps-server
+        // For now, return a mock proof for development/testing
+        // Production implementation should:
+        // 1. POST hash to calendar server (e.g., https://alice.btc.calendar.opentimestamps.org/stamp)
+        // 2. Receive OTS proof in binary format
+        // 3. Store proof for later verification
         let mock_proof = format!("MOCK_OTS_PROOF:{}", hex::encode(hash)).into_bytes();
         
         info!("Created mock OTS proof for {} bytes", data.len());
@@ -52,8 +58,13 @@ impl OtsClient {
         hasher.update(data);
         let data_hash = hasher.finalize();
 
+        // TODO: Replace with real OpenTimestamps verification
+        // Production implementation should:
+        // 1. Parse OTS proof binary format
+        // 2. Verify Merkle tree structure
+        // 3. Check Bitcoin block header commitments
+        // 4. Return confirmed block height or pending status
         // For now, return a mock verification
-        // In a real implementation, this would verify against OpenTimestamps
         if proof.starts_with(b"MOCK_OTS_PROOF:") {
             info!("Mock timestamp verified");
             Ok(VerificationResult::Confirmed(12345)) // Mock block height
