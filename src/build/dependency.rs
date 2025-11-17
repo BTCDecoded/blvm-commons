@@ -118,7 +118,7 @@ impl DependencyGraph {
     /// Returns groups of repositories that can be built simultaneously
     pub fn get_parallel_groups(&self) -> Result<Vec<Vec<String>>, String> {
         let build_order = self.get_build_order()?;
-        let mut groups = Vec::new();
+        let mut groups: Vec<Vec<String>> = Vec::new();
         let mut completed = HashSet::new();
         
         for repo in build_order {
