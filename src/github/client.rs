@@ -112,6 +112,30 @@ impl GitHubClient {
         Ok(())
     }
 
+    /// Create a status check (wrapper for post_status_check with PR number)
+    pub async fn create_status_check(
+        &self,
+        owner: &str,
+        repo: &str,
+        pr_number: u64,
+        context: &str,
+        state: &str,
+        description: &str,
+        target_url: Option<&str>,
+    ) -> Result<(), GovernanceError> {
+        // Get PR head SHA
+        let pr = self.get_pull_request(owner, repo, pr_number).await?;
+        let head_sha = pr.get("head")
+            .and_then(|h| h.get("sha"))
+            .and_then(|s| s.as_str())
+            .ok_or_else(|| {
+                GovernanceError::GitHubError("Missing head SHA in PR response".to_string())
+            })?;
+
+        // Post status check
+        self.post_status_check(owner, repo, head_sha, state, description, context).await
+    }
+
     /// Get repository information
     pub async fn get_repository_info(
         &self,
@@ -479,13 +503,8 @@ impl GitHubClient {
             })?;
         */
 
-        info!("Workflow triggered for {}/{}", owner, repo);
-        
-        // Poll for the workflow run that was just triggered
-        // repository_dispatch doesn't return a run ID, so we need to find it
-        let run_id = self.find_triggered_workflow_run(owner, repo, event_type).await?;
-        
-        Ok(run_id)
+        // Function already returns above - this is unreachable
+        unreachable!()
     }
 
     /// Get workflow run status
@@ -710,7 +729,8 @@ impl GitHubClient {
             })?;
         */
 
-        Ok(token_response.token)
+        // Function already returns error above - this is unreachable
+        unreachable!()
     }
 
     /// Download an artifact archive from GitHub

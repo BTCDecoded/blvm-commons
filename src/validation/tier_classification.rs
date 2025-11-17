@@ -147,9 +147,9 @@ async fn load_tier_classification_config() -> Result<TierClassificationConfig, G
                 audit_present: 0.1,
             },
             penalty_factors: PenaltyFactors {
-                missing_specification: 0.1,
-                missing_tests: 0.1,
-                breaking_changes: 0.1,
+                conflicting_indicators: 0.1,
+                insufficient_evidence: 0.1,
+                unclear_intent: 0.1,
             },
         },
         fallback: FallbackConfig {

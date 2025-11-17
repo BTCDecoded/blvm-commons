@@ -2,6 +2,7 @@ use crate::error::GovernanceError;
 use crate::validation::content_hash::{ContentHashValidator, SyncReport, SyncStatus};
 use crate::validation::version_pinning::{VersionPinningValidator, VersionPinningConfig, VersionManifest};
 use crate::validation::equivalence_proof::{EquivalenceProofValidator, EquivalenceTestVector};
+use crate::validation::verification_check::requires_verification;
 use crate::github::file_operations::GitHubFileOperations;
 use crate::github::cross_layer_status::{CrossLayerStatusChecker, CrossLayerStatusCheck, StatusState};
 use serde_json::Value;
