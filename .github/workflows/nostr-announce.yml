@@ -1,0 +1,83 @@
+name: Nostr Announcements
+
+on:
+  workflow_dispatch:
+    inputs:
+      bot:
+        description: 'Bot identity (gov, dev, research, network)'
+        required: true
+        type: choice
+        options:
+          - gov
+          - dev
+          - research
+          - network
+      event_type:
+        description: 'Event type (merge, release, milestone, announcement, etc.)'
+        required: true
+        type: string
+      content:
+        description: 'Event content (JSON or markdown text)'
+        required: true
+        type: string
+      kind:
+        description: 'Nostr event kind (1=text note, 30023=long-form, etc.)'
+        required: false
+        default: '1'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to Nostr (${{ inputs.bot }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      
+      - name: Cache cargo dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+      
+      - name: Publish to Nostr
+        env:
+          NOSTR_NSEC_GOV: ${{ secrets.NOSTR_NSEC_GOV }}
+          NOSTR_NSEC_DEV: ${{ secrets.NOSTR_NSEC_DEV }}
+          NOSTR_NSEC_RESEARCH: ${{ secrets.NOSTR_NSEC_RESEARCH }}
+          NOSTR_NSEC_NETWORK: ${{ secrets.NOSTR_NSEC_NETWORK }}
+          NOSTR_BOT: ${{ inputs.bot }}
+          NOSTR_EVENT_TYPE: ${{ inputs.event_type }}
+          NOSTR_CONTENT: ${{ inputs.content }}
+          NOSTR_KIND: ${{ inputs.kind }}
+          NOSTR_RELAYS: "wss://relay.damus.io,wss://nos.lol,wss://relay.nostr.band"
+        run: |
+          cd governance-app
+          cargo run --bin nostr-publisher -- \
+            --bot "$NOSTR_BOT" \
+            --event-type "$NOSTR_EVENT_TYPE" \
+            --content "$NOSTR_CONTENT" \
+            --kind "$NOSTR_KIND" \
+            --relays "$NOSTR_RELAYS"
+      
+      - name: Verify publication
+        run: |
+          echo "✅ Published to Nostr via @BTCCommons_${{ inputs.bot }}"
+          echo "Event type: ${{ inputs.event_type }}"
+          echo "Kind: ${{ inputs.kind }}"
+

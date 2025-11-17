@@ -24,12 +24,29 @@ pub struct AppConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NostrConfig {
     pub enabled: bool,
-    pub server_nsec_path: String,
+    pub server_nsec_path: String,  // Legacy: single bot (deprecated, use bots instead)
     pub relays: Vec<String>,
     pub publish_interval_secs: u64,
     pub governance_config: String,  // e.g., "commons_mainnet"
-    pub zap_address: Option<String>,  // Lightning address for donations
+    pub zap_address: Option<String>,  // Legacy: single zap address (deprecated, use bots instead)
     pub logo_url: Option<String>,  // URL to Bitcoin Commons logo
+    #[serde(default)]
+    pub bots: std::collections::HashMap<String, BotConfig>,  // Multi-bot support
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BotConfig {
+    pub nsec_path: String,  // Path to nsec file or "env:VAR_NAME" for GitHub secrets
+    pub npub: String,      // Public key (npub)
+    pub lightning_address: String,  // Lightning address for zaps
+    pub profile: BotProfile,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BotProfile {
+    pub name: String,      // e.g., "@BTCCommons_Gov"
+    pub about: String,     // Bot description
+    pub picture: String,   // Logo URL (variant for this bot)
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -167,6 +184,7 @@ impl AppConfig {
                 governance_config,
                 zap_address,
                 logo_url,
+                bots: std::collections::HashMap::new(),  // Loaded from config file or env vars
             },
             ots: OtsConfig {
                 enabled: ots_enabled,

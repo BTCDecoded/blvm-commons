@@ -469,7 +469,7 @@ impl GitHubClient {
         repo: &str,
         event_type: &str,
         client_payload: &serde_json::Value,
-    ) -> Result<u64, GovernanceError> {
+    ) -> crate::error::Result<u64> {
         info!(
             "Triggering workflow for {}/{} via repository_dispatch (event: {})",
             owner, repo, event_type
@@ -484,9 +484,9 @@ impl GitHubClient {
         // Trigger workflow via repository_dispatch
         // Note: This requires Actions: Write permission
         // TODO: Fix octocrab 0.38 API - create_dispatch_event doesn't exist
-        // For now, return success
+        // For now, return success with placeholder run ID
         info!("Workflow dispatch stubbed out - API method not available");
-        Ok(())
+        Ok(0) // Placeholder run ID
         
         /* Original code - needs API fix:
         let response = self

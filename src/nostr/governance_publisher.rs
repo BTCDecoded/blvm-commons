@@ -69,7 +69,7 @@ impl GovernanceActionPublisher {
             }),
             layer_requirement: layer_req,
             tier_requirement: tier_req,
-            combined_requirement: combined_req,
+            combined_requirement: combined_req.clone(),
             signatures,
             economic_veto_status,
             review_period_ends,

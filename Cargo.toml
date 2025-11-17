@@ -89,6 +89,10 @@ path = "src/bin/test_content_hash.rs"
 name = "test-content-hash-standalone"
 path = "src/bin/test_content_hash_standalone.rs"
 
+[[bin]]
+name = "nostr-publisher"
+path = "src/bin/nostr-publisher.rs"
+
 [dev-dependencies]
 tokio-test = "0.4"
 mockito = "1.2"
