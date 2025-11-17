@@ -12,6 +12,30 @@ impl From<sqlx::Error> for GovernanceError {
     }
 }
 
+impl From<octocrab::Error> for GovernanceError {
+    fn from(err: octocrab::Error) -> Self {
+        Self::GitHubError(format!("GitHub API error: {}", err))
+    }
+}
+
+impl From<reqwest::Error> for GovernanceError {
+    fn from(err: reqwest::Error) -> Self {
+        Self::GitHubError(format!("HTTP error: {}", err))
+    }
+}
+
+impl From<std::io::Error> for GovernanceError {
+    fn from(err: std::io::Error) -> Self {
+        Self::ConfigError(format!("IO error: {}", err))
+    }
+}
+
+impl From<anyhow::Error> for GovernanceError {
+    fn from(err: anyhow::Error) -> Self {
+        Self::ConfigError(format!("Error: {}", err))
+    }
+}
+
 #[derive(Error, Debug)]
 pub enum GovernanceError {
     #[error("Configuration error: {0}")]
