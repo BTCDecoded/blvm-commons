@@ -8,7 +8,7 @@ use crate::github::types::{CheckRun, WorkflowStatus};
 
 #[derive(Clone)]
 pub struct GitHubClient {
-    client: Octocrab,
+    pub(crate) client: Octocrab,
     app_id: u64,
     http_client: ReqwestClient,
 }
@@ -80,7 +80,7 @@ impl GitHubClient {
             })?;
 
         info!(
-            "Successfully posted status check: {}/{}@{} - {}: {} ({})",
+            "Successfully posted status check: {}/{}@{} - {:?}: {} ({})",
             owner, repo, sha, github_state, description, context
         );
 
