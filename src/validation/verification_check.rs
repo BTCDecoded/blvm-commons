@@ -57,7 +57,7 @@ pub async fn check_verification_status(
     let workflow = "verify.yml";
     let status = client.get_workflow_status(&owner, &repo, pr.pr_number as u64, workflow).await?;
     
-    match status.conclusion {
+    match status.conclusion.as_deref() {
         Some("success") => {
             // Verification passed - check specific tools
             let kani_passed = check_tool_status(client, pr, "Kani Model Checking").await?;

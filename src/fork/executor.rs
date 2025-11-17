@@ -7,6 +7,7 @@ use std::collections::HashMap;
 use std::path::Path;
 use std::fs;
 use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
 use serde_json;
 use tracing::{info, warn, error};
 
@@ -198,9 +199,10 @@ impl ForkExecutor {
                             "repositories": export.repositories,
                             "governance_fork": export.governance_fork,
                         });
+                        let ruleset_id = export.ruleset_id.clone();
                         let ruleset = Ruleset {
-                            id: export.ruleset_id.clone(),
-                            name: format!("Ruleset {}", export.ruleset_id),
+                            id: ruleset_id.clone(),
+                            name: format!("Ruleset {}", ruleset_id),
                             version: export.ruleset_version,
                             hash: self.calculate_config_hash(&config)?,
                             created_at: export.created_at,
@@ -208,8 +210,8 @@ impl ForkExecutor {
                             description: Some(format!("Exported ruleset from {}", export.metadata.source_repository)),
                         };
                         
-                        self.available_rulesets.insert(export.ruleset_id, ruleset);
-                        info!("Loaded ruleset: {}", export.ruleset_id);
+                        self.available_rulesets.insert(ruleset_id.clone(), ruleset);
+                        info!("Loaded ruleset: {}", ruleset_id);
                     }
                 }
             }
@@ -227,10 +229,10 @@ impl ForkExecutor {
         let adoption_stats = self.adoption_tracker.get_adoption_statistics().await?;
         
         // Check if any ruleset meets fork thresholds
-        for (ruleset_id, metrics) in &adoption_stats.rulesets {
+        for metrics in &adoption_stats.rulesets {
             if self.should_execute_fork(metrics) {
-                info!("Fork conditions met for ruleset: {}", ruleset_id);
-                self.execute_fork(ruleset_id).await?;
+                info!("Fork conditions met for ruleset: {}", metrics.ruleset_id);
+                self.execute_fork(&metrics.ruleset_id).await?;
                 break; // Only execute one fork at a time
             }
         }
@@ -250,14 +252,15 @@ impl ForkExecutor {
     async fn execute_fork(&mut self, target_ruleset_id: &str) -> Result<(), GovernanceError> {
         info!("Executing governance fork to ruleset: {}", target_ruleset_id);
         
-        // Get target ruleset
+        // Get target ruleset (clone to avoid borrow checker issues)
         let target_ruleset = self.available_rulesets.get(target_ruleset_id)
             .ok_or_else(|| GovernanceError::ConfigError(
                 format!("Target ruleset not found: {}", target_ruleset_id)
-            ))?;
+            ))?
+            .clone();
         
         // Validate target ruleset
-        self.validate_ruleset(target_ruleset)?;
+        self.validate_ruleset(&target_ruleset)?;
         
         // Create fork event
         let fork_event = ForkEvent {
@@ -266,7 +269,7 @@ impl ForkExecutor {
             ruleset_id: target_ruleset_id.to_string(),
             node_id: "bllvm-commons".to_string(),
             details: serde_json::json!({
-                "from_ruleset": self.current_ruleset.as_ref().map(|r| &r.id),
+                "from_ruleset": self.current_ruleset.as_ref().map(|r| r.id.clone()),
                 "to_ruleset": target_ruleset_id,
                 "reason": "Adoption threshold met"
             }),
@@ -277,7 +280,7 @@ impl ForkExecutor {
         self.log_fork_event(&fork_event).await?;
         
         // Execute the fork
-        self.perform_fork_transition(target_ruleset).await?;
+        self.perform_fork_transition(&target_ruleset).await?;
         
         info!("Governance fork executed successfully to: {}", target_ruleset_id);
         Ok(())

@@ -208,7 +208,8 @@ impl CrossLayerValidator {
                     commit_sha: "a1b2c3d4e5f6789012345678901234567890abcd".to_string(),
                     content_hash: "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef".to_string(),
                     created_at: Utc::now() - chrono::Duration::days(1),
-                    signatures: vec![
+                    signatures: Vec::<crate::validation::version_pinning::VersionSignature>::new(),
+                    // vec![
                         VersionSignature {
                             maintainer_id: "maintainer1".to_string(),
                             signature: "test_signature_1".to_string(),
@@ -396,7 +397,7 @@ impl CrossLayerValidator {
                 repo,
                 pr_number,
                 &status_check.context,
-                &status_check.state,
+                &format!("{:?}", status_check.state),
                 &status_check.description,
                 status_check.target_url.as_deref(),
             ).await?;

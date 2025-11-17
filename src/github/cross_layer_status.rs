@@ -138,7 +138,7 @@ impl CrossLayerStatusChecker {
 
         // 6. Create status check
         let status_check = CrossLayerStatusCheck {
-            state: overall_status,
+            state: overall_status.clone(),
             description: self.generate_status_description(&content_hash_status, &version_pinning_status, &equivalence_proof_status),
             target_url: Some(format!("https://github.com/{}/{}/pull/{}", owner, repo, pr_number)),
             context: "cross-layer-sync".to_string(),
@@ -146,7 +146,7 @@ impl CrossLayerStatusChecker {
                 content_hash_status,
                 version_pinning_status,
                 equivalence_proof_status,
-                overall_sync_status: self.map_status_to_sync_status(overall_status),
+                overall_sync_status: self.map_status_to_sync_status(&overall_status),
                 recommendations,
             },
         };
