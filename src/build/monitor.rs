@@ -114,7 +114,7 @@ impl BuildMonitor {
         for (repo, workflow_run_id) in builds {
             let monitor = self.clone();
             let repo_clone = repo.clone();
-            let org_clone = self.organization.clone();
+            let _org_clone = self.organization.clone();
             
             let task = tokio::spawn(async move {
                 let status = monitor.monitor_build(&repo_clone, workflow_run_id).await;

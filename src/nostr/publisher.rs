@@ -105,7 +105,7 @@ impl StatusPublisher {
         let uptime_hours = (Utc::now() - self.start_time).num_hours() as u64;
 
         // TODO: Implement these database methods
-        let last_merge: Option<()> = None;
+        let _last_merge: Option<()> = None;
         let last_merge_pr = None;
         let last_merge_time = None;
         let merges_today = 0;

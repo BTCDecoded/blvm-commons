@@ -142,7 +142,7 @@ impl CrossLayerValidator {
     }
     
     /// Parse repository name into owner and repo
-    fn parse_repo_name(repo_name: &str) -> Result<(String, String), GovernanceError> {
+    fn parse_repo_name(repo_name: &str) -> crate::error::Result<(String, String)> {
         let parts: Vec<&str> = repo_name.split('/').collect();
         if parts.len() != 2 {
             return Err(GovernanceError::ValidationError(format!(
@@ -207,15 +207,16 @@ impl CrossLayerValidator {
                     commit_sha: "a1b2c3d4e5f6789012345678901234567890abcd".to_string(),
                     content_hash: "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef".to_string(),
                     created_at: Utc::now() - chrono::Duration::days(1),
-                    signatures: vec![
-                        VersionSignature {
+                    signatures: {
+                        let mut sigs: Vec<VersionSignature> = Vec::new();
+                        sigs.push(VersionSignature {
                             maintainer_id: "maintainer1".to_string(),
                             signature: "test_signature_1".to_string(),
                             public_key: "test_public_key_1".to_string(),
                             signed_at: Utc::now() - chrono::Duration::days(1),
-                        },
-                        // Add more signatures as needed
-                    ],
+                        });
+                        sigs
+                    },
                     ots_timestamp: Some("bitcoin:test_timestamp".to_string()),
                     is_stable: true,
                     is_latest: true,
@@ -345,7 +346,7 @@ impl CrossLayerValidator {
 
         /// Generate comprehensive cross-layer status check for GitHub PR
         pub async fn generate_github_status_check(
-            github_token: &str,
+            _github_token: &str,
             owner: &str,
             repo: &str,
             pr_number: u64,

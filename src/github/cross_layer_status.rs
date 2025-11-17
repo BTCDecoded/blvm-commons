@@ -137,6 +137,7 @@ impl CrossLayerStatusChecker {
         let recommendations = self.generate_recommendations(&content_hash_status, &version_pinning_status, &equivalence_proof_status);
 
         // 6. Create status check
+        let overall_sync_status = self.map_status_to_sync_status(overall_status.clone());
         let status_check = CrossLayerStatusCheck {
             state: overall_status,
             description: self.generate_status_description(&content_hash_status, &version_pinning_status, &equivalence_proof_status),
@@ -146,7 +147,7 @@ impl CrossLayerStatusChecker {
                 content_hash_status,
                 version_pinning_status,
                 equivalence_proof_status,
-                overall_sync_status: self.map_status_to_sync_status(overall_status.clone()),
+                overall_sync_status,
                 recommendations,
             },
         };
