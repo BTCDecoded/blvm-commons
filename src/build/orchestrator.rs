@@ -220,13 +220,11 @@ impl BuildOrchestrator {
             .client
             .repos(&self.organization, "bllvm")
             .releases()
-            .create(&json!({
-                "tag_name": version,
-                "name": format!("Bitcoin Commons {}", version),
-                "body": release_body,
-                "prerelease": prerelease,
-                "draft": false,
-            }))
+            .create(version)
+            .name(&format!("Bitcoin Commons {}", version))
+            .body(&release_body)
+            .prerelease(prerelease)
+            .draft(false)
             .send()
             .await
             .map_err(|e| {

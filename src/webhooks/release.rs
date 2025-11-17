@@ -14,7 +14,7 @@ use crate::config::AppConfig;
 pub async fn handle_release_event(
     payload: &Value,
     orchestrator: &BuildOrchestrator,
-) -> Result<(StatusCode, Value), GovernanceError> {
+) -> crate::error::Result<(StatusCode, Value)> {
     info!("Handling release event");
     
     // Extract release information
@@ -77,7 +77,7 @@ pub async fn handle_release_event(
 pub async fn handle_repository_dispatch(
     payload: &Value,
     _orchestrator: &BuildOrchestrator,
-) -> Result<(StatusCode, Value), GovernanceError> {
+) -> crate::error::Result<(StatusCode, Value)> {
     info!("Handling repository_dispatch event");
     
     let action = payload
