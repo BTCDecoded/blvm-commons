@@ -56,13 +56,14 @@ impl std::str::FromStr for KeyType {
 
 impl KeyType {
     /// Get key rotation period for this key type
+    /// Matches documented policy: 6 months for routine maintainers, 3 months for emergency
     pub fn rotation_period(&self) -> Duration {
         match self {
-            KeyType::Maintainer => Duration::from_secs(365 * 24 * 60 * 60), // 1 year
+            KeyType::Maintainer => Duration::from_secs(180 * 24 * 60 * 60),  // 6 months
             KeyType::EconomicNode => Duration::from_secs(365 * 24 * 60 * 60), // 1 year
-            KeyType::Emergency => Duration::from_secs(180 * 24 * 60 * 60),  // 6 months
-            KeyType::GitHubApp => Duration::from_secs(90 * 24 * 60 * 60),   // 3 months
-            KeyType::System => Duration::from_secs(365 * 24 * 60 * 60),     // 1 year
+            KeyType::Emergency => Duration::from_secs(90 * 24 * 60 * 60),    // 3 months
+            KeyType::GitHubApp => Duration::from_secs(90 * 24 * 60 * 60),    // 3 months
+            KeyType::System => Duration::from_secs(365 * 24 * 60 * 60),      // 1 year
         }
     }
 
@@ -394,6 +395,20 @@ impl KeyManager {
             )
             .await?;
 
+        // If this is a maintainer key, update the maintainers table
+        if current_metadata.key_type == KeyType::Maintainer {
+            self.update_maintainer_public_key(&owner, &new_metadata.public_key)
+                .await?;
+            info!("Updated maintainer registry for: {}", owner);
+        }
+
+        // If this is an emergency key, update the emergency_keyholders table
+        if current_metadata.key_type == KeyType::Emergency {
+            self.update_emergency_keyholder_public_key(&owner, &new_metadata.public_key)
+                .await?;
+            info!("Updated emergency keyholder registry for: {}", owner);
+        }
+
         // Mark old key as revoked
         self.revoke_key(key_id, "Key rotated").await?;
 
@@ -402,6 +417,60 @@ impl KeyManager {
             key_id, new_metadata.key_id
         );
         Ok(new_metadata)
+    }
+
+    /// Update maintainer public key in the maintainers table
+    async fn update_maintainer_public_key(
+        &self,
+        github_username: &str,
+        new_public_key: &str,
+    ) -> Result<(), GovernanceError> {
+        sqlx::query(
+            r#"
+            UPDATE maintainers 
+            SET public_key = ?, last_updated = CURRENT_TIMESTAMP
+            WHERE github_username = ? AND active = true
+            "#,
+        )
+        .bind(new_public_key)
+        .bind(github_username)
+        .execute(&self.pool)
+        .await
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!(
+                "Failed to update maintainer public key: {}",
+                e
+            ))
+        })?;
+
+        Ok(())
+    }
+
+    /// Update emergency keyholder public key in the emergency_keyholders table
+    async fn update_emergency_keyholder_public_key(
+        &self,
+        github_username: &str,
+        new_public_key: &str,
+    ) -> Result<(), GovernanceError> {
+        sqlx::query(
+            r#"
+            UPDATE emergency_keyholders 
+            SET public_key = ?, last_updated = CURRENT_TIMESTAMP
+            WHERE github_username = ? AND active = true
+            "#,
+        )
+        .bind(new_public_key)
+        .bind(github_username)
+        .execute(&self.pool)
+        .await
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!(
+                "Failed to update emergency keyholder public key: {}",
+                e
+            ))
+        })?;
+
+        Ok(())
     }
 
     /// Revoke a key
@@ -483,21 +552,23 @@ impl KeyManager {
     }
 
     /// Check for keys that need rotation
+    /// Returns keys that are within 30 days of expiration or have already expired
     pub async fn check_rotation_needed(&self) -> Result<Vec<KeyMetadata>, GovernanceError> {
         let now = Utc::now();
-        let rotation_threshold = now
-            - chrono::Duration::try_days(30)
-                .ok_or_else(|| GovernanceError::CryptoError("Invalid duration".to_string()))?; // 30 days before expiration
+        // Check for keys expiring within 30 days or already expired
+        let rotation_warning_threshold = now
+            + chrono::Duration::try_days(30)
+                .ok_or_else(|| GovernanceError::CryptoError("Invalid duration".to_string()))?;
 
         let rows = sqlx::query(
             r#"
             SELECT id, key_id, key_type, owner, public_key, status, created_at, expires_at, last_used, usage_count, metadata
             FROM key_metadata
-            WHERE status = 'active' AND expires_at < ?
+            WHERE status = 'active' AND expires_at <= ?
             ORDER BY expires_at ASC
             "#
         )
-        .bind(rotation_threshold)
+        .bind(rotation_warning_threshold)
         .fetch_all(&self.pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(format!("Failed to fetch keys needing rotation: {}", e)))?;

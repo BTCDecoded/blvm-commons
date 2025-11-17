@@ -81,6 +81,13 @@ enum Commands {
     /// Check for keys needing rotation
     CheckRotation,
 
+    /// Automatically rotate keys that need rotation
+    AutoRotate {
+        /// Dry run mode (don't actually rotate, just show what would be rotated)
+        #[arg(long)]
+        dry_run: bool,
+    },
+
     /// Get key statistics
     Stats,
 
@@ -190,6 +197,51 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     );
                 }
             }
+        }
+
+        Commands::AutoRotate { dry_run } => {
+            let keys_needing_rotation = key_manager.check_rotation_needed().await?;
+
+            if keys_needing_rotation.is_empty() {
+                println!("No keys need rotation");
+                return Ok(());
+            }
+
+            if dry_run {
+                println!("DRY RUN: Would rotate the following keys:");
+                for key in &keys_needing_rotation {
+                    println!(
+                        "  {} ({}) - expires {}",
+                        key.key_id, key.owner, key.expires_at
+                    );
+                }
+                return Ok(());
+            }
+
+            println!("Rotating {} keys...", keys_needing_rotation.len());
+            let mut success_count = 0;
+            let mut error_count = 0;
+
+            for key in keys_needing_rotation {
+                match key_manager.rotate_key(&key.key_id, None).await {
+                    Ok(new_key) => {
+                        println!(
+                            "✅ Rotated {} ({}) -> {}",
+                            key.key_id, key.owner, new_key.key_id
+                        );
+                        success_count += 1;
+                    }
+                    Err(e) => {
+                        println!(
+                            "❌ Failed to rotate {} ({}): {}",
+                            key.key_id, key.owner, e
+                        );
+                        error_count += 1;
+                    }
+                }
+            }
+
+            println!("\nRotation complete: {} succeeded, {} failed", success_count, error_count);
         }
 
         Commands::Stats => {
