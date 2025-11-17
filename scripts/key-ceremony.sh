@@ -292,3 +292,4 @@ echo "4. Register public key in governance system"
 echo ""
 echo "⚠️  IMPORTANT: Keep private key secure and never share it!"
 
+

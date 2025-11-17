@@ -132,3 +132,6 @@ pub struct MaxExtensionsReachedArgs {
     pub current: u32,
     pub max: u32,
 }
+
+/// Type alias for Result with GovernanceError
+pub type Result<T> = std::result::Result<T, GovernanceError>;

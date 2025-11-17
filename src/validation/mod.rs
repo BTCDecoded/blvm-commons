@@ -9,3 +9,25 @@ pub mod threshold;
 pub mod tier_classification;
 pub mod verification_check;
 pub mod version_pinning;
+
+use serde::{Deserialize, Serialize};
+
+/// Result of validation checks
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ValidationResult {
+    /// Validation passed
+    Valid {
+        message: String,
+    },
+    /// Validation failed
+    Invalid {
+        message: String,
+        blocking: bool,
+    },
+    /// Validation is still pending
+    Pending {
+        message: String,
+    },
+    /// Validation not applicable to this case
+    NotApplicable,
+}

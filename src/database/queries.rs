@@ -1,6 +1,7 @@
 use crate::database::models::*;
+use crate::error::GovernanceError;
 use chrono::Utc;
-use sqlx::{SqlitePool, Row};
+use sqlx::{SqlitePool, Row, FromRow};
 
 pub struct Queries;
 
@@ -34,7 +35,13 @@ impl Queries {
         .fetch_optional(pool)
         .await?;
 
-        Ok(row.map(|r| PullRequestRow::from_row(&r).unwrap().into()))
+        match row {
+            Some(r) => {
+                let pr_row = PullRequestRow::from_row(&r)?;
+                Ok(Some(pr_row.into()))
+            }
+            None => Ok(None),
+        }
     }
 
     pub async fn get_maintainers_for_layer(
@@ -59,10 +66,14 @@ impl Queries {
         .fetch_all(pool)
         .await?;
 
-        Ok(rows
+        let result: Result<Vec<Maintainer>, _> = rows
             .into_iter()
-            .map(|r| MaintainerRow::from_row(&r).unwrap().into())
-            .collect())
+            .map(|r| {
+                let mr = MaintainerRow::from_row(&r)?;
+                Ok(mr.into())
+            })
+            .collect();
+        result
     }
 
     pub async fn get_emergency_keyholders(
@@ -84,10 +95,14 @@ impl Queries {
         .fetch_all(pool)
         .await?;
 
-        Ok(rows
+        let result: Result<Vec<EmergencyKeyholder>, _> = rows
             .into_iter()
-            .map(|r| EmergencyKeyholderRow::from_row(&r).unwrap().into())
-            .collect())
+            .map(|r| {
+                let ekr = EmergencyKeyholderRow::from_row(&r)?;
+                Ok(ekr.into())
+            })
+            .collect();
+        result
     }
 
     pub async fn get_governance_events(
@@ -113,10 +128,14 @@ impl Queries {
         .fetch_all(pool)
         .await?;
 
-        Ok(rows
+        let result: Result<Vec<GovernanceEvent>, _> = rows
             .into_iter()
-            .map(|r| GovernanceEventRow::from_row(&r).unwrap().into())
-            .collect())
+            .map(|r| {
+                let ger = GovernanceEventRow::from_row(&r)?;
+                Ok(ger.into())
+            })
+            .collect();
+        result
     }
 
     pub async fn create_pull_request(
