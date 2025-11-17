@@ -66,18 +66,13 @@ impl GitHubClient {
         };
 
         // Create status check payload
-        let payload = json!({
-            "state": github_state,
-            "description": description,
-            "context": context,
-            "target_url": format!("https://github.com/{}/{}/actions", owner, repo)
-        });
-
         // Post status check via GitHub API
         self.client
             .repos(owner, repo)
-            .create_status(sha)
-            .body(&payload)
+            .create_status(sha, github_state)
+            .description(description)
+            .context(context)
+            .target_url(&format!("https://github.com/{}/{}/actions", owner, repo))
             .send()
             .await
             .map_err(|e| {
@@ -177,18 +172,10 @@ impl GitHubClient {
             })?;
 
         // Extract head and base SHA from the pull request
-        let head_sha = pull_request.head.as_ref()
-            .map(|h| h.sha.clone())
-            .unwrap_or_default();
-        let base_sha = pull_request.base.as_ref()
-            .map(|b| b.sha.clone())
-            .unwrap_or_default();
-        let head_ref = pull_request.head.as_ref()
-            .map(|h| h.ref_field.clone())
-            .unwrap_or_default();
-        let base_ref = pull_request.base.as_ref()
-            .map(|b| b.ref_field.clone())
-            .unwrap_or_default();
+        let head_sha = pull_request.head.sha.clone();
+        let base_sha = pull_request.base.sha.clone();
+        let head_ref = pull_request.head.ref_field.clone();
+        let base_ref = pull_request.base.ref_field.clone();
 
         Ok(json!({
             "id": pull_request.id,

@@ -24,7 +24,7 @@ pub struct VersionReference {
 }
 
 /// Types of version references
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum VersionReferenceType {
     /// @orange-paper-version: v1.2.3
     Version,

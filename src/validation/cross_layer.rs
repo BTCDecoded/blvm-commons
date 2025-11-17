@@ -353,8 +353,10 @@ impl CrossLayerValidator {
         ) -> Result<CrossLayerStatusCheck, GovernanceError> {
             info!("Generating GitHub status check for {}/{} PR #{}", owner, repo, pr_number);
 
-            // Create GitHub client
-            let github_client = crate::github::client::GitHubClient::new(github_token.to_string());
+            // Create GitHub client - for now, use a placeholder app_id and key path
+            // In production, this should use proper authentication
+            let github_client = crate::github::client::GitHubClient::new(0, "/dev/null")
+                .map_err(|_| GovernanceError::ConfigError("Failed to create GitHub client".to_string()))?;
             
             // Create status checker
             let mut status_checker = CrossLayerStatusChecker::new(github_client);
