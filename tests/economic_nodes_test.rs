@@ -7,6 +7,8 @@ use chrono::Utc;
 use bllvm_commons::database::Database;
 use bllvm_commons::economic_nodes::{registry::EconomicNodeRegistry, types::*, veto::VetoManager};
 use bllvm_commons::error::GovernanceError;
+use bllvm_commons::crypto::signatures::SignatureManager;
+use bllvm_sdk::governance::GovernanceKeypair;
 use sqlx::SqlitePool;
 
 #[tokio::test]
@@ -55,12 +57,12 @@ async fn test_economic_node_registration() -> Result<(), Box<dyn std::error::Err
         hashpower_proof: None,
         holdings_proof: Some(HoldingsProof {
             addresses: vec!["addr1".to_string()],
-            total_btc: 2000.0,
+            total_btc: 15_000.0, // Above 10,000 BTC threshold
             signature_challenge: "sig1".to_string(),
         }),
         volume_proof: Some(VolumeProof {
-            daily_volume_usd: 15_000_000.0,
-            monthly_volume_usd: 450_000_000.0,
+            daily_volume_usd: 150_000_000.0, // Above $100M daily threshold
+            monthly_volume_usd: 4_500_000_000.0,
             data_source: "test".to_string(),
             verification_url: None,
         }),
@@ -91,7 +93,7 @@ async fn test_economic_node_registration() -> Result<(), Box<dyn std::error::Err
         hashpower_proof: None,
         holdings_proof: Some(HoldingsProof {
             addresses: vec!["addr2".to_string()],
-            total_btc: 6000.0,
+            total_btc: 15_000.0, // Above 10,000 BTC threshold
             signature_challenge: "sig2".to_string(),
         }),
         volume_proof: None,
@@ -224,7 +226,8 @@ async fn test_weight_calculation() -> Result<(), Box<dyn std::error::Error>> {
     let weight = registry
         .calculate_weight(NodeType::MiningPool, &mining_proof)
         .await?;
-    assert!(weight > 10.0); // Base weight + hashpower adjustment
+    assert!(weight > 0.0 && weight <= 1.0); // Weight is hashpower percentage / 100.0
+    assert_eq!(weight, 0.1); // 10% hashpower = 0.1 weight
     println!("✅ Mining pool weight calculated: {}", weight);
 
     // Test exchange weight calculation
@@ -233,12 +236,12 @@ async fn test_weight_calculation() -> Result<(), Box<dyn std::error::Error>> {
         hashpower_proof: None,
         holdings_proof: Some(HoldingsProof {
             addresses: vec!["addr4".to_string()],
-            total_btc: 5000.0,
+            total_btc: 15_000.0, // Above 10,000 BTC threshold
             signature_challenge: "sig4".to_string(),
         }),
         volume_proof: Some(VolumeProof {
-            daily_volume_usd: 50_000_000.0,
-            monthly_volume_usd: 1_500_000_000.0,
+            daily_volume_usd: 150_000_000.0, // Above $100M daily threshold
+            monthly_volume_usd: 4_500_000_000.0,
             data_source: "test".to_string(),
             verification_url: None,
         }),
@@ -253,7 +256,8 @@ async fn test_weight_calculation() -> Result<(), Box<dyn std::error::Error>> {
     let weight = registry
         .calculate_weight(NodeType::Exchange, &exchange_proof)
         .await?;
-    assert!(weight > 5.0); // Base weight + holdings/volume adjustment
+    assert!(weight > 0.0 && weight <= 1.0); // Weight is normalized 0-1 (70% holdings + 30% volume)
+    assert!(weight >= 0.9); // With 15K BTC and $150M daily, should be close to 1.0
     println!("✅ Exchange weight calculated: {}", weight);
 
     Ok(())
@@ -295,13 +299,33 @@ async fn test_veto_signal_collection() -> Result<(), Box<dyn std::error::Error>>
         )
         .await?;
 
+    // Activate the node so it can submit veto signals
+    registry.update_node_status(node_id, NodeStatus::Active).await?;
+
+    // Create valid signature for veto signal
+    let signature_manager = SignatureManager::new();
+    let keypair = GovernanceKeypair::generate()?;
+    let public_key = keypair.public_key().to_string();
+    
+    // Update the node's public key to match the generated keypair
+    let pool = db.pool().expect("Database should have SQLite pool");
+    sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
+        .bind(&public_key)
+        .bind(node_id)
+        .execute(pool)
+        .await?;
+    
+    let message = format!("PR #1 veto signal from Test Mining Pool");
+    let signature = signature_manager
+        .create_governance_signature(&message, &keypair)?;
+
     // Submit a veto signal
     let signal_id = veto_manager
         .collect_veto_signal(
             1, // PR ID
             node_id,
             SignalType::Veto,
-            "test_signature",
+            &signature,
             "This change threatens network security",
         )
         .await?;
@@ -310,12 +334,16 @@ async fn test_veto_signal_collection() -> Result<(), Box<dyn std::error::Error>>
     println!("✅ Veto signal submitted with ID: {}", signal_id);
 
     // Test duplicate signal rejection
+    let message2 = format!("PR #1 veto signal from Test Mining Pool");
+    let signature2 = signature_manager
+        .create_governance_signature(&message2, &keypair)?;
+    
     let result = veto_manager
         .collect_veto_signal(
             1, // Same PR ID
             node_id,
             SignalType::Support,
-            "test_signature_2",
+            &signature2,
             "Changed my mind",
         )
         .await;
@@ -367,12 +395,12 @@ async fn test_veto_threshold_calculation() -> Result<(), Box<dyn std::error::Err
         hashpower_proof: None,
         holdings_proof: Some(HoldingsProof {
             addresses: vec!["addr6".to_string()],
-            total_btc: 10000.0,
+            total_btc: 15_000.0, // Above 10,000 BTC threshold
             signature_challenge: "sig6".to_string(),
         }),
         volume_proof: Some(VolumeProof {
-            daily_volume_usd: 100_000_000.0,
-            monthly_volume_usd: 3_000_000_000.0,
+            daily_volume_usd: 150_000_000.0, // Above $100M daily threshold
+            monthly_volume_usd: 4_500_000_000.0,
             data_source: "test".to_string(),
             verification_url: None,
         }),
@@ -394,13 +422,44 @@ async fn test_veto_threshold_calculation() -> Result<(), Box<dyn std::error::Err
         )
         .await?;
 
+    // Activate nodes so they can submit veto signals
+    registry.update_node_status(mining_node_id, NodeStatus::Active).await?;
+    registry.update_node_status(exchange_node_id, NodeStatus::Active).await?;
+
+    // Create valid signatures for veto signals
+    let signature_manager = SignatureManager::new();
+    let mining_keypair = GovernanceKeypair::generate()?;
+    let exchange_keypair = GovernanceKeypair::generate()?;
+    let mining_public_key = mining_keypair.public_key().to_string();
+    let exchange_public_key = exchange_keypair.public_key().to_string();
+    
+    // Update nodes' public keys to match generated keypairs
+    let pool = db.pool().expect("Database should have SQLite pool");
+    sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
+        .bind(&mining_public_key)
+        .bind(mining_node_id)
+        .execute(pool)
+        .await?;
+    sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
+        .bind(&exchange_public_key)
+        .bind(exchange_node_id)
+        .execute(pool)
+        .await?;
+    
+    let mining_message = format!("PR #1 veto signal from Large Mining Pool");
+    let exchange_message = format!("PR #1 veto signal from Large Exchange");
+    let mining_signature = signature_manager
+        .create_governance_signature(&mining_message, &mining_keypair)?;
+    let exchange_signature = signature_manager
+        .create_governance_signature(&exchange_message, &exchange_keypair)?;
+
     // Submit veto signals
     veto_manager
         .collect_veto_signal(
             1, // PR ID
             mining_node_id,
             SignalType::Veto,
-            "test_signature_1",
+            &mining_signature,
             "Mining pool veto",
         )
         .await?;
@@ -410,7 +469,7 @@ async fn test_veto_threshold_calculation() -> Result<(), Box<dyn std::error::Err
             1, // PR ID
             exchange_node_id,
             SignalType::Veto,
-            "test_signature_2",
+            &exchange_signature,
             "Exchange veto",
         )
         .await?;
@@ -587,12 +646,12 @@ async fn test_veto_statistics() -> Result<(), Box<dyn std::error::Error>> {
         hashpower_proof: None,
         holdings_proof: Some(HoldingsProof {
             addresses: vec!["addr1".to_string()],
-            total_btc: 5000.0,
+            total_btc: 15_000.0, // Above 10,000 BTC threshold
             signature_challenge: "sig1".to_string(),
         }),
         volume_proof: Some(VolumeProof {
-            daily_volume_usd: 25_000_000.0,
-            monthly_volume_usd: 750000000.0,
+            daily_volume_usd: 150_000_000.0, // Above $100M daily threshold
+            monthly_volume_usd: 4_500_000_000.0,
             data_source: "test".to_string(),
             verification_url: None,
         }),
@@ -624,13 +683,44 @@ async fn test_veto_statistics() -> Result<(), Box<dyn std::error::Error>> {
         )
         .await?;
 
+    // Activate nodes so they can submit veto signals
+    registry.update_node_status(mining_node_id, NodeStatus::Active).await?;
+    registry.update_node_status(exchange_node_id, NodeStatus::Active).await?;
+
+    // Create valid signatures for veto signals
+    let signature_manager = SignatureManager::new();
+    let mining_keypair = GovernanceKeypair::generate()?;
+    let exchange_keypair = GovernanceKeypair::generate()?;
+    let mining_public_key = mining_keypair.public_key().to_string();
+    let exchange_public_key = exchange_keypair.public_key().to_string();
+    
+    // Update nodes' public keys to match generated keypairs
+    let pool = db.pool().expect("Database should have SQLite pool");
+    sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
+        .bind(&mining_public_key)
+        .bind(mining_node_id)
+        .execute(pool)
+        .await?;
+    sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
+        .bind(&exchange_public_key)
+        .bind(exchange_node_id)
+        .execute(pool)
+        .await?;
+    
+    let mining_message = format!("PR #1 veto signal from Mining Pool");
+    let exchange_message = format!("PR #1 veto signal from Exchange");
+    let mining_signature = signature_manager
+        .create_governance_signature(&mining_message, &mining_keypair)?;
+    let exchange_signature = signature_manager
+        .create_governance_signature(&exchange_message, &exchange_keypair)?;
+
     // Submit different types of signals
     veto_manager
         .collect_veto_signal(
             1,
             mining_node_id,
             SignalType::Veto,
-            "test_signature_1",
+            &mining_signature,
             "Mining veto",
         )
         .await?;
@@ -640,7 +730,7 @@ async fn test_veto_statistics() -> Result<(), Box<dyn std::error::Error>> {
             1,
             exchange_node_id,
             SignalType::Support,
-            "test_signature_2",
+            &exchange_signature,
             "Exchange support",
         )
         .await?;
@@ -648,9 +738,10 @@ async fn test_veto_statistics() -> Result<(), Box<dyn std::error::Error>> {
     // Get veto statistics
     let statistics = veto_manager.get_veto_statistics(1).await?;
 
-    assert!(statistics.get("total_signals").unwrap().as_u64().unwrap() > 0);
-    assert!(statistics.get("veto_count").unwrap().as_u64().unwrap() > 0);
-    assert!(statistics.get("support_count").unwrap().as_u64().unwrap() > 0);
+    let signals = statistics.get("signals").unwrap();
+    assert!(signals.get("total").unwrap().as_u64().unwrap() > 0);
+    assert!(signals.get("veto").unwrap().as_u64().unwrap() > 0);
+    assert!(signals.get("support").unwrap().as_u64().unwrap() > 0);
 
     println!("✅ Veto statistics retrieved: {:?}", statistics);
 

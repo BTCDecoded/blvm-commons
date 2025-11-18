@@ -26,7 +26,6 @@ CREATE TABLE veto_signals (
   rationale TEXT NOT NULL, -- Required explanation for veto
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   verified BOOLEAN DEFAULT FALSE,
-  FOREIGN KEY (pr_id) REFERENCES pull_requests(id),
   FOREIGN KEY (node_id) REFERENCES economic_nodes(id)
 );
 

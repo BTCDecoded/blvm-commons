@@ -264,26 +264,44 @@ impl EconomicNodeRegistry {
                         Utc::now() // Default to now if empty
                     } else {
                         // Try RFC3339 first, then SQLite format (YYYY-MM-DD HH:MM:SS)
-                        DateTime::parse_from_rfc3339(&ts_str)
-                            .or_else(|_| {
+                        match DateTime::parse_from_rfc3339(&ts_str) {
+                            Ok(dt) => dt.with_timezone(&Utc),
+                            Err(_) => {
                                 // Try SQLite format: YYYY-MM-DD HH:MM:SS
                                 chrono::NaiveDateTime::parse_from_str(&ts_str, "%Y-%m-%d %H:%M:%S")
                                     .map(|dt| dt.and_utc())
-                                    .map_err(|_| chrono::ParseError::TooShort)
-                            })
-                            .map_err(|e| GovernanceError::CryptoError(format!("Invalid timestamp: {}", e)))?
-                            .with_timezone(&Utc)
+                                    .map_err(|e| GovernanceError::CryptoError(format!("Invalid timestamp: {}", e)))?
+                            }
+                        }
                     }
                 },
-                verified_at: row.get::<Option<String>, _>("verified_at").map(|t| {
-                    DateTime::parse_from_rfc3339(&t)
-                        .unwrap()
-                        .with_timezone(&Utc)
+                verified_at: row.get::<Option<String>, _>("verified_at").and_then(|t| {
+                    if t.is_empty() {
+                        None
+                    } else {
+                        match DateTime::parse_from_rfc3339(&t) {
+                            Ok(dt) => Some(dt.with_timezone(&Utc)),
+                            Err(_) => {
+                                chrono::NaiveDateTime::parse_from_str(&t, "%Y-%m-%d %H:%M:%S")
+                                    .map(|dt| dt.and_utc())
+                                    .ok()
+                            }
+                        }
+                    }
                 }),
-                last_verified_at: row.get::<Option<String>, _>("last_verified_at").map(|t| {
-                    DateTime::parse_from_rfc3339(&t)
-                        .unwrap()
-                        .with_timezone(&Utc)
+                last_verified_at: row.get::<Option<String>, _>("last_verified_at").and_then(|t| {
+                    if t.is_empty() {
+                        None
+                    } else {
+                        match DateTime::parse_from_rfc3339(&t) {
+                            Ok(dt) => Some(dt.with_timezone(&Utc)),
+                            Err(_) => {
+                                chrono::NaiveDateTime::parse_from_str(&t, "%Y-%m-%d %H:%M:%S")
+                                    .map(|dt| dt.and_utc())
+                                    .ok()
+                            }
+                        }
+                    }
                 }),
                 created_by: row.get::<Option<String>, _>("created_by"),
                 notes: row.get::<String, _>("notes"),
