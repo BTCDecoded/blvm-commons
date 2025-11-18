@@ -167,9 +167,10 @@ async fn check_status(detailed: bool) -> Result<()> {
                 };
 
                 let blocking = if blocks_production { " (BLOCKS)" } else { "" };
+                let control_id_str = control_id.as_str().unwrap_or("unknown");
 
                 println!("  {} {} {} - {}{}", 
-                    state_emoji, priority_emoji, name, control_id, blocking);
+                    state_emoji, priority_emoji, name, control_id_str, blocking);
             }
         }
     }
@@ -449,8 +450,9 @@ async fn generate_report(output: Option<String>) -> Result<()> {
 
             let blocking = if blocks_production { " ⚠️ BLOCKS PRODUCTION" } else { "" };
 
+            let control_id_str = control_id.as_str().unwrap_or("unknown");
             report.push_str(&format!("- {} **{}** ({}) - {}{}\n", 
-                state_emoji, name, control_id, priority, blocking));
+                state_emoji, name, control_id_str, priority, blocking));
         }
     }
 
@@ -473,8 +475,9 @@ async fn generate_report(output: Option<String>) -> Result<()> {
 
     match output {
         Some(path) => {
-            fs::write(path, report)?;
-            println!("📄 Security report written to: {}", path);
+            let path_clone = path.clone();
+            fs::write(&path, report)?;
+            println!("📄 Security report written to: {}", path_clone);
         }
         None => {
             println!("{}", report);

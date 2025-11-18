@@ -182,7 +182,7 @@ mod tests {
 
         let publisher = StatusPublisher {
             client: NostrClient::new("test".to_string(), vec![]).await.unwrap(),
-            database: Database::new_sqlite(":memory:".to_string()).await.unwrap(),
+            database: Database::new_in_memory().await.unwrap(),
             server_id: "test".to_string(),
             binary_path: test_file.to_string_lossy().to_string(),
             config_path: "".to_string(),
@@ -194,11 +194,11 @@ mod tests {
         assert_eq!(hash.len(), 71); // "sha256:" + 64 hex chars
     }
 
-    #[test]
-    fn test_next_ots_anchor_calculation() {
+    #[tokio::test]
+    async fn test_next_ots_anchor_calculation() {
         let publisher = StatusPublisher {
             client: NostrClient::new("test".to_string(), vec![]).await.unwrap(),
-            database: Database::new_sqlite(":memory:".to_string()).await.unwrap(),
+            database: Database::new_in_memory().await.unwrap(),
             server_id: "test".to_string(),
             binary_path: "".to_string(),
             config_path: "".to_string(),

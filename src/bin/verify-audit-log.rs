@@ -88,7 +88,7 @@ async fn verify_audit_log_file(
     let logger = AuditLogger::new(log_path.to_string())?;
     
     // Load all entries
-    let entries = logger.load_all_entries().await?;
+    let entries = logger.get_all_entries().await?;
     
     if entries.is_empty() {
         return Err(anyhow!("Audit log is empty"));

@@ -160,6 +160,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Build application
+    let port = config.server_port;
     let app = Router::new()
         .route("/health", get(health_check))
         .route("/webhooks/github", post(webhooks::github::handle_webhook))
@@ -172,7 +173,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_state((config, database));
 
     // Start server
-    let port = config.server_port;
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
     info!("Server listening on {}", addr);
 

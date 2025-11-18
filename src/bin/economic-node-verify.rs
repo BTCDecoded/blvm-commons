@@ -87,7 +87,8 @@ fn verify_registration(
 ) -> Result<(), Box<dyn std::error::Error>> {
     println!("🔍 Verifying registration for node: {}", name);
     
-    let file_path = file.unwrap_or(&format!("economic-registrations/{}.json", name));
+    let default_path = format!("economic-registrations/{}.json", name);
+    let file_path = file.unwrap_or(&default_path);
     
     if !fs::metadata(file_path).is_ok() {
         println!("❌ Registration file not found: {}", file_path);

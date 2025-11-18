@@ -16,7 +16,7 @@ server_id = "governance-01"
 
 [nostr]
 enabled = true
-server_nsec_path = "/etc/governance/server.nsec"
+server_nsec_path = "/etc/governance/server.nsec"  # Legacy: single bot (deprecated, use bots instead)
 relays = [
     "wss://relay.damus.io",
     "wss://nos.lol",
@@ -24,8 +24,41 @@ relays = [
 ]
 publish_interval_secs = 3600  # 1 hour
 governance_config = "commons_mainnet"  # Governance fork identifier
-zap_address = "donations@btcdecoded.org"  # Optional: Lightning address for donations
+zap_address = "donations@btcdecoded.org"  # Legacy: single zap address (deprecated, use bots instead)
 logo_url = "https://btcdecoded.org/assets/bitcoin-commons-logo.png"  # Bitcoin Commons logo for Nostr bots
+
+# Multi-bot Nostr configuration
+[nostr.bots.gov]
+nsec_path = "env:NOSTR_NSEC_GOV"  # GitHub Secret or file path
+npub = "npub1..."  # Public key (npub)
+lightning_address = "donations@btcdecoded.org"
+profile_name = "🏛️ @BTCCommons_Gov"
+profile_about = "Official governance announcements from Bitcoin Commons. Transparent, cryptographically-signed decisions. Zaps fund decentralized development."
+profile_picture = "https://btcdecoded.org/assets/bitcoin-commons-logo.png"
+
+[nostr.bots.dev]
+nsec_path = "env:NOSTR_NSEC_DEV"
+npub = "npub1..."
+lightning_address = "dev@btcdecoded.org"
+profile_name = "⚙️ @BTCCommons_Dev"
+profile_about = "Development updates from Bitcoin Commons. Performance benchmarks, code releases, technical achievements. Zaps fund open source work."
+profile_picture = "https://btcdecoded.org/assets/bitcoin-commons-logo.png"
+
+[nostr.bots.research]
+nsec_path = "env:NOSTR_NSEC_RESEARCH"
+npub = "npub1..."
+lightning_address = "research@btcdecoded.org"
+profile_name = "📚 @BTCCommons_Research"
+profile_about = "Educational content and research from Bitcoin Commons. Governance analysis, Bitcoin development insights, research findings."
+profile_picture = "https://btcdecoded.org/assets/bitcoin-commons-logo.png"
+
+[nostr.bots.network]
+nsec_path = "env:NOSTR_NSEC_NETWORK"
+npub = "npub1..."
+lightning_address = "network@btcdecoded.org"
+profile_name = "📊 @BTCCommons_Network"
+profile_about = "Network metrics and statistics from Bitcoin Commons. Node adoption, miner participation, network health."
+profile_picture = "https://btcdecoded.org/assets/bitcoin-commons-logo.png"
 
 [ots]
 enabled = true

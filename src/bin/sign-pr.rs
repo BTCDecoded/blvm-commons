@@ -6,6 +6,7 @@
 use std::env;
 use std::fs;
 use std::path::Path;
+use std::str::FromStr;
 use clap::{Parser, Subcommand};
 use serde_json::json;
 
@@ -101,8 +102,11 @@ fn sign_pr(
     // Initialize signature manager
     let signature_manager = SignatureManager::new();
     
+    // Parse private key
+    let secret_key = secp256k1::SecretKey::from_str(private_key.trim())?;
+    
     // Sign the message
-    let signature = signature_manager.sign_governance_message(&message, &private_key)?;
+    let signature = signature_manager.create_signature(&message, &secret_key)?;
     
     println!("✅ Signature generated successfully!");
     println!("");
