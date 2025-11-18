@@ -2,6 +2,7 @@ use octocrab::Octocrab;
 use serde_json::json;
 use tracing::{error, info, warn};
 use reqwest::Client as ReqwestClient;
+use std::sync::Arc;
 
 use crate::error::GovernanceError;
 use crate::github::types::{CheckRun, WorkflowStatus};
@@ -11,6 +12,8 @@ pub struct GitHubClient {
     pub(crate) client: Octocrab,
     app_id: u64,
     http_client: ReqwestClient,
+    /// Circuit breaker for GitHub API calls
+    circuit_breaker: Arc<crate::resilience::CircuitBreaker>,
 }
 
 impl GitHubClient {
@@ -38,7 +41,22 @@ impl GitHubClient {
                 GovernanceError::GitHubError(format!("Failed to create HTTP client: {}", e))
             })?;
 
-        Ok(Self { client, app_id, http_client })
+        let circuit_breaker = Arc::new(crate::resilience::CircuitBreaker::with_config(
+            "github-api",
+            crate::resilience::CircuitBreakerConfig {
+                failure_threshold: 5,
+                success_threshold: 2,
+                timeout: std::time::Duration::from_secs(60),
+                window_duration: std::time::Duration::from_secs(60),
+            },
+        ));
+
+        Ok(Self { 
+            client, 
+            app_id, 
+            http_client,
+            circuit_breaker,
+        })
     }
 
     /// Post a status check to GitHub
@@ -51,6 +69,18 @@ impl GitHubClient {
         description: &str,
         context: &str,
     ) -> Result<(), GovernanceError> {
+        // Input validation
+        if owner.is_empty() || repo.is_empty() || sha.is_empty() {
+            return Err(GovernanceError::GitHubError(
+                format!("Invalid input: owner, repo, and sha must be non-empty (owner={}, repo={}, sha={})", 
+                       owner, repo, sha)
+            ));
+        }
+
+        if !sha.chars().all(|c| c.is_ascii_hexdigit()) || sha.len() != 40 {
+            warn!("SHA '{}' may be invalid (expected 40 hex characters)", sha);
+        }
+
         info!(
             "Posting status check for {}/{}@{}: {} - {} ({})",
             owner, repo, sha, state, description, context
@@ -62,21 +92,45 @@ impl GitHubClient {
             "failure" => octocrab::models::StatusState::Failure,
             "pending" => octocrab::models::StatusState::Pending,
             "error" => octocrab::models::StatusState::Error,
-            _ => octocrab::models::StatusState::Error,
+            _ => {
+                warn!("Unknown status state '{}', defaulting to Error", state);
+                octocrab::models::StatusState::Error
+            },
         };
 
         // Create status check payload
-        // Post status check via GitHub API
-        self.client
-            .repos(owner, repo)
-            .create_status(sha.to_string(), github_state)
-            .description(description.to_string())
-            .context(context.to_string())
-            // TODO: Fix octocrab 0.38 API - target_url method doesn't exist
-            .send()
+        // Post status check via GitHub API with circuit breaker protection
+        self.circuit_breaker
+            .call(|| async {
+                // Post status check via GitHub API
+                // Note: octocrab 0.38 API - target_url is optional and can be set via builder
+                let mut status_builder = self.client
+                    .repos(owner, repo)
+                    .create_status(sha.to_string(), github_state)
+                    .description(description.to_string())
+                    .context(context.to_string());
+                
+                // target_url is optional in octocrab 0.38 - can be omitted if not needed
+                status_builder
+                    .send()
+                    .await
+                    .map_err(|e| {
+                        error!("Failed to post status check for {}/{}@{}: {}", owner, repo, sha, e);
+                        GovernanceError::GitHubError(format!(
+                            "Failed to post status check for {}/{}@{}: {}. Check repository permissions and SHA validity.",
+                            owner, repo, sha, e
+                        ))
+                    })
+            })
             .await
-            .map_err(|e| {
-                GovernanceError::GitHubError(format!("Failed to post status check: {}", e))
+            .map_err(|e| match e {
+                crate::resilience::CircuitBreakerError::CircuitOpen => {
+                    warn!("GitHub API circuit breaker is open - rejecting request");
+                    GovernanceError::GitHubError(
+                        "GitHub API circuit breaker is open - service temporarily unavailable".to_string()
+                    )
+                }
+                crate::resilience::CircuitBreakerError::ServiceError(e) => e,
             })?;
 
         info!(
@@ -101,13 +155,36 @@ impl GitHubClient {
             owner, repo, check_run_id, state, description
         );
 
-        // For now, just log the status check update - full implementation will be added later
+        // Convert state to GitHub API format
+        let conclusion = match state {
+            "success" => Some(octocrab::models::CheckRunConclusion::Success),
+            "failure" => Some(octocrab::models::CheckRunConclusion::Failure),
+            "cancelled" => Some(octocrab::models::CheckRunConclusion::Cancelled),
+            "timed_out" => Some(octocrab::models::CheckRunConclusion::TimedOut),
+            "action_required" => Some(octocrab::models::CheckRunConclusion::ActionRequired),
+            "neutral" => Some(octocrab::models::CheckRunConclusion::Neutral),
+            _ => None,
+        };
+
+        // octocrab 0.38 API - use checks().update_check_run()
+        self.client
+            .checks(owner, repo)
+            .update_check_run(check_run_id)
+            .output_title(description)
+            .output_summary(description)
+            .conclusion(conclusion)
+            .send()
+            .await
+            .map_err(|e| {
+                error!("Failed to update status check: {}", e);
+                GovernanceError::GitHubError(format!("Failed to update status check: {}", e))
+            })?;
+
         info!(
-            "Status check would be updated: {} - {} ({})",
+            "Successfully updated status check: {} - {} ({})",
             state, description, check_run_id
         );
 
-        // TODO: Implement actual GitHub API call when octocrab issues are resolved
         Ok(())
     }
 
@@ -117,11 +194,21 @@ impl GitHubClient {
         owner: &str,
         repo: &str,
     ) -> Result<serde_json::Value, GovernanceError> {
+        // Input validation
+        if owner.is_empty() || repo.is_empty() {
+            return Err(GovernanceError::GitHubError(
+                format!("Invalid input: owner and repo must be non-empty (owner={}, repo={})", owner, repo)
+            ));
+        }
+
         info!("Getting repository info for {}/{}", owner, repo);
 
         let repository = self.client.repos(owner, repo).get().await.map_err(|e| {
-            error!("Failed to get repository info: {}", e);
-            GovernanceError::GitHubError(format!("Failed to get repository info: {}", e))
+            error!("Failed to get repository info for {}/{}: {}", owner, repo, e);
+            GovernanceError::GitHubError(format!(
+                "Failed to get repository info for {}/{}: {}. Check repository name and permissions.",
+                owner, repo, e
+            ))
         })?;
 
         Ok(json!({
@@ -156,6 +243,19 @@ impl GitHubClient {
         repo: &str,
         pr_number: u64,
     ) -> Result<serde_json::Value, GovernanceError> {
+        // Input validation
+        if owner.is_empty() || repo.is_empty() {
+            return Err(GovernanceError::GitHubError(
+                format!("Invalid input: owner and repo must be non-empty (owner={}, repo={})", owner, repo)
+            ));
+        }
+
+        if pr_number == 0 {
+            return Err(GovernanceError::GitHubError(
+                format!("Invalid PR number: {} (must be > 0)", pr_number)
+            ));
+        }
+
         info!(
             "Getting pull request info for {}/{}#{}",
             owner, repo, pr_number
@@ -167,8 +267,11 @@ impl GitHubClient {
             .get(pr_number)
             .await
             .map_err(|e| {
-                error!("Failed to get pull request info: {}", e);
-                GovernanceError::GitHubError(format!("Failed to get pull request info: {}", e))
+                error!("Failed to get pull request {}/{}#{}: {}", owner, repo, pr_number, e);
+                GovernanceError::GitHubError(format!(
+                    "Failed to get pull request {}/{}#{}: {}. Check repository permissions and PR number.",
+                    owner, repo, pr_number, e
+                ))
             })?;
 
         // Extract head and base SHA from the pull request
@@ -232,19 +335,15 @@ impl GitHubClient {
             "restrictions": null
         });
 
-        // TODO: Fix octocrab 0.38 API - branches method doesn't exist
-        // Update branch protection via GitHub API
-        // For now, return success (stubbed)
-        info!("Branch protection update stubbed - octocrab 0.38 API changed");
-        // self.client
-        //     .repos(owner, repo)
-        //     .branches(branch)
-        //     .protection()
-        //     .put(&payload)
-        //     .await
-        //     .map_err(|e| {
-        //         GovernanceError::GitHubError(format!("Failed to set required status checks: {}", e))
-        //     })?;
+        // octocrab 0.38 API - use repos().branches().update_protection()
+        self.client
+            .repos(owner, repo)
+            .branches(branch)
+            .update_protection(&payload)
+            .await
+            .map_err(|e| {
+                GovernanceError::GitHubError(format!("Failed to set required status checks: {}", e))
+            })?;
 
         info!(
             "Successfully set required status checks for {}/{} branch '{}'",
@@ -297,16 +396,11 @@ impl GitHubClient {
     ) -> Result<Vec<CheckRun>, GovernanceError> {
         info!("Getting check runs for {}/{}@{}", owner, repo, sha);
 
-        // TODO: Fix octocrab 0.38 API - check_runs() doesn't exist on RepoHandler
-        // For now, return empty list
-        Ok(vec![])
-        
-        /* Original code - needs API fix:
+        // octocrab 0.38 API - use checks API instead of check_runs
         let check_runs = self
             .client
-            .repos(owner, repo)
-            .check_runs()
-            .for_ref(sha)
+            .checks(owner, repo)
+            .list_check_runs_for_ref(sha)
             .send()
             .await
             .map_err(|e| {
@@ -326,7 +420,6 @@ impl GitHubClient {
 
         info!("Found {} check runs for {}/{}@{}", results.len(), owner, repo, sha);
         Ok(results)
-        */
     }
 
     /// Get workflow status for a PR
@@ -351,19 +444,12 @@ impl GitHubClient {
                 GovernanceError::GitHubError("Missing head SHA in PR response".to_string())
             })?;
 
-        // TODO: Fix octocrab 0.38 API - list_workflow_runs_for_repo doesn't exist
-        // Get workflow runs for this workflow file
-        // For now, return pending status
-        return Ok(WorkflowStatus {
-            conclusion: None,
-            status: Some("pending".to_string()),
-        });
-        
-        /* Original code - needs API fix:
+        // octocrab 0.38 API - use actions().workflows().list_runs()
         let workflow_runs = self
             .client
-            .actions()
-            .list_workflow_runs_for_repo(owner, repo)
+            .actions(owner, repo)
+            .workflows()
+            .list_runs()
             .workflow_file(workflow_file)
             .head_sha(head_sha)
             .per_page(1u8)
@@ -387,7 +473,6 @@ impl GitHubClient {
                 status: Some("pending".to_string()),
             })
         }
-        */
     }
 
     /// Check if a workflow file exists in the repository
@@ -402,15 +487,12 @@ impl GitHubClient {
             workflow_file, owner, repo
         );
 
-        // TODO: Fix octocrab 0.38 API - list_workflows_for_repo doesn't exist
-        // For now, assume workflow exists (conservative approach)
-        return Ok(true);
-        
-        /* Original code - needs API fix:
+        // octocrab 0.38 API - use actions().workflows().list()
         match self
             .client
-            .actions()
-            .list_workflows_for_repo(owner, repo)
+            .actions(owner, repo)
+            .workflows()
+            .list()
             .send()
             .await
         {
@@ -432,7 +514,6 @@ impl GitHubClient {
                 Ok(true)
             }
         }
-        */
     }
 
     /// Trigger a workflow via repository_dispatch
@@ -454,22 +535,17 @@ impl GitHubClient {
             "client_payload": client_payload,
         });
 
-        // TODO: Fix octocrab 0.38 API - create_dispatch_event doesn't exist
-        // Trigger workflow via repository_dispatch
-        // Note: This requires Actions: Write permission
-        // For now, return placeholder (stubbed)
-        info!("Workflow dispatch stubbed - octocrab 0.38 API changed");
-        // let response = self
-        //     .client
-        //     .repos(owner, repo)
-        //     .create_dispatch_event(event_type)
-        //     .client_payload(client_payload)
-        //     .send()
-        //     .await
-            // .map_err(|e| {
-            //     error!("Failed to trigger workflow: {}", e);
-            //     GovernanceError::GitHubError(format!("Failed to trigger workflow: {}", e))
-            // })?;
+        // octocrab 0.38 API - use repos().create_dispatch_event()
+        self.client
+            .repos(owner, repo)
+            .create_dispatch_event(event_type)
+            .client_payload(client_payload)
+            .send()
+            .await
+            .map_err(|e| {
+                error!("Failed to trigger workflow: {}", e);
+                GovernanceError::GitHubError(format!("Failed to trigger workflow: {}", e))
+            })?;
 
         info!("Workflow triggered for {}/{}", owner, repo);
         
@@ -489,16 +565,12 @@ impl GitHubClient {
     ) -> Result<serde_json::Value, GovernanceError> {
         info!("Getting workflow run status for {}/{} (run ID: {})", owner, repo, run_id);
 
-        // TODO: Fix octocrab 0.38 API - get_workflow_run doesn't exist
-        Err(GovernanceError::GitHubError(
-            "get_workflow_run not implemented - octocrab API changed".to_string()
-        ))
-        
-        /* Original code - needs API fix:
+        // octocrab 0.38 API - use actions().workflows().get_run()
         let run = self
             .client
-            .actions()
-            .get_workflow_run(owner, repo, run_id)
+            .actions(owner, repo)
+            .workflows()
+            .get_run(run_id)
             .await
             .map_err(|e| {
                 error!("Failed to get workflow run: {}", e);
@@ -514,7 +586,6 @@ impl GitHubClient {
             "head_sha": run.head_sha,
             "workflow_id": run.workflow_id,
         }))
-        */
     }
 
     /// List workflow runs for a repository
@@ -528,15 +599,12 @@ impl GitHubClient {
     ) -> Result<Vec<serde_json::Value>, GovernanceError> {
         info!("Listing workflow runs for {}/{}", owner, repo);
 
-        // TODO: Fix octocrab 0.38 API - list_workflow_runs_for_repo doesn't exist
-        // For now, return empty list
-        Ok(vec![])
-        
-        /* Original code - needs API fix:
+        // octocrab 0.38 API - use actions().workflows().list_runs()
         let mut request = self
             .client
-            .actions()
-            .list_workflow_runs_for_repo(owner, repo);
+            .actions(owner, repo)
+            .workflows()
+            .list_runs();
 
         if let Some(workflow) = workflow_file {
             request = request.workflow_file(workflow);
@@ -547,7 +615,7 @@ impl GitHubClient {
         }
 
         if let Some(limit) = limit {
-            request = request.per_page(limit as u8);
+            request = request.per_page(limit);
         }
 
         let runs = request
@@ -572,7 +640,6 @@ impl GitHubClient {
         }
 
         Ok(results)
-        */
     }
 
     /// Find the workflow run that was just triggered
@@ -629,11 +696,30 @@ impl GitHubClient {
     ) -> Result<Vec<serde_json::Value>, GovernanceError> {
         info!("Listing artifacts for {}/{} (run ID: {})", owner, repo, run_id);
 
-        // TODO: Fix octocrab 0.38 API - list_workflow_run_artifacts API changed
-        // The method no longer returns a future, needs different approach
-        // For now, return empty list
-        // Stubbed out - octocrab 0.38 API changed
-        let results = Vec::new();
+        // octocrab 0.38 API - use actions().artifacts().list_for_run()
+        let artifacts = self
+            .client
+            .actions(owner, repo)
+            .artifacts()
+            .list_for_run(run_id)
+            .send()
+            .await
+            .map_err(|e| {
+                error!("Failed to list artifacts: {}", e);
+                GovernanceError::GitHubError(format!("Failed to list artifacts: {}", e))
+            })?;
+
+        let mut results = Vec::new();
+        for artifact in artifacts.artifacts {
+            results.push(json!({
+                "id": artifact.id,
+                "name": artifact.name,
+                "size_in_bytes": artifact.size_in_bytes,
+                "created_at": artifact.created_at,
+                "expires_at": artifact.expires_at,
+                "archive_download_url": artifact.archive_download_url.map(|u| u.to_string()),
+            }));
+        }
 
         Ok(results)
     }
@@ -652,19 +738,43 @@ impl GitHubClient {
             })?;
 
         // Find installation for this organization
-        // TODO: Fix octocrab 0.38 API - Author structure changed, as_ref() no longer works
-        // For now, just take the first installation
-        let installation = installations
-            .into_iter()
-            .next()
+        // octocrab 0.38 API - account field is now Option<InstallationAccount>
+        // Collect installations into Vec to allow multiple passes
+        let installations_vec: Vec<_> = installations.into_iter().collect();
+        
+        // First, try to find installation matching organization
+        let installation = installations_vec
+            .iter()
+            .find(|inst| {
+                if let Some(ref account) = inst.account {
+                    match account {
+                        octocrab::models::InstallationAccount::Organization { login, .. } => {
+                            login == org
+                        }
+                        _ => false,
+                    }
+                } else {
+                    false
+                }
+            })
+            // Fallback to first installation if no match found
+            .or_else(|| installations_vec.first())
             .ok_or_else(|| {
                 GovernanceError::GitHubError(format!("No installation found for organization: {}", org))
             })?;
 
-        // TODO: Fix octocrab 0.38 API - create_installation_access_token doesn't exist
-        // For now, return placeholder token
-        // In production, this needs proper implementation
-        Ok("placeholder_installation_token".to_string())
+        // octocrab 0.38 API - use apps().create_installation_access_token()
+        let token_response = self
+            .client
+            .apps()
+            .create_installation_access_token(installation.id)
+            .await
+            .map_err(|e| {
+                error!("Failed to create installation token: {}", e);
+                GovernanceError::GitHubError(format!("Failed to create installation token: {}", e))
+            })?;
+
+        Ok(token_response.token)
     }
 
     /// Download an artifact archive from GitHub

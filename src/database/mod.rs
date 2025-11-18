@@ -15,6 +15,16 @@ pub enum DatabaseBackend {
 #[derive(Clone)]
 pub struct Database {
     backend: DatabaseBackend,
+    /// Original database URL for reconnection
+    database_url: String,
+}
+
+/// Database connection pool statistics
+#[derive(Debug, Clone)]
+pub struct PoolStats {
+    pub size: u32,
+    pub idle: usize,
+    pub is_closed: bool,
 }
 
 impl Database {
@@ -25,6 +35,7 @@ impl Database {
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
             Ok(Self {
                 backend: DatabaseBackend::Sqlite(pool),
+                database_url: database_url.to_string(),
             })
         } else if database_url.starts_with("postgres://") || database_url.starts_with("postgresql://") {
             let pool = PgPool::connect(database_url)
@@ -32,6 +43,7 @@ impl Database {
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
             Ok(Self {
                 backend: DatabaseBackend::Postgres(pool),
+                database_url: database_url.to_string(),
             })
         } else {
             Err(GovernanceError::DatabaseError(
@@ -50,6 +62,7 @@ impl Database {
         
         let db = Self {
             backend: DatabaseBackend::Sqlite(pool),
+            database_url: "sqlite::memory:".to_string(),
         };
         db.run_migrations().await?;
         Ok(db)
@@ -78,6 +91,7 @@ impl Database {
 
             let db = Database {
                 backend: DatabaseBackend::Sqlite(pool),
+                database_url: database_url.to_string(),
             };
             db.run_migrations().await?;
             Ok(db)
@@ -87,6 +101,7 @@ impl Database {
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
             let db = Database {
                 backend: DatabaseBackend::Postgres(pool),
+                database_url: database_url.to_string(),
             };
             db.run_migrations().await?;
             Ok(db)
@@ -160,6 +175,49 @@ impl Database {
 
     pub fn is_postgres(&self) -> bool {
         matches!(self.backend, DatabaseBackend::Postgres(_))
+    }
+
+    /// Check database connection health
+    /// Returns true if connection is healthy, false otherwise
+    pub async fn check_health(&self) -> Result<bool, GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                // Simple query to test connection
+                sqlx::query("SELECT 1")
+                    .execute(pool)
+                    .await
+                    .map(|_| true)
+                    .map_err(|e| GovernanceError::DatabaseError(format!("Health check failed: {}", e)))
+            }
+            DatabaseBackend::Postgres(pool) => {
+                // Simple query to test connection
+                sqlx::query("SELECT 1")
+                    .execute(pool)
+                    .await
+                    .map(|_| true)
+                    .map_err(|e| GovernanceError::DatabaseError(format!("Health check failed: {}", e)))
+            }
+        }
+    }
+
+    /// Get database connection pool statistics
+    pub async fn get_pool_stats(&self) -> Result<PoolStats, GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                Ok(PoolStats {
+                    size: pool.size(),
+                    idle: pool.num_idle(),
+                    is_closed: pool.is_closed(),
+                })
+            }
+            DatabaseBackend::Postgres(pool) => {
+                Ok(PoolStats {
+                    size: pool.size(),
+                    idle: pool.num_idle(),
+                    is_closed: pool.is_closed(),
+                })
+            }
+        }
     }
 
     pub async fn create_pull_request(
@@ -365,21 +423,275 @@ impl Database {
 
     pub async fn get_pull_request(
         &self,
-        _repo_name: &str,
-        _pr_number: i32,
+        repo_name: &str,
+        pr_number: i32,
     ) -> Result<Option<crate::database::models::PullRequest>, GovernanceError> {
-        // This would retrieve a pull request from the database
-        // For now, return None as a placeholder
-        Ok(None)
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                use crate::database::queries::Queries;
+                Queries::get_pull_request(pool, repo_name, pr_number)
+                    .await
+                    .map_err(|e| GovernanceError::DatabaseError(e.to_string()))
+            }
+            DatabaseBackend::Postgres(pool) => {
+                // Postgres implementation - similar to SQLite but with $1, $2 placeholders
+                let row = sqlx::query(
+                    r#"
+                    SELECT 
+                        id,
+                        repo_name,
+                        pr_number,
+                        opened_at,
+                        layer,
+                        head_sha,
+                        signatures,
+                        governance_status,
+                        linked_prs,
+                        emergency_mode,
+                        created_at,
+                        updated_at
+                    FROM pull_requests
+                    WHERE repo_name = $1 AND pr_number = $2
+                    "#,
+                )
+                .bind(repo_name)
+                .bind(pr_number)
+                .fetch_optional(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                match row {
+                    Some(r) => {
+                        let id: i32 = r.get(0);
+                        let repo_name: String = r.get(1);
+                        let pr_number: i32 = r.get(2);
+                        let opened_at: chrono::DateTime<chrono::Utc> = r.get(3);
+                        let layer: i32 = r.get(4);
+                        let head_sha: String = r.get(5);
+                        let signatures_json: String = r.get(6);
+                        let governance_status: String = r.get(7);
+                        let linked_prs_json: String = r.get(8);
+                        let emergency_mode: bool = r.get(9);
+                        let created_at: chrono::DateTime<chrono::Utc> = r.get(10);
+                        let updated_at: chrono::DateTime<chrono::Utc> = r.get(11);
+
+                        let signatures: Vec<crate::database::models::Signature> = 
+                            serde_json::from_str(&signatures_json)
+                                .unwrap_or_else(|_| vec![]);
+                        let linked_prs: Vec<i32> = 
+                            serde_json::from_str(&linked_prs_json)
+                                .unwrap_or_else(|_| vec![]);
+
+                        Ok(Some(crate::database::models::PullRequest {
+                            id,
+                            repo_name,
+                            pr_number,
+                            opened_at,
+                            layer,
+                            head_sha,
+                            signatures,
+                            governance_status,
+                            linked_prs,
+                            emergency_mode,
+                            created_at,
+                            updated_at,
+                        }))
+                    }
+                    None => Ok(None),
+                }
+            }
+        }
     }
 
     pub async fn get_governance_events(
         &self,
-        _limit: i64,
+        limit: i64,
     ) -> Result<Vec<crate::database::models::GovernanceEvent>, GovernanceError> {
-        // This would retrieve governance events from the database
-        // For now, return empty vector as a placeholder
-        Ok(vec![])
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                let rows = sqlx::query(
+                    r#"
+                    SELECT 
+                        id,
+                        event_type,
+                        repo_name,
+                        pr_number,
+                        maintainer,
+                        details,
+                        timestamp
+                    FROM governance_events
+                    ORDER BY timestamp DESC
+                    LIMIT ?
+                    "#
+                )
+                .bind(limit)
+                .fetch_all(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                let mut events = Vec::new();
+                for row in rows {
+                    let id: i32 = row.get(0);
+                    let event_type: String = row.get(1);
+                    let repo_name: Option<String> = row.get(2);
+                    let pr_number: Option<i32> = row.get(3);
+                    let maintainer: Option<String> = row.get(4);
+                    let details_str: String = row.get(5);
+                    let timestamp: chrono::DateTime<chrono::Utc> = row.get(6);
+                    
+                    let details: serde_json::Value = serde_json::from_str(&details_str)
+                        .unwrap_or_else(|_| serde_json::json!({}));
+                    
+                    events.push(crate::database::models::GovernanceEvent {
+                        id,
+                        event_type,
+                        repo_name,
+                        pr_number,
+                        maintainer,
+                        details,
+                        timestamp,
+                    });
+                }
+                Ok(events)
+            }
+            DatabaseBackend::Postgres(pool) => {
+                let rows = sqlx::query(
+                    r#"
+                    SELECT 
+                        id,
+                        event_type,
+                        repo_name,
+                        pr_number,
+                        maintainer,
+                        details,
+                        timestamp
+                    FROM governance_events
+                    ORDER BY timestamp DESC
+                    LIMIT $1
+                    "#
+                )
+                .bind(limit)
+                .fetch_all(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                let mut events = Vec::new();
+                for row in rows {
+                    let id: i32 = row.get(0);
+                    let event_type: String = row.get(1);
+                    let repo_name: Option<String> = row.get(2);
+                    let pr_number: Option<i32> = row.get(3);
+                    let maintainer: Option<String> = row.get(4);
+                    let details: serde_json::Value = row.get(5);
+                    let timestamp: chrono::DateTime<chrono::Utc> = row.get(6);
+                    
+                    events.push(crate::database::models::GovernanceEvent {
+                        id,
+                        event_type,
+                        repo_name,
+                        pr_number,
+                        maintainer,
+                        details,
+                        timestamp,
+                    });
+                }
+                Ok(events)
+            }
+        }
+    }
+
+    /// Get the last merged PR information
+    pub async fn get_last_merged_pr(
+        &self,
+    ) -> Result<Option<(Option<i32>, Option<chrono::DateTime<chrono::Utc>>)>, GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                let row = sqlx::query(
+                    r#"
+                    SELECT pr_number, timestamp
+                    FROM governance_events
+                    WHERE event_type IN ('merge', 'merged', 'pr_merged')
+                    ORDER BY timestamp DESC
+                    LIMIT 1
+                    "#
+                )
+                .fetch_optional(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                if let Some(row) = row {
+                    let pr_number: Option<i32> = row.get(0);
+                    let timestamp: Option<chrono::DateTime<chrono::Utc>> = row.get(1);
+                    Ok(Some((pr_number, timestamp)))
+                } else {
+                    Ok(None)
+                }
+            }
+            DatabaseBackend::Postgres(pool) => {
+                let row = sqlx::query(
+                    r#"
+                    SELECT pr_number, timestamp
+                    FROM governance_events
+                    WHERE event_type IN ('merge', 'merged', 'pr_merged')
+                    ORDER BY timestamp DESC
+                    LIMIT 1
+                    "#
+                )
+                .fetch_optional(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                if let Some(row) = row {
+                    let pr_number: Option<i32> = row.get(0);
+                    let timestamp: Option<chrono::DateTime<chrono::Utc>> = row.get(1);
+                    Ok(Some((pr_number, timestamp)))
+                } else {
+                    Ok(None)
+                }
+            }
+        }
+    }
+
+    /// Count merges today
+    pub async fn count_merges_today(
+        &self,
+    ) -> Result<u64, GovernanceError> {
+        let today_start = chrono::Utc::now().date_naive().and_hms_opt(0, 0, 0)
+            .and_then(|dt| chrono::DateTime::from_naive_utc_and_offset(dt, chrono::Utc).into())
+            .ok_or_else(|| GovernanceError::DatabaseError("Failed to calculate today start".to_string()))?;
+        
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                let count: i64 = sqlx::query_scalar(
+                    r#"
+                    SELECT COUNT(*)
+                    FROM governance_events
+                    WHERE event_type IN ('merge', 'merged', 'pr_merged')
+                    AND timestamp >= ?
+                    "#
+                )
+                .bind(today_start)
+                .fetch_one(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                Ok(count as u64)
+            }
+            DatabaseBackend::Postgres(pool) => {
+                let count: i64 = sqlx::query_scalar(
+                    r#"
+                    SELECT COUNT(*)
+                    FROM governance_events
+                    WHERE event_type IN ('merge', 'merged', 'pr_merged')
+                    AND timestamp >= $1
+                    "#
+                )
+                .bind(today_start)
+                .fetch_one(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                Ok(count as u64)
+            }
+        }
     }
 
     /// Add or update a tier override for a PR
@@ -526,6 +838,55 @@ impl Database {
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
                 Ok(maintainer)
+            }
+        }
+    }
+
+    pub async fn get_emergency_keyholders(
+        &self,
+    ) -> Result<Vec<crate::database::models::EmergencyKeyholder>, GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                use crate::database::queries::Queries;
+                Queries::get_emergency_keyholders(pool)
+                    .await
+                    .map_err(|e| GovernanceError::DatabaseError(e.to_string()))
+            }
+            DatabaseBackend::Postgres(pool) => {
+                let rows = sqlx::query(
+                    r#"
+                    SELECT 
+                        id,
+                        github_username,
+                        public_key,
+                        active,
+                        last_updated
+                    FROM emergency_keyholders
+                    WHERE active = true
+                    ORDER BY github_username
+                    "#
+                )
+                .fetch_all(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                let mut keyholders = Vec::new();
+                for row in rows {
+                    let id: i32 = row.get(0);
+                    let github_username: String = row.get(1);
+                    let public_key: String = row.get(2);
+                    let active: bool = row.get(3);
+                    let last_updated: chrono::DateTime<chrono::Utc> = row.get(4);
+
+                    keyholders.push(crate::database::models::EmergencyKeyholder {
+                        id,
+                        github_username,
+                        public_key,
+                        active,
+                        last_updated,
+                    });
+                }
+                Ok(keyholders)
             }
         }
     }
@@ -687,6 +1048,349 @@ impl Database {
             }
         }
         Ok(())
+    }
+
+    /// Create or update build run state
+    pub async fn upsert_build_run(
+        &self,
+        release_version: &str,
+        repo_name: &str,
+        workflow_run_id: Option<u64>,
+        status: &str,
+    ) -> Result<i64, GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                let build_id = sqlx::query_scalar::<_, i64>(
+                    r#"
+                    INSERT INTO build_runs (release_version, repo_name, workflow_run_id, status, started_at, updated_at)
+                    VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                    ON CONFLICT(release_version, repo_name) DO UPDATE SET
+                        workflow_run_id = COALESCE(EXCLUDED.workflow_run_id, workflow_run_id),
+                        status = EXCLUDED.status,
+                        updated_at = CURRENT_TIMESTAMP
+                    RETURNING id
+                    "#
+                )
+                .bind(release_version)
+                .bind(repo_name)
+                .bind(workflow_run_id.map(|id| id as i64))
+                .bind(status)
+                .fetch_one(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                Ok(build_id)
+            }
+            DatabaseBackend::Postgres(pool) => {
+                let build_id = sqlx::query_scalar::<_, i64>(
+                    r#"
+                    INSERT INTO build_runs (release_version, repo_name, workflow_run_id, status, started_at, updated_at)
+                    VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                    ON CONFLICT(release_version, repo_name) DO UPDATE SET
+                        workflow_run_id = COALESCE(EXCLUDED.workflow_run_id, build_runs.workflow_run_id),
+                        status = EXCLUDED.status,
+                        updated_at = CURRENT_TIMESTAMP
+                    RETURNING id
+                    "#
+                )
+                .bind(release_version)
+                .bind(repo_name)
+                .bind(workflow_run_id.map(|id| id as i64))
+                .bind(status)
+                .fetch_one(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                Ok(build_id)
+            }
+        }
+    }
+
+    /// Update build run status with state transition tracking
+    pub async fn update_build_status(
+        &self,
+        release_version: &str,
+        repo_name: &str,
+        new_status: &str,
+        error_message: Option<&str>,
+    ) -> Result<(), GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                // Get current status
+                let current_status: Option<String> = sqlx::query_scalar(
+                    "SELECT status FROM build_runs WHERE release_version = ? AND repo_name = ?"
+                )
+                .bind(release_version)
+                .bind(repo_name)
+                .fetch_optional(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                // Update build run
+                let completed_at = if new_status == "success" || new_status == "failure" || new_status == "cancelled" || new_status == "timed_out" {
+                    Some("CURRENT_TIMESTAMP")
+                } else {
+                    None
+                };
+
+                if let Some(completed) = completed_at {
+                    sqlx::query(
+                        &format!(
+                            r#"
+                            UPDATE build_runs 
+                            SET status = ?, error_message = ?, completed_at = {}, updated_at = CURRENT_TIMESTAMP
+                            WHERE release_version = ? AND repo_name = ?
+                            "#,
+                            completed
+                        )
+                    )
+                    .bind(new_status)
+                    .bind(error_message)
+                    .bind(release_version)
+                    .bind(repo_name)
+                    .execute(pool)
+                    .await
+                    .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                } else {
+                    sqlx::query(
+                        r#"
+                        UPDATE build_runs 
+                        SET status = ?, error_message = ?, updated_at = CURRENT_TIMESTAMP
+                        WHERE release_version = ? AND repo_name = ?
+                        "#
+                    )
+                    .bind(new_status)
+                    .bind(error_message)
+                    .bind(release_version)
+                    .bind(repo_name)
+                    .execute(pool)
+                    .await
+                    .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                }
+
+                // Log state transition
+                if let Some(from_status) = current_status {
+                    if from_status != new_status {
+                        let build_id: i64 = sqlx::query_scalar(
+                            "SELECT id FROM build_runs WHERE release_version = ? AND repo_name = ?"
+                        )
+                        .bind(release_version)
+                        .bind(repo_name)
+                        .fetch_one(pool)
+                        .await
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                        sqlx::query(
+                            r#"
+                            INSERT INTO build_state_transitions (build_run_id, from_status, to_status, reason)
+                            VALUES (?, ?, ?, ?)
+                            "#
+                        )
+                        .bind(build_id)
+                        .bind(&from_status)
+                        .bind(new_status)
+                        .bind(error_message)
+                        .execute(pool)
+                        .await
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    }
+                }
+            }
+            DatabaseBackend::Postgres(pool) => {
+                // Get current status
+                let current_status: Option<String> = sqlx::query_scalar(
+                    "SELECT status FROM build_runs WHERE release_version = $1 AND repo_name = $2"
+                )
+                .bind(release_version)
+                .bind(repo_name)
+                .fetch_optional(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                // Update build run
+                let completed_at = if new_status == "success" || new_status == "failure" || new_status == "cancelled" || new_status == "timed_out" {
+                    Some("CURRENT_TIMESTAMP")
+                } else {
+                    None
+                };
+
+                if let Some(_completed) = completed_at {
+                    sqlx::query(
+                        r#"
+                        UPDATE build_runs 
+                        SET status = $1, error_message = $2, completed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+                        WHERE release_version = $3 AND repo_name = $4
+                        "#
+                    )
+                    .bind(new_status)
+                    .bind(error_message)
+                    .bind(release_version)
+                    .bind(repo_name)
+                    .execute(pool)
+                    .await
+                    .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                } else {
+                    sqlx::query(
+                        r#"
+                        UPDATE build_runs 
+                        SET status = $1, error_message = $2, updated_at = CURRENT_TIMESTAMP
+                        WHERE release_version = $3 AND repo_name = $4
+                        "#
+                    )
+                    .bind(new_status)
+                    .bind(error_message)
+                    .bind(release_version)
+                    .bind(repo_name)
+                    .execute(pool)
+                    .await
+                    .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                }
+
+                // Log state transition
+                if let Some(from_status) = current_status {
+                    if from_status != new_status {
+                        let build_id: i64 = sqlx::query_scalar(
+                            "SELECT id FROM build_runs WHERE release_version = $1 AND repo_name = $2"
+                        )
+                        .bind(release_version)
+                        .bind(repo_name)
+                        .fetch_one(pool)
+                        .await
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                        sqlx::query(
+                            r#"
+                            INSERT INTO build_state_transitions (build_run_id, from_status, to_status, reason)
+                            VALUES ($1, $2, $3, $4)
+                            "#
+                        )
+                        .bind(build_id)
+                        .bind(&from_status)
+                        .bind(new_status)
+                        .bind(error_message)
+                        .execute(pool)
+                        .await
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
+    /// Get all build runs for a release
+    pub async fn get_build_runs_for_release(
+        &self,
+        release_version: &str,
+    ) -> Result<Vec<(String, String)>, GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                let rows = sqlx::query(
+                    "SELECT repo_name, status FROM build_runs WHERE release_version = ?"
+                )
+                .bind(release_version)
+                .fetch_all(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                
+                Ok(rows.iter().map(|row| {
+                    (row.get::<String, _>(0), row.get::<String, _>(1))
+                }).collect())
+            }
+            DatabaseBackend::Postgres(pool) => {
+                let rows = sqlx::query(
+                    "SELECT repo_name, status FROM build_runs WHERE release_version = $1"
+                )
+                .bind(release_version)
+                .fetch_all(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                
+                Ok(rows.iter().map(|row| {
+                    (row.get::<String, _>(0), row.get::<String, _>(1))
+                }).collect())
+            }
+        }
+    }
+
+    /// Get all build runs with workflow_run_ids for a release
+    pub async fn get_build_runs_with_ids_for_release(
+        &self,
+        release_version: &str,
+    ) -> Result<Vec<(String, Option<u64>, String)>, GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                let rows = sqlx::query(
+                    "SELECT repo_name, workflow_run_id, status FROM build_runs WHERE release_version = ?"
+                )
+                .bind(release_version)
+                .fetch_all(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                
+                Ok(rows.iter().map(|row| {
+                    (
+                        row.get::<String, _>(0),
+                        row.get::<Option<i64>, _>(1).map(|id| id as u64),
+                        row.get::<String, _>(2),
+                    )
+                }).collect())
+            }
+            DatabaseBackend::Postgres(pool) => {
+                let rows = sqlx::query(
+                    "SELECT repo_name, workflow_run_id, status FROM build_runs WHERE release_version = $1"
+                )
+                .bind(release_version)
+                .fetch_all(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                
+                Ok(rows.iter().map(|row| {
+                    (
+                        row.get::<String, _>(0),
+                        row.get::<Option<i64>, _>(1).map(|id| id as u64),
+                        row.get::<String, _>(2),
+                    )
+                }).collect())
+            }
+        }
+    }
+
+    /// Check if all builds for a release are complete
+    pub async fn are_all_builds_complete(
+        &self,
+        release_version: &str,
+    ) -> Result<bool, GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                let incomplete_count: i64 = sqlx::query_scalar(
+                    r#"
+                    SELECT COUNT(*) FROM build_runs 
+                    WHERE release_version = ? 
+                    AND status NOT IN ('success', 'failure', 'cancelled', 'timed_out')
+                    "#
+                )
+                .bind(release_version)
+                .fetch_one(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                
+                Ok(incomplete_count == 0)
+            }
+            DatabaseBackend::Postgres(pool) => {
+                let incomplete_count: i64 = sqlx::query_scalar(
+                    r#"
+                    SELECT COUNT(*) FROM build_runs 
+                    WHERE release_version = $1 
+                    AND status NOT IN ('success', 'failure', 'cancelled', 'timed_out')
+                    "#
+                )
+                .bind(release_version)
+                .fetch_one(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                
+                Ok(incomplete_count == 0)
+            }
+        }
     }
 }
 

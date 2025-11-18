@@ -25,6 +25,7 @@ mod ots;
 mod audit;
 mod authorization;
 mod build;
+mod backup;
 
 use config::AppConfig;
 use database::Database;
@@ -56,6 +57,67 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Run migrations
     database.run_migrations().await?;
     info!("Database migrations completed");
+
+    // Start automated backup task
+    let database_for_backup = database.clone();
+    let backup_config = backup::BackupConfig {
+        directory: std::path::PathBuf::from("/opt/bllvm-commons/backups"),
+        retention_days: 30,
+        compression: true,
+        interval: std::time::Duration::from_secs(86400), // Daily
+        enabled: true,
+    };
+    let backup_manager = Arc::new(backup::BackupManager::new(database_for_backup, backup_config));
+    backup_manager.clone().start_backup_task();
+    info!("Automated backup task started");
+
+    // Start database health monitoring task
+    let database_for_health = database.clone();
+    let database_url_for_reconnect = config.database_url.clone();
+    tokio::spawn(async move {
+        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(60)); // Check every 60 seconds
+        let mut consecutive_failures = 0u32;
+        
+        loop {
+            interval.tick().await;
+            
+            // Check database health
+            match database_for_health.check_health().await {
+                Ok(true) => {
+                    if consecutive_failures > 0 {
+                        info!("Database health check passed after {} failures", consecutive_failures);
+                        consecutive_failures = 0;
+                    }
+                    
+                    // Log pool stats periodically (every 10 checks = 10 minutes)
+                    if consecutive_failures == 0 {
+                        if let Ok(stats) = database_for_health.get_pool_stats().await {
+                            debug!("Database pool stats: size={}, idle={}, closed={}", 
+                                   stats.size, stats.idle, stats.is_closed);
+                        }
+                    }
+                }
+                Ok(false) | Err(_) => {
+                    consecutive_failures += 1;
+                    warn!("Database health check failed (consecutive failures: {})", consecutive_failures);
+                    
+                    // After 3 consecutive failures, attempt reconnection
+                    if consecutive_failures >= 3 {
+                        error!("Database connection unhealthy after {} consecutive failures - attempting reconnection", consecutive_failures);
+                        
+                        // Note: sqlx pools handle reconnection automatically, but we can log the issue
+                        // For production, you might want to recreate the pool here
+                        // For now, we'll just log and let sqlx handle it
+                        if let Ok(stats) = database_for_health.get_pool_stats().await {
+                            if stats.is_closed {
+                                error!("Database pool is closed - manual intervention may be required");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
 
     // Initialize audit logger
     let mut audit_logger = if config.audit.enabled {

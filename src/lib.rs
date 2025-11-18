@@ -1,4 +1,5 @@
 pub mod audit;
+pub mod backup;
 pub mod config;
 pub mod crypto;
 pub mod database;
@@ -11,5 +12,6 @@ pub mod validation;
 pub mod webhooks;
 pub mod build;
 pub mod nostr;
+pub mod resilience;
 
 pub use error::GovernanceError;
