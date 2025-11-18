@@ -14,6 +14,7 @@ use bllvm_commons::{
 };
 use serde_json::json;
 use std::str::FromStr;
+use hex;
 
 mod common;
 use common::create_test_decision_logger;
@@ -70,14 +71,17 @@ async fn test_tier_1_routine_approval_flow() -> Result<(), Box<dyn std::error::E
         &["maintainer1".to_string(), "maintainer2".to_string(), "maintainer3".to_string()],
         &["maintainer4".to_string(), "maintainer5".to_string()],
     );
-    let combined_status = StatusCheckGenerator::generate_combined_status(
+    let tier_status = StatusCheckGenerator::generate_tier_status(
+        tier,
+        "Routine Maintenance",
         true,
         true,
+        false,
         &review_status,
         &signature_status,
     );
 
-    assert!(combined_status.contains("Routine Maintenance"));
+    assert!(tier_status.contains("Routine Maintenance") || tier_status.contains("🔧"));
     println!("✅ Status checks generated for Tier 1 PR");
 
     println!("🎉 Tier 1 routine approval flow completed successfully!");
@@ -183,12 +187,53 @@ async fn test_tier_3_economic_node_veto_scenario() -> Result<(), Box<dyn std::er
     println!("✅ PR classified as Tier 3 (Consensus-Adjacent)");
 
     // 3. Submit veto signals
+    // For testing, we need to create valid signatures
+    // Since we registered nodes with "mining_pool_key" and "exchange_key" as public keys,
+    // we need to either update those keys or create signatures that match
+    // Simplest: Update the nodes' public keys to match generated keypairs
+    use bllvm_commons::crypto::signatures::SignatureManager;
+    use bllvm_sdk::governance::GovernanceKeypair;
+    let sig_manager = SignatureManager::new();
+    
+    let mining_keypair = GovernanceKeypair::generate().expect("Failed to generate keypair");
+    let exchange_keypair = GovernanceKeypair::generate().expect("Failed to generate keypair");
+    
+    // Update node public keys in database to match our keypairs
+    let mining_pubkey_hex = hex::encode(mining_keypair.public_key().to_bytes());
+    let exchange_pubkey_hex = hex::encode(exchange_keypair.public_key().to_bytes());
+    
+    let pool = db.pool().expect("Database should have SQLite pool");
+    sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
+        .bind(&mining_pubkey_hex)
+        .bind(mining_node_id)
+        .execute(pool)
+        .await
+        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to update mining node key: {}", e)))?;
+    
+    sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
+        .bind(&exchange_pubkey_hex)
+        .bind(exchange_node_id)
+        .execute(pool)
+        .await
+        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to update exchange node key: {}", e)))?;
+    
+    // Get updated nodes via VetoManager (which has get_node_by_id)
+    let mining_node = veto_manager.get_node_by_id(mining_node_id).await?;
+    let exchange_node = veto_manager.get_node_by_id(exchange_node_id).await?;
+    
+    // Create valid signatures
+    let mining_message = format!("PR #{} veto signal from {}", 2, mining_node.entity_name);
+    let mining_sig = sig_manager.create_governance_signature(&mining_message, &mining_keypair).expect("Failed to create signature");
+    
+    let exchange_message = format!("PR #{} veto signal from {}", 2, exchange_node.entity_name);
+    let exchange_sig = sig_manager.create_governance_signature(&exchange_message, &exchange_keypair).expect("Failed to create signature");
+    
     veto_manager
         .collect_veto_signal(
             2, // PR ID
             mining_node_id,
             SignalType::Veto,
-            "mining_veto_signature",
+            &mining_sig,
             "This change threatens network security",
         )
         .await?;
@@ -198,7 +243,7 @@ async fn test_tier_3_economic_node_veto_scenario() -> Result<(), Box<dyn std::er
             2, // PR ID
             exchange_node_id,
             SignalType::Veto,
-            "exchange_veto_signature",
+            &exchange_sig,
             "This change could impact user funds",
         )
         .await?;

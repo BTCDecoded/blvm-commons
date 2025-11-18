@@ -2,6 +2,7 @@ use bllvm_commons::database::Database;
 use bllvm_commons::crypto::signatures::SignatureManager;
 use bllvm_commons::crypto::multisig::MultisigManager;
 use bllvm_commons::enforcement::decision_log::DecisionLogger;
+use bllvm_sdk::governance::GovernanceKeypair;
 use secp256k1::{SecretKey, Secp256k1, PublicKey};
 use rand::rngs::OsRng;
 use std::collections::HashMap;
@@ -25,6 +26,17 @@ pub fn create_test_multisig_manager() -> MultisigManager {
 /// Create a test decision logger
 pub fn create_test_decision_logger() -> DecisionLogger {
     DecisionLogger::new(true, false, None)
+}
+
+/// Generate a valid governance signature for testing
+pub fn create_test_governance_signature(message: &str) -> (String, String) {
+    let keypair = GovernanceKeypair::generate().expect("Failed to generate keypair");
+    let signature_manager = SignatureManager::new();
+    let signature = signature_manager
+        .create_governance_signature(message, &keypair)
+        .expect("Failed to create signature");
+    let public_key = keypair.public_key().to_string();
+    (signature, public_key)
 }
 
 /// Generate test keypairs for testing

@@ -215,6 +215,37 @@ pub async fn classify_pr_tier_detailed(
 
     debug!("Classifying PR with {} files, title: '{}'", files.len(), title);
 
+    // First, check for explicit tier markers in title (highest priority)
+    let title_lower = title.to_lowercase();
+    if title_lower.contains("[consensus-adjacent]") {
+        // Explicit tier 3 marker - return immediately
+        return TierClassificationResult {
+            tier: 3,
+            confidence: 1.0,
+            matched_patterns: vec![],
+            matched_keywords: vec!["[CONSENSUS-ADJACENT]".to_string()],
+            rationale: "Explicit [CONSENSUS-ADJACENT] marker in title".to_string(),
+        };
+    }
+    if title_lower.contains("[governance]") {
+        return TierClassificationResult {
+            tier: 5,
+            confidence: 1.0,
+            matched_patterns: vec![],
+            matched_keywords: vec!["[GOVERNANCE]".to_string()],
+            rationale: "Explicit [GOVERNANCE] marker in title".to_string(),
+        };
+    }
+    if title_lower.contains("[emergency]") || title_lower.contains("emergency:") {
+        return TierClassificationResult {
+            tier: 4,
+            confidence: 1.0,
+            matched_patterns: vec![],
+            matched_keywords: vec!["[EMERGENCY]".to_string()],
+            rationale: "Explicit [EMERGENCY] marker in title".to_string(),
+        };
+    }
+
     let mut best_tier = config.fallback.default_tier;
     let mut best_confidence = 0.0;
     let mut matched_patterns = Vec::new();
@@ -245,13 +276,27 @@ pub async fn classify_pr_tier_detailed(
             let body_match = body.to_lowercase().contains(&keyword.to_lowercase());
             
             if title_match {
-                confidence += config.confidence_scoring.keyword_match * config.confidence_scoring.title_analysis;
+                // Title matches are very strong signals - give them more weight
+                confidence += config.confidence_scoring.keyword_match * 2.0; // Boost title matches
                 tier_keywords.push(format!("title:{}", keyword));
             }
             if body_match {
                 confidence += config.confidence_scoring.keyword_match * config.confidence_scoring.description_analysis;
                 tier_keywords.push(format!("body:{}", keyword));
             }
+        }
+        
+        // Special handling for tier markers in title (e.g., [CONSENSUS-ADJACENT], [GOVERNANCE], [EMERGENCY])
+        // These are very strong signals and should override other matches
+        let title_lower = title.to_lowercase();
+        if title_lower.contains("[consensus-adjacent]") && tier_num == 3 {
+            confidence = 1.0; // Very strong signal - set to max confidence
+        }
+        if title_lower.contains("[governance]") && tier_num == 5 {
+            confidence = 1.0;
+        }
+        if (title_lower.contains("[emergency]") || title_lower.contains("emergency:")) && tier_num == 4 {
+            confidence = 1.0;
         }
 
         // Check for exclusions
@@ -309,7 +354,7 @@ fn get_default_config() -> TierClassificationConfig {
     // Tier 5: Governance
     rules.insert("tier_5_governance".to_string(), TierRule {
         name: "Governance Changes".to_string(),
-        confidence_threshold: 0.9,
+        confidence_threshold: 0.5, // Lower threshold to catch explicit markers
         file_patterns: vec![
             "governance/**".to_string(),
             "maintainers/**".to_string(),
@@ -321,6 +366,7 @@ fn get_default_config() -> TierClassificationConfig {
             "maintainer".to_string(),
             "signature".to_string(),
             "threshold".to_string(),
+            "[governance]".to_string(),
         ],
         exclude_patterns: None,
         require_specification: Some(false),
@@ -335,7 +381,7 @@ fn get_default_config() -> TierClassificationConfig {
     // Tier 4: Emergency
     rules.insert("tier_4_emergency".to_string(), TierRule {
         name: "Emergency Actions".to_string(),
-        confidence_threshold: 0.95,
+        confidence_threshold: 0.5, // Lower threshold for emergency detection
         file_patterns: vec![],
         keywords: vec![
             "emergency".to_string(),
@@ -343,6 +389,8 @@ fn get_default_config() -> TierClassificationConfig {
             "security".to_string(),
             "vulnerability".to_string(),
             "CVE".to_string(),
+            "[emergency]".to_string(),
+            "emergency:".to_string(),
         ],
         exclude_patterns: None,
         require_specification: Some(false),
@@ -357,7 +405,7 @@ fn get_default_config() -> TierClassificationConfig {
     // Tier 3: Consensus-Adjacent
     rules.insert("tier_3_consensus_adjacent".to_string(), TierRule {
         name: "Consensus-Adjacent Changes".to_string(),
-        confidence_threshold: 0.9,
+        confidence_threshold: 0.5, // Lower threshold to catch explicit markers
         file_patterns: vec![
             "consensus/**".to_string(),
             "validation/**".to_string(),
@@ -370,6 +418,7 @@ fn get_default_config() -> TierClassificationConfig {
             "block".to_string(),
             "transaction".to_string(),
             "consensus-adjacent".to_string(),
+            "[consensus-adjacent]".to_string(),
         ],
         exclude_patterns: None,
         require_specification: Some(true),
@@ -410,17 +459,19 @@ fn get_default_config() -> TierClassificationConfig {
     // Tier 1: Routine (default)
     rules.insert("tier_1_routine".to_string(), TierRule {
         name: "Routine Maintenance".to_string(),
-        confidence_threshold: 0.8,
+        confidence_threshold: 0.3, // Lower threshold for routine maintenance
         file_patterns: vec![
             "docs/**".to_string(),
             "tests/**".to_string(),
             "*.md".to_string(),
+            "README*".to_string(),
         ],
         keywords: vec![
             "fix".to_string(),
             "bug".to_string(),
             "typo".to_string(),
             "documentation".to_string(),
+            "readme".to_string(),
         ],
         exclude_patterns: Some(vec![
             "consensus/**".to_string(),

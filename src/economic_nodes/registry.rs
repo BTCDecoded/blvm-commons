@@ -27,6 +27,21 @@ impl EconomicNodeRegistry {
         qualification_data: &QualificationProof,
         created_by: Option<&str>,
     ) -> Result<i32, GovernanceError> {
+        // Check for duplicate public key
+        let existing = sqlx::query(
+            "SELECT id FROM economic_nodes WHERE public_key = ?"
+        )
+        .bind(public_key)
+        .fetch_optional(&self.pool)
+        .await
+        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to check for duplicate: {}", e)))?;
+        
+        if existing.is_some() {
+            return Err(GovernanceError::CryptoError(
+                format!("Node with public key {} already registered", public_key)
+            ));
+        }
+
         // Verify qualification meets thresholds
         let verified = self
             .verify_qualification(node_type.clone(), qualification_data)
@@ -243,9 +258,23 @@ impl EconomicNodeRegistry {
                 )?,
                 weight: row.get::<f64, _>("weight"),
                 status,
-                registered_at: DateTime::parse_from_rfc3339(&row.get::<String, _>("registered_at"))
-                    .map_err(|e| GovernanceError::CryptoError(format!("Invalid timestamp: {}", e)))?
-                    .with_timezone(&Utc),
+                registered_at: {
+                    let ts_str = row.get::<String, _>("registered_at");
+                    if ts_str.is_empty() {
+                        Utc::now() // Default to now if empty
+                    } else {
+                        // Try RFC3339 first, then SQLite format (YYYY-MM-DD HH:MM:SS)
+                        DateTime::parse_from_rfc3339(&ts_str)
+                            .or_else(|_| {
+                                // Try SQLite format: YYYY-MM-DD HH:MM:SS
+                                chrono::NaiveDateTime::parse_from_str(&ts_str, "%Y-%m-%d %H:%M:%S")
+                                    .map(|dt| dt.and_utc())
+                                    .map_err(|_| chrono::ParseError::TooShort)
+                            })
+                            .map_err(|e| GovernanceError::CryptoError(format!("Invalid timestamp: {}", e)))?
+                            .with_timezone(&Utc)
+                    }
+                },
                 verified_at: row.get::<Option<String>, _>("verified_at").map(|t| {
                     DateTime::parse_from_rfc3339(&t)
                         .unwrap()

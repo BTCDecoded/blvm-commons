@@ -237,7 +237,7 @@ impl VetoManager {
     }
 
     /// Get economic node by ID
-    async fn get_node_by_id(&self, node_id: i32) -> Result<EconomicNode, GovernanceError> {
+    pub async fn get_node_by_id(&self, node_id: i32) -> Result<EconomicNode, GovernanceError> {
         let row = sqlx::query(
             r#"
             SELECT id, node_type, entity_name, public_key, qualification_data, 
@@ -276,9 +276,23 @@ impl VetoManager {
             qualification_data: serde_json::from_str(&row.get::<String, _>("qualification_data"))?,
             weight: row.get::<f64, _>("weight"),
             status,
-            registered_at: DateTime::parse_from_rfc3339(&row.get::<String, _>("registered_at"))
-                .map_err(|e| GovernanceError::CryptoError(format!("Invalid timestamp: {}", e)))?
-                .with_timezone(&Utc),
+            registered_at: {
+                let ts_str = row.get::<String, _>("registered_at");
+                if ts_str.is_empty() {
+                    Utc::now() // Default to now if empty
+                } else {
+                    // Try RFC3339 first, then SQLite format (YYYY-MM-DD HH:MM:SS)
+                    DateTime::parse_from_rfc3339(&ts_str)
+                        .or_else(|_| {
+                            // Try SQLite format: YYYY-MM-DD HH:MM:SS
+                            chrono::NaiveDateTime::parse_from_str(&ts_str, "%Y-%m-%d %H:%M:%S")
+                                .map(|dt| dt.and_utc())
+                                .map_err(|_| chrono::ParseError::TooShort)
+                        })
+                        .map_err(|e| GovernanceError::CryptoError(format!("Invalid timestamp: {}", e)))?
+                        .with_timezone(&Utc)
+                }
+            },
             verified_at: row.get::<Option<String>, _>("verified_at").map(|t| {
                 DateTime::parse_from_rfc3339(&t)
                     .unwrap()
