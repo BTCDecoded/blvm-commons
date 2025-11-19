@@ -29,6 +29,8 @@ mod build;
 mod backup;
 mod resilience;
 mod governance;
+mod node_registry;
+mod economic_nodes;
 
 use config::AppConfig;
 use database::Database;
@@ -124,7 +126,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     });
 
     // Initialize audit logger
-    let mut audit_logger = if config.audit.enabled {
+    let audit_logger = if config.audit.enabled {
         Some(AuditLogger::new(config.audit.log_path.clone())?)
     } else {
         None
@@ -144,9 +146,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         None
     };
 
-    let status_publisher = if let Some(client) = nostr_client {
+    let status_publisher = if let Some(ref client) = nostr_client {
         Some(StatusPublisher::new(
-            client,
+            client.clone(),
             database.clone(),
             config.server_id.clone(),
             std::env::current_exe().unwrap().to_string_lossy().to_string(),
@@ -251,7 +253,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             
             if !bot_pubkeys.is_empty() {
-                let zap_tracker = ZapTracker::new(pool.clone(), nostr_client, bot_pubkeys);
+                let zap_tracker = ZapTracker::new(pool.clone(), Arc::new((*nostr_client).clone()), bot_pubkeys);
                 if let Err(e) = zap_tracker.start_tracking().await {
                     error!("Failed to start zap tracking: {}", e);
                 } else {

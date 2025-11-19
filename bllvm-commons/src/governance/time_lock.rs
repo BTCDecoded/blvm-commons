@@ -267,26 +267,61 @@ impl TimeLockManager {
     ) -> Result<(), sqlx::Error> {
         debug!("Recording override signal for {} from node {}", change_id, node_id);
 
-        // Update override signals JSON
-        sqlx::query(
-            r#"
-            UPDATE time_locked_changes
-            SET override_signals = jsonb_set(
-                COALESCE(override_signals, '{}'::jsonb),
-                $1,
-                to_jsonb($2::text),
-                true
-            ),
-            updated_at = $3
-            WHERE change_id = $4
-            "#,
+        // Get current override signals or initialize empty object
+        let change = sqlx::query_as::<_, TimeLockedChange>(
+            "SELECT * FROM time_locked_changes WHERE change_id = ?"
         )
-        .bind(format!("/{}", node_id))
-        .bind(Utc::now().to_rfc3339())
-        .bind(Utc::now())
         .bind(change_id)
-        .execute(self.db.pool().unwrap())
+        .fetch_optional(self.db.pool().unwrap())
         .await?;
+
+        let mut signals = if let Some(c) = change {
+            c.override_signals.clone()
+        } else {
+            HashMap::new()
+        };
+
+        // Add the new signal
+        signals.insert(node_id.to_string(), Utc::now());
+
+        // Update override signals JSON
+        if self.db.is_sqlite() {
+            // SQLite uses json_set
+            sqlx::query(
+                r#"
+                UPDATE time_locked_changes
+                SET override_signals = json(?),
+                    updated_at = ?
+                WHERE change_id = ?
+                "#,
+            )
+            .bind(serde_json::to_string(&signals).unwrap())
+            .bind(Utc::now())
+            .bind(change_id)
+            .execute(self.db.pool().unwrap())
+            .await?;
+        } else {
+            // PostgreSQL uses jsonb_set
+            sqlx::query(
+                r#"
+                UPDATE time_locked_changes
+                SET override_signals = jsonb_set(
+                    COALESCE(override_signals, '{}'::jsonb),
+                    $1,
+                    to_jsonb($2::text),
+                    true
+                ),
+                updated_at = $3
+                WHERE change_id = $4
+                "#,
+            )
+            .bind(format!("/{}", node_id))
+            .bind(Utc::now().to_rfc3339())
+            .bind(Utc::now())
+            .bind(change_id)
+            .execute(self.db.pool().unwrap())
+            .await?;
+        }
 
         Ok(())
     }

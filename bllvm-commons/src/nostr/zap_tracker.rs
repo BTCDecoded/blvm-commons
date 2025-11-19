@@ -8,18 +8,19 @@ use crate::nostr::{NostrClient, ZapEvent};
 use anyhow::Result;
 use chrono::{DateTime, Utc};
 use sqlx::SqlitePool;
+use std::sync::Arc;
 use tracing::{info, warn};
 
 /// Zap tracker service that monitors and records zap contributions
 pub struct ZapTracker {
     pool: SqlitePool,
-    nostr_client: NostrClient,
+    nostr_client: Arc<NostrClient>,
     bot_pubkeys: Vec<String>,  // All bot pubkeys to track
 }
 
 impl ZapTracker {
     /// Create a new zap tracker
-    pub fn new(pool: SqlitePool, nostr_client: NostrClient, bot_pubkeys: Vec<String>) -> Self {
+    pub fn new(pool: SqlitePool, nostr_client: Arc<NostrClient>, bot_pubkeys: Vec<String>) -> Self {
         Self {
             pool,
             nostr_client,
@@ -31,7 +32,7 @@ impl ZapTracker {
     pub async fn start_tracking(&self) -> Result<()> {
         // Subscribe to zaps for each bot pubkey
         for pubkey in &self.bot_pubkeys {
-            let mut zap_rx = self.nostr_client.subscribe_to_zaps(pubkey).await?;
+            let mut zap_rx = Arc::as_ref(&self.nostr_client).subscribe_to_zaps(pubkey).await?;
             
             // Spawn task to process zaps for this pubkey
             let pool = self.pool.clone();

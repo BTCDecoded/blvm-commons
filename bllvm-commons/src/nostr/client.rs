@@ -13,8 +13,9 @@ use tokio::sync::Mutex;
 use tracing::{debug, error, info, warn};
 
 /// Nostr client managing multiple relay connections
+#[derive(Clone)]
 pub struct NostrClient {
-    client: Client,
+    client: Arc<Client>,
     pub keys: Keys,
     relay_status: Arc<Mutex<HashMap<String, bool>>>,
 }
@@ -45,7 +46,7 @@ impl NostrClient {
         let relay_status = Arc::new(Mutex::new(HashMap::new()));
         
         Ok(Self {
-            client,
+            client: Arc::new(client),
             keys,
             relay_status,
         })
@@ -57,7 +58,7 @@ impl NostrClient {
         let mut failed_relays = Vec::new();
 
         // Get list of connected relays
-        let relays = self.client.relays().await;
+        let relays = (*self.client).relays().await;
 
         for (relay_url, relay) in &relays {
             match relay.send_event(event.clone(), RelaySendOptions::new()).await {
@@ -99,7 +100,7 @@ impl NostrClient {
 
     /// Close all relay connections
     pub async fn close(&self) -> Result<()> {
-        self.client.disconnect().await?;
+        (*self.client).disconnect().await?;
         info!("Disconnected from all Nostr relays");
         Ok(())
     }
@@ -144,7 +145,7 @@ impl NostrClient {
                     .kind(Kind::ZapReceipt)
                     .pubkey(recipient_key);
                 
-                match client_handle.get_events_of(vec![query_filter], Some(Duration::from_secs(10))).await {
+                match (*client_handle).get_events_of(vec![query_filter], Some(Duration::from_secs(10))).await {
                     Ok(events) => {
                         for event in events {
                             if event.kind == Kind::ZapReceipt {

@@ -271,7 +271,7 @@ impl GitHubIntegration {
     /// Check economic node veto status
     /// This now integrates with the new voting system (zap votes + participation votes)
     async fn check_economic_veto(&self, pr_id: i32) -> Result<(bool, String), GovernanceError> {
-        use crate::economic_nodes::veto::VetoManager;
+        use crate::economic_nodes::VetoManager;
         use crate::governance::VoteAggregator;
         
         let pool = self.database.pool().ok_or_else(|| {

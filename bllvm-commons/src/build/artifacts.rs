@@ -195,21 +195,12 @@ mod tests {
     use tempfile::tempdir;
 
     fn create_test_github_client() -> GitHubClient {
-        use std::process::Command;
         let temp_dir = tempdir().unwrap();
-        let key_path = temp_dir.path().join("test_key.pem");
-        
-        // Generate RSA key for testing
-        let output = Command::new("openssl")
-            .args(&["genrsa", "-out", key_path.to_str().unwrap(), "2048"])
-            .output()
-            .expect("Failed to execute openssl");
-        
-        if !output.status.success() {
-            panic!("Failed to generate test RSA key");
-        }
-        
-        GitHubClient::new(123456, key_path.to_str().unwrap()).unwrap()
+        let private_key_path = temp_dir.path().join("test_key.pem");
+        // Use the actual test RSA key from test_fixtures
+        let valid_key = include_str!("../../../test_fixtures/test_rsa_key.pem");
+        std::fs::write(&private_key_path, valid_key).unwrap();
+        GitHubClient::new(123456, private_key_path.to_str().unwrap()).unwrap()
     }
 
     #[tokio::test]

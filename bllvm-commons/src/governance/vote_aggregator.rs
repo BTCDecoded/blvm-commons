@@ -3,7 +3,7 @@
 //! Aggregates votes from multiple sources (zap votes, participation votes)
 //! and calculates totals for governance proposals.
 
-use crate::economic_nodes::veto::VetoManager;
+use crate::economic_nodes::VetoManager;
 use crate::governance::WeightCalculator;
 use crate::nostr::zap_voting::{ZapVotingProcessor, VoteTotals as ZapVoteTotals};
 use anyhow::Result;
@@ -147,7 +147,7 @@ impl VoteAggregator {
     }
     
     /// Get fixed vote threshold for tier
-    fn get_threshold_for_tier(&self, tier: u8) -> Result<u32> {
+    pub fn get_threshold_for_tier(&self, tier: u8) -> Result<u32> {
         match tier {
             1 => Ok(100),   // Tier 1: Routine Maintenance
             2 => Ok(500),   // Tier 2: Minor Changes

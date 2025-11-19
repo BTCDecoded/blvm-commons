@@ -43,7 +43,7 @@ pub struct ListNodesResponse {
 
 /// Register a new node
 pub async fn register_node(
-    State((database, _)): State<(Database, crate::config::AppConfig)>,
+    State((_, database)): State<(crate::config::AppConfig, Database)>,
     Json(request): Json<RegisterNodeRequest>,
 ) -> Json<RegisterNodeResponse> {
     let pool = match database.get_sqlite_pool() {
@@ -85,7 +85,7 @@ pub async fn register_node(
 
 /// Get node by ID
 pub async fn get_node(
-    State((database, _)): State<(Database, crate::config::AppConfig)>,
+    State((_, database)): State<(crate::config::AppConfig, Database)>,
     axum::extract::Path(node_id): axum::extract::Path<String>,
 ) -> Json<GetNodeResponse> {
     let pool = match database.get_sqlite_pool() {
@@ -103,7 +103,7 @@ pub async fn get_node(
 
 /// List all active nodes
 pub async fn list_nodes(
-    State((database, _)): State<(Database, crate::config::AppConfig)>,
+    State((_, database)): State<(crate::config::AppConfig, Database)>,
 ) -> Json<ListNodesResponse> {
     let pool = match database.get_sqlite_pool() {
         Some(pool) => pool,
@@ -119,7 +119,7 @@ pub async fn list_nodes(
 }
 
 /// Create router for node registry API
-pub fn create_router() -> Router<(Database, crate::config::AppConfig)> {
+pub fn create_router() -> Router<(crate::config::AppConfig, Database)> {
     Router::new()
         .route("/nodes/register", post(register_node))
         .route("/nodes/:node_id", get(get_node))

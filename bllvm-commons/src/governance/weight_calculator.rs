@@ -194,8 +194,13 @@ impl WeightCalculator {
                 cumulative_zaps_btc,
             );
             
-            // Apply weight cap
-            let capped_weight = self.apply_weight_cap(base_weight, total_system_weight);
+            // Apply weight cap (only if we have a valid total system weight)
+            // On first iteration, total_system_weight is 0, so we skip the cap
+            let capped_weight = if total_system_weight > 0.0 {
+                self.apply_weight_cap(base_weight, total_system_weight)
+            } else {
+                base_weight
+            };
             
             // Update or insert participation weight
             sqlx::query(
