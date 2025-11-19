@@ -1,7 +1,0 @@
-﻿2025-11-09T23:51:27.8955799Z ##[group]Run if [ -d "../bllvm-consensus" ]; then rm -rf ../bllvm-consensus; fi
-2025-11-09T23:51:27.8956381Z [36;1mif [ -d "../bllvm-consensus" ]; then rm -rf ../bllvm-consensus; fi[0m
-2025-11-09T23:51:27.8956788Z [36;1mmv _temp-consensus-proof ../bllvm-consensus[0m
-2025-11-09T23:51:27.8987740Z shell: /usr/bin/bash -e {0}
-2025-11-09T23:51:27.8987983Z env:
-2025-11-09T23:51:27.8988169Z   CARGO_TERM_COLOR: always
-2025-11-09T23:51:27.8988379Z ##[endgroup]

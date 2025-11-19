@@ -1,9 +1,0 @@
-﻿2025-11-09T23:38:07.2383548Z ##[group]Run cargo install cargo-audit --version 0.20.0
-2025-11-09T23:38:07.2385249Z [36;1mcargo install cargo-audit --version 0.20.0[0m
-2025-11-09T23:38:07.2420275Z shell: /usr/bin/bash -e {0}
-2025-11-09T23:38:07.2421083Z env:
-2025-11-09T23:38:07.2421705Z   CARGO_TERM_COLOR: always
-2025-11-09T23:38:07.2422522Z   CARGO_HOME: /home/jswift/.cargo
-2025-11-09T23:38:07.2423361Z   CARGO_INCREMENTAL: 0
-2025-11-09T23:38:07.2424063Z ##[endgroup]
-2025-11-09T23:38:07.3369730Z [1m[32m     Ignored[0m package `cargo-audit v0.20.0` is already installed, use --force to override

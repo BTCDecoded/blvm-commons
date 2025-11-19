@@ -1,9 +1,0 @@
-﻿2025-11-09T23:20:17.5518071Z ##[group]Run if [ -d "../protocol-engine" ]; then rm -rf ../protocol-engine; fi
-2025-11-09T23:20:17.5518645Z [36;1mif [ -d "../protocol-engine" ]; then rm -rf ../protocol-engine; fi[0m
-2025-11-09T23:20:17.5519119Z [36;1mif [ -d "../consensus-proof" ]; then rm -rf ../consensus-proof; fi[0m
-2025-11-09T23:20:17.5519553Z [36;1mmv _temp-protocol-engine ../protocol-engine[0m
-2025-11-09T23:20:17.5519887Z [36;1mmv _temp-consensus-proof ../consensus-proof[0m
-2025-11-09T23:20:17.5553948Z shell: /usr/bin/bash -e {0}
-2025-11-09T23:20:17.5554193Z env:
-2025-11-09T23:20:17.5554525Z   CARGO_TERM_COLOR: always
-2025-11-09T23:20:17.5554751Z ##[endgroup]

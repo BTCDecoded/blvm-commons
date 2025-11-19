@@ -1,7 +1,0 @@
-﻿2025-11-09T23:37:35.7688456Z Post job cleanup.
-2025-11-09T23:37:35.9756086Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/jswift/actions-runner-org2/_work/bllvm-consensus/bllvm-consensus --files-from manifest.txt --use-compress-program zstdmt
-2025-11-09T23:37:58.4237348Z Sent 0 of 838847341 (0.0%), 0.0 MBs/sec
-2025-11-09T23:37:59.4237694Z Sent 67108864 of 838847341 (8.0%), 31.9 MBs/sec
-2025-11-09T23:38:00.4247545Z Sent 570411885 of 838847341 (68.0%), 181.0 MBs/sec
-2025-11-09T23:38:00.9968595Z Sent 838847341 of 838847341 (100.0%), 223.6 MBs/sec
-2025-11-09T23:38:01.2815437Z Cache saved with key: Linux-cargo-registry-be20cb763b1c2a23d480f273acac121679c301efe5e74593667a8cb6ea1cc014

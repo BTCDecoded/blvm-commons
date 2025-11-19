@@ -1,9 +1,0 @@
-﻿2025-11-10T00:05:34.1438290Z A job started hook has been configured by the self-hosted runner administrator
-2025-11-10T00:05:34.1607697Z ##[group]Run '/home/jswift/actions-runner-org2/cleanup-hooks/job-started.sh'
-2025-11-10T00:05:34.1640200Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
-2025-11-10T00:05:34.1641271Z ##[endgroup]
-2025-11-10T00:05:34.1830259Z Job started: Mon Nov 10 12:05:34 AM UTC 2025
-2025-11-10T00:05:34.1849556Z Available disk space: 9.1G
-2025-11-10T00:05:34.1892718Z WARNING: Disk usage is 82% - performing user-level cleanup
-2025-11-10T00:05:34.1894013Z Cleaning old work directories (user-level cleanup)...
-2025-11-10T00:05:34.2863323Z User-level cleanup completed. Disk usage: 82%

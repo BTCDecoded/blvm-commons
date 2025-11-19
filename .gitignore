@@ -1,2 +1,9 @@
 target/
 /target/
+
+# Workflow logs (large log files from CI)
+workflow-logs/
+
+# Test artifacts
+test_pattern
+*.test
