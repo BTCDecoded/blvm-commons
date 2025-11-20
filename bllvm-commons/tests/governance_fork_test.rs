@@ -276,7 +276,7 @@ async fn test_adoption_tracking() -> Result<(), Box<dyn std::error::Error>> {
         
         sqlx::query(
             r#"
-            CREATE TABLE IF NOT EXISTS adoption_metrics (
+            CREATE TABLE adoption_metrics (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 ruleset_id TEXT NOT NULL,
                 node_count INTEGER NOT NULL,
@@ -286,6 +286,16 @@ async fn test_adoption_tracking() -> Result<(), Box<dyn std::error::Error>> {
                 calculated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ruleset_id) REFERENCES governance_rulesets(id)
             )
+            "#
+        )
+        .execute(&pool)
+        .await?;
+    } else {
+        // Tables exist, but ensure ruleset exists
+        sqlx::query(
+            r#"
+            INSERT OR IGNORE INTO governance_rulesets (id, name, version_major, version_minor, version_patch, hash, config, description, status)
+            VALUES ('ruleset-v1.0.0', 'Ruleset v1.0.0', 1, 0, 0, 'hash_v1_0_0', '{}', 'Test ruleset', 'active')
             "#
         )
         .execute(&pool)
