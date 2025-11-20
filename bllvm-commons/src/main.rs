@@ -266,7 +266,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             
             if !bot_pubkeys.is_empty() {
-                let zap_tracker = ZapTracker::new(pool.clone(), nostr_client.clone(), bot_pubkeys);
+                let zap_tracker = ZapTracker::new(pool.clone(), Arc::new(nostr_client.clone()), bot_pubkeys);
                 if let Err(e) = zap_tracker.start_tracking().await {
                     error!("Failed to start zap tracking: {}", e);
                 } else {

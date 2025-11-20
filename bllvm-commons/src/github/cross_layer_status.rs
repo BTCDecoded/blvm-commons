@@ -493,8 +493,8 @@ impl CrossLayerStatusChecker {
     
     /// Extract test count from check run name using regex patterns
     /// Looks for patterns like "123 tests", "Tests: 456", etc.
-    #[cfg(test)]
-    pub(crate) fn extract_test_count_from_name(name: &str) -> Option<usize> {
+    /// This is public for use in tests and fuzz targets.
+    pub fn extract_test_count_from_name(name: &str) -> Option<usize> {
         Self::extract_test_count_from_name_impl(name)
     }
     

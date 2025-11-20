@@ -1,0 +1,5 @@
+---
+source: tests/snapshot_tests.rs
+expression: hash
+---
+sha256:d8a652f814b5d70960959dd076188e403cad2b76bbff53691225ce1bd2375a3a

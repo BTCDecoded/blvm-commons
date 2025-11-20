@@ -150,7 +150,7 @@ impl AuthorizedServer {
 }
 
 /// Server approval action
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum ServerAction {
     Add,
     Remove,

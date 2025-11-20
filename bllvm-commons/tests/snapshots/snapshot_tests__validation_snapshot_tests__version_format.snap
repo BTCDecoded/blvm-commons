@@ -1,0 +1,7 @@
+---
+source: tests/snapshot_tests.rs
+expression: format
+---
+// @orange-paper-version: v1.2.3
+// @orange-paper-commit: abc123def456
+// @orange-paper-hash: sha256:fedcba9876543210

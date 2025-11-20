@@ -566,6 +566,7 @@ dependencies = [
  "bech32 0.9.1",
  "bincode",
  "bllvm-consensus",
+ "hex",
  "ripemd",
  "secp256k1 0.28.2",
  "serde",
