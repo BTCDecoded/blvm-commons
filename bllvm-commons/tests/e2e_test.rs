@@ -5,19 +5,22 @@
 //! and governance changes with fork capability
 
 use bllvm_commons::{
+    crypto::signatures::SignatureManager,
     database::Database,
     economic_nodes::{registry::EconomicNodeRegistry, types::*, veto::VetoManager},
     enforcement::{merge_block::MergeBlocker, status_checks::StatusCheckGenerator},
     error::GovernanceError,
-    fork::{adoption::AdoptionTracker, export::GovernanceExporter, types::RulesetVersion, versioning::RulesetVersioning},
+    fork::{
+        adoption::AdoptionTracker, export::GovernanceExporter, types::RulesetVersion,
+        versioning::RulesetVersioning,
+    },
     validation::tier_classification,
-    crypto::signatures::SignatureManager,
 };
 use bllvm_sdk::governance::GovernanceKeypair;
-use serde_json::json;
-use std::str::FromStr;
 use hex;
+use serde_json::json;
 use sqlx;
+use std::str::FromStr;
 
 mod common;
 use common::create_test_decision_logger;
@@ -57,8 +60,7 @@ async fn test_tier_1_routine_approval_flow() -> Result<(), Box<dyn std::error::E
         true,  // review period met (simulated)
         true,  // signatures met (simulated)
         false, // no economic veto (Tier 1 doesn't require economic node input)
-        tier,
-        false, // emergency_mode
+        tier, false, // emergency_mode
     )?;
 
     assert!(!should_block);
@@ -71,7 +73,11 @@ async fn test_tier_1_routine_approval_flow() -> Result<(), Box<dyn std::error::E
         3,
         5,
         5,
-        &["maintainer1".to_string(), "maintainer2".to_string(), "maintainer3".to_string()],
+        &[
+            "maintainer1".to_string(),
+            "maintainer2".to_string(),
+            "maintainer3".to_string(),
+        ],
         &["maintainer4".to_string(), "maintainer5".to_string()],
     );
     let tier_status = StatusCheckGenerator::generate_tier_status(
@@ -103,7 +109,7 @@ async fn test_tier_3_economic_node_veto_scenario() -> Result<(), Box<dyn std::er
 
     // 1. Register economic nodes
     use bllvm_commons::economic_nodes::types::{HashpowerProof, HoldingsProof, VolumeProof};
-    
+
     let mining_pool_proof = QualificationProof {
         node_type: NodeType::MiningPool,
         hashpower_proof: Some(HashpowerProof {
@@ -197,41 +203,49 @@ async fn test_tier_3_economic_node_veto_scenario() -> Result<(), Box<dyn std::er
     use bllvm_commons::crypto::signatures::SignatureManager;
     use bllvm_sdk::governance::GovernanceKeypair;
     let sig_manager = SignatureManager::new();
-    
+
     let mining_keypair = GovernanceKeypair::generate().expect("Failed to generate keypair");
     let exchange_keypair = GovernanceKeypair::generate().expect("Failed to generate keypair");
-    
+
     // Update node public keys in database to match our keypairs
     let mining_pubkey_hex = hex::encode(mining_keypair.public_key().to_bytes());
     let exchange_pubkey_hex = hex::encode(exchange_keypair.public_key().to_bytes());
-    
+
     let pool = db.pool().expect("Database should have SQLite pool");
     sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
         .bind(&mining_pubkey_hex)
         .bind(mining_node_id)
         .execute(pool)
         .await
-        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to update mining node key: {}", e)))?;
-    
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!("Failed to update mining node key: {}", e))
+        })?;
+
     sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
         .bind(&exchange_pubkey_hex)
         .bind(exchange_node_id)
         .execute(pool)
         .await
-        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to update exchange node key: {}", e)))?;
-    
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!("Failed to update exchange node key: {}", e))
+        })?;
+
     // Get updated nodes via EconomicNodeRegistry
     let registry = EconomicNodeRegistry::new(pool.clone());
     let mining_node = registry.get_node_by_id(mining_node_id).await?;
     let exchange_node = registry.get_node_by_id(exchange_node_id).await?;
-    
+
     // Create valid signatures
     let mining_message = format!("PR #{} veto signal from {}", 2, mining_node.entity_name);
-    let mining_sig = sig_manager.create_governance_signature(&mining_message, &mining_keypair).expect("Failed to create signature");
-    
+    let mining_sig = sig_manager
+        .create_governance_signature(&mining_message, &mining_keypair)
+        .expect("Failed to create signature");
+
     let exchange_message = format!("PR #{} veto signal from {}", 2, exchange_node.entity_name);
-    let exchange_sig = sig_manager.create_governance_signature(&exchange_message, &exchange_keypair).expect("Failed to create signature");
-    
+    let exchange_sig = sig_manager
+        .create_governance_signature(&exchange_message, &exchange_keypair)
+        .expect("Failed to create signature");
+
     veto_manager
         .collect_veto_signal(
             2, // PR ID
@@ -268,8 +282,7 @@ async fn test_tier_3_economic_node_veto_scenario() -> Result<(), Box<dyn std::er
         true, // review period met
         true, // signatures met
         true, // economic veto active
-        tier,
-        false, // emergency_mode
+        tier, false, // emergency_mode
     )?;
 
     assert!(should_block);
@@ -284,7 +297,10 @@ async fn test_tier_3_economic_node_veto_scenario() -> Result<(), Box<dyn std::er
         2,    // veto count
     );
 
-    assert!(veto_status.contains("Economic Node Veto Active") || veto_status.contains("Economic node veto active"));
+    assert!(
+        veto_status.contains("Economic Node Veto Active")
+            || veto_status.contains("Economic node veto active")
+    );
     println!("✅ Economic veto status generated");
 
     println!("🎉 Tier 3 economic node veto scenario completed successfully!");
@@ -323,8 +339,7 @@ async fn test_tier_4_emergency_activation() -> Result<(), Box<dyn std::error::Er
         true,  // no review period required for emergency
         true,  // signatures met
         false, // no economic veto for emergency
-        tier,
-        true, // emergency_mode
+        tier, true, // emergency_mode
     )?;
 
     assert!(can_merge_emergency);
@@ -332,7 +347,7 @@ async fn test_tier_4_emergency_activation() -> Result<(), Box<dyn std::error::Er
 
     // 4. Generate emergency status
     use bllvm_commons::validation::emergency::{ActiveEmergency, EmergencyTier};
-    use chrono::{Utc, Duration};
+    use chrono::{Duration, Utc};
     let emergency = ActiveEmergency {
         id: 1,
         tier: EmergencyTier::Urgent,
@@ -436,18 +451,14 @@ tiers:
         ]
     });
 
-    let new_ruleset = versioning
-        .create_ruleset(
-            "governance-v1.1.0",
-            "Governance v1.1.0",
-            new_config,
-            Some("Updated governance ruleset"),
-        )?;
+    let new_ruleset = versioning.create_ruleset(
+        "governance-v1.1.0",
+        "Governance v1.1.0",
+        new_config,
+        Some("Updated governance ruleset"),
+    )?;
 
-    println!(
-        "✅ New governance ruleset created: {}",
-        new_ruleset.id
-    );
+    println!("✅ New governance ruleset created: {}", new_ruleset.id);
 
     // Ensure governance_rulesets table exists (migration might not have run)
     let pool = db.pool().expect("Database should have SQLite pool");
@@ -457,7 +468,7 @@ tiers:
     .fetch_one(pool)
     .await
     .unwrap_or(false);
-    
+
     if !table_exists {
         // Create the table manually if migration didn't run
         sqlx::query(
@@ -476,12 +487,17 @@ tiers:
                 description TEXT,
                 status TEXT DEFAULT 'active'
             )
-            "#
+            "#,
         )
         .execute(pool)
         .await
-        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to create governance_rulesets table: {}", e)))?;
-        
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!(
+                "Failed to create governance_rulesets table: {}",
+                e
+            ))
+        })?;
+
         sqlx::query(
             r#"
             CREATE TABLE IF NOT EXISTS fork_decisions (
@@ -495,12 +511,14 @@ tiers:
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ruleset_id) REFERENCES governance_rulesets(id)
             )
-            "#
+            "#,
         )
         .execute(pool)
         .await
-        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to create fork_decisions table: {}", e)))?;
-        
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!("Failed to create fork_decisions table: {}", e))
+        })?;
+
         sqlx::query(
             r#"
             CREATE TABLE IF NOT EXISTS fork_events (
@@ -513,12 +531,14 @@ tiers:
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ruleset_id) REFERENCES governance_rulesets(id)
             )
-            "#
+            "#,
         )
         .execute(pool)
         .await
-        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to create fork_events table: {}", e)))?;
-        
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!("Failed to create fork_events table: {}", e))
+        })?;
+
         sqlx::query(
             r#"
             CREATE TABLE IF NOT EXISTS adoption_metrics (
@@ -531,13 +551,18 @@ tiers:
                 calculated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ruleset_id) REFERENCES governance_rulesets(id)
             )
-            "#
+            "#,
         )
         .execute(pool)
         .await
-        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to create adoption_metrics table: {}", e)))?;
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!(
+                "Failed to create adoption_metrics table: {}",
+                e
+            ))
+        })?;
     }
-    
+
     // Save rulesets to database so fork_decisions can reference them
     sqlx::query(
         r#"
@@ -578,7 +603,7 @@ tiers:
     // 4. Simulate adoption decisions
     use bllvm_commons::fork::types::ForkDecision;
     use chrono::Utc;
-    
+
     let decision1 = ForkDecision {
         node_id: "1".to_string(),
         node_type: "mining_pool".to_string(),
@@ -635,8 +660,7 @@ tiers:
         true,  // review period met (180 days for Tier 5)
         true,  // signatures met (5-of-5 for Tier 5)
         false, // no economic veto
-        tier,
-        false, // emergency_mode
+        tier, false, // emergency_mode
     )?;
 
     assert!(!should_block);
@@ -752,7 +776,7 @@ async fn test_complete_governance_lifecycle() -> Result<(), Box<dyn std::error::
             5 => "[GOVERNANCE] Update governance rules".to_string(),
             _ => format!("[TIER{}] {}", tier, description),
         };
-        
+
         let pr_payload = json!({
             "pull_request": {
                 "number": tier,
@@ -775,9 +799,9 @@ async fn test_complete_governance_lifecycle() -> Result<(), Box<dyn std::error::
             let signature_manager = SignatureManager::new();
             let mining_message = format!("PR #{} veto signal from Test Mining Pool", tier);
             let exchange_message = format!("PR #{} veto signal from Test Exchange", tier);
-            
-            let mining_signature = signature_manager
-                .create_governance_signature(&mining_message, &mining_keypair)?;
+
+            let mining_signature =
+                signature_manager.create_governance_signature(&mining_message, &mining_keypair)?;
             let exchange_signature = signature_manager
                 .create_governance_signature(&exchange_message, &exchange_keypair)?;
 
@@ -846,13 +870,12 @@ async fn test_complete_governance_lifecycle() -> Result<(), Box<dyn std::error::
         ]
     });
 
-    let ruleset = versioning
-        .create_ruleset(
-            "test-ruleset-v1.0.0",
-            "Test Ruleset",
-            config,
-            Some("Test ruleset description"),
-        )?;
+    let ruleset = versioning.create_ruleset(
+        "test-ruleset-v1.0.0",
+        "Test Ruleset",
+        config,
+        Some("Test ruleset description"),
+    )?;
 
     // Ensure governance_rulesets table exists (migration might not have run)
     let pool_for_ruleset = db.pool().expect("Database should have SQLite pool");
@@ -862,7 +885,7 @@ async fn test_complete_governance_lifecycle() -> Result<(), Box<dyn std::error::
     .fetch_one(pool_for_ruleset)
     .await
     .unwrap_or(false);
-    
+
     if !table_exists {
         // Create the table manually if migration didn't run
         sqlx::query(
@@ -881,12 +904,17 @@ async fn test_complete_governance_lifecycle() -> Result<(), Box<dyn std::error::
                 description TEXT,
                 status TEXT DEFAULT 'active'
             )
-            "#
+            "#,
         )
         .execute(pool_for_ruleset)
         .await
-        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to create governance_rulesets table: {}", e)))?;
-        
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!(
+                "Failed to create governance_rulesets table: {}",
+                e
+            ))
+        })?;
+
         sqlx::query(
             r#"
             CREATE TABLE IF NOT EXISTS fork_decisions (
@@ -900,12 +928,14 @@ async fn test_complete_governance_lifecycle() -> Result<(), Box<dyn std::error::
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ruleset_id) REFERENCES governance_rulesets(id)
             )
-            "#
+            "#,
         )
         .execute(pool_for_ruleset)
         .await
-        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to create fork_decisions table: {}", e)))?;
-        
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!("Failed to create fork_decisions table: {}", e))
+        })?;
+
         sqlx::query(
             r#"
             CREATE TABLE IF NOT EXISTS fork_events (
@@ -918,12 +948,14 @@ async fn test_complete_governance_lifecycle() -> Result<(), Box<dyn std::error::
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ruleset_id) REFERENCES governance_rulesets(id)
             )
-            "#
+            "#,
         )
         .execute(pool_for_ruleset)
         .await
-        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to create fork_events table: {}", e)))?;
-        
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!("Failed to create fork_events table: {}", e))
+        })?;
+
         sqlx::query(
             r#"
             CREATE TABLE IF NOT EXISTS adoption_metrics (
@@ -936,13 +968,18 @@ async fn test_complete_governance_lifecycle() -> Result<(), Box<dyn std::error::
                 calculated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ruleset_id) REFERENCES governance_rulesets(id)
             )
-            "#
+            "#,
         )
         .execute(pool_for_ruleset)
         .await
-        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to create adoption_metrics table: {}", e)))?;
+        .map_err(|e| {
+            GovernanceError::DatabaseError(format!(
+                "Failed to create adoption_metrics table: {}",
+                e
+            ))
+        })?;
     }
-    
+
     // Save ruleset to database so fork_decisions can reference it
     sqlx::query(
         r#"
@@ -965,7 +1002,7 @@ async fn test_complete_governance_lifecycle() -> Result<(), Box<dyn std::error::
     // Record adoption decisions
     use bllvm_commons::fork::types::ForkDecision;
     use chrono::Utc;
-    
+
     let decision1 = ForkDecision {
         node_id: mining_node_id.to_string(),
         node_type: "mining_pool".to_string(),
@@ -976,7 +1013,11 @@ async fn test_complete_governance_lifecycle() -> Result<(), Box<dyn std::error::
         signature: "mining_adoption_signature".to_string(),
     };
     tracker
-        .record_fork_decision("test-ruleset-v1.0.0", &mining_node_id.to_string(), &decision1)
+        .record_fork_decision(
+            "test-ruleset-v1.0.0",
+            &mining_node_id.to_string(),
+            &decision1,
+        )
         .await?;
 
     let decision2 = ForkDecision {
@@ -989,7 +1030,11 @@ async fn test_complete_governance_lifecycle() -> Result<(), Box<dyn std::error::
         signature: "exchange_adoption_signature".to_string(),
     };
     tracker
-        .record_fork_decision("test-ruleset-v1.0.0", &exchange_node_id.to_string(), &decision2)
+        .record_fork_decision(
+            "test-ruleset-v1.0.0",
+            &exchange_node_id.to_string(),
+            &decision2,
+        )
         .await?;
 
     // Calculate adoption metrics
@@ -1096,28 +1141,30 @@ async fn test_error_handling_and_edge_cases() -> Result<(), Box<dyn std::error::
             "Valid Pool",
             "valid_key",
             &QualificationProof {
-        node_type: NodeType::MiningPool,
-        hashpower_proof: Some(HashpowerProof {
-            blocks_mined: vec!["block1".to_string()],
-            time_period_days: 30,
-            total_network_blocks: 1000,
-            percentage: 5.0,
-        }),
-        holdings_proof: None,
-        volume_proof: None,
-        contact_info: ContactInfo {
-            entity_name: "Test Node".to_string(),
-            contact_email: "test@test.com".to_string(),
-            website: None,
-            github_username: None,
-        },
-    },
+                node_type: NodeType::MiningPool,
+                hashpower_proof: Some(HashpowerProof {
+                    blocks_mined: vec!["block1".to_string()],
+                    time_period_days: 30,
+                    total_network_blocks: 1000,
+                    percentage: 5.0,
+                }),
+                holdings_proof: None,
+                volume_proof: None,
+                contact_info: ContactInfo {
+                    entity_name: "Test Node".to_string(),
+                    contact_email: "test@test.com".to_string(),
+                    website: None,
+                    github_username: None,
+                },
+            },
             Some("admin"),
         )
         .await?;
-    
+
     // Activate the node so it can submit veto signals
-    registry.update_node_status(node_id, NodeStatus::Active).await?;
+    registry
+        .update_node_status(node_id, NodeStatus::Active)
+        .await?;
 
     // This should fail due to invalid signature format (not valid hex)
     // Create a valid hex string but with wrong length to trigger hex decode error
@@ -1154,7 +1201,7 @@ async fn test_error_handling_and_edge_cases() -> Result<(), Box<dyn std::error::
     let signature_manager = SignatureManager::new();
     let keypair = GovernanceKeypair::generate()?;
     let public_key = keypair.public_key().to_string();
-    
+
     // Update the node's public key to match the generated keypair
     let pool = db.pool().expect("Database should have SQLite pool");
     sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
@@ -1162,25 +1209,17 @@ async fn test_error_handling_and_edge_cases() -> Result<(), Box<dyn std::error::
         .bind(node_id)
         .execute(pool)
         .await?;
-    
+
     let message1 = format!("PR #2 veto signal from Valid Pool");
-    let signature1 = signature_manager
-        .create_governance_signature(&message1, &keypair)?;
-    
+    let signature1 = signature_manager.create_governance_signature(&message1, &keypair)?;
+
     veto_manager
-        .collect_veto_signal(
-            2,
-            node_id,
-            SignalType::Veto,
-            &signature1,
-            "First veto",
-        )
+        .collect_veto_signal(2, node_id, SignalType::Veto, &signature1, "First veto")
         .await?;
 
     let message2 = format!("PR #2 veto signal from Valid Pool");
-    let signature2 = signature_manager
-        .create_governance_signature(&message2, &keypair)?;
-    
+    let signature2 = signature_manager.create_governance_signature(&message2, &keypair)?;
+
     let duplicate_veto_result = veto_manager
         .collect_veto_signal(
             2,       // Same PR
@@ -1205,7 +1244,3 @@ async fn test_error_handling_and_edge_cases() -> Result<(), Box<dyn std::error::
     println!("🎉 Error handling and edge cases test completed successfully!");
     Ok(())
 }
-
-
-
-

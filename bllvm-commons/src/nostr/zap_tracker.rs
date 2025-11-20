@@ -15,7 +15,7 @@ use tracing::{info, warn};
 pub struct ZapTracker {
     pool: SqlitePool,
     nostr_client: Arc<NostrClient>,
-    bot_pubkeys: Vec<String>,  // All bot pubkeys to track
+    bot_pubkeys: Vec<String>, // All bot pubkeys to track
 }
 
 impl ZapTracker {
@@ -27,13 +27,15 @@ impl ZapTracker {
             bot_pubkeys,
         }
     }
-    
+
     /// Start tracking zaps for all bot pubkeys
     pub async fn start_tracking(&self) -> Result<()> {
         // Subscribe to zaps for each bot pubkey
         for pubkey in &self.bot_pubkeys {
-            let mut zap_rx = Arc::as_ref(&self.nostr_client).subscribe_to_zaps(pubkey).await?;
-            
+            let mut zap_rx = Arc::as_ref(&self.nostr_client)
+                .subscribe_to_zaps(pubkey)
+                .await?;
+
             // Spawn task to process zaps for this pubkey
             let pool = self.pool.clone();
             let pubkey_clone = pubkey.clone();
@@ -45,29 +47,30 @@ impl ZapTracker {
                 }
             });
         }
-        
-        info!("Started tracking zaps for {} bot pubkeys", self.bot_pubkeys.len());
+
+        info!(
+            "Started tracking zaps for {} bot pubkeys",
+            self.bot_pubkeys.len()
+        );
         Ok(())
     }
-    
+
     /// Process a zap event and record it in the database
-    async fn process_zap(
-        pool: &SqlitePool,
-        recipient_pubkey: &str,
-        zap: ZapEvent,
-    ) -> Result<()> {
+    async fn process_zap(pool: &SqlitePool, recipient_pubkey: &str, zap: ZapEvent) -> Result<()> {
         // Convert millisatoshis to BTC
         let amount_btc = zap.amount_msat as f64 / 100_000_000_000.0;
-        
+
         // Convert timestamp to DateTime
-        let timestamp = DateTime::from_timestamp(zap.timestamp, 0)
-            .unwrap_or_else(Utc::now);
-        
+        let timestamp = DateTime::from_timestamp(zap.timestamp, 0).unwrap_or_else(Utc::now);
+
         // Determine if this is a proposal zap (has zapped_event_id)
         let is_proposal_zap = zap.zapped_event_id.is_some();
-        
+
         // Record zap in database
-        let invoice_hash = zap.invoice.as_ref().and_then(|i| Self::extract_payment_hash(i));
+        let invoice_hash = zap
+            .invoice
+            .as_ref()
+            .and_then(|i| Self::extract_payment_hash(i));
         let governance_event_id = zap.zapped_event_id.clone();
         sqlx::query(
             r#"
@@ -88,7 +91,7 @@ impl ZapTracker {
         .bind(governance_event_id.as_deref())
         .execute(pool)
         .await?;
-        
+
         info!(
             "Recorded zap: {} msat ({:.8} BTC) to {} from {}",
             zap.amount_msat,
@@ -96,26 +99,21 @@ impl ZapTracker {
             recipient_pubkey,
             zap.sender_pubkey.as_deref().unwrap_or("unknown")
         );
-        
+
         // Also record in unified contributions if we have sender pubkey
         if let Some(ref sender_pubkey) = zap.sender_pubkey {
             let tracker = ContributionTracker::new(pool.clone());
             if let Err(e) = tracker
-                .record_zap_contribution(
-                    sender_pubkey,
-                    amount_btc,
-                    timestamp,
-                    is_proposal_zap,
-                )
+                .record_zap_contribution(sender_pubkey, amount_btc, timestamp, is_proposal_zap)
                 .await
             {
                 warn!("Failed to record zap in unified contributions: {}", e);
             }
         }
-        
+
         Ok(())
     }
-    
+
     /// Extract payment hash from invoice (for verification)
     /// This is a placeholder - in production, use a bolt11 parsing library
     fn extract_payment_hash(_invoice: &str) -> Option<String> {
@@ -123,7 +121,7 @@ impl ZapTracker {
         // For now, return None
         None
     }
-    
+
     /// Get total zaps for a pubkey in time period
     pub async fn get_total_zaps(
         &self,
@@ -145,10 +143,10 @@ impl ZapTracker {
         .bind(end_time)
         .fetch_one(&self.pool)
         .await?;
-        
+
         Ok(result.unwrap_or(0.0))
     }
-    
+
     /// Get zaps by sender (for contributor qualification)
     pub async fn get_zaps_by_sender(
         &self,
@@ -170,7 +168,7 @@ impl ZapTracker {
             is_proposal_zap: bool,
             governance_event_id: Option<String>,
         }
-        
+
         let rows = sqlx::query_as::<_, ZapRow>(
             r#"
             SELECT id, recipient_pubkey, sender_pubkey, amount_msat, amount_btc, timestamp, invoice_hash, message, zapped_event_id, is_proposal_zap, governance_event_id
@@ -186,22 +184,25 @@ impl ZapTracker {
         .bind(end_time)
         .fetch_all(&self.pool)
         .await?;
-        
-        Ok(rows.into_iter().map(|row| ZapContribution {
-            id: row.id,
-            recipient_pubkey: row.recipient_pubkey,
-            sender_pubkey: row.sender_pubkey,
-            amount_msat: row.amount_msat as u64,
-            amount_btc: row.amount_btc,
-            timestamp: row.timestamp,
-            invoice_hash: row.invoice_hash,
-            message: row.message,
-            zapped_event_id: row.zapped_event_id,
-            is_proposal_zap: row.is_proposal_zap,
-            governance_event_id: row.governance_event_id,
-        }).collect())
+
+        Ok(rows
+            .into_iter()
+            .map(|row| ZapContribution {
+                id: row.id,
+                recipient_pubkey: row.recipient_pubkey,
+                sender_pubkey: row.sender_pubkey,
+                amount_msat: row.amount_msat as u64,
+                amount_btc: row.amount_btc,
+                timestamp: row.timestamp,
+                invoice_hash: row.invoice_hash,
+                message: row.message,
+                zapped_event_id: row.zapped_event_id,
+                is_proposal_zap: row.is_proposal_zap,
+                governance_event_id: row.governance_event_id,
+            })
+            .collect())
     }
-    
+
     /// Get proposal zaps (zaps to governance events)
     pub async fn get_proposal_zaps(
         &self,
@@ -221,7 +222,7 @@ impl ZapTracker {
             is_proposal_zap: bool,
             governance_event_id: Option<String>,
         }
-        
+
         let rows = sqlx::query_as::<_, ZapRow>(
             r#"
             SELECT id, recipient_pubkey, sender_pubkey, amount_msat, amount_btc, timestamp, invoice_hash, message, zapped_event_id, is_proposal_zap, governance_event_id
@@ -233,20 +234,23 @@ impl ZapTracker {
         .bind(governance_event_id)
         .fetch_all(&self.pool)
         .await?;
-        
-        Ok(rows.into_iter().map(|row| ZapContribution {
-            id: row.id,
-            recipient_pubkey: row.recipient_pubkey,
-            sender_pubkey: row.sender_pubkey,
-            amount_msat: row.amount_msat as u64,
-            amount_btc: row.amount_btc,
-            timestamp: row.timestamp,
-            invoice_hash: row.invoice_hash,
-            message: row.message,
-            zapped_event_id: row.zapped_event_id,
-            is_proposal_zap: row.is_proposal_zap,
-            governance_event_id: row.governance_event_id,
-        }).collect())
+
+        Ok(rows
+            .into_iter()
+            .map(|row| ZapContribution {
+                id: row.id,
+                recipient_pubkey: row.recipient_pubkey,
+                sender_pubkey: row.sender_pubkey,
+                amount_msat: row.amount_msat as u64,
+                amount_btc: row.amount_btc,
+                timestamp: row.timestamp,
+                invoice_hash: row.invoice_hash,
+                message: row.message,
+                zapped_event_id: row.zapped_event_id,
+                is_proposal_zap: row.is_proposal_zap,
+                governance_event_id: row.governance_event_id,
+            })
+            .collect())
     }
 }
 
@@ -265,4 +269,3 @@ pub struct ZapContribution {
     pub is_proposal_zap: bool,
     pub governance_event_id: Option<String>,
 }
-

@@ -115,12 +115,12 @@ impl RegistryAnchorer {
     pub async fn anchor_registry(&self) -> Result<()> {
         let now = Utc::now();
         let month_key = now.format("%Y-%m").to_string();
-        
+
         info!("Generating monthly registry for {}", month_key);
 
         // Generate registry
         let registry = self.generate_registry().await?;
-        
+
         // Save registry JSON
         let registry_file = self.registry_path.join(format!("{}.json", month_key));
         self.save_registry(&registry, &registry_file).await?;
@@ -136,9 +136,13 @@ impl RegistryAnchorer {
         self.save_proof(&proof_data, &proof_file).await?;
 
         // Store in database
-        self.store_registry_info(&month_key, &registry_file, &proof_file).await?;
+        self.store_registry_info(&month_key, &registry_file, &proof_file)
+            .await?;
 
-        info!("Successfully anchored registry for {} to Bitcoin", month_key);
+        info!(
+            "Successfully anchored registry for {} to Bitcoin",
+            month_key
+        );
         Ok(())
     }
 
@@ -213,15 +217,13 @@ impl RegistryAnchorer {
     async fn save_registry(&self, registry: &GovernanceRegistry, path: &Path) -> Result<()> {
         // Ensure directory exists
         if let Some(parent) = path.parent() {
-            fs::create_dir_all(parent)
-                .map_err(|e| anyhow!("Failed to create directory: {}", e))?;
+            fs::create_dir_all(parent).map_err(|e| anyhow!("Failed to create directory: {}", e))?;
         }
 
         let json = serde_json::to_string_pretty(registry)
             .map_err(|e| anyhow!("Failed to serialize registry: {}", e))?;
 
-        fs::write(path, json)
-            .map_err(|e| anyhow!("Failed to write registry file: {}", e))?;
+        fs::write(path, json).map_err(|e| anyhow!("Failed to write registry file: {}", e))?;
 
         info!("Saved registry to: {}", path.display());
         Ok(())
@@ -231,34 +233,46 @@ impl RegistryAnchorer {
     async fn save_proof(&self, proof: &[u8], path: &Path) -> Result<()> {
         // Ensure directory exists
         if let Some(parent) = path.parent() {
-            fs::create_dir_all(parent)
-                .map_err(|e| anyhow!("Failed to create directory: {}", e))?;
+            fs::create_dir_all(parent).map_err(|e| anyhow!("Failed to create directory: {}", e))?;
         }
 
-        fs::write(path, proof)
-            .map_err(|e| anyhow!("Failed to write proof file: {}", e))?;
+        fs::write(path, proof).map_err(|e| anyhow!("Failed to write proof file: {}", e))?;
 
         info!("Saved OTS proof to: {}", path.display());
         Ok(())
     }
 
     /// Store registry information in database
-    async fn store_registry_info(&self, month_key: &str, registry_file: &Path, proof_file: &Path) -> Result<()> {
+    async fn store_registry_info(
+        &self,
+        month_key: &str,
+        registry_file: &Path,
+        proof_file: &Path,
+    ) -> Result<()> {
         // This would store the registry info in the database
         // For now, just log
-        info!("Stored registry info for {}: {} -> {}", month_key, registry_file.display(), proof_file.display());
+        info!(
+            "Stored registry info for {}: {} -> {}",
+            month_key,
+            registry_file.display(),
+            proof_file.display()
+        );
         Ok(())
     }
 
     /// Verify a registry against its OTS proof
-    pub async fn verify_registry(&self, registry_file: &Path, proof_file: &Path) -> Result<VerificationResult> {
+    pub async fn verify_registry(
+        &self,
+        registry_file: &Path,
+        proof_file: &Path,
+    ) -> Result<VerificationResult> {
         // Load registry data
-        let registry_data = fs::read(registry_file)
-            .map_err(|e| anyhow!("Failed to read registry file: {}", e))?;
+        let registry_data =
+            fs::read(registry_file).map_err(|e| anyhow!("Failed to read registry file: {}", e))?;
 
         // Load OTS proof
-        let proof_data = fs::read(proof_file)
-            .map_err(|e| anyhow!("Failed to read proof file: {}", e))?;
+        let proof_data =
+            fs::read(proof_file).map_err(|e| anyhow!("Failed to read proof file: {}", e))?;
 
         // Verify timestamp
         self.ots_client.verify(&registry_data, &proof_data).await
@@ -273,17 +287,24 @@ mod tests {
     #[tokio::test]
     async fn test_registry_anchorer_creation() {
         let temp_dir = tempdir().unwrap();
-        let ots_client = OtsClient::new("https://alice.btc.calendar.opentimestamps.org".to_string());
+        let ots_client =
+            OtsClient::new("https://alice.btc.calendar.opentimestamps.org".to_string());
         let database = Database::new_in_memory().await.unwrap();
-        
+
         let anchorer = RegistryAnchorer::new(
             ots_client,
             database,
-            temp_dir.path().join("registries").to_string_lossy().to_string(),
+            temp_dir
+                .path()
+                .join("registries")
+                .to_string_lossy()
+                .to_string(),
             temp_dir.path().join("proofs").to_string_lossy().to_string(),
         );
 
-        assert!(anchorer.registry_path.exists() || anchorer.registry_path.parent().unwrap().exists());
+        assert!(
+            anchorer.registry_path.exists() || anchorer.registry_path.parent().unwrap().exists()
+        );
         assert!(anchorer.proofs_path.exists() || anchorer.proofs_path.parent().unwrap().exists());
     }
 
@@ -292,7 +313,9 @@ mod tests {
         let registry = GovernanceRegistry {
             version: "2025-01".to_string(),
             timestamp: Utc::now(),
-            previous_registry_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000".to_string(),
+            previous_registry_hash:
+                "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+                    .to_string(),
             maintainers: vec![],
             authorized_servers: vec![],
             audit_logs: HashMap::new(),

@@ -78,7 +78,10 @@ async fn main() -> Result<()> {
         Commands::CheckPr { pr_number, format } => {
             check_pr_impact(pr_number, &format).await?;
         }
-        Commands::CheckPlaceholders { files, fail_on_placeholder } => {
+        Commands::CheckPlaceholders {
+            files,
+            fail_on_placeholder,
+        } => {
             check_placeholders(files, fail_on_placeholder).await?;
         }
         Commands::VerifyProductionReadiness { format } => {
@@ -100,7 +103,10 @@ async fn check_status(detailed: bool) -> Result<()> {
 
     let status_file = "governance/config/security-control-status.yml";
     if !Path::new(status_file).exists() {
-        return Err(anyhow!("Security control status file not found: {}", status_file));
+        return Err(anyhow!(
+            "Security control status file not found: {}",
+            status_file
+        ));
     }
 
     let content = fs::read_to_string(status_file)?;
@@ -118,7 +124,10 @@ async fn check_status(detailed: bool) -> Result<()> {
     if production_ready {
         println!("✅ Production Ready: YES");
     } else {
-        println!("❌ Production Ready: NO ({} controls blocking)", blocking_controls);
+        println!(
+            "❌ Production Ready: NO ({} controls blocking)",
+            blocking_controls
+        );
     }
 
     println!("📊 Total Controls: {}", total_controls);
@@ -130,9 +139,15 @@ async fn check_status(detailed: bool) -> Result<()> {
         let p0_complete = summary["P0_complete"].as_i64().unwrap_or(0);
         let p0_incomplete = summary["P0_incomplete"].as_i64().unwrap_or(0);
 
-        println!("P0 (Critical) Controls: {}/{} complete", p0_complete, p0_critical);
+        println!(
+            "P0 (Critical) Controls: {}/{} complete",
+            p0_complete, p0_critical
+        );
         if p0_incomplete > 0 {
-            println!("⚠️  {} P0 controls incomplete - blocks production", p0_incomplete);
+            println!(
+                "⚠️  {} P0 controls incomplete - blocks production",
+                p0_incomplete
+            );
         }
     }
 
@@ -168,8 +183,10 @@ async fn check_status(detailed: bool) -> Result<()> {
                 let blocking = if blocks_production { " (BLOCKS)" } else { "" };
                 let control_id_str = control_id.as_str().unwrap_or("unknown");
 
-                println!("  {} {} {} - {}{}", 
-                    state_emoji, priority_emoji, name, control_id_str, blocking);
+                println!(
+                    "  {} {} {} - {}{}",
+                    state_emoji, priority_emoji, name, control_id_str, blocking
+                );
             }
         }
     }
@@ -196,7 +213,8 @@ async fn check_pr_impact(pr_number: u32, format: &str) -> Result<()> {
     info!("Checking security impact for PR #{}", pr_number);
 
     // Load security control mapping
-    let validator = SecurityControlValidator::new("governance/config/security-control-mapping.yml")?;
+    let validator =
+        SecurityControlValidator::new("governance/config/security-control-mapping.yml")?;
 
     // Get changed files from PR (simplified - in real implementation, would use GitHub API)
     let changed_files = get_pr_changed_files(pr_number).await?;
@@ -209,7 +227,7 @@ async fn check_pr_impact(pr_number: u32, format: &str) -> Result<()> {
         "json" => {
             let json = serde_json::to_string_pretty(&impact)?;
             println!("{}", json);
-            
+
             // Also write to file for CI
             fs::write("security-impact.json", json)?;
         }
@@ -282,7 +300,8 @@ async fn check_pr_impact(pr_number: u32, format: &str) -> Result<()> {
 async fn check_placeholders(files: Option<Vec<String>>, fail_on_placeholder: bool) -> Result<()> {
     info!("Checking for placeholder implementations...");
 
-    let validator = SecurityControlValidator::new("governance/config/security-control-mapping.yml")?;
+    let validator =
+        SecurityControlValidator::new("governance/config/security-control-mapping.yml")?;
 
     let files_to_check = match files {
         Some(f) => f,
@@ -310,7 +329,9 @@ async fn check_placeholders(files: Option<Vec<String>>, fail_on_placeholder: boo
     }
 
     if fail_on_placeholder {
-        return Err(anyhow!("Placeholder implementations found in security-critical files"));
+        return Err(anyhow!(
+            "Placeholder implementations found in security-critical files"
+        ));
     }
 
     Ok(())
@@ -347,8 +368,11 @@ async fn verify_production_readiness(format: &str) -> Result<()> {
                 println!("🚀 System is ready for production deployment");
             } else {
                 println!("❌ Production Ready: NO");
-                println!("⚠️  {} controls blocking production deployment", blocking_controls);
-                
+                println!(
+                    "⚠️  {} controls blocking production deployment",
+                    blocking_controls
+                );
+
                 if let Some(blocking) = status.get("audit_readiness") {
                     if let Some(blockers) = blocking.get("audit_blockers") {
                         if let Some(blocker_list) = blockers.as_sequence() {
@@ -396,7 +420,10 @@ async fn generate_report(output: Option<String>) -> Result<()> {
 
     let mut report = String::new();
     report.push_str("# Bitcoin Commons Security Control Report\n");
-    report.push_str(&format!("Generated: {}\n\n", chrono::Utc::now().format("%Y-%m-%d %H:%M:%S UTC")));
+    report.push_str(&format!(
+        "Generated: {}\n\n",
+        chrono::Utc::now().format("%Y-%m-%d %H:%M:%S UTC")
+    ));
 
     // Overall status
     let production_ready = status["production_ready"].as_bool().unwrap_or(false);
@@ -406,7 +433,10 @@ async fn generate_report(output: Option<String>) -> Result<()> {
     if production_ready {
         report.push_str("✅ **Production Ready**: YES\n\n");
     } else {
-        report.push_str(&format!("❌ **Production Ready**: NO ({} controls blocking)\n\n", blocking_controls));
+        report.push_str(&format!(
+            "❌ **Production Ready**: NO ({} controls blocking)\n\n",
+            blocking_controls
+        ));
     }
 
     // Control summary
@@ -414,18 +444,24 @@ async fn generate_report(output: Option<String>) -> Result<()> {
         report.push_str("## Control Summary\n\n");
         report.push_str("| Priority | Total | Complete | Incomplete |\n");
         report.push_str("|----------|-------|----------|------------|\n");
-        
+
         let p0_total = summary["P0_critical"].as_i64().unwrap_or(0);
         let p0_complete = summary["P0_complete"].as_i64().unwrap_or(0);
         let p0_incomplete = summary["P0_incomplete"].as_i64().unwrap_or(0);
-        
-        report.push_str(&format!("| P0 (Critical) | {} | {} | {} |\n", p0_total, p0_complete, p0_incomplete));
-        
+
+        report.push_str(&format!(
+            "| P0 (Critical) | {} | {} | {} |\n",
+            p0_total, p0_complete, p0_incomplete
+        ));
+
         let p1_total = summary["P1_high"].as_i64().unwrap_or(0);
         let p1_complete = summary["P1_complete"].as_i64().unwrap_or(0);
         let p1_incomplete = summary["P1_incomplete"].as_i64().unwrap_or(0);
-        
-        report.push_str(&format!("| P1 (High) | {} | {} | {} |\n", p1_total, p1_complete, p1_incomplete));
+
+        report.push_str(&format!(
+            "| P1 (High) | {} | {} | {} |\n",
+            p1_total, p1_complete, p1_incomplete
+        ));
     }
 
     // Detailed control status
@@ -447,18 +483,24 @@ async fn generate_report(output: Option<String>) -> Result<()> {
                 _ => "❓",
             };
 
-            let blocking = if blocks_production { " ⚠️ BLOCKS PRODUCTION" } else { "" };
+            let blocking = if blocks_production {
+                " ⚠️ BLOCKS PRODUCTION"
+            } else {
+                ""
+            };
 
             let control_id_str = control_id.as_str().unwrap_or("unknown");
-            report.push_str(&format!("- {} **{}** ({}) - {}{}\n", 
-                state_emoji, name, control_id_str, priority, blocking));
+            report.push_str(&format!(
+                "- {} **{}** ({}) - {}{}\n",
+                state_emoji, name, control_id_str, priority, blocking
+            ));
         }
     }
 
     // Next actions
     if let Some(next_actions) = status.get("next_actions") {
         report.push_str("\n## Next Actions Required\n\n");
-        
+
         if let Some(immediate) = next_actions.get("immediate") {
             if let Some(actions) = immediate.as_sequence() {
                 if !actions.is_empty() {
@@ -507,7 +549,7 @@ async fn get_git_changed_files() -> Result<Vec<String>> {
 
 fn get_blocking_controls(status: &serde_yaml::Value) -> Vec<String> {
     let mut blocking = Vec::new();
-    
+
     if let Some(controls) = status.get("controls") {
         for (control_id, control) in controls.as_mapping().unwrap() {
             if control["blocks_production"].as_bool().unwrap_or(false) {
@@ -515,7 +557,7 @@ fn get_blocking_controls(status: &serde_yaml::Value) -> Vec<String> {
             }
         }
     }
-    
+
     blocking
 }
 
@@ -525,16 +567,3 @@ struct ProductionReadinessResult {
     blocking_controls: usize,
     blocking_control_ids: Vec<String>,
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

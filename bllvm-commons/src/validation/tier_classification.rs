@@ -1,13 +1,13 @@
 //! Tier classification for PRs based on file patterns and content
 //! Implements auto-detection with manual override capability
 
+use crate::config::loader::GovernanceConfigFiles;
+use crate::error::GovernanceError;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
 use std::path::Path;
-use tracing::{info, debug, warn};
-use crate::error::GovernanceError;
-use crate::config::loader::GovernanceConfigFiles;
+use tracing::{debug, info, warn};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TierClassificationResult {
@@ -89,28 +89,36 @@ pub struct FallbackConfig {
 }
 
 /// Load tier classification config from YAML file
-pub async fn load_config_from_file<P: AsRef<Path>>(path: P) -> Result<TierClassificationConfig, GovernanceError> {
-    let content = tokio::fs::read_to_string(path).await
+pub async fn load_config_from_file<P: AsRef<Path>>(
+    path: P,
+) -> Result<TierClassificationConfig, GovernanceError> {
+    let content = tokio::fs::read_to_string(path)
+        .await
         .map_err(|e| GovernanceError::ConfigError(format!("Failed to read config file: {}", e)))?;
-    
+
     let config: TierClassificationConfig = serde_yaml::from_str(&content)
         .map_err(|e| GovernanceError::ConfigError(format!("Failed to parse YAML config: {}", e)))?;
-    
+
     Ok(config)
 }
 
 /// Load tier classification config using the governance config loader
 async fn load_tier_classification_config() -> Result<TierClassificationConfig, GovernanceError> {
-    let governance_config = GovernanceConfigFiles::load_from_directory(Path::new("governance/config"))
-        .map_err(|e| GovernanceError::ConfigError(format!("Failed to load governance config: {}", e)))?;
-    
+    let governance_config =
+        GovernanceConfigFiles::load_from_directory(Path::new("governance/config")).map_err(
+            |e| GovernanceError::ConfigError(format!("Failed to load governance config: {}", e)),
+        )?;
+
     // Convert from the governance config format to our internal format
     let mut classification_rules = HashMap::new();
-    
+
     for (rule_name, rule) in &governance_config.tier_classification.classification_rules {
         let tier_rule = TierRule {
             name: rule.name.clone(),
-            confidence_threshold: governance_config.tier_classification.classification_config.min_confidence,
+            confidence_threshold: governance_config
+                .tier_classification
+                .classification_config
+                .min_confidence,
             file_patterns: rule.file_patterns.clone(),
             keywords: rule.keywords.title.clone(),
             exclude_patterns: None,
@@ -124,7 +132,7 @@ async fn load_tier_classification_config() -> Result<TierClassificationConfig, G
         };
         classification_rules.insert(rule_name.clone(), tier_rule);
     }
-    
+
     let config = TierClassificationConfig {
         classification_rules,
         manual_override: ManualOverrideConfig {
@@ -132,12 +140,22 @@ async fn load_tier_classification_config() -> Result<TierClassificationConfig, G
             permissions: vec!["maintainer".to_string()],
             logging: LoggingConfig {
                 required: true,
-                fields: vec!["user".to_string(), "timestamp".to_string(), "reason".to_string()],
+                fields: vec![
+                    "user".to_string(),
+                    "timestamp".to_string(),
+                    "reason".to_string(),
+                ],
             },
         },
         confidence_scoring: ConfidenceScoring {
-            file_pattern_match: governance_config.tier_classification.classification_config.file_pattern_weight,
-            keyword_match: governance_config.tier_classification.classification_config.keyword_weight,
+            file_pattern_match: governance_config
+                .tier_classification
+                .classification_config
+                .file_pattern_weight,
+            keyword_match: governance_config
+                .tier_classification
+                .classification_config
+                .keyword_weight,
             title_analysis: 0.3,
             description_analysis: 0.2,
             boost_factors: BoostFactors {
@@ -159,18 +177,20 @@ async fn load_tier_classification_config() -> Result<TierClassificationConfig, G
             notification: vec![],
         },
     };
-    
+
     Ok(config)
 }
 
 /// Classify PR tier based on file patterns and content
 pub async fn classify_pr_tier(payload: &Value) -> u32 {
-    let config = load_tier_classification_config().await
-        .unwrap_or_else(|e| {
-            warn!("Failed to load tier classification config: {}, using default", e);
-            get_default_config()
-        });
-    
+    let config = load_tier_classification_config().await.unwrap_or_else(|e| {
+        warn!(
+            "Failed to load tier classification config: {}, using default",
+            e
+        );
+        get_default_config()
+    });
+
     let result = classify_pr_tier_detailed(payload, &config).await;
     result.tier
 }
@@ -196,10 +216,13 @@ pub async fn classify_pr_tier_with_db(
             // No override, proceed with automated classification
         }
         Err(e) => {
-            warn!("Failed to check for tier override: {}, using automated classification", e);
+            warn!(
+                "Failed to check for tier override: {}, using automated classification",
+                e
+            );
         }
     }
-    
+
     // Fall back to automated classification
     classify_pr_tier(payload).await
 }
@@ -213,7 +236,11 @@ pub async fn classify_pr_tier_detailed(
     let title = extract_title(payload);
     let body = extract_body(payload);
 
-    debug!("Classifying PR with {} files, title: '{}'", files.len(), title);
+    debug!(
+        "Classifying PR with {} files, title: '{}'",
+        files.len(),
+        title
+    );
 
     // First, check for explicit tier markers in title (highest priority)
     let title_lower = title.to_lowercase();
@@ -253,15 +280,22 @@ pub async fn classify_pr_tier_detailed(
     let mut rationale = String::new();
 
     // Collect all tier rules and sort by tier number (descending) to check higher tiers first
-    let mut tier_rules: Vec<(u32, String, &TierRule)> = config.classification_rules
+    let mut tier_rules: Vec<(u32, String, &TierRule)> = config
+        .classification_rules
         .iter()
         .map(|(name, rule)| {
             // Extract tier number from name like "tier_1_routine" or "tier_5_governance"
             let tier_num = if name.starts_with("tier_") {
-                name.split('_').nth(1).and_then(|s| s.parse::<u32>().ok()).unwrap_or(1)
+                name.split('_')
+                    .nth(1)
+                    .and_then(|s| s.parse::<u32>().ok())
+                    .unwrap_or(1)
             } else {
                 // Fallback: try to parse from last segment
-                name.split('_').next_back().and_then(|s| s.parse::<u32>().ok()).unwrap_or(1)
+                name.split('_')
+                    .next_back()
+                    .and_then(|s| s.parse::<u32>().ok())
+                    .unwrap_or(1)
             };
             (tier_num, name.clone(), rule)
         })
@@ -270,7 +304,6 @@ pub async fn classify_pr_tier_detailed(
 
     // Check each tier rule (now in descending order)
     for (tier_num, _tier_name, rule) in tier_rules {
-        
         let mut confidence = 0.0;
         let mut tier_patterns = Vec::new();
         let mut tier_keywords = Vec::new();
@@ -293,32 +326,32 @@ pub async fn classify_pr_tier_detailed(
         } else {
             1.5 // Boost keyword weight when no files match (keyword-only classification)
         };
-        
+
         for keyword in &rule.keywords {
             let keyword_lower = keyword.to_lowercase();
             let title_lower = title.to_lowercase();
             let body_lower = body.to_lowercase();
-            
+
             let title_match = title_lower.contains(&keyword_lower);
             let body_match = body_lower.contains(&keyword_lower);
-            
+
             if title_match {
                 // Title matches are very strong signals - give them more weight
                 // Use keyword_weight_multiplier for consistency with body matches
-                confidence += config.confidence_scoring.keyword_match 
-                    * config.confidence_scoring.title_analysis 
+                confidence += config.confidence_scoring.keyword_match
+                    * config.confidence_scoring.title_analysis
                     * keyword_weight_multiplier
                     * 2.0; // Additional boost for title matches
                 tier_keywords.push(format!("title:{}", keyword));
             }
             if body_match {
-                confidence += config.confidence_scoring.keyword_match 
-                    * config.confidence_scoring.description_analysis 
+                confidence += config.confidence_scoring.keyword_match
+                    * config.confidence_scoring.description_analysis
                     * keyword_weight_multiplier;
                 tier_keywords.push(format!("body:{}", keyword));
             }
         }
-        
+
         // Special handling for tier markers in title (e.g., [CONSENSUS-ADJACENT], [GOVERNANCE], [EMERGENCY])
         // These are very strong signals and should override other matches
         let title_lower = title.to_lowercase();
@@ -328,7 +361,9 @@ pub async fn classify_pr_tier_detailed(
         if title_lower.contains("[governance]") && tier_num == 5 {
             confidence = 1.0;
         }
-        if (title_lower.contains("[emergency]") || title_lower.contains("emergency:")) && tier_num == 4 {
+        if (title_lower.contains("[emergency]") || title_lower.contains("emergency:"))
+            && tier_num == 4
+        {
             confidence = 1.0;
         }
 
@@ -337,7 +372,10 @@ pub async fn classify_pr_tier_detailed(
             for pattern in exclude_patterns {
                 for file in &files {
                     if matches_pattern(file, pattern) {
-                        confidence += config.confidence_scoring.penalty_factors.conflicting_indicators;
+                        confidence += config
+                            .confidence_scoring
+                            .penalty_factors
+                            .conflicting_indicators;
                         break;
                     }
                 }
@@ -346,19 +384,27 @@ pub async fn classify_pr_tier_detailed(
 
         // Apply boost factors
         if tier_patterns.len() > 1 {
-            confidence += config.confidence_scoring.boost_factors.multiple_file_matches;
+            confidence += config
+                .confidence_scoring
+                .boost_factors
+                .multiple_file_matches;
         }
         if tier_keywords.len() > 2 {
-            confidence += config.confidence_scoring.boost_factors.strong_keyword_matches;
+            confidence += config
+                .confidence_scoring
+                .boost_factors
+                .strong_keyword_matches;
         }
-        
+
         // Boost confidence if multiple strong indicators present
         if !tier_patterns.is_empty() && !tier_keywords.is_empty() {
             confidence += 0.1; // Bonus for both file and keyword matches
         }
 
-        debug!("Tier {}: confidence={:.2}, patterns={:?}, keywords={:?}", 
-               tier_num, confidence, tier_patterns, tier_keywords);
+        debug!(
+            "Tier {}: confidence={:.2}, patterns={:?}, keywords={:?}",
+            tier_num, confidence, tier_patterns, tier_keywords
+        );
 
         // Update if this tier matches and either:
         // 1. This is the first match (best_confidence == 0.0), OR
@@ -367,7 +413,9 @@ pub async fn classify_pr_tier_detailed(
         // so we only override with lower tiers if they have significantly higher confidence
         // For governance (tier 5), we want to prioritize it even with lower confidence
         let should_update = if confidence >= rule.confidence_threshold {
-            best_confidence == 0.0 || confidence > best_confidence + 0.1 || (tier_num == 5 && confidence > 0.0)
+            best_confidence == 0.0
+                || confidence > best_confidence + 0.1
+                || (tier_num == 5 && confidence > 0.0)
         } else {
             false
         };
@@ -377,7 +425,10 @@ pub async fn classify_pr_tier_detailed(
             best_confidence = confidence;
             matched_patterns = tier_patterns;
             matched_keywords = tier_keywords;
-            rationale = format!("Matched {} rule with confidence {:.2}", rule.name, confidence);
+            rationale = format!(
+                "Matched {} rule with confidence {:.2}",
+                rule.name, confidence
+            );
         }
     }
 
@@ -385,8 +436,10 @@ pub async fn classify_pr_tier_detailed(
     // Don't override tier 5 (governance) with fallback if it has any confidence
     if best_confidence < config.fallback.confidence_threshold && best_tier != 5 {
         best_tier = config.fallback.default_tier;
-        rationale = format!("Confidence {:.2} below threshold {:.2}, using fallback Tier {}", 
-                           best_confidence, config.fallback.confidence_threshold, best_tier);
+        rationale = format!(
+            "Confidence {:.2} below threshold {:.2}, using fallback Tier {}",
+            best_confidence, config.fallback.confidence_threshold, best_tier
+        );
     }
 
     TierClassificationResult {
@@ -401,142 +454,157 @@ pub async fn classify_pr_tier_detailed(
 /// Get default tier classification configuration
 fn get_default_config() -> TierClassificationConfig {
     let mut rules = HashMap::new();
-    
+
     // Tier 5: Governance
-    rules.insert("tier_5_governance".to_string(), TierRule {
-        name: "Governance Changes".to_string(),
-        confidence_threshold: 0.2, // Lower threshold to catch governance keywords
-        file_patterns: vec![
-            "governance/**".to_string(),
-            "maintainers/**".to_string(),
-            "**/action-tiers.yml".to_string(),
-            "**/economic-nodes.yml".to_string(),
-        ],
-        keywords: vec![
-            "governance".to_string(),
-            "maintainer".to_string(),
-            "signature".to_string(),
-            "threshold".to_string(),
-            "[governance]".to_string(),
-        ],
-        exclude_patterns: None,
-        require_specification: Some(false),
-        require_audit: Some(false),
-        require_equivalence_proof: Some(false),
-        require_post_mortem: Some(false),
-        require_public_comment: Some(true),
-        require_rationale: Some(true),
-        examples: vec!["Change signature thresholds".to_string()],
-    });
+    rules.insert(
+        "tier_5_governance".to_string(),
+        TierRule {
+            name: "Governance Changes".to_string(),
+            confidence_threshold: 0.2, // Lower threshold to catch governance keywords
+            file_patterns: vec![
+                "governance/**".to_string(),
+                "maintainers/**".to_string(),
+                "**/action-tiers.yml".to_string(),
+                "**/economic-nodes.yml".to_string(),
+            ],
+            keywords: vec![
+                "governance".to_string(),
+                "maintainer".to_string(),
+                "signature".to_string(),
+                "threshold".to_string(),
+                "[governance]".to_string(),
+            ],
+            exclude_patterns: None,
+            require_specification: Some(false),
+            require_audit: Some(false),
+            require_equivalence_proof: Some(false),
+            require_post_mortem: Some(false),
+            require_public_comment: Some(true),
+            require_rationale: Some(true),
+            examples: vec!["Change signature thresholds".to_string()],
+        },
+    );
 
     // Tier 4: Emergency
-    rules.insert("tier_4_emergency".to_string(), TierRule {
-        name: "Emergency Actions".to_string(),
-        confidence_threshold: 0.5, // Lower threshold for emergency detection
-        file_patterns: vec![],
-        keywords: vec![
-            "emergency".to_string(),
-            "critical".to_string(),
-            "security".to_string(),
-            "vulnerability".to_string(),
-            "CVE".to_string(),
-            "[emergency]".to_string(),
-            "emergency:".to_string(),
-        ],
-        exclude_patterns: None,
-        require_specification: Some(false),
-        require_audit: Some(false),
-        require_equivalence_proof: Some(false),
-        require_post_mortem: Some(true),
-        require_public_comment: Some(false),
-        require_rationale: Some(false),
-        examples: vec!["Fix critical security vulnerability".to_string()],
-    });
+    rules.insert(
+        "tier_4_emergency".to_string(),
+        TierRule {
+            name: "Emergency Actions".to_string(),
+            confidence_threshold: 0.5, // Lower threshold for emergency detection
+            file_patterns: vec![],
+            keywords: vec![
+                "emergency".to_string(),
+                "critical".to_string(),
+                "security".to_string(),
+                "vulnerability".to_string(),
+                "CVE".to_string(),
+                "[emergency]".to_string(),
+                "emergency:".to_string(),
+            ],
+            exclude_patterns: None,
+            require_specification: Some(false),
+            require_audit: Some(false),
+            require_equivalence_proof: Some(false),
+            require_post_mortem: Some(true),
+            require_public_comment: Some(false),
+            require_rationale: Some(false),
+            examples: vec!["Fix critical security vulnerability".to_string()],
+        },
+    );
 
     // Tier 3: Consensus-Adjacent
-    rules.insert("tier_3_consensus_adjacent".to_string(), TierRule {
-        name: "Consensus-Adjacent Changes".to_string(),
-        confidence_threshold: 0.5, // Lower threshold to catch explicit markers
-        file_patterns: vec![
-            "consensus/**".to_string(),
-            "validation/**".to_string(),
-            "block-acceptance/**".to_string(),
-            "transaction-validation/**".to_string(),
-        ],
-        keywords: vec![
-            "consensus".to_string(),
-            "validation".to_string(),
-            "block".to_string(),
-            "transaction".to_string(),
-            "consensus-adjacent".to_string(),
-            "[consensus-adjacent]".to_string(),
-        ],
-        exclude_patterns: None,
-        require_specification: Some(true),
-        require_audit: Some(true),
-        require_equivalence_proof: Some(true),
-        require_post_mortem: Some(false),
-        require_public_comment: Some(false),
-        require_rationale: Some(false),
-        examples: vec!["Change block validation logic".to_string()],
-    });
+    rules.insert(
+        "tier_3_consensus_adjacent".to_string(),
+        TierRule {
+            name: "Consensus-Adjacent Changes".to_string(),
+            confidence_threshold: 0.5, // Lower threshold to catch explicit markers
+            file_patterns: vec![
+                "consensus/**".to_string(),
+                "validation/**".to_string(),
+                "block-acceptance/**".to_string(),
+                "transaction-validation/**".to_string(),
+            ],
+            keywords: vec![
+                "consensus".to_string(),
+                "validation".to_string(),
+                "block".to_string(),
+                "transaction".to_string(),
+                "consensus-adjacent".to_string(),
+                "[consensus-adjacent]".to_string(),
+            ],
+            exclude_patterns: None,
+            require_specification: Some(true),
+            require_audit: Some(true),
+            require_equivalence_proof: Some(true),
+            require_post_mortem: Some(false),
+            require_public_comment: Some(false),
+            require_rationale: Some(false),
+            examples: vec!["Change block validation logic".to_string()],
+        },
+    );
 
     // Tier 2: Features
-    rules.insert("tier_2_features".to_string(), TierRule {
-        name: "Feature Changes".to_string(),
-        confidence_threshold: 0.3, // Lower threshold to catch feature keywords
-        file_patterns: vec![
-            "rpc/**".to_string(),
-            "wallet/**".to_string(),
-            "p2p/**".to_string(),
-            "api/**".to_string(),
-        ],
-        keywords: vec![
-            "feature".to_string(),
-            "new".to_string(),
-            "add".to_string(),
-            "implement".to_string(),
-            "addition".to_string(), // Match "Feature addition" in test
-        ],
-        exclude_patterns: None,
-        require_specification: Some(true),
-        require_audit: Some(false),
-        require_equivalence_proof: Some(false),
-        require_post_mortem: Some(false),
-        require_public_comment: Some(false),
-        require_rationale: Some(false),
-        examples: vec!["Add new RPC method".to_string()],
-    });
+    rules.insert(
+        "tier_2_features".to_string(),
+        TierRule {
+            name: "Feature Changes".to_string(),
+            confidence_threshold: 0.3, // Lower threshold to catch feature keywords
+            file_patterns: vec![
+                "rpc/**".to_string(),
+                "wallet/**".to_string(),
+                "p2p/**".to_string(),
+                "api/**".to_string(),
+            ],
+            keywords: vec![
+                "feature".to_string(),
+                "new".to_string(),
+                "add".to_string(),
+                "implement".to_string(),
+                "addition".to_string(), // Match "Feature addition" in test
+            ],
+            exclude_patterns: None,
+            require_specification: Some(true),
+            require_audit: Some(false),
+            require_equivalence_proof: Some(false),
+            require_post_mortem: Some(false),
+            require_public_comment: Some(false),
+            require_rationale: Some(false),
+            examples: vec!["Add new RPC method".to_string()],
+        },
+    );
 
     // Tier 1: Routine (default)
-    rules.insert("tier_1_routine".to_string(), TierRule {
-        name: "Routine Maintenance".to_string(),
-        confidence_threshold: 0.3, // Lower threshold for routine maintenance
-        file_patterns: vec![
-            "docs/**".to_string(),
-            "tests/**".to_string(),
-            "*.md".to_string(),
-            "README*".to_string(),
-        ],
-        keywords: vec![
-            "fix".to_string(),
-            "bug".to_string(),
-            "typo".to_string(),
-            "documentation".to_string(),
-            "readme".to_string(),
-        ],
-        exclude_patterns: Some(vec![
-            "consensus/**".to_string(),
-            "validation/**".to_string(),
-        ]),
-        require_specification: Some(false),
-        require_audit: Some(false),
-        require_equivalence_proof: Some(false),
-        require_post_mortem: Some(false),
-        require_public_comment: Some(false),
-        require_rationale: Some(false),
-        examples: vec!["Fix typo in README".to_string()],
-    });
+    rules.insert(
+        "tier_1_routine".to_string(),
+        TierRule {
+            name: "Routine Maintenance".to_string(),
+            confidence_threshold: 0.3, // Lower threshold for routine maintenance
+            file_patterns: vec![
+                "docs/**".to_string(),
+                "tests/**".to_string(),
+                "*.md".to_string(),
+                "README*".to_string(),
+            ],
+            keywords: vec![
+                "fix".to_string(),
+                "bug".to_string(),
+                "typo".to_string(),
+                "documentation".to_string(),
+                "readme".to_string(),
+            ],
+            exclude_patterns: Some(vec![
+                "consensus/**".to_string(),
+                "validation/**".to_string(),
+            ]),
+            require_specification: Some(false),
+            require_audit: Some(false),
+            require_equivalence_proof: Some(false),
+            require_post_mortem: Some(false),
+            require_public_comment: Some(false),
+            require_rationale: Some(false),
+            examples: vec!["Fix typo in README".to_string()],
+        },
+    );
 
     TierClassificationConfig {
         classification_rules: rules,
@@ -548,10 +616,17 @@ fn get_default_config() -> TierClassificationConfig {
                 "/governance-tier 4".to_string(),
                 "/governance-tier 5".to_string(),
             ],
-            permissions: vec!["maintainers".to_string(), "emergency-keyholders".to_string()],
+            permissions: vec![
+                "maintainers".to_string(),
+                "emergency-keyholders".to_string(),
+            ],
             logging: LoggingConfig {
                 required: true,
-                fields: vec!["user".to_string(), "timestamp".to_string(), "reason".to_string()],
+                fields: vec![
+                    "user".to_string(),
+                    "timestamp".to_string(),
+                    "reason".to_string(),
+                ],
             },
         },
         confidence_scoring: ConfidenceScoring {
@@ -587,26 +662,30 @@ fn matches_pattern(file: &str, pattern: &str) -> bool {
         // Handle **/pattern/** case (match anywhere in path)
         if pattern.starts_with("**/") && pattern.ends_with("/**") {
             // Extract the pattern between **/ and /**
-            let pattern_clean = pattern.strip_prefix("**/").unwrap_or(pattern)
-                .strip_suffix("/**").unwrap_or(pattern);
+            let pattern_clean = pattern
+                .strip_prefix("**/")
+                .unwrap_or(pattern)
+                .strip_suffix("/**")
+                .unwrap_or(pattern);
             // Match if file path contains /pattern/
-            return file.contains(&format!("/{}/", pattern_clean)) || 
-                   file.ends_with(&format!("/{}", pattern_clean)) ||
-                   file.starts_with(&format!("{}/", pattern_clean));
+            return file.contains(&format!("/{}/", pattern_clean))
+                || file.ends_with(&format!("/{}", pattern_clean))
+                || file.starts_with(&format!("{}/", pattern_clean));
         }
-        
+
         let parts: Vec<&str> = pattern.split("**").collect();
         if parts.len() == 2 {
             let prefix = parts[0];
             let suffix = parts[1];
-            
+
             // Handle **/pattern case (match anywhere in path)
             if prefix.is_empty() && suffix.starts_with('/') {
                 // For **/pattern, match if file path ends with pattern or contains /pattern
                 let suffix_clean = &suffix[1..];
-                return file.ends_with(suffix_clean) || file.contains(&format!("/{}", suffix_clean));
+                return file.ends_with(suffix_clean)
+                    || file.contains(&format!("/{}", suffix_clean));
             }
-            
+
             // Handle **/pattern case (match anywhere in path, no leading /)
             if prefix.is_empty() {
                 return file.contains(suffix);
@@ -620,7 +699,8 @@ fn matches_pattern(file: &str, pattern: &str) -> bool {
             if file.starts_with(prefix) {
                 // Check if suffix appears after prefix
                 if let Some(rest) = file.strip_prefix(prefix) {
-                    return rest.ends_with(suffix) || rest.contains(&format!("/{}", suffix.trim_start_matches('/')));
+                    return rest.ends_with(suffix)
+                        || rest.contains(&format!("/{}", suffix.trim_start_matches('/')));
                 }
             }
             return false;
@@ -707,7 +787,10 @@ mod tests {
 
         let result = classify_pr_tier_detailed(&payload, &get_default_config()).await;
         // Should detect emergency tier based on keywords
-        assert_eq!(result.tier, 4, "Emergency keywords should classify as Tier 4");
+        assert_eq!(
+            result.tier, 4,
+            "Emergency keywords should classify as Tier 4"
+        );
         assert!(result.confidence > 0.3, "Should have reasonable confidence");
     }
 
@@ -723,7 +806,10 @@ mod tests {
 
         let result = classify_pr_tier_detailed(&payload, &get_default_config()).await;
         // Should detect governance tier based on keywords
-        assert_eq!(result.tier, 5, "Governance keywords should classify as Tier 5");
+        assert_eq!(
+            result.tier, 5,
+            "Governance keywords should classify as Tier 5"
+        );
     }
 
     #[tokio::test]
@@ -738,7 +824,10 @@ mod tests {
 
         let result = classify_pr_tier_detailed(&payload, &get_default_config()).await;
         // Should detect consensus-adjacent tier based on keywords
-        assert_eq!(result.tier, 3, "Consensus keywords should classify as Tier 3");
+        assert_eq!(
+            result.tier, 3,
+            "Consensus keywords should classify as Tier 3"
+        );
     }
 
     #[tokio::test]
@@ -774,13 +863,19 @@ mod tests {
     fn test_pattern_matching() {
         assert!(matches_pattern("docs/README.md", "docs/**"));
         assert!(matches_pattern("src/rpc/server.rs", "**/rpc/**"));
-        assert!(matches_pattern("governance/config/action-tiers.yml", "**/action-tiers.yml"));
+        assert!(matches_pattern(
+            "governance/config/action-tiers.yml",
+            "**/action-tiers.yml"
+        ));
         assert!(!matches_pattern("src/consensus/validation.rs", "docs/**"));
-        
+
         // Test various pattern cases
         assert!(matches_pattern("src/rpc/server.rs", "**/rpc/**"));
         assert!(matches_pattern("src/rpc/server.rs", "src/**"));
-        assert!(matches_pattern("governance/config/action-tiers.yml", "**/action-tiers.yml"));
+        assert!(matches_pattern(
+            "governance/config/action-tiers.yml",
+            "**/action-tiers.yml"
+        ));
         assert!(matches_pattern("any/path/to/rpc/server.rs", "**/rpc/**"));
     }
 }

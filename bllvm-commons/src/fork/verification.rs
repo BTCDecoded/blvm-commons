@@ -2,8 +2,8 @@
 //!
 //! Utilities for verifying fork decision signatures.
 
-use crate::error::GovernanceError;
 use super::types::ForkDecision;
+use crate::error::GovernanceError;
 use bllvm_sdk::governance::{verify_signature, PublicKey, Signature};
 use hex;
 use serde_json;
@@ -33,9 +33,10 @@ pub fn verify_fork_decision_signature(
     // Parse signature
     let signature_bytes = hex::decode(&decision.signature)
         .map_err(|_| GovernanceError::InvalidSignature("Invalid hex format".to_string()))?;
-    
-    let signature = Signature::from_bytes(&signature_bytes)
-        .map_err(|e| GovernanceError::InvalidSignature(format!("Invalid signature format: {}", e)))?;
+
+    let signature = Signature::from_bytes(&signature_bytes).map_err(|e| {
+        GovernanceError::InvalidSignature(format!("Invalid signature format: {}", e))
+    })?;
 
     // Verify
     verify_signature(&signature, &message, public_key)
@@ -45,7 +46,7 @@ pub fn verify_fork_decision_signature(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use bllvm_sdk::governance::{GovernanceKeypair, signatures::sign_message};
+    use bllvm_sdk::governance::{signatures::sign_message, GovernanceKeypair};
     use chrono::Utc;
 
     #[test]
@@ -102,4 +103,3 @@ mod tests {
         assert!(!verified, "Tampered decision should fail verification");
     }
 }
-

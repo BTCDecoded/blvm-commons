@@ -120,11 +120,13 @@ mod tests {
         let mut rng = OsRng;
         let secret_key = SecretKey::new(&mut rng);
         let public_key = PublicKey::from_secret_key(&manager.secp, &secret_key);
-        
+
         let message = "test message";
         let signature = manager.create_signature(message, &secret_key).unwrap();
-        
-        let verified = manager.verify_signature(message, &signature, &public_key).unwrap();
+
+        let verified = manager
+            .verify_signature(message, &signature, &public_key)
+            .unwrap();
         assert!(verified, "Signature should be valid");
     }
 
@@ -134,13 +136,18 @@ mod tests {
         let mut rng = OsRng;
         let secret_key = SecretKey::new(&mut rng);
         let public_key = PublicKey::from_secret_key(&manager.secp, &secret_key);
-        
+
         let message1 = "test message";
         let message2 = "different message";
         let signature = manager.create_signature(message1, &secret_key).unwrap();
-        
-        let verified = manager.verify_signature(message2, &signature, &public_key).unwrap();
-        assert!(!verified, "Signature should be invalid for different message");
+
+        let verified = manager
+            .verify_signature(message2, &signature, &public_key)
+            .unwrap();
+        assert!(
+            !verified,
+            "Signature should be invalid for different message"
+        );
     }
 
     #[test]
@@ -150,11 +157,13 @@ mod tests {
         let secret_key1 = SecretKey::new(&mut rng);
         let secret_key2 = SecretKey::new(&mut rng);
         let public_key2 = PublicKey::from_secret_key(&manager.secp, &secret_key2);
-        
+
         let message = "test message";
         let signature = manager.create_signature(message, &secret_key1).unwrap();
-        
-        let verified = manager.verify_signature(message, &signature, &public_key2).unwrap();
+
+        let verified = manager
+            .verify_signature(message, &signature, &public_key2)
+            .unwrap();
         assert!(!verified, "Signature should be invalid for different key");
     }
 
@@ -162,12 +171,16 @@ mod tests {
     fn test_governance_signature_creation_and_verification() {
         let manager = SignatureManager::new();
         let keypair = manager.generate_keypair().unwrap();
-        
+
         let message = "governance message";
-        let signature = manager.create_governance_signature(message, &keypair).unwrap();
-        
+        let signature = manager
+            .create_governance_signature(message, &keypair)
+            .unwrap();
+
         let public_key_str = hex::encode(keypair.public_key.serialize());
-        let verified = manager.verify_governance_signature(message, &signature, &public_key_str).unwrap();
+        let verified = manager
+            .verify_governance_signature(message, &signature, &public_key_str)
+            .unwrap();
         assert!(verified, "Governance signature should be valid");
     }
 
@@ -175,20 +188,27 @@ mod tests {
     fn test_governance_signature_verification_fails_wrong_message() {
         let manager = SignatureManager::new();
         let keypair = manager.generate_keypair().unwrap();
-        
+
         let message1 = "governance message";
         let message2 = "different message";
-        let signature = manager.create_governance_signature(message1, &keypair).unwrap();
-        
+        let signature = manager
+            .create_governance_signature(message1, &keypair)
+            .unwrap();
+
         let public_key_str = hex::encode(keypair.public_key.serialize());
-        let verified = manager.verify_governance_signature(message2, &signature, &public_key_str).unwrap();
-        assert!(!verified, "Governance signature should be invalid for different message");
+        let verified = manager
+            .verify_governance_signature(message2, &signature, &public_key_str)
+            .unwrap();
+        assert!(
+            !verified,
+            "Governance signature should be invalid for different message"
+        );
     }
 
     #[test]
     fn test_governance_signature_invalid_hex() {
         let manager = SignatureManager::new();
-        
+
         let result = manager.verify_governance_signature("message", "invalid_hex", "invalid_hex");
         assert!(result.is_err(), "Should fail with invalid hex");
     }
@@ -198,10 +218,10 @@ mod tests {
         let manager = SignatureManager::new();
         let mut rng = OsRng;
         let secret_key = SecretKey::new(&mut rng);
-        
+
         let public_key = manager.public_key_from_secret(&secret_key);
         let expected = PublicKey::from_secret_key(&manager.secp, &secret_key);
-        
+
         assert_eq!(public_key, expected, "Public key should match");
     }
 
@@ -210,14 +230,23 @@ mod tests {
         let manager = SignatureManager::new();
         let keypair1 = manager.generate_keypair().unwrap();
         let keypair2 = manager.generate_keypair().unwrap();
-        
+
         // Keypairs should be different
-        assert_ne!(keypair1.secret_key, keypair2.secret_key, "Generated keypairs should be different");
-        assert_ne!(keypair1.public_key, keypair2.public_key, "Generated public keys should be different");
-        
+        assert_ne!(
+            keypair1.secret_key, keypair2.secret_key,
+            "Generated keypairs should be different"
+        );
+        assert_ne!(
+            keypair1.public_key, keypair2.public_key,
+            "Generated public keys should be different"
+        );
+
         // But each keypair should be consistent
         let public_key1 = manager.public_key_from_secret(&keypair1.secret_key);
-        assert_eq!(public_key1, keypair1.public_key, "Public key should match secret key");
+        assert_eq!(
+            public_key1, keypair1.public_key,
+            "Public key should match secret key"
+        );
     }
 
     #[test]
@@ -225,16 +254,20 @@ mod tests {
         let manager = SignatureManager::new();
         let mut rng = OsRng;
         let secret_key = SecretKey::new(&mut rng);
-        
+
         let message = "test message";
         let signature1 = manager.create_signature(message, &secret_key).unwrap();
         let signature2 = manager.create_signature(message, &secret_key).unwrap();
-        
+
         // ECDSA signatures are non-deterministic (uses random nonce), so they should be different
         // But both should verify
         let public_key = PublicKey::from_secret_key(&manager.secp, &secret_key);
-        assert!(manager.verify_signature(message, &signature1, &public_key).unwrap());
-        assert!(manager.verify_signature(message, &signature2, &public_key).unwrap());
+        assert!(manager
+            .verify_signature(message, &signature1, &public_key)
+            .unwrap());
+        assert!(manager
+            .verify_signature(message, &signature2, &public_key)
+            .unwrap());
     }
 
     #[test]
@@ -243,10 +276,12 @@ mod tests {
         let mut rng = OsRng;
         let secret_key = SecretKey::new(&mut rng);
         let public_key = PublicKey::from_secret_key(&manager.secp, &secret_key);
-        
+
         let message = "";
         let signature = manager.create_signature(message, &secret_key).unwrap();
-        let verified = manager.verify_signature(message, &signature, &public_key).unwrap();
+        let verified = manager
+            .verify_signature(message, &signature, &public_key)
+            .unwrap();
         assert!(verified, "Empty message should work");
     }
 
@@ -256,10 +291,12 @@ mod tests {
         let mut rng = OsRng;
         let secret_key = SecretKey::new(&mut rng);
         let public_key = PublicKey::from_secret_key(&manager.secp, &secret_key);
-        
+
         let message = "a".repeat(10000);
         let signature = manager.create_signature(&message, &secret_key).unwrap();
-        let verified = manager.verify_signature(&message, &signature, &public_key).unwrap();
+        let verified = manager
+            .verify_signature(&message, &signature, &public_key)
+            .unwrap();
         assert!(verified, "Long message should work");
     }
 }

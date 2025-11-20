@@ -1,11 +1,11 @@
 //! Configuration file loader for governance system
 //! Loads YAML configuration files from the governance repository
 
+use crate::error::GovernanceError;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
 use tracing::info;
-use crate::error::GovernanceError;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ActionTiersConfig {
@@ -106,21 +106,12 @@ impl GovernanceConfigFiles {
             )));
         }
 
-        let contents = fs::read_to_string(&path)
-            .map_err(|e| {
-                GovernanceError::ConfigError(format!(
-                    "Failed to read {:?}: {}",
-                    path, e
-                ))
-            })?;
+        let contents = fs::read_to_string(&path).map_err(|e| {
+            GovernanceError::ConfigError(format!("Failed to read {:?}: {}", path, e))
+        })?;
 
         serde_yaml::from_str(&contents)
-            .map_err(|e| {
-                GovernanceError::ConfigError(format!(
-                    "Failed to parse {:?}: {}",
-                    path, e
-                ))
-            })
+            .map_err(|e| GovernanceError::ConfigError(format!("Failed to parse {:?}: {}", path, e)))
     }
 
     /// Validate the loaded configuration
@@ -250,7 +241,9 @@ impl GovernanceConfigFiles {
     }
 
     /// Get tier classification rules
-    pub fn get_classification_rules(&self) -> &std::collections::HashMap<String, ClassificationRule> {
+    pub fn get_classification_rules(
+        &self,
+    ) -> &std::collections::HashMap<String, ClassificationRule> {
         &self.tier_classification.classification_rules
     }
 
@@ -314,13 +307,13 @@ impl ConfigCache {
     /// Reload configuration from disk
     pub fn reload(&mut self) -> Result<(), GovernanceError> {
         info!("Reloading governance configuration");
-        
+
         let new_config = GovernanceConfigFiles::load_from_directory(&self.config_path)?;
         new_config.validate()?;
-        
+
         self.config = new_config;
         self.last_updated = std::time::SystemTime::now();
-        
+
         info!("Configuration reloaded successfully");
         Ok(())
     }
@@ -334,14 +327,17 @@ mod tests {
     #[test]
     fn test_config_validation() {
         let mut tiers = HashMap::new();
-        tiers.insert("tier_1".to_string(), TierConfig {
-            name: "Routine".to_string(),
-            signatures_required: 3,
-            signatures_total: 5,
-            review_period_days: 7,
-            economic_veto_required: false,
-            description: "Routine maintenance".to_string(),
-        });
+        tiers.insert(
+            "tier_1".to_string(),
+            TierConfig {
+                name: "Routine".to_string(),
+                signatures_required: 3,
+                signatures_total: 5,
+                review_period_days: 7,
+                economic_veto_required: false,
+                description: "Routine maintenance".to_string(),
+            },
+        );
 
         let action_tiers = ActionTiersConfig { tiers };
         let repository_layers = RepositoryLayersConfig {
@@ -369,14 +365,17 @@ mod tests {
     #[test]
     fn test_tier_config_access() {
         let mut tiers = HashMap::new();
-        tiers.insert("tier_1".to_string(), TierConfig {
-            name: "Routine".to_string(),
-            signatures_required: 3,
-            signatures_total: 5,
-            review_period_days: 7,
-            economic_veto_required: false,
-            description: "Routine maintenance".to_string(),
-        });
+        tiers.insert(
+            "tier_1".to_string(),
+            TierConfig {
+                name: "Routine".to_string(),
+                signatures_required: 3,
+                signatures_total: 5,
+                review_period_days: 7,
+                economic_veto_required: false,
+                description: "Routine maintenance".to_string(),
+            },
+        );
 
         let action_tiers = ActionTiersConfig { tiers };
         let repository_layers = RepositoryLayersConfig {
@@ -405,7 +404,3 @@ mod tests {
         assert!(tier_2.is_none());
     }
 }
-
-
-
-

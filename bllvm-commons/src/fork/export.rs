@@ -239,14 +239,19 @@ impl GovernanceExporter {
     }
 
     /// Export a ruleset to file
-    pub async fn export_ruleset(&self, ruleset: &super::types::Ruleset) -> Result<(), GovernanceError> {
-        let export = self.export_governance_config(
-            &ruleset.id,
-            &ruleset.version,
-            "governance-app",
-            "BTCDecoded/governance",
-            "unknown",
-        ).await?;
+    pub async fn export_ruleset(
+        &self,
+        ruleset: &super::types::Ruleset,
+    ) -> Result<(), GovernanceError> {
+        let export = self
+            .export_governance_config(
+                &ruleset.id,
+                &ruleset.version,
+                "governance-app",
+                "BTCDecoded/governance",
+                "unknown",
+            )
+            .await?;
 
         let export_dir = self.get_export_directory();
         if !export_dir.exists() {
@@ -257,7 +262,8 @@ impl GovernanceExporter {
 
         let filename = format!("{}_{:?}.yaml", ruleset.id, ruleset.version);
         let file_path = export_dir.join(&filename);
-        self.save_export(&export, file_path.to_str().unwrap()).await?;
+        self.save_export(&export, file_path.to_str().unwrap())
+            .await?;
 
         Ok(())
     }

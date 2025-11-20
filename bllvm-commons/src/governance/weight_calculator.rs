@@ -11,9 +11,9 @@ use tracing::{debug, info};
 /// Weight calculator with quadratic formula, caps, and cooling-off
 pub struct WeightCalculator {
     pool: SqlitePool,
-    cap_percentage: f64,  // 0.05 = 5% cap
-    cooling_off_threshold_btc: f64,  // 0.1 BTC
-    cooling_off_period_days: u32,  // 30 days
+    cap_percentage: f64,            // 0.05 = 5% cap
+    cooling_off_threshold_btc: f64, // 0.1 BTC
+    cooling_off_period_days: u32,   // 30 days
 }
 
 impl WeightCalculator {
@@ -21,12 +21,12 @@ impl WeightCalculator {
     pub fn new(pool: SqlitePool) -> Self {
         Self {
             pool,
-            cap_percentage: 0.05,  // 5% cap
-            cooling_off_threshold_btc: 0.1,  // 0.1 BTC threshold
-            cooling_off_period_days: 30,  // 30 days cooling period
+            cap_percentage: 0.05,           // 5% cap
+            cooling_off_threshold_btc: 0.1, // 0.1 BTC threshold
+            cooling_off_period_days: 30,    // 30 days cooling period
         }
     }
-    
+
     /// Calculate ongoing participation weight (quadratic, BTC-based)
     pub fn calculate_participation_weight(
         &self,
@@ -37,17 +37,13 @@ impl WeightCalculator {
         let total_btc = merge_mining_btc + fee_forwarding_btc + cumulative_zaps_btc;
         total_btc.sqrt()
     }
-    
+
     /// Apply weight cap to prevent whale dominance
-    pub fn apply_weight_cap(
-        &self,
-        calculated_weight: f64,
-        total_system_weight: f64,
-    ) -> f64 {
+    pub fn apply_weight_cap(&self, calculated_weight: f64, total_system_weight: f64) -> f64 {
         let max_weight = total_system_weight * self.cap_percentage;
         calculated_weight.min(max_weight)
     }
-    
+
     /// Check if contribution is eligible for voting (cooling-off period)
     pub fn check_cooling_off(
         &self,
@@ -57,22 +53,22 @@ impl WeightCalculator {
         if contribution_amount_btc >= self.cooling_off_threshold_btc {
             contribution_age_days >= self.cooling_off_period_days
         } else {
-            true  // No cooling period for small contributions
+            true // No cooling period for small contributions
         }
     }
-    
+
     /// Calculate per-proposal zap vote weight (quadratic, BTC-based)
     pub fn calculate_zap_vote_weight(&self, zap_amount_btc: f64) -> f64 {
         zap_amount_btc.sqrt()
     }
-    
+
     /// Get vote weight for proposal (uses higher of zap or participation)
     pub fn get_proposal_vote_weight(
         &self,
         participation_weight: f64,
         proposal_zap_amount_btc: Option<f64>,
         total_system_weight: f64,
-        contribution_age_days: Option<u32>,  // For cooling-off check
+        contribution_age_days: Option<u32>, // For cooling-off check
     ) -> f64 {
         let base_weight = if let Some(zap_btc) = proposal_zap_amount_btc {
             // Check cooling-off for proposal zap
@@ -88,11 +84,11 @@ impl WeightCalculator {
         } else {
             participation_weight
         };
-        
+
         // Apply weight cap
         self.apply_weight_cap(base_weight, total_system_weight)
     }
-    
+
     /// Calculate and update participation weights for all contributors
     pub async fn update_participation_weights(&self) -> Result<()> {
         // First, update contribution ages (for cooling-off calculation)
@@ -109,14 +105,14 @@ impl WeightCalculator {
         )
         .execute(&self.pool)
         .await?;
-        
+
         // Get all unique contributors
         #[derive(sqlx::FromRow)]
         struct ContributorRow {
             contributor_id: String,
             contributor_type: String,
         }
-        
+
         let contributors = sqlx::query_as::<_, ContributorRow>(
             r#"
             SELECT DISTINCT contributor_id, contributor_type
@@ -125,25 +121,25 @@ impl WeightCalculator {
         )
         .fetch_all(&self.pool)
         .await?;
-        
+
         // Calculate total system weight first (needed for caps)
         // On first pass, this will be 0, so we'll do a second pass to apply caps correctly
         let mut total_system_weight = self.calculate_total_system_weight().await?;
-        
+
         // Save contributor count before moving
         let contributor_count = contributors.len();
-        
+
         // First pass: calculate base weights without cap (if total_system_weight is 0)
         let mut base_weights: Vec<(String, f64)> = Vec::new();
-        
+
         // Update weights for each contributor
         for contributor in contributors {
             let contributor_id = contributor.contributor_id;
-            
+
             // Get contributions (30-day rolling for merge mining and fee forwarding, cumulative for zaps)
             let now = Utc::now();
             let thirty_days_ago = now - chrono::Duration::days(30);
-            
+
             // Merge mining (30-day rolling)
             let merge_mining_btc: Option<f64> = sqlx::query_scalar(
                 r#"
@@ -159,7 +155,7 @@ impl WeightCalculator {
             .fetch_one(&self.pool)
             .await?;
             let merge_mining_btc = merge_mining_btc.unwrap_or(0.0);
-            
+
             // Fee forwarding (30-day rolling)
             let fee_forwarding_btc: Option<f64> = sqlx::query_scalar(
                 r#"
@@ -175,7 +171,7 @@ impl WeightCalculator {
             .fetch_one(&self.pool)
             .await?;
             let fee_forwarding_btc = fee_forwarding_btc.unwrap_or(0.0);
-            
+
             // Zaps (cumulative - all time, but exclude contributions in cooling-off period)
             let cumulative_zaps_btc: Option<f64> = sqlx::query_scalar(
                 r#"
@@ -195,20 +191,21 @@ impl WeightCalculator {
             .fetch_one(&self.pool)
             .await?;
             let cumulative_zaps_btc = cumulative_zaps_btc.unwrap_or(0.0);
-            
+
             // Calculate base weight (quadratic)
-            let total_contribution_btc = merge_mining_btc + fee_forwarding_btc + cumulative_zaps_btc;
+            let total_contribution_btc =
+                merge_mining_btc + fee_forwarding_btc + cumulative_zaps_btc;
             let base_weight = self.calculate_participation_weight(
                 merge_mining_btc,
                 fee_forwarding_btc,
                 cumulative_zaps_btc,
             );
-            
+
             // Store base weight for second pass if needed
             if total_system_weight == 0.0 {
                 base_weights.push((contributor_id.clone(), base_weight));
             }
-            
+
             // Apply weight cap (only if we have a valid total system weight)
             // On first iteration, total_system_weight is 0, so we skip the cap
             let capped_weight = if total_system_weight > 0.0 {
@@ -216,7 +213,7 @@ impl WeightCalculator {
             } else {
                 base_weight
             };
-            
+
             // Update or insert participation weight
             sqlx::query(
                 r#"
@@ -246,13 +243,13 @@ impl WeightCalculator {
             .bind(total_system_weight)
             .execute(&self.pool)
             .await?;
-            
+
             debug!(
                 "Updated participation weight for {}: base={:.2}, capped={:.2} (contributions: {:.8} BTC)",
                 contributor_id, base_weight, capped_weight, total_contribution_btc
             );
         }
-        
+
         // If we did a first pass without caps, do iterative passes to apply caps correctly
         // This is needed because caps depend on total system weight, which depends on caps
         if total_system_weight == 0.0 && !base_weights.is_empty() {
@@ -261,24 +258,28 @@ impl WeightCalculator {
             let mut current_total = base_weights.iter().map(|(_, w)| *w).sum::<f64>();
             let mut iterations = 0;
             const MAX_ITERATIONS: usize = 20;
-            
+
             loop {
                 iterations += 1;
                 let mut new_total = 0.0;
                 let mut new_capped_weights = Vec::new();
-                
+
                 // Apply caps based on current total
                 for (contributor_id, base_weight) in &base_weights {
                     let capped = self.apply_weight_cap(*base_weight, current_total);
                     new_total += capped;
                     new_capped_weights.push((contributor_id.clone(), capped));
                 }
-                
+
                 // Check if we've converged (change < 0.001% or very small absolute change)
                 // Use tighter convergence criteria to ensure caps are applied correctly
                 let change = (new_total - current_total).abs();
-                let change_percent = if current_total > 0.0 { change / current_total } else { 0.0 };
-                
+                let change_percent = if current_total > 0.0 {
+                    change / current_total
+                } else {
+                    0.0
+                };
+
                 // Check convergence: if change is very small, we've converged
                 // Also verify that all weights are properly capped
                 // Need tighter convergence to ensure caps are correctly applied
@@ -290,11 +291,17 @@ impl WeightCalculator {
                 });
                 // Tighter convergence: need both small change AND all weights properly capped
                 // Also verify that the largest weight (whale) is exactly at the cap
-                let largest_weight = new_capped_weights.iter().map(|(_, w)| *w).fold(0.0, f64::max);
+                let largest_weight = new_capped_weights
+                    .iter()
+                    .map(|(_, w)| *w)
+                    .fold(0.0, f64::max);
                 let expected_cap = new_total * self.cap_percentage;
-                let cap_correct = (largest_weight - expected_cap).abs() < 0.0001 || largest_weight <= expected_cap + 0.0001;
-                let converged = (change_percent < 0.0000001 && change < 0.00001 && all_capped && cap_correct) || iterations >= MAX_ITERATIONS;
-                
+                let cap_correct = (largest_weight - expected_cap).abs() < 0.0001
+                    || largest_weight <= expected_cap + 0.0001;
+                let converged =
+                    (change_percent < 0.0000001 && change < 0.00001 && all_capped && cap_correct)
+                        || iterations >= MAX_ITERATIONS;
+
                 if converged {
                     // Use the converged values (new_total and new_capped_weights)
                     // Update all capped weights with final values
@@ -312,7 +319,7 @@ impl WeightCalculator {
                         .execute(&self.pool)
                         .await?;
                     }
-                    
+
                     // Update total_system_weight for all rows
                     sqlx::query(
                         r#"
@@ -323,18 +330,21 @@ impl WeightCalculator {
                     .bind(new_total)
                     .execute(&self.pool)
                     .await?;
-                    
+
                     break;
                 }
-                
+
                 current_total = new_total;
             }
         }
-        
-        info!("Updated participation weights for {} contributors", contributor_count);
+
+        info!(
+            "Updated participation weights for {} contributors",
+            contributor_count
+        );
         Ok(())
     }
-    
+
     /// Calculate total system weight (sum of all capped weights)
     pub async fn calculate_total_system_weight(&self) -> Result<f64> {
         let total: Option<f64> = sqlx::query_scalar(
@@ -345,15 +355,12 @@ impl WeightCalculator {
         )
         .fetch_one(&self.pool)
         .await?;
-        
+
         Ok(total.unwrap_or(0.0))
     }
-    
+
     /// Get participation weight for a contributor
-    pub async fn get_participation_weight(
-        &self,
-        contributor_id: &str,
-    ) -> Result<Option<f64>> {
+    pub async fn get_participation_weight(&self, contributor_id: &str) -> Result<Option<f64>> {
         let weight: Option<f64> = sqlx::query_scalar(
             r#"
             SELECT capped_weight
@@ -364,8 +371,7 @@ impl WeightCalculator {
         .bind(contributor_id)
         .fetch_optional(&self.pool)
         .await?;
-        
+
         Ok(weight)
     }
 }
-

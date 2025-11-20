@@ -9,8 +9,8 @@ use axum::{
 use serde::{Deserialize, Serialize};
 use tracing::{info, warn};
 
-use crate::node_registry::{NodeRegistry, NodeType};
 use crate::database::Database;
+use crate::node_registry::{NodeRegistry, NodeType};
 
 /// Register node request
 #[derive(Debug, Deserialize)]
@@ -55,17 +55,20 @@ pub async fn register_node(
             });
         }
     };
-    
+
     let registry = NodeRegistry::new(pool.clone());
     let node_type = NodeType::from_str(&request.node_type);
-    
-    match registry.register_node(
-        &request.node_id,
-        &request.node_name,
-        node_type,
-        request.bitcoin_addresses,
-        request.metadata,
-    ).await {
+
+    match registry
+        .register_node(
+            &request.node_id,
+            &request.node_name,
+            node_type,
+            request.bitcoin_addresses,
+            request.metadata,
+        )
+        .await
+    {
         Ok(_) => {
             info!("Node registered: {}", request.node_id);
             Json(RegisterNodeResponse {
@@ -94,10 +97,10 @@ pub async fn get_node(
             return Json(GetNodeResponse { node: None });
         }
     };
-    
+
     let registry = NodeRegistry::new(pool.clone());
     let node = registry.get_node(&node_id).await.ok().flatten();
-    
+
     Json(GetNodeResponse { node })
 }
 
@@ -111,10 +114,10 @@ pub async fn list_nodes(
             return Json(ListNodesResponse { nodes: Vec::new() });
         }
     };
-    
+
     let registry = NodeRegistry::new(pool.clone());
     let nodes = registry.get_active_nodes().await.unwrap_or_default();
-    
+
     Json(ListNodesResponse { nodes })
 }
 
@@ -125,4 +128,3 @@ pub fn create_router() -> Router<(crate::config::AppConfig, Database)> {
         .route("/nodes/:node_id", get(get_node))
         .route("/nodes", get(list_nodes))
 }
-

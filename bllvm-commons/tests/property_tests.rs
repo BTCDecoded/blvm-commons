@@ -14,7 +14,7 @@ proptest! {
         let validator = ContentHashValidator::new();
         let hash1 = validator.compute_file_hash(&content);
         let hash2 = validator.compute_file_hash(&content);
-        
+
         prop_assert_eq!(hash1, hash2, "Hash must be deterministic");
     }
 
@@ -25,7 +25,7 @@ proptest! {
     ) {
         let validator = ContentHashValidator::new();
         let hash = validator.compute_file_hash(&content);
-        
+
         prop_assert!(hash.starts_with("sha256:"), "Hash must start with 'sha256:'");
         prop_assert_eq!(hash.len(), 71, "Hash must be 71 characters");
     }
@@ -35,7 +35,7 @@ proptest! {
 fn test_empty_hash() {
     let validator = ContentHashValidator::new();
     let hash = validator.compute_file_hash(&[]);
-    
+
     let expected = "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
     assert_eq!(hash, expected, "Empty content must produce known hash");
 }
@@ -50,10 +50,10 @@ proptest! {
     ) {
         let validator = VersionPinningValidator::default();
         let content = format!("// @orange-paper-version: {}", version);
-        
+
         let refs1 = validator.parse_version_references("test.rs", &content);
         let refs2 = validator.parse_version_references("test.rs", &content);
-        
+
         match (refs1, refs2) {
             (Ok(r1), Ok(r2)) => prop_assert_eq!(r1, r2, "Version parsing must be deterministic"),
             (Err(e1), Err(e2)) => prop_assert_eq!(e1.to_string(), e2.to_string(), "Error messages must be deterministic"),
@@ -71,9 +71,9 @@ proptest! {
         let validator = VersionPinningValidator::default();
         let version = format!("v{}.{}.{}", major, minor, patch);
         let content = format!("// @orange-paper-version: {}", version);
-        
+
         let refs = validator.parse_version_references("test.rs", &content);
-        
+
         prop_assert!(refs.is_ok(), "Valid semantic version must parse successfully");
     }
 }
@@ -93,7 +93,7 @@ proptest! {
             format!("{} passed", count),
             format!("passed: {}", count),
         ];
-        
+
         for format in formats {
             let result = CrossLayerStatusChecker::extract_test_count_from_name(&format);
             prop_assert_eq!(result, Some(count), "Format '{}' should extract count {}", format, count);
@@ -110,7 +110,7 @@ proptest! {
             format!("{} Tests", count),
             format!("{} tests", count),
         ];
-        
+
         for format in formats {
             let result = CrossLayerStatusChecker::extract_test_count_from_name(&format);
             prop_assert_eq!(result, Some(count), "Case should not matter for '{}'", format);
@@ -119,7 +119,7 @@ proptest! {
 }
 
 use bllvm_commons::crypto::signatures::SignatureManager;
-use secp256k1::{PublicKey, SecretKey, Secp256k1};
+use secp256k1::{PublicKey, Secp256k1, SecretKey};
 
 proptest! {
     /// Property: Signature creation and verification round-trip
@@ -132,10 +132,10 @@ proptest! {
         let mut rng = proptest::test_runner::TestRng::deterministic_rng(proptest::test_runner::RngAlgorithm::ChaCha);
         let secret_key = SecretKey::new(&mut rng);
         let public_key = PublicKey::from_secret_key(&secp, &secret_key);
-        
+
         let signature = manager.create_signature(&message, &secret_key).unwrap();
         let verified = manager.verify_signature(&message, &signature, &public_key).unwrap();
-        
+
         prop_assert!(verified, "Signature should verify for original message");
     }
 
@@ -146,16 +146,16 @@ proptest! {
         message2 in prop::string::string_regex(".+").unwrap()
     ) {
         prop_assume!(message1 != message2);
-        
+
         let manager = SignatureManager::new();
         let secp = Secp256k1::new();
         let mut rng = proptest::test_runner::TestRng::deterministic_rng(proptest::test_runner::RngAlgorithm::ChaCha);
         let secret_key = SecretKey::new(&mut rng);
         let public_key = PublicKey::from_secret_key(&secp, &secret_key);
-        
+
         let signature = manager.create_signature(&message1, &secret_key).unwrap();
         let verified = manager.verify_signature(&message2, &signature, &public_key).unwrap();
-        
+
         prop_assert!(!verified, "Signature should not verify for different message");
     }
 }

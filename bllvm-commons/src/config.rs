@@ -25,29 +25,29 @@ pub struct AppConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NostrConfig {
     pub enabled: bool,
-    pub server_nsec_path: String,  // Legacy: single bot (deprecated, use bots instead)
+    pub server_nsec_path: String, // Legacy: single bot (deprecated, use bots instead)
     pub relays: Vec<String>,
     pub publish_interval_secs: u64,
-    pub governance_config: String,  // e.g., "commons_mainnet"
-    pub zap_address: Option<String>,  // Legacy: single zap address (deprecated, use bots instead)
-    pub logo_url: Option<String>,  // URL to Bitcoin Commons logo
+    pub governance_config: String,   // e.g., "commons_mainnet"
+    pub zap_address: Option<String>, // Legacy: single zap address (deprecated, use bots instead)
+    pub logo_url: Option<String>,    // URL to Bitcoin Commons logo
     #[serde(default)]
-    pub bots: std::collections::HashMap<String, BotConfig>,  // Multi-bot support
+    pub bots: std::collections::HashMap<String, BotConfig>, // Multi-bot support
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BotConfig {
-    pub nsec_path: String,  // Path to nsec file or "env:VAR_NAME" for GitHub secrets
+    pub nsec_path: String, // Path to nsec file or "env:VAR_NAME" for GitHub secrets
     pub npub: String,      // Public key (npub)
-    pub lightning_address: String,  // Lightning address for zaps
+    pub lightning_address: String, // Lightning address for zaps
     pub profile: BotProfile,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BotProfile {
-    pub name: String,      // e.g., "@BTCCommons_Gov"
-    pub about: String,     // Bot description
-    pub picture: String,   // Logo URL (variant for this bot)
+    pub name: String,    // e.g., "@BTCCommons_Gov"
+    pub about: String,   // Bot description
+    pub picture: String, // Logo URL (variant for this bot)
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -71,19 +71,19 @@ pub struct GovernanceConfig {
     /// Commons addresses to monitor for fee forwarding
     #[serde(default)]
     pub commons_addresses: Vec<String>,
-    
+
     /// Bitcoin network (mainnet, testnet, regtest)
     #[serde(default = "default_network")]
     pub network: String,
-    
+
     /// Enable governance contribution tracking
     #[serde(default = "default_true")]
     pub contribution_tracking_enabled: bool,
-    
+
     /// Enable periodic weight updates
     #[serde(default = "default_true")]
     pub weight_updates_enabled: bool,
-    
+
     /// Weight update interval (seconds, default: 86400 = daily)
     #[serde(default = "default_weight_update_interval")]
     pub weight_update_interval_secs: u64,
@@ -94,7 +94,7 @@ fn default_true() -> bool {
 }
 
 fn default_weight_update_interval() -> u64 {
-    86400  // Daily
+    86400 // Daily
 }
 
 fn default_network() -> String {
@@ -149,8 +149,7 @@ impl AppConfig {
 
         let enforcement_log_path = env::var("ENFORCEMENT_LOG_PATH").ok();
 
-        let server_id = env::var("SERVER_ID")
-            .unwrap_or_else(|_| "governance-01".to_string());
+        let server_id = env::var("SERVER_ID").unwrap_or_else(|_| "governance-01".to_string());
 
         let nostr_enabled = env::var("NOSTR_ENABLED")
             .unwrap_or_else(|_| "false".to_string())
@@ -171,13 +170,15 @@ impl AppConfig {
             .parse()
             .unwrap_or(3600);
 
-        let governance_config = env::var("GOVERNANCE_CONFIG")
-            .unwrap_or_else(|_| "commons_mainnet".to_string());
+        let governance_config =
+            env::var("GOVERNANCE_CONFIG").unwrap_or_else(|_| "commons_mainnet".to_string());
 
         let zap_address = env::var("NOSTR_ZAP_ADDRESS").ok();
 
         let logo_url = env::var("NOSTR_LOGO_URL")
-            .unwrap_or_else(|_| "https://btcdecoded.org/assets/bitcoin-commons-logo.png".to_string())
+            .unwrap_or_else(|_| {
+                "https://btcdecoded.org/assets/bitcoin-commons-logo.png".to_string()
+            })
             .into();
 
         let ots_enabled = env::var("OTS_ENABLED")
@@ -232,7 +233,7 @@ impl AppConfig {
                 governance_config,
                 zap_address,
                 logo_url,
-                bots: std::collections::HashMap::new(),  // Loaded from config file or env vars
+                bots: std::collections::HashMap::new(), // Loaded from config file or env vars
             },
             ots: OtsConfig {
                 enabled: ots_enabled,
@@ -253,17 +254,19 @@ impl AppConfig {
                     .filter(|s| !s.is_empty())
                     .map(|s| s.trim().to_string())
                     .collect();
-                
-                let network = env::var("GOVERNANCE_NETWORK")
-                    .unwrap_or_else(|_| "mainnet".to_string());
-                
+
+                let network =
+                    env::var("GOVERNANCE_NETWORK").unwrap_or_else(|_| "mainnet".to_string());
+
                 GovernanceConfig {
                     commons_addresses,
                     network,
-                    contribution_tracking_enabled: env::var("GOVERNANCE_CONTRIBUTION_TRACKING_ENABLED")
-                        .unwrap_or_else(|_| "true".to_string())
-                        .parse()
-                        .unwrap_or(true),
+                    contribution_tracking_enabled: env::var(
+                        "GOVERNANCE_CONTRIBUTION_TRACKING_ENABLED",
+                    )
+                    .unwrap_or_else(|_| "true".to_string())
+                    .parse()
+                    .unwrap_or(true),
                     weight_updates_enabled: env::var("GOVERNANCE_WEIGHT_UPDATES_ENABLED")
                         .unwrap_or_else(|_| "true".to_string())
                         .parse()
@@ -305,7 +308,10 @@ impl Default for NostrConfig {
         NostrConfig {
             enabled: false,
             server_nsec_path: "/etc/governance/server.nsec".to_string(),
-            relays: vec!["wss://relay.damus.io".to_string(), "wss://nos.lol".to_string()],
+            relays: vec![
+                "wss://relay.damus.io".to_string(),
+                "wss://nos.lol".to_string(),
+            ],
             publish_interval_secs: 3600,
             governance_config: "commons_mainnet".to_string(),
             zap_address: None,

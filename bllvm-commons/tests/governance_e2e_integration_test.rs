@@ -3,21 +3,21 @@
 //! Comprehensive integration tests for the complete governance flow:
 //! - Proposal creation → Voting → Veto checking → Merge blocking
 
+use bllvm_commons::crypto::signatures::SignatureManager;
+use bllvm_commons::economic_nodes::{registry::EconomicNodeRegistry, veto::VetoManager};
 use bllvm_commons::governance::{
-    ContributionTracker, ContributionAggregator, WeightCalculator, VoteAggregator,
+    ContributionAggregator, ContributionTracker, VoteAggregator, WeightCalculator,
 };
 use bllvm_commons::nostr::ZapVotingProcessor;
-use bllvm_commons::economic_nodes::{veto::VetoManager, registry::EconomicNodeRegistry};
-use bllvm_commons::crypto::signatures::SignatureManager;
 use bllvm_sdk::governance::GovernanceKeypair;
 use chrono::{DateTime, Utc};
-use sqlx::SqlitePool;
 use hex;
+use sqlx::SqlitePool;
 
 /// Setup complete test database with all governance tables
 async fn setup_complete_governance_db() -> SqlitePool {
     let pool = SqlitePool::connect(":memory:").await.unwrap();
-    
+
     // Create all governance tables
     sqlx::query(
         r#"
@@ -33,12 +33,12 @@ async fn setup_complete_governance_db() -> SqlitePool {
             verified BOOLEAN DEFAULT FALSE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
-        "#
+        "#,
     )
     .execute(&pool)
     .await
     .unwrap();
-    
+
     sqlx::query(
         r#"
         CREATE TABLE zap_contributions (
@@ -55,12 +55,12 @@ async fn setup_complete_governance_db() -> SqlitePool {
             governance_event_id TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
-        "#
+        "#,
     )
     .execute(&pool)
     .await
     .unwrap();
-    
+
     sqlx::query(
         r#"
         CREATE TABLE fee_forwarding_contributions (
@@ -75,12 +75,12 @@ async fn setup_complete_governance_db() -> SqlitePool {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(tx_hash)
         );
-        "#
+        "#,
     )
     .execute(&pool)
     .await
     .unwrap();
-    
+
     sqlx::query(
         r#"
         CREATE TABLE participation_weights (
@@ -95,12 +95,12 @@ async fn setup_complete_governance_db() -> SqlitePool {
             total_system_weight REAL NOT NULL,
             last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
-        "#
+        "#,
     )
     .execute(&pool)
     .await
     .unwrap();
-    
+
     sqlx::query(
         r#"
         CREATE TABLE proposal_zap_votes (
@@ -115,12 +115,12 @@ async fn setup_complete_governance_db() -> SqlitePool {
             timestamp DATETIME NOT NULL,
             verified BOOLEAN DEFAULT FALSE
         );
-        "#
+        "#,
     )
     .execute(&pool)
     .await
     .unwrap();
-    
+
     // Economic node tables (matching migration 004_economic_nodes.sql)
     sqlx::query(
         r#"
@@ -138,12 +138,12 @@ async fn setup_complete_governance_db() -> SqlitePool {
             created_by TEXT,
             notes TEXT DEFAULT ''
         );
-        "#
+        "#,
     )
     .execute(&pool)
     .await
     .unwrap();
-    
+
     sqlx::query(
         r#"
         CREATE TABLE veto_signals (
@@ -157,12 +157,12 @@ async fn setup_complete_governance_db() -> SqlitePool {
             timestamp DATETIME NOT NULL,
             verified BOOLEAN DEFAULT FALSE
         );
-        "#
+        "#,
     )
     .execute(&pool)
     .await
     .unwrap();
-    
+
     pool
 }
 
@@ -173,23 +173,32 @@ async fn test_complete_governance_flow_tier3_approval() {
     let aggregator = ContributionAggregator::new(pool.clone());
     let calculator = WeightCalculator::new(pool.clone());
     let vote_aggregator = VoteAggregator::new(pool.clone());
-    
+
     let timestamp = Utc::now();
     let pr_id = 123;
     let tier = 3;
-    
+
     // Step 1: Contributors make contributions
-    tracker.record_merge_mining_contribution("miner1", "rsk", 1.0, 0.01, timestamp).await.unwrap();
-    tracker.record_fee_forwarding_contribution("node1", "tx1", 0.05, "addr1", 100, timestamp).await.unwrap();
-    tracker.record_zap_contribution("user1", 0.02, timestamp, false).await.unwrap();
-    
+    tracker
+        .record_merge_mining_contribution("miner1", "rsk", 1.0, 0.01, timestamp)
+        .await
+        .unwrap();
+    tracker
+        .record_fee_forwarding_contribution("node1", "tx1", 0.05, "addr1", 100, timestamp)
+        .await
+        .unwrap();
+    tracker
+        .record_zap_contribution("user1", 0.02, timestamp, false)
+        .await
+        .unwrap();
+
     // Step 2: Update weights
     tracker.update_contribution_ages().await.unwrap();
     calculator.update_participation_weights().await.unwrap();
-    
+
     // Step 3: Users vote via zaps
     let zap_processor = ZapVotingProcessor::new(pool.clone());
-    
+
     // Insert zap votes (simulating processed zaps)
     sqlx::query(
         r#"
@@ -210,10 +219,13 @@ async fn test_complete_governance_flow_tier3_approval() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     // Step 4: Aggregate votes
-    let result = vote_aggregator.aggregate_proposal_votes(pr_id, tier).await.unwrap();
-    
+    let result = vote_aggregator
+        .aggregate_proposal_votes(pr_id, tier)
+        .await
+        .unwrap();
+
     // Step 5: Verify results
     assert_eq!(result.pr_id, pr_id);
     assert_eq!(result.tier, tier);
@@ -226,13 +238,13 @@ async fn test_complete_governance_flow_tier3_veto_blocked() {
     let pool = setup_complete_governance_db().await;
     let vote_aggregator = VoteAggregator::new(pool.clone());
     let veto_manager = VetoManager::new(pool.clone());
-    
+
     let pr_id = 456;
     let tier = 3;
     let timestamp = Utc::now();
-    
+
     // Step 1: Create economic node with proper qualification data
-    use bllvm_commons::economic_nodes::types::{QualificationProof, ContactInfo};
+    use bllvm_commons::economic_nodes::types::{ContactInfo, QualificationProof};
     let qual_proof = QualificationProof {
         node_type: bllvm_commons::economic_nodes::types::NodeType::MiningPool,
         hashpower_proof: None,
@@ -246,7 +258,7 @@ async fn test_complete_governance_flow_tier3_veto_blocked() {
         },
     };
     let qual_json = serde_json::to_string(&qual_proof).unwrap();
-    
+
     let result = sqlx::query(
         r#"
         INSERT INTO economic_nodes (entity_name, node_type, public_key, qualification_data, weight, status)
@@ -262,14 +274,14 @@ async fn test_complete_governance_flow_tier3_veto_blocked() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     let node_id = result.last_insert_rowid() as i32;
-    
+
     // Step 2: Create valid signature for veto signal
     let signature_manager = SignatureManager::new();
     let keypair = GovernanceKeypair::generate().expect("Failed to generate keypair");
     let pubkey_hex = hex::encode(keypair.public_key().to_bytes());
-    
+
     // Update node's public key to match generated keypair
     sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
         .bind(&pubkey_hex)
@@ -277,34 +289,46 @@ async fn test_complete_governance_flow_tier3_veto_blocked() {
         .execute(&pool)
         .await
         .unwrap();
-    
+
     // Get node to get entity name for signature message
     let registry = EconomicNodeRegistry::new(pool.clone());
     let node = registry.get_node_by_id(node_id).await.unwrap();
-    
+
     // Create valid signature
     let message = format!("PR #{} veto signal from {}", pr_id, node.entity_name);
-    let signature = signature_manager.create_governance_signature(&message, &keypair).expect("Failed to create signature");
-    
+    let signature = signature_manager
+        .create_governance_signature(&message, &keypair)
+        .expect("Failed to create signature");
+
     // Step 3: Economic node vetoes (35% > 30% threshold)
-    veto_manager.collect_veto_signal(
-        pr_id,
-        node_id,
-        bllvm_commons::economic_nodes::types::SignalType::Veto,
-        &signature,
-        "Economic concerns",
-    )
-    .await
-    .unwrap();
-    
+    veto_manager
+        .collect_veto_signal(
+            pr_id,
+            node_id,
+            bllvm_commons::economic_nodes::types::SignalType::Veto,
+            &signature,
+            "Economic concerns",
+        )
+        .await
+        .unwrap();
+
     // Step 4: Aggregate votes (should detect veto)
-    let result = vote_aggregator.aggregate_proposal_votes(pr_id, tier).await.unwrap();
-    
+    let result = vote_aggregator
+        .aggregate_proposal_votes(pr_id, tier)
+        .await
+        .unwrap();
+
     // Step 5: Verify veto blocks
-    assert!(result.veto_blocks, "Proposal should be blocked by economic node veto");
-    
+    assert!(
+        result.veto_blocks,
+        "Proposal should be blocked by economic node veto"
+    );
+
     // Step 5: Check economic veto blocking
-    let blocks = vote_aggregator.check_economic_veto_blocking(pr_id, tier).await.unwrap();
+    let blocks = vote_aggregator
+        .check_economic_veto_blocking(pr_id, tier)
+        .await
+        .unwrap();
     assert!(blocks, "Economic veto should block Tier 3+ proposal");
 }
 
@@ -312,11 +336,11 @@ async fn test_complete_governance_flow_tier3_veto_blocked() {
 async fn test_complete_governance_flow_zap_veto_blocked() {
     let pool = setup_complete_governance_db().await;
     let vote_aggregator = VoteAggregator::new(pool.clone());
-    
+
     let pr_id = 789;
     let tier = 2; // Zap veto applies to all tiers
     let timestamp = Utc::now();
-    
+
     // Step 1: Create zap votes with 50% veto (exceeds 40% threshold)
     sqlx::query(
         r#"
@@ -337,7 +361,7 @@ async fn test_complete_governance_flow_zap_veto_blocked() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     sqlx::query(
         r#"
         INSERT INTO proposal_zap_votes
@@ -357,14 +381,20 @@ async fn test_complete_governance_flow_zap_veto_blocked() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     // Step 2: Aggregate votes
-    let result = vote_aggregator.aggregate_proposal_votes(pr_id, tier).await.unwrap();
-    
+    let result = vote_aggregator
+        .aggregate_proposal_votes(pr_id, tier)
+        .await
+        .unwrap();
+
     // Step 3: Verify zap veto blocks
     // Veto weight: 6.32, Support weight: 3.16, Total: 9.48
     // Veto percentage: 6.32 / 9.48 ≈ 66.7% > 40% threshold
-    assert!(result.veto_blocks, "Proposal should be blocked by zap vote veto");
+    assert!(
+        result.veto_blocks,
+        "Proposal should be blocked by zap vote veto"
+    );
     // Note: result.veto_votes and result.support_votes include participation votes,
     // so we check that zap veto blocks (which we already verified above)
     // The zap veto weight (6.32) exceeds zap support weight (3.16) as expected
@@ -375,32 +405,48 @@ async fn test_complete_governance_flow_weight_cap_enforcement() {
     let pool = setup_complete_governance_db().await;
     let tracker = ContributionTracker::new(pool.clone());
     let calculator = WeightCalculator::new(pool.clone());
-    
+
     let timestamp = Utc::now();
-    
+
     // Step 1: Create whale contributor (huge contribution)
-    tracker.record_merge_mining_contribution("whale", "rsk", 1000.0, 10.0, timestamp).await.unwrap();
-    tracker.record_fee_forwarding_contribution("whale", "tx1", 40.0, "addr1", 100, timestamp).await.unwrap();
-    tracker.record_zap_contribution("whale", 50.0, timestamp, false).await.unwrap();
+    tracker
+        .record_merge_mining_contribution("whale", "rsk", 1000.0, 10.0, timestamp)
+        .await
+        .unwrap();
+    tracker
+        .record_fee_forwarding_contribution("whale", "tx1", 40.0, "addr1", 100, timestamp)
+        .await
+        .unwrap();
+    tracker
+        .record_zap_contribution("whale", 50.0, timestamp, false)
+        .await
+        .unwrap();
     // Total: 100 BTC → weight would be √100 = 10.0
-    
+
     // Step 2: Create many small contributors
     for i in 0..20 {
-        tracker.record_zap_contribution(&format!("user{}", i), 0.01, timestamp, false).await.unwrap();
+        tracker
+            .record_zap_contribution(&format!("user{}", i), 0.01, timestamp, false)
+            .await
+            .unwrap();
     }
     // Each: 0.01 BTC → weight = √0.01 = 0.1
     // Total small: 20 * 0.1 = 2.0
-    
+
     // Step 3: Update weights
     tracker.update_contribution_ages().await.unwrap();
     calculator.update_participation_weights().await.unwrap();
-    
+
     // Step 4: Get total system weight (sum of all capped weights)
     let total_weight = calculator.calculate_total_system_weight().await.unwrap();
-    
+
     // Step 5: Get whale weight (should be capped)
-    let whale_weight = calculator.get_participation_weight("whale").await.unwrap().unwrap();
-    
+    let whale_weight = calculator
+        .get_participation_weight("whale")
+        .await
+        .unwrap()
+        .unwrap();
+
     // Step 6: Verify cap enforcement
     // The whale's base weight is sqrt(100) = 10.0
     // With 20 small users at 0.1 each = 2.0, total base = 12.0
@@ -412,15 +458,19 @@ async fn test_complete_governance_flow_weight_cap_enforcement() {
     // Allow tolerance for floating point precision in iterative algorithm
     let max_allowed = total_weight * 0.05;
     // The iterative algorithm may have small rounding errors, so allow slightly more tolerance
-    assert!(whale_weight <= max_allowed + 0.015, 
-        "Whale weight ({}) must be capped at 5% of total ({}), max_allowed: {}", 
-        whale_weight, total_weight, max_allowed);
-    
+    assert!(
+        whale_weight <= max_allowed + 0.015,
+        "Whale weight ({}) must be capped at 5% of total ({}), max_allowed: {}",
+        whale_weight,
+        total_weight,
+        max_allowed
+    );
+
     // Step 7: Verify whale cannot dominate
     // The iterative algorithm converges to approximately 5%, but may have small rounding errors
     // Allow tolerance for floating point precision (0.01 = 1% tolerance)
     let whale_percentage = whale_weight / total_weight;
-    assert!(whale_percentage <= 0.06, 
+    assert!(whale_percentage <= 0.06,
         "Whale percentage ({}) cannot exceed 5% of total (allowing 1% tolerance for iterative convergence)", whale_percentage);
 }
 
@@ -429,44 +479,63 @@ async fn test_complete_governance_flow_cooling_off_period() {
     let pool = setup_complete_governance_db().await;
     let tracker = ContributionTracker::new(pool.clone());
     let calculator = WeightCalculator::new(pool.clone());
-    
+
     let now = Utc::now();
     let twenty_nine_days_ago = now - chrono::Duration::days(29);
     let thirty_days_ago = now - chrono::Duration::days(30);
     let thirty_one_days_ago = now - chrono::Duration::days(31);
-    
+
     // Step 1: Record large contribution (0.1 BTC) 29 days ago (not eligible)
-    tracker.record_zap_contribution("user1", 0.1, twenty_nine_days_ago, false).await.unwrap();
-    
+    tracker
+        .record_zap_contribution("user1", 0.1, twenty_nine_days_ago, false)
+        .await
+        .unwrap();
+
     // Step 2: Record large contribution (0.1 BTC) 31 days ago (eligible)
-    tracker.record_zap_contribution("user2", 0.1, thirty_one_days_ago, false).await.unwrap();
-    
+    tracker
+        .record_zap_contribution("user2", 0.1, thirty_one_days_ago, false)
+        .await
+        .unwrap();
+
     // Step 3: Record small contribution (0.05 BTC) 1 day ago (eligible, no cooling-off)
-    tracker.record_zap_contribution("user3", 0.05, now - chrono::Duration::days(1), false).await.unwrap();
-    
+    tracker
+        .record_zap_contribution("user3", 0.05, now - chrono::Duration::days(1), false)
+        .await
+        .unwrap();
+
     // Step 4: Update contribution ages
     tracker.update_contribution_ages().await.unwrap();
-    
+
     // Step 5: Update weights
     calculator.update_participation_weights().await.unwrap();
-    
+
     // Step 6: Verify cooling-off enforcement
     // user1: 0.1 BTC, 29 days old → should NOT count (cooling-off)
     // user2: 0.1 BTC, 31 days old → should count (cooling-off passed)
     // user3: 0.05 BTC, 1 day old → should count (no cooling-off needed)
-    
+
     let weight1 = calculator.get_participation_weight("user1").await.unwrap();
     let weight2 = calculator.get_participation_weight("user2").await.unwrap();
     let weight3 = calculator.get_participation_weight("user3").await.unwrap();
-    
+
     // user1 should have 0 weight (contribution in cooling-off)
-    assert_eq!(weight1, Some(0.0), "29-day-old large contribution should not count");
-    
+    assert_eq!(
+        weight1,
+        Some(0.0),
+        "29-day-old large contribution should not count"
+    );
+
     // user2 should have weight (cooling-off passed)
-    assert!(weight2.is_some() && weight2.unwrap() > 0.0, "31-day-old large contribution should count");
-    
+    assert!(
+        weight2.is_some() && weight2.unwrap() > 0.0,
+        "31-day-old large contribution should count"
+    );
+
     // user3 should have weight (no cooling-off for small contributions)
-    assert!(weight3.is_some() && weight3.unwrap() > 0.0, "Small contribution should count immediately");
+    assert!(
+        weight3.is_some() && weight3.unwrap() > 0.0,
+        "Small contribution should count immediately"
+    );
 }
 
 #[tokio::test]
@@ -474,13 +543,13 @@ async fn test_complete_governance_flow_combined_veto_systems() {
     let pool = setup_complete_governance_db().await;
     let vote_aggregator = VoteAggregator::new(pool.clone());
     let veto_manager = VetoManager::new(pool.clone());
-    
+
     let pr_id = 999;
     let tier = 3;
     let timestamp = Utc::now();
-    
+
     // Step 1: Economic node veto (25% hashpower - below 30% threshold)
-    use bllvm_commons::economic_nodes::types::{QualificationProof, ContactInfo};
+    use bllvm_commons::economic_nodes::types::{ContactInfo, QualificationProof};
     let qual_proof = QualificationProof {
         node_type: bllvm_commons::economic_nodes::types::NodeType::MiningPool,
         hashpower_proof: None,
@@ -494,7 +563,7 @@ async fn test_complete_governance_flow_combined_veto_systems() {
         },
     };
     let qual_json = serde_json::to_string(&qual_proof).unwrap();
-    
+
     let result = sqlx::query(
         r#"
         INSERT INTO economic_nodes (entity_name, node_type, public_key, qualification_data, weight, status)
@@ -510,14 +579,14 @@ async fn test_complete_governance_flow_combined_veto_systems() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     let node_id = result.last_insert_rowid() as i32;
-    
+
     // Create valid signature for veto signal
     let signature_manager = SignatureManager::new();
     let keypair = GovernanceKeypair::generate().expect("Failed to generate keypair");
     let pubkey_hex = hex::encode(keypair.public_key().to_bytes());
-    
+
     // Update node's public key to match generated keypair
     sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
         .bind(&pubkey_hex)
@@ -525,25 +594,28 @@ async fn test_complete_governance_flow_combined_veto_systems() {
         .execute(&pool)
         .await
         .unwrap();
-    
+
     // Get node to get entity name for signature message
     let registry = EconomicNodeRegistry::new(pool.clone());
     let node = registry.get_node_by_id(node_id).await.unwrap();
-    
+
     // Create valid signature
     let message = format!("PR #{} veto signal from {}", pr_id, node.entity_name);
-    let signature = signature_manager.create_governance_signature(&message, &keypair).expect("Failed to create signature");
-    
-    veto_manager.collect_veto_signal(
-        pr_id,
-        node_id,
-        bllvm_commons::economic_nodes::types::SignalType::Veto,
-        &signature,
-        "Concerns",
-    )
-    .await
-    .unwrap();
-    
+    let signature = signature_manager
+        .create_governance_signature(&message, &keypair)
+        .expect("Failed to create signature");
+
+    veto_manager
+        .collect_veto_signal(
+            pr_id,
+            node_id,
+            bllvm_commons::economic_nodes::types::SignalType::Veto,
+            &signature,
+            "Concerns",
+        )
+        .await
+        .unwrap();
+
     // Step 2: Zap votes (15% veto weight - below 40% threshold)
     sqlx::query(
         r#"
@@ -564,7 +636,7 @@ async fn test_complete_governance_flow_combined_veto_systems() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     sqlx::query(
         r#"
         INSERT INTO proposal_zap_votes
@@ -584,10 +656,13 @@ async fn test_complete_governance_flow_combined_veto_systems() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     // Step 3: Aggregate votes
-    let result = vote_aggregator.aggregate_proposal_votes(pr_id, tier).await.unwrap();
-    
+    let result = vote_aggregator
+        .aggregate_proposal_votes(pr_id, tier)
+        .await
+        .unwrap();
+
     // Step 4: Add additional mining pool to represent total network
     // With only one node (25% hashpower), the total network is 25%, so 25% / 25% = 100% → blocks
     // We need to add more nodes to the network so 25% is actually < 30% of total
@@ -606,17 +681,22 @@ async fn test_complete_governance_flow_combined_veto_systems() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     // Now: mining_veto_percent = (25.0 / (25.0 + 75.0)) * 100 = 25% < 30% → NOT blocked
     // The calculation is now against total network (100%), not just signal submitters
-    
+
     // Step 5: Aggregate votes
-    let result = vote_aggregator.aggregate_proposal_votes(pr_id, tier).await.unwrap();
-    
+    let result = vote_aggregator
+        .aggregate_proposal_votes(pr_id, tier)
+        .await
+        .unwrap();
+
     // Step 6: Verify combined system
     // Economic veto: 25% / 100% = 25% < 30% threshold → NOT blocked
     // Zap veto: 4.74 / (4.74 + 10.0) ≈ 32% < 40% threshold → NOT blocked
     // Combined: Neither threshold met individually → should NOT block
-    assert!(!result.veto_blocks, "Proposal should not be blocked (neither threshold met)");
+    assert!(
+        !result.veto_blocks,
+        "Proposal should not be blocked (neither threshold met)"
+    );
 }
-

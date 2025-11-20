@@ -4,7 +4,7 @@
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use tracing::{info, debug};
+use tracing::{debug, info};
 
 use crate::error::GovernanceError;
 
@@ -61,7 +61,11 @@ pub struct DecisionLogger {
 }
 
 impl DecisionLogger {
-    pub fn new(dry_run_mode: bool, log_enforcement_decisions: bool, log_path: Option<String>) -> Self {
+    pub fn new(
+        dry_run_mode: bool,
+        log_enforcement_decisions: bool,
+        log_path: Option<String>,
+    ) -> Self {
         Self {
             dry_run_mode,
             log_enforcement_decisions,
@@ -88,34 +92,42 @@ impl DecisionLogger {
 
     /// Log to console with appropriate level
     fn log_to_console(&self, decision: &EnforcementDecision) {
-        let action = if decision.would_allow_merge { "ALLOW" } else { "BLOCK" };
-        let prefix = if decision.dry_run { "[DRY-RUN]" } else { "[ENFORCEMENT]" };
-        
+        let action = if decision.would_allow_merge {
+            "ALLOW"
+        } else {
+            "BLOCK"
+        };
+        let prefix = if decision.dry_run {
+            "[DRY-RUN]"
+        } else {
+            "[ENFORCEMENT]"
+        };
+
         info!(
             "{} Would {} merge for PR #{} (Layer {}, Tier {}) - {}",
-            prefix,
-            action,
-            decision.pr_number,
-            decision.layer,
-            decision.tier,
-            decision.rationale
+            prefix, action, decision.pr_number, decision.layer, decision.tier, decision.rationale
         );
 
         // Log detailed enforcement actions
         for action in &decision.enforcement_actions {
-            let action_prefix = if action.dry_run { "[DRY-RUN]" } else { "[ACTION]" };
+            let action_prefix = if action.dry_run {
+                "[DRY-RUN]"
+            } else {
+                "[ACTION]"
+            };
             debug!(
                 "{} {}: {} - {}",
-                action_prefix,
-                action.action_type,
-                action.status,
-                action.message
+                action_prefix, action.action_type, action.status, action.message
             );
         }
     }
 
     /// Log to file for audit trail
-    fn log_to_file(&self, decision: &EnforcementDecision, path: &str) -> Result<(), GovernanceError> {
+    fn log_to_file(
+        &self,
+        decision: &EnforcementDecision,
+        path: &str,
+    ) -> Result<(), GovernanceError> {
         use std::fs::OpenOptions;
         use std::io::Write;
 
@@ -125,11 +137,13 @@ impl DecisionLogger {
             .open(path)
             .map_err(|e| GovernanceError::ConfigError(format!("Failed to open log file: {}", e)))?;
 
-        let log_entry = serde_json::to_string_pretty(decision)
-            .map_err(|e| GovernanceError::ConfigError(format!("Failed to serialize decision: {}", e)))?;
+        let log_entry = serde_json::to_string_pretty(decision).map_err(|e| {
+            GovernanceError::ConfigError(format!("Failed to serialize decision: {}", e))
+        })?;
 
-        writeln!(file, "{}", log_entry)
-            .map_err(|e| GovernanceError::ConfigError(format!("Failed to write to log file: {}", e)))?;
+        writeln!(file, "{}", log_entry).map_err(|e| {
+            GovernanceError::ConfigError(format!("Failed to write to log file: {}", e))
+        })?;
 
         Ok(())
     }
@@ -179,15 +193,13 @@ impl DecisionLogger {
     }
 
     /// Log a status check update
-    pub fn log_status_check(
-        &self,
-        pr_number: i32,
-        context: &str,
-        state: &str,
-        description: &str,
-    ) {
+    pub fn log_status_check(&self, pr_number: i32, context: &str, state: &str, description: &str) {
         if self.log_enforcement_decisions {
-            let prefix = if self.dry_run_mode { "[DRY-RUN]" } else { "[STATUS]" };
+            let prefix = if self.dry_run_mode {
+                "[DRY-RUN]"
+            } else {
+                "[STATUS]"
+            };
             info!(
                 "{} Status check for PR #{}: {} - {} ({})",
                 prefix, pr_number, context, state, description
@@ -196,15 +208,14 @@ impl DecisionLogger {
     }
 
     /// Log a merge blocking decision
-    pub fn log_merge_decision(
-        &self,
-        pr_number: i32,
-        blocked: bool,
-        reason: &str,
-    ) {
+    pub fn log_merge_decision(&self, pr_number: i32, blocked: bool, reason: &str) {
         if self.log_enforcement_decisions {
             let action = if blocked { "BLOCKED" } else { "ALLOWED" };
-            let prefix = if self.dry_run_mode { "[DRY-RUN]" } else { "[MERGE]" };
+            let prefix = if self.dry_run_mode {
+                "[DRY-RUN]"
+            } else {
+                "[MERGE]"
+            };
             info!(
                 "{} Merge {} for PR #{}: {}",
                 prefix, action, pr_number, reason
@@ -222,7 +233,11 @@ impl DecisionLogger {
         valid: bool,
     ) {
         if self.log_enforcement_decisions {
-            let prefix = if self.dry_run_mode { "[DRY-RUN]" } else { "[SIGNATURES]" };
+            let prefix = if self.dry_run_mode {
+                "[DRY-RUN]"
+            } else {
+                "[SIGNATURES]"
+            };
             let status = if valid { "VALID" } else { "INVALID" };
             info!(
                 "{} Signature validation for PR #{}: {} ({}/{}/{})",
@@ -232,14 +247,13 @@ impl DecisionLogger {
     }
 
     /// Log review period check
-    pub fn log_review_period_check(
-        &self,
-        pr_number: i32,
-        met: bool,
-        remaining_days: i64,
-    ) {
+    pub fn log_review_period_check(&self, pr_number: i32, met: bool, remaining_days: i64) {
         if self.log_enforcement_decisions {
-            let prefix = if self.dry_run_mode { "[DRY-RUN]" } else { "[REVIEW]" };
+            let prefix = if self.dry_run_mode {
+                "[DRY-RUN]"
+            } else {
+                "[REVIEW]"
+            };
             let status = if met { "MET" } else { "NOT MET" };
             info!(
                 "{} Review period for PR #{}: {} ({} days remaining)",
@@ -249,14 +263,13 @@ impl DecisionLogger {
     }
 
     /// Log economic veto check
-    pub fn log_economic_veto_check(
-        &self,
-        pr_number: i32,
-        active: bool,
-        percent: f64,
-    ) {
+    pub fn log_economic_veto_check(&self, pr_number: i32, active: bool, percent: f64) {
         if self.log_enforcement_decisions {
-            let prefix = if self.dry_run_mode { "[DRY-RUN]" } else { "[VETO]" };
+            let prefix = if self.dry_run_mode {
+                "[DRY-RUN]"
+            } else {
+                "[VETO]"
+            };
             let status = if active { "ACTIVE" } else { "INACTIVE" };
             info!(
                 "{} Economic veto for PR #{}: {} ({}%)",
@@ -280,7 +293,7 @@ mod tests {
     #[test]
     fn test_create_decision() {
         let logger = DecisionLogger::new(true, true, None);
-        
+
         let requirements = Requirements {
             signatures_required: 4,
             signatures_total: 5,
@@ -320,7 +333,7 @@ mod tests {
     #[test]
     fn test_create_action() {
         let logger = DecisionLogger::new(true, true, None);
-        
+
         let action = logger.create_action(
             "status_check".to_string(),
             "pending".to_string(),
@@ -335,9 +348,9 @@ mod tests {
     fn test_log_to_file() {
         let temp_dir = tempdir().unwrap();
         let log_path = temp_dir.path().join("test.log");
-        
+
         let logger = DecisionLogger::new(true, true, Some(log_path.to_string_lossy().to_string()));
-        
+
         let requirements = Requirements {
             signatures_required: 4,
             signatures_total: 5,
@@ -371,7 +384,7 @@ mod tests {
 
         let result = logger.log_decision(&decision);
         assert!(result.is_ok());
-        
+
         // Verify file was created and contains the decision
         assert!(log_path.exists());
         let content = std::fs::read_to_string(&log_path).unwrap();

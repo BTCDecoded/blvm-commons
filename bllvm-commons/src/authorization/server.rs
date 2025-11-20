@@ -125,10 +125,7 @@ impl AuthorizedServer {
     pub fn summary(&self) -> String {
         format!(
             "{} ({}) - {} - {}",
-            self.server_id,
-            self.operator.name,
-            self.operator.jurisdiction,
-            self.status
+            self.server_id, self.operator.name, self.operator.jurisdiction, self.status
         )
     }
 
@@ -137,14 +134,17 @@ impl AuthorizedServer {
         let mut info = HashMap::new();
         info.insert("server_id".to_string(), self.server_id.clone());
         info.insert("nostr_npub".to_string(), self.keys.nostr_npub.clone());
-        info.insert("ssh_fingerprint".to_string(), self.keys.ssh_fingerprint.clone());
+        info.insert(
+            "ssh_fingerprint".to_string(),
+            self.keys.ssh_fingerprint.clone(),
+        );
         info.insert("status".to_string(), self.status.as_str().to_string());
         info.insert("added_at".to_string(), self.added_at.to_rfc3339());
-        
+
         if let Some(verified) = self.last_verified {
             info.insert("last_verified".to_string(), verified.to_rfc3339());
         }
-        
+
         info
     }
 }
@@ -243,12 +243,8 @@ mod tests {
             ots_enabled: true,
         };
 
-        let server = AuthorizedServer::new(
-            "governance-01".to_string(),
-            operator,
-            keys,
-            infrastructure,
-        );
+        let server =
+            AuthorizedServer::new("governance-01".to_string(), operator, keys, infrastructure);
 
         assert_eq!(server.server_id, "governance-01");
         assert!(server.is_authorized());
@@ -259,18 +255,24 @@ mod tests {
     fn test_server_status() {
         assert!(ServerStatus::Active.is_operational());
         assert!(!ServerStatus::Active.is_compromised());
-        
+
         assert!(!ServerStatus::Inactive.is_operational());
         assert!(!ServerStatus::Inactive.is_compromised());
-        
+
         assert!(!ServerStatus::Compromised.is_operational());
         assert!(ServerStatus::Compromised.is_compromised());
     }
 
     #[test]
     fn test_server_status_parsing() {
-        assert_eq!("active".parse::<ServerStatus>().unwrap(), ServerStatus::Active);
-        assert_eq!("compromised".parse::<ServerStatus>().unwrap(), ServerStatus::Compromised);
+        assert_eq!(
+            "active".parse::<ServerStatus>().unwrap(),
+            ServerStatus::Active
+        );
+        assert_eq!(
+            "compromised".parse::<ServerStatus>().unwrap(),
+            ServerStatus::Compromised
+        );
         assert!("invalid".parse::<ServerStatus>().is_err());
     }
 
@@ -307,12 +309,8 @@ mod tests {
             ots_enabled: true,
         };
 
-        let server = AuthorizedServer::new(
-            "governance-01".to_string(),
-            operator,
-            keys,
-            infrastructure,
-        );
+        let server =
+            AuthorizedServer::new("governance-01".to_string(), operator, keys, infrastructure);
 
         let summary = server.summary();
         assert!(summary.contains("governance-01"));
@@ -339,17 +337,16 @@ mod tests {
             ots_enabled: true,
         };
 
-        let server = AuthorizedServer::new(
-            "governance-01".to_string(),
-            operator,
-            keys,
-            infrastructure,
-        );
+        let server =
+            AuthorizedServer::new("governance-01".to_string(), operator, keys, infrastructure);
 
         let info = server.verification_info();
         assert_eq!(info.get("server_id"), Some(&"governance-01".to_string()));
         assert_eq!(info.get("nostr_npub"), Some(&"npub1abc123".to_string()));
-        assert_eq!(info.get("ssh_fingerprint"), Some(&"SHA256:xyz789".to_string()));
+        assert_eq!(
+            info.get("ssh_fingerprint"),
+            Some(&"SHA256:xyz789".to_string())
+        );
         assert_eq!(info.get("status"), Some(&"active".to_string()));
     }
 
@@ -364,8 +361,14 @@ mod tests {
     #[test]
     fn test_server_action_from_str() {
         assert_eq!("add".parse::<ServerAction>().unwrap(), ServerAction::Add);
-        assert_eq!("remove".parse::<ServerAction>().unwrap(), ServerAction::Remove);
-        assert_eq!("compromise".parse::<ServerAction>().unwrap(), ServerAction::Compromise);
+        assert_eq!(
+            "remove".parse::<ServerAction>().unwrap(),
+            ServerAction::Remove
+        );
+        assert_eq!(
+            "compromise".parse::<ServerAction>().unwrap(),
+            ServerAction::Compromise
+        );
         assert!("invalid".parse::<ServerAction>().is_err());
     }
 
@@ -403,17 +406,13 @@ mod tests {
             ots_enabled: false,
         };
 
-        let mut server = AuthorizedServer::new(
-            "governance-02".to_string(),
-            operator,
-            keys,
-            infrastructure,
-        );
-        
+        let mut server =
+            AuthorizedServer::new("governance-02".to_string(), operator, keys, infrastructure);
+
         // Server starts as active
         assert!(server.is_authorized());
         assert!(!server.is_compromised());
-        
+
         // Mark as compromised
         server.status = ServerStatus::Compromised;
         assert!(!server.is_authorized());
@@ -439,13 +438,9 @@ mod tests {
             ots_enabled: false,
         };
 
-        let mut server = AuthorizedServer::new(
-            "governance-03".to_string(),
-            operator,
-            keys,
-            infrastructure,
-        );
-        
+        let mut server =
+            AuthorizedServer::new("governance-03".to_string(), operator, keys, infrastructure);
+
         // Mark as inactive
         server.status = ServerStatus::Inactive;
         assert!(!server.is_authorized());
@@ -457,7 +452,7 @@ mod tests {
 impl From<crate::ots::anchor::AuthorizedServer> for AuthorizedServer {
     fn from(ots_server: crate::ots::anchor::AuthorizedServer) -> Self {
         use std::str::FromStr;
-        
+
         Self {
             server_id: ots_server.server_id,
             operator: OperatorInfo {

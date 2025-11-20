@@ -3,9 +3,9 @@
 //! Publishes hourly governance status updates to Nostr relays
 //! with server health, audit log information, and verification hashes.
 
-use anyhow::{anyhow, Result};
-use chrono::{DateTime, Utc, Datelike, Timelike};
 use ::hex;
+use anyhow::{anyhow, Result};
+use chrono::{DateTime, Datelike, Timelike, Utc};
 use nostr_sdk::prelude::*;
 use sha2::{Digest, Sha256};
 use std::fs;
@@ -46,7 +46,10 @@ impl StatusPublisher {
 
     /// Publish current governance status
     pub async fn publish_status(&self) -> Result<()> {
-        info!("Publishing governance status for server: {}", self.server_id);
+        info!(
+            "Publishing governance status for server: {}",
+            self.server_id
+        );
 
         // Calculate file hashes
         let binary_hash = self.calculate_file_hash(&self.binary_path)?;
@@ -88,13 +91,13 @@ impl StatusPublisher {
 
     /// Calculate SHA256 hash of a file
     fn calculate_file_hash(&self, file_path: &str) -> Result<String> {
-        let content = fs::read(file_path)
-            .map_err(|e| anyhow!("Failed to read file {}: {}", file_path, e))?;
-        
+        let content =
+            fs::read(file_path).map_err(|e| anyhow!("Failed to read file {}: {}", file_path, e))?;
+
         let mut hasher = Sha256::new();
         hasher.update(&content);
         let hash = hasher.finalize();
-        
+
         Ok(format!("sha256:{}", hex::encode(hash)))
     }
 
@@ -146,35 +149,58 @@ impl StatusPublisher {
     fn calculate_next_ots_anchor(&self) -> DateTime<Utc> {
         let now = Utc::now();
         let next_month = if now.month() == 12 {
-            now.with_month(1).unwrap().with_year(now.year() + 1).unwrap()
+            now.with_month(1)
+                .unwrap()
+                .with_year(now.year() + 1)
+                .unwrap()
         } else {
             now.with_month(now.month() + 1).unwrap()
         };
-        
-        next_month.with_day(1).unwrap().with_hour(0).unwrap()
-            .with_minute(0).unwrap().with_second(0).unwrap()
+
+        next_month
+            .with_day(1)
+            .unwrap()
+            .with_hour(0)
+            .unwrap()
+            .with_minute(0)
+            .unwrap()
+            .with_second(0)
+            .unwrap()
     }
 
     /// Create Nostr event from governance status
     fn create_nostr_event(&self, status: GovernanceStatus) -> Result<Event> {
-        let content = status.to_json()
+        let content = status
+            .to_json()
             .map_err(|e| anyhow!("Failed to serialize status: {}", e))?;
 
         let current_month = Utc::now().format("%Y-%m").to_string();
 
         let tags = vec![
-            Tag::Generic(TagKind::Custom("d".into()), vec!["governance-status".to_string()]),
-            Tag::Generic(TagKind::Custom("server".into()), vec![self.server_id.clone()]),
-            Tag::Generic(TagKind::Custom("authorized_by".into()), vec![format!("registry-{}", current_month)]),
-            Tag::Generic(TagKind::Custom("btcdecoded".into()), vec!["governance-infrastructure".to_string()]),
-            Tag::Generic(TagKind::Custom("t".into()), vec!["bitcoin".to_string(), "governance".to_string()]),
+            Tag::Generic(
+                TagKind::Custom("d".into()),
+                vec!["governance-status".to_string()],
+            ),
+            Tag::Generic(
+                TagKind::Custom("server".into()),
+                vec![self.server_id.clone()],
+            ),
+            Tag::Generic(
+                TagKind::Custom("authorized_by".into()),
+                vec![format!("registry-{}", current_month)],
+            ),
+            Tag::Generic(
+                TagKind::Custom("btcdecoded".into()),
+                vec!["governance-infrastructure".to_string()],
+            ),
+            Tag::Generic(
+                TagKind::Custom("t".into()),
+                vec!["bitcoin".to_string(), "governance".to_string()],
+            ),
         ];
 
-        let event = EventBuilder::new(
-            Kind::Custom(30078),
-            content,
-            tags,
-        ).to_event(&self.client.keys)
+        let event = EventBuilder::new(Kind::Custom(30078), content, tags)
+            .to_event(&self.client.keys)
             .map_err(|e| anyhow!("Failed to create Nostr event: {}", e))?;
 
         Ok(event)
@@ -184,9 +210,8 @@ impl StatusPublisher {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile::tempdir;
     use nostr_sdk::prelude::Keys;
-    
+    use tempfile::tempdir;
 
     #[tokio::test]
     async fn test_file_hash_calculation() {
@@ -207,7 +232,9 @@ mod tests {
             start_time: Utc::now(),
         };
 
-        let hash = publisher.calculate_file_hash(&test_file.to_string_lossy()).unwrap();
+        let hash = publisher
+            .calculate_file_hash(&test_file.to_string_lossy())
+            .unwrap();
         assert!(hash.starts_with("sha256:"));
         assert_eq!(hash.len(), 71); // "sha256:" + 64 hex chars
     }

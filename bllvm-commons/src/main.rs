@@ -13,31 +13,31 @@ use tower_http::trace::TraceLayer;
 use tracing::{debug, error, info, warn};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
+mod audit;
+mod authorization;
+mod backup;
+mod build;
 mod config;
 mod crypto;
 mod database;
+mod economic_nodes;
 mod enforcement;
 mod error;
 mod github;
-mod validation;
-mod webhooks;
-mod nostr;
-mod ots;
-mod audit;
-mod authorization;
-mod build;
-mod backup;
-mod resilience;
 mod governance;
 mod node_registry;
-mod economic_nodes;
+mod nostr;
+mod ots;
+mod resilience;
+mod validation;
+mod webhooks;
 
+use audit::AuditLogger;
 use config::AppConfig;
 use database::Database;
-use nostr::{NostrClient, StatusPublisher, ZapTracker};
 use governance::{ContributionAggregator, FeeForwardingTracker};
+use nostr::{NostrClient, StatusPublisher, ZapTracker};
 use ots::{OtsClient, RegistryAnchorer};
-use audit::AuditLogger;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -73,7 +73,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         interval: std::time::Duration::from_secs(86400), // Daily
         enabled: true,
     };
-    let backup_manager = Arc::new(backup::BackupManager::new(database_for_backup, backup_config));
+    let backup_manager = Arc::new(backup::BackupManager::new(
+        database_for_backup,
+        backup_config,
+    ));
     backup_manager.clone().start_backup_task();
     info!("Automated backup task started");
 
@@ -84,39 +87,49 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(60)); // Check every 60 seconds
         let mut consecutive_failures = 0u32;
         let mut current_db = database_for_health;
-        
+
         loop {
             interval.tick().await;
-            
+
             // Check database health
             match current_db.check_health().await {
                 Ok(true) => {
                     if consecutive_failures > 0 {
-                        info!("Database health check passed after {} failures", consecutive_failures);
+                        info!(
+                            "Database health check passed after {} failures",
+                            consecutive_failures
+                        );
                         consecutive_failures = 0;
                     }
-                    
+
                     // Log pool stats periodically (every 10 checks = 10 minutes)
                     if consecutive_failures == 0 {
                         if let Ok(stats) = current_db.get_pool_stats().await {
-                            debug!("Database pool stats: size={}, idle={}, closed={}", 
-                                   stats.size, stats.idle, stats.is_closed);
+                            debug!(
+                                "Database pool stats: size={}, idle={}, closed={}",
+                                stats.size, stats.idle, stats.is_closed
+                            );
                         }
                     }
                 }
                 Ok(false) | Err(_) => {
                     consecutive_failures += 1;
-                    warn!("Database health check failed (consecutive failures: {})", consecutive_failures);
-                    
+                    warn!(
+                        "Database health check failed (consecutive failures: {})",
+                        consecutive_failures
+                    );
+
                     // After 3 consecutive failures, attempt reconnection
                     if consecutive_failures >= 3 {
                         error!("Database connection unhealthy after {} consecutive failures - attempting reconnection", consecutive_failures);
-                        
+
                         // Check if pool is closed before attempting reconnection
-                        let should_reconnect = current_db.get_pool_stats().await
+                        let should_reconnect = current_db
+                            .get_pool_stats()
+                            .await
                             .map(|stats| stats.is_closed)
                             .unwrap_or(true);
-                        
+
                         if should_reconnect {
                             // Attempt to reconnect using stored database URL
                             match Database::new(&database_url_for_reconnect).await {
@@ -148,10 +161,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let nostr_client = if config.nostr.enabled {
         let nsec = std::fs::read_to_string(&config.nostr.server_nsec_path)
             .map_err(|e| format!("Failed to read Nostr key: {}", e))?;
-        
-        let client = NostrClient::new(nsec, config.nostr.relays.clone()).await
+
+        let client = NostrClient::new(nsec, config.nostr.relays.clone())
+            .await
             .map_err(|e| format!("Failed to create Nostr client: {}", e))?;
-        
+
         Some(client)
     } else {
         None
@@ -192,7 +206,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Start background tasks
     let config_clone = config.clone();
     let database_clone = database.clone();
-        // TODO: Implement audit logger cloning or use Arc
+    // TODO: Implement audit logger cloning or use Arc
 
     // Nostr status publisher task
     if let Some(publisher) = status_publisher {
@@ -228,7 +242,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Audit log rotation task
     if audit_logger.is_some() {
-        let rotation_interval = Duration::from_secs(config.audit.rotation_interval_days as u64 * 86400);
+        let rotation_interval =
+            Duration::from_secs(config.audit.rotation_interval_days as u64 * 86400);
         tokio::spawn(async move {
             let mut interval = tokio::time::interval(rotation_interval);
             loop {
@@ -241,9 +256,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Initialize governance services
-    let pool = database.get_sqlite_pool()
+    let pool = database
+        .get_sqlite_pool()
         .ok_or_else(|| "Database pool not available".to_string())?;
-    
+
     // Start zap tracker if Nostr is enabled and governance tracking enabled
     if config.nostr.enabled && config.governance.contribution_tracking_enabled {
         if let Some(ref nostr_client) = nostr_client {
@@ -258,15 +274,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     info!("Zap tracking configured for legacy zap address");
                 }
             }
-            
+
             // Add bot pubkeys from multi-bot config
             for (bot_id, bot_config) in &config.nostr.bots {
                 bot_pubkeys.push(bot_config.npub.clone());
-                info!("Zap tracking configured for bot: {} (npub: {})", bot_id, bot_config.npub);
+                info!(
+                    "Zap tracking configured for bot: {} (npub: {})",
+                    bot_id, bot_config.npub
+                );
             }
-            
+
             if !bot_pubkeys.is_empty() {
-                let zap_tracker = ZapTracker::new(pool.clone(), Arc::new(nostr_client.clone()), bot_pubkeys);
+                let zap_tracker =
+                    ZapTracker::new(pool.clone(), Arc::new(nostr_client.clone()), bot_pubkeys);
                 if let Err(e) = zap_tracker.start_tracking().await {
                     error!("Failed to start zap tracking: {}", e);
                 } else {
@@ -275,7 +295,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
-    
+
     // Initialize fee forwarding tracker (if Commons addresses configured)
     let fee_forwarding_tracker = if !config.governance.commons_addresses.is_empty() {
         Some(FeeForwardingTracker::from_network_string(
@@ -286,12 +306,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         None
     };
-    
+
     if fee_forwarding_tracker.is_some() {
-        info!("Fee forwarding tracker initialized for {} Commons addresses on {}", 
-              config.governance.commons_addresses.len(), config.governance.network);
+        info!(
+            "Fee forwarding tracker initialized for {} Commons addresses on {}",
+            config.governance.commons_addresses.len(),
+            config.governance.network
+        );
     }
-    
+
     // Start periodic weight update task (if enabled)
     if config.governance.weight_updates_enabled {
         let pool_for_weights = pool.clone();
@@ -301,7 +324,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             loop {
                 interval.tick().await;
                 info!("Starting periodic weight update");
-                
+
                 let aggregator = ContributionAggregator::new(pool_for_weights.clone());
                 if let Err(e) = aggregator.update_all_weights().await {
                     error!("Failed to update participation weights: {}", e);
@@ -310,7 +333,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
         });
-        info!("Periodic weight update task started (interval: {}s)", config.governance.weight_update_interval_secs);
+        info!(
+            "Periodic weight update task started (interval: {}s)",
+            config.governance.weight_update_interval_secs
+        );
     }
 
     // Build application
@@ -319,7 +345,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = Router::new()
         .route("/health", get(health_check))
         .route("/webhooks/github", post(webhooks::github::handle_webhook))
-        .route("/webhooks/block", post(webhooks::block::handle_block_notification))
+        .route(
+            "/webhooks/block",
+            post(webhooks::block::handle_block_notification),
+        )
         .route("/status", get(status_endpoint))
         .merge(node_registry::api::create_router())
         .layer(
@@ -347,7 +376,9 @@ async fn health_check() -> Json<serde_json::Value> {
     }))
 }
 
-async fn status_endpoint(State((config, database)): State<(AppConfig, Database)>) -> Json<serde_json::Value> {
+async fn status_endpoint(
+    State((config, database)): State<(AppConfig, Database)>,
+) -> Json<serde_json::Value> {
     let pool = database.get_sqlite_pool();
     let governance_status = if let Some(pool) = pool {
         // Check governance tables exist
@@ -359,15 +390,14 @@ async fn status_endpoint(State((config, database)): State<(AppConfig, Database)>
         .ok()
         .map(|count| count >= 3)
         .unwrap_or(false);
-        
+
         // Get contributor count
-        let contributor_count: i64 = sqlx::query_scalar(
-            "SELECT COUNT(DISTINCT contributor_id) FROM unified_contributions"
-        )
-        .fetch_one(pool)
-        .await
-        .unwrap_or(0);
-        
+        let contributor_count: i64 =
+            sqlx::query_scalar("SELECT COUNT(DISTINCT contributor_id) FROM unified_contributions")
+                .fetch_one(pool)
+                .await
+                .unwrap_or(0);
+
         serde_json::json!({
             "enabled": config.governance.contribution_tracking_enabled,
             "tables_exist": tables_exist,
@@ -381,7 +411,7 @@ async fn status_endpoint(State((config, database)): State<(AppConfig, Database)>
             "error": "Database pool not available"
         })
     };
-    
+
     let mut status = serde_json::json!({
         "status": "healthy",
         "service": "bllvm-commons",

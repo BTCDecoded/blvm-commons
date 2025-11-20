@@ -3,12 +3,12 @@
 //! Tests for economic node registration, qualification verification,
 //! weight calculation, veto signal collection, and threshold calculation
 
-use chrono::Utc;
+use bllvm_commons::crypto::signatures::SignatureManager;
 use bllvm_commons::database::Database;
 use bllvm_commons::economic_nodes::{registry::EconomicNodeRegistry, types::*, veto::VetoManager};
 use bllvm_commons::error::GovernanceError;
-use bllvm_commons::crypto::signatures::SignatureManager;
 use bllvm_sdk::governance::GovernanceKeypair;
+use chrono::Utc;
 use sqlx::SqlitePool;
 
 #[tokio::test]
@@ -300,13 +300,15 @@ async fn test_veto_signal_collection() -> Result<(), Box<dyn std::error::Error>>
         .await?;
 
     // Activate the node so it can submit veto signals
-    registry.update_node_status(node_id, NodeStatus::Active).await?;
+    registry
+        .update_node_status(node_id, NodeStatus::Active)
+        .await?;
 
     // Create valid signature for veto signal
     let signature_manager = SignatureManager::new();
     let keypair = GovernanceKeypair::generate()?;
     let public_key = keypair.public_key().to_string();
-    
+
     // Update the node's public key to match the generated keypair
     let pool = db.pool().expect("Database should have SQLite pool");
     sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
@@ -314,10 +316,9 @@ async fn test_veto_signal_collection() -> Result<(), Box<dyn std::error::Error>>
         .bind(node_id)
         .execute(pool)
         .await?;
-    
+
     let message = format!("PR #1 veto signal from Test Mining Pool");
-    let signature = signature_manager
-        .create_governance_signature(&message, &keypair)?;
+    let signature = signature_manager.create_governance_signature(&message, &keypair)?;
 
     // Submit a veto signal
     let signal_id = veto_manager
@@ -335,9 +336,8 @@ async fn test_veto_signal_collection() -> Result<(), Box<dyn std::error::Error>>
 
     // Test duplicate signal rejection
     let message2 = format!("PR #1 veto signal from Test Mining Pool");
-    let signature2 = signature_manager
-        .create_governance_signature(&message2, &keypair)?;
-    
+    let signature2 = signature_manager.create_governance_signature(&message2, &keypair)?;
+
     let result = veto_manager
         .collect_veto_signal(
             1, // Same PR ID
@@ -423,8 +423,12 @@ async fn test_veto_threshold_calculation() -> Result<(), Box<dyn std::error::Err
         .await?;
 
     // Activate nodes so they can submit veto signals
-    registry.update_node_status(mining_node_id, NodeStatus::Active).await?;
-    registry.update_node_status(exchange_node_id, NodeStatus::Active).await?;
+    registry
+        .update_node_status(mining_node_id, NodeStatus::Active)
+        .await?;
+    registry
+        .update_node_status(exchange_node_id, NodeStatus::Active)
+        .await?;
 
     // Create valid signatures for veto signals
     let signature_manager = SignatureManager::new();
@@ -432,7 +436,7 @@ async fn test_veto_threshold_calculation() -> Result<(), Box<dyn std::error::Err
     let exchange_keypair = GovernanceKeypair::generate()?;
     let mining_public_key = mining_keypair.public_key().to_string();
     let exchange_public_key = exchange_keypair.public_key().to_string();
-    
+
     // Update nodes' public keys to match generated keypairs
     let pool = db.pool().expect("Database should have SQLite pool");
     sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
@@ -445,13 +449,13 @@ async fn test_veto_threshold_calculation() -> Result<(), Box<dyn std::error::Err
         .bind(exchange_node_id)
         .execute(pool)
         .await?;
-    
+
     let mining_message = format!("PR #1 veto signal from Large Mining Pool");
     let exchange_message = format!("PR #1 veto signal from Large Exchange");
-    let mining_signature = signature_manager
-        .create_governance_signature(&mining_message, &mining_keypair)?;
-    let exchange_signature = signature_manager
-        .create_governance_signature(&exchange_message, &exchange_keypair)?;
+    let mining_signature =
+        signature_manager.create_governance_signature(&mining_message, &mining_keypair)?;
+    let exchange_signature =
+        signature_manager.create_governance_signature(&exchange_message, &exchange_keypair)?;
 
     // Submit veto signals
     veto_manager
@@ -684,8 +688,12 @@ async fn test_veto_statistics() -> Result<(), Box<dyn std::error::Error>> {
         .await?;
 
     // Activate nodes so they can submit veto signals
-    registry.update_node_status(mining_node_id, NodeStatus::Active).await?;
-    registry.update_node_status(exchange_node_id, NodeStatus::Active).await?;
+    registry
+        .update_node_status(mining_node_id, NodeStatus::Active)
+        .await?;
+    registry
+        .update_node_status(exchange_node_id, NodeStatus::Active)
+        .await?;
 
     // Create valid signatures for veto signals
     let signature_manager = SignatureManager::new();
@@ -693,7 +701,7 @@ async fn test_veto_statistics() -> Result<(), Box<dyn std::error::Error>> {
     let exchange_keypair = GovernanceKeypair::generate()?;
     let mining_public_key = mining_keypair.public_key().to_string();
     let exchange_public_key = exchange_keypair.public_key().to_string();
-    
+
     // Update nodes' public keys to match generated keypairs
     let pool = db.pool().expect("Database should have SQLite pool");
     sqlx::query("UPDATE economic_nodes SET public_key = ? WHERE id = ?")
@@ -706,13 +714,13 @@ async fn test_veto_statistics() -> Result<(), Box<dyn std::error::Error>> {
         .bind(exchange_node_id)
         .execute(pool)
         .await?;
-    
+
     let mining_message = format!("PR #1 veto signal from Mining Pool");
     let exchange_message = format!("PR #1 veto signal from Exchange");
-    let mining_signature = signature_manager
-        .create_governance_signature(&mining_message, &mining_keypair)?;
-    let exchange_signature = signature_manager
-        .create_governance_signature(&exchange_message, &exchange_keypair)?;
+    let mining_signature =
+        signature_manager.create_governance_signature(&mining_message, &mining_keypair)?;
+    let exchange_signature =
+        signature_manager.create_governance_signature(&exchange_message, &exchange_keypair)?;
 
     // Submit different types of signals
     veto_manager
@@ -738,17 +746,25 @@ async fn test_veto_statistics() -> Result<(), Box<dyn std::error::Error>> {
     // Get veto statistics using available methods
     let threshold = veto_manager.check_veto_threshold(1).await?;
     let signals = veto_manager.get_pr_veto_signals(1).await?;
-    
+
     let total_signals = signals.len();
-    let veto_count = signals.iter().filter(|s| s.signal_type == SignalType::Veto).count();
-    let support_count = signals.iter().filter(|s| s.signal_type == SignalType::Support).count();
-    
+    let veto_count = signals
+        .iter()
+        .filter(|s| s.signal_type == SignalType::Veto)
+        .count();
+    let support_count = signals
+        .iter()
+        .filter(|s| s.signal_type == SignalType::Support)
+        .count();
+
     assert!(total_signals > 0, "Should have signals");
     assert!(veto_count > 0, "Should have veto signals");
     assert!(support_count > 0, "Should have support signals");
 
-    println!("✅ Veto statistics retrieved: total={}, veto={}, support={}, threshold={:?}", 
-             total_signals, veto_count, support_count, threshold);
+    println!(
+        "✅ Veto statistics retrieved: total={}, veto={}, support={}, threshold={:?}",
+        total_signals, veto_count, support_count, threshold
+    );
 
     Ok(())
 }

@@ -11,19 +11,19 @@ use crate::ots::anchor::GovernanceRegistry;
 use crate::ots::client::{OtsClient, VerificationResult};
 
 /// Verify a governance registry against its OTS proof
-pub async fn verify_registry(
-    registry_path: &str,
-    proof_path: &str,
-) -> Result<VerificationResult> {
-    info!("Verifying registry: {} with proof: {}", registry_path, proof_path);
+pub async fn verify_registry(registry_path: &str, proof_path: &str) -> Result<VerificationResult> {
+    info!(
+        "Verifying registry: {} with proof: {}",
+        registry_path, proof_path
+    );
 
     // Load registry data
-    let registry_data = fs::read(registry_path)
-        .map_err(|e| anyhow!("Failed to read registry file: {}", e))?;
+    let registry_data =
+        fs::read(registry_path).map_err(|e| anyhow!("Failed to read registry file: {}", e))?;
 
     // Load OTS proof
-    let proof_data = fs::read(proof_path)
-        .map_err(|e| anyhow!("Failed to read proof file: {}", e))?;
+    let proof_data =
+        fs::read(proof_path).map_err(|e| anyhow!("Failed to read proof file: {}", e))?;
 
     // Create OTS client
     let ots_client = OtsClient::new("https://alice.btc.calendar.opentimestamps.org".to_string());
@@ -36,7 +36,10 @@ pub async fn verify_registry(
             info!("Registry timestamp is pending confirmation");
         }
         VerificationResult::Confirmed(block_height) => {
-            info!("Registry timestamp confirmed at Bitcoin block height: {}", block_height);
+            info!(
+                "Registry timestamp confirmed at Bitcoin block height: {}",
+                block_height
+            );
         }
     }
 
@@ -74,8 +77,8 @@ pub fn verify_registry_structure(registry_path: &str) -> Result<GovernanceRegist
 pub fn verify_proof_format(proof_path: &str) -> Result<()> {
     debug!("Verifying OTS proof format: {}", proof_path);
 
-    let proof_data = fs::read(proof_path)
-        .map_err(|e| anyhow!("Failed to read proof file: {}", e))?;
+    let proof_data =
+        fs::read(proof_path).map_err(|e| anyhow!("Failed to read proof file: {}", e))?;
 
     // For now, just check if it's a mock proof
     if proof_data.starts_with(b"MOCK_OTS_PROOF:") {
@@ -90,8 +93,8 @@ pub fn verify_proof_format(proof_path: &str) -> Result<()> {
 pub async fn get_bitcoin_block_height(proof_path: &str) -> Result<Option<u32>> {
     debug!("Getting Bitcoin block height from proof: {}", proof_path);
 
-    let proof_data = fs::read(proof_path)
-        .map_err(|e| anyhow!("Failed to read proof file: {}", e))?;
+    let proof_data =
+        fs::read(proof_path).map_err(|e| anyhow!("Failed to read proof file: {}", e))?;
 
     // For mock proofs, return a mock block height
     if proof_data.starts_with(b"MOCK_OTS_PROOF:") {
@@ -106,7 +109,8 @@ pub async fn verify_registry_chain(registry_dir: &str) -> Result<Vec<String>> {
     info!("Verifying complete registry chain in: {}", registry_dir);
 
     let mut verified_registries = Vec::new();
-    let mut previous_hash = "sha256:0000000000000000000000000000000000000000000000000000000000000000".to_string();
+    let mut previous_hash =
+        "sha256:0000000000000000000000000000000000000000000000000000000000000000".to_string();
 
     // Find all registry files
     let entries = fs::read_dir(registry_dir)
@@ -146,7 +150,8 @@ pub async fn verify_registry_chain(registry_dir: &str) -> Result<Vec<String>> {
             let result = verify_registry(
                 registry_file.to_str().unwrap(),
                 proof_file.to_str().unwrap(),
-            ).await?;
+            )
+            .await?;
 
             if !result.is_confirmed() {
                 return Err(anyhow!("Registry {} is not confirmed", registry.version));
@@ -154,9 +159,10 @@ pub async fn verify_registry_chain(registry_dir: &str) -> Result<Vec<String>> {
         }
 
         verified_registries.push(registry.version.clone());
-        previous_hash = format!("sha256:{}", hex::encode(sha2::Sha256::digest(
-            fs::read(registry_file).unwrap()
-        )));
+        previous_hash = format!(
+            "sha256:{}",
+            hex::encode(sha2::Sha256::digest(fs::read(registry_file).unwrap()))
+        );
 
         info!("Verified registry: {}", registry.version);
     }
@@ -168,8 +174,8 @@ pub async fn verify_registry_chain(registry_dir: &str) -> Result<Vec<String>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile::tempdir;
     use std::fs;
+    use tempfile::tempdir;
 
     #[tokio::test]
     async fn test_verify_registry_structure() {
@@ -180,7 +186,9 @@ mod tests {
         let registry = GovernanceRegistry {
             version: "2025-01".to_string(),
             timestamp: chrono::Utc::now(),
-            previous_registry_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000".to_string(),
+            previous_registry_hash:
+                "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+                    .to_string(),
             maintainers: vec![crate::ots::anchor::Maintainer {
                 id: 1,
                 name: "Test Maintainer".to_string(),

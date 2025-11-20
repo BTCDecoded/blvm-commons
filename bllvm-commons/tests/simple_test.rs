@@ -132,7 +132,10 @@ async fn test_status_check_generation() -> Result<(), Box<dyn std::error::Error>
         &review_status,
         &_signature_status,
     );
-    assert!(combined_status.contains("All Requirements Met") || combined_status.contains("Ready to Merge"));
+    assert!(
+        combined_status.contains("All Requirements Met")
+            || combined_status.contains("Ready to Merge")
+    );
     println!("✅ Combined status generated: {}", combined_status);
 
     Ok(())
@@ -378,7 +381,10 @@ async fn test_complete_governance_workflow() -> Result<(), Box<dyn std::error::E
         &signature_status,
     );
 
-    assert!(combined_status.contains("All Requirements Met") || combined_status.contains("Ready to Merge"));
+    assert!(
+        combined_status.contains("All Requirements Met")
+            || combined_status.contains("Ready to Merge")
+    );
     println!("✅ Status checks generated");
 
     // 4. Test merge blocking

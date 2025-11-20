@@ -1,15 +1,15 @@
 //! Governance Fork Detection
-//! 
+//!
 //! Detects governance fork conditions and triggers appropriate responses.
 
-use std::collections::HashMap;
-use chrono::{DateTime, Utc, Duration};
+use chrono::{DateTime, Duration, Utc};
 use serde::{Deserialize, Serialize};
-use tracing::{info, warn, debug};
+use std::collections::HashMap;
+use tracing::{debug, info, warn};
 
-use crate::error::GovernanceError;
-use super::types::*;
 use super::adoption::AdoptionTracker;
+use super::types::*;
+use crate::error::GovernanceError;
 
 /// Detects governance fork conditions and manages fork triggers
 pub struct ForkDetector {
@@ -53,10 +53,7 @@ pub enum ForkAction {
 
 impl ForkDetector {
     /// Create a new fork detector
-    pub fn new(
-        adoption_tracker: AdoptionTracker,
-        fork_thresholds: Option<ForkThresholds>,
-    ) -> Self {
+    pub fn new(adoption_tracker: AdoptionTracker, fork_thresholds: Option<ForkThresholds>) -> Self {
         Self {
             adoption_tracker,
             fork_thresholds: fork_thresholds.unwrap_or_default(),
@@ -68,37 +65,40 @@ impl ForkDetector {
     /// Run fork detection analysis
     pub async fn detect_forks(&mut self) -> Result<Vec<ForkDetectionEvent>, GovernanceError> {
         info!("Running fork detection analysis...");
-        
+
         let mut new_detections = Vec::new();
-        
+
         // Get current adoption statistics
         let adoption_stats = self.adoption_tracker.get_adoption_statistics().await?;
-        
+
         // Check each ruleset for fork conditions
         for metrics in &adoption_stats.rulesets {
             if let Some(detection) = self.analyze_ruleset_for_fork(metrics).await? {
                 new_detections.push(detection);
             }
         }
-        
+
         // Check for time-based triggers
         if let Some(time_detection) = self.check_time_based_triggers().await? {
             new_detections.push(time_detection);
         }
-        
+
         // Check for consensus-based triggers
         if let Some(consensus_detection) = self.check_consensus_triggers(&adoption_stats).await? {
             new_detections.push(consensus_detection);
         }
-        
+
         // Store detections
         for detection in &new_detections {
             self.detection_history.push(detection.clone());
         }
-        
+
         self.last_detection = Some(Utc::now());
-        
-        info!("Fork detection completed: {} new detections", new_detections.len());
+
+        info!(
+            "Fork detection completed: {} new detections",
+            new_detections.len()
+        );
         Ok(new_detections)
     }
 
@@ -107,13 +107,16 @@ impl ForkDetector {
         &self,
         metrics: &AdoptionMetrics,
     ) -> Result<Option<ForkDetectionEvent>, GovernanceError> {
-        debug!("Analyzing ruleset {} for fork conditions", metrics.ruleset_id);
-        
+        debug!(
+            "Analyzing ruleset {} for fork conditions",
+            metrics.ruleset_id
+        );
+
         let threshold_met = self.check_adoption_thresholds(metrics);
-        
+
         if threshold_met {
             info!("Fork threshold met for ruleset: {}", metrics.ruleset_id);
-            
+
             let detection = ForkDetectionEvent {
                 event_id: uuid::Uuid::new_v4().to_string(),
                 detected_at: Utc::now(),
@@ -123,14 +126,14 @@ impl ForkDetector {
                 threshold_met: true,
                 action_taken: Some(ForkAction::ForkExecuted),
             };
-            
+
             return Ok(Some(detection));
         }
-        
+
         // Check if approaching threshold (for early warning)
         if self.is_approaching_threshold(metrics) {
             warn!("Ruleset {} approaching fork threshold", metrics.ruleset_id);
-            
+
             let detection = ForkDetectionEvent {
                 event_id: uuid::Uuid::new_v4().to_string(),
                 detected_at: Utc::now(),
@@ -140,19 +143,20 @@ impl ForkDetector {
                 threshold_met: false,
                 action_taken: Some(ForkAction::MonitoringIncreased),
             };
-            
+
             return Ok(Some(detection));
         }
-        
+
         Ok(None)
     }
 
     /// Check if adoption thresholds are met
     fn check_adoption_thresholds(&self, metrics: &AdoptionMetrics) -> bool {
-        metrics.node_count >= self.fork_thresholds.minimum_node_count &&
-        metrics.hashpower_percentage >= self.fork_thresholds.minimum_hashpower_percentage &&
-        metrics.economic_activity_percentage >= self.fork_thresholds.minimum_economic_activity_percentage &&
-        metrics.total_weight >= self.fork_thresholds.minimum_adoption_percentage
+        metrics.node_count >= self.fork_thresholds.minimum_node_count
+            && metrics.hashpower_percentage >= self.fork_thresholds.minimum_hashpower_percentage
+            && metrics.economic_activity_percentage
+                >= self.fork_thresholds.minimum_economic_activity_percentage
+            && metrics.total_weight >= self.fork_thresholds.minimum_adoption_percentage
     }
 
     /// Check if approaching threshold (for early warning)
@@ -161,27 +165,29 @@ impl ForkDetector {
         let hashpower_threshold = self.fork_thresholds.minimum_hashpower_percentage * 0.8;
         let economic_threshold = self.fork_thresholds.minimum_economic_activity_percentage * 0.8;
         let adoption_threshold = self.fork_thresholds.minimum_adoption_percentage * 0.8;
-        
-        metrics.node_count as f64 >= node_threshold ||
-        metrics.hashpower_percentage >= hashpower_threshold ||
-        metrics.economic_activity_percentage >= economic_threshold ||
-        metrics.total_weight >= adoption_threshold
+
+        metrics.node_count as f64 >= node_threshold
+            || metrics.hashpower_percentage >= hashpower_threshold
+            || metrics.economic_activity_percentage >= economic_threshold
+            || metrics.total_weight >= adoption_threshold
     }
 
     /// Check for time-based fork triggers
-    async fn check_time_based_triggers(&self) -> Result<Option<ForkDetectionEvent>, GovernanceError> {
+    async fn check_time_based_triggers(
+        &self,
+    ) -> Result<Option<ForkDetectionEvent>, GovernanceError> {
         // Check if grace period has expired for any pending forks
         if let Some(last_detection) = self.last_detection {
             let grace_period = Duration::days(self.fork_thresholds.grace_period_days as i64);
             let time_since_detection = Utc::now() - last_detection;
-            
+
             if time_since_detection > grace_period {
                 // Check if there are pending forks that should be executed
                 let pending_forks = self.get_pending_forks().await?;
-                
+
                 if !pending_forks.is_empty() {
                     info!("Grace period expired, executing pending forks");
-                    
+
                     let detection = ForkDetectionEvent {
                         event_id: uuid::Uuid::new_v4().to_string(),
                         detected_at: Utc::now(),
@@ -198,12 +204,12 @@ impl ForkDetector {
                         threshold_met: true,
                         action_taken: Some(ForkAction::ForkScheduled),
                     };
-                    
+
                     return Ok(Some(detection));
                 }
             }
         }
-        
+
         Ok(None)
     }
 
@@ -214,16 +220,21 @@ impl ForkDetector {
     ) -> Result<Option<ForkDetectionEvent>, GovernanceError> {
         // Check if there's a clear winning ruleset
         if let Some(winning_ruleset) = &adoption_stats.winning_ruleset {
-            let winning_metrics = adoption_stats.rulesets.iter()
+            let winning_metrics = adoption_stats
+                .rulesets
+                .iter()
                 .find(|m| &m.ruleset_id == winning_ruleset);
-            
+
             if let Some(metrics) = winning_metrics {
                 // Check if winning ruleset has overwhelming support
                 let overwhelming_threshold = 80.0; // 80% adoption
-                
+
                 if metrics.total_weight >= overwhelming_threshold {
-                    info!("Overwhelming consensus detected for ruleset: {}", winning_ruleset);
-                    
+                    info!(
+                        "Overwhelming consensus detected for ruleset: {}",
+                        winning_ruleset
+                    );
+
                     let detection = ForkDetectionEvent {
                         event_id: uuid::Uuid::new_v4().to_string(),
                         detected_at: Utc::now(),
@@ -233,12 +244,12 @@ impl ForkDetector {
                         threshold_met: true,
                         action_taken: Some(ForkAction::ForkExecuted),
                     };
-                    
+
                     return Ok(Some(detection));
                 }
             }
         }
-        
+
         Ok(None)
     }
 
@@ -256,8 +267,9 @@ impl ForkDetector {
 
     /// Get recent detections
     pub fn get_recent_detections(&self, hours: i64) -> Vec<&ForkDetectionEvent> {
-        let cutoff = Utc::now() - chrono::Duration::try_hours(hours).unwrap_or(chrono::Duration::zero());
-        
+        let cutoff =
+            Utc::now() - chrono::Duration::try_hours(hours).unwrap_or(chrono::Duration::zero());
+
         self.detection_history
             .iter()
             .filter(|detection| detection.detected_at > cutoff)
@@ -267,18 +279,20 @@ impl ForkDetector {
     /// Get detection statistics
     pub fn get_detection_statistics(&self) -> ForkDetectionStats {
         let total_detections = self.detection_history.len();
-        let successful_forks = self.detection_history
+        let successful_forks = self
+            .detection_history
             .iter()
             .filter(|d| d.action_taken == Some(ForkAction::ForkExecuted))
             .count();
-        
-        let trigger_counts = self.detection_history
-            .iter()
-            .fold(HashMap::new(), |mut acc, detection| {
-                *acc.entry(detection.trigger_type.clone()).or_insert(0) += 1;
-                acc
-            });
-        
+
+        let trigger_counts =
+            self.detection_history
+                .iter()
+                .fold(HashMap::new(), |mut acc, detection| {
+                    *acc.entry(detection.trigger_type.clone()).or_insert(0) += 1;
+                    acc
+                });
+
         ForkDetectionStats {
             total_detections,
             successful_forks,
@@ -311,8 +325,8 @@ pub struct ForkDetectionStats {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile::tempdir;
     use crate::database::Database;
+    use tempfile::tempdir;
 
     #[tokio::test]
     async fn test_fork_detection() {
@@ -321,7 +335,7 @@ mod tests {
         let pool = db.pool().expect("Database should have SQLite pool").clone();
         let adoption_tracker = AdoptionTracker::new(pool);
         let mut detector = ForkDetector::new(adoption_tracker, None);
-        
+
         // Test with empty adoption stats
         let detections = detector.detect_forks().await.unwrap();
         assert_eq!(detections.len(), 0);
@@ -334,7 +348,7 @@ mod tests {
         let pool = db.pool().expect("Database should have SQLite pool").clone();
         let adoption_tracker = AdoptionTracker::new(pool);
         let detector = ForkDetector::new(adoption_tracker, None);
-        
+
         let metrics = AdoptionMetrics {
             ruleset_id: "test".to_string(),
             node_count: 100,
@@ -343,7 +357,7 @@ mod tests {
             total_weight: 70.0,
             last_updated: Utc::now(),
         };
-        
+
         assert!(detector.check_adoption_thresholds(&metrics));
     }
 }

@@ -8,7 +8,7 @@ use std::collections::HashMap;
 use tracing::{debug, info, warn};
 
 use crate::authorization::server::ServerStatus;
-use crate::ots::anchor::{GovernanceRegistry, AuthorizedServer};
+use crate::ots::anchor::{AuthorizedServer, GovernanceRegistry};
 
 /// Verify if a server is authorized
 pub fn verify_server_authorization(
@@ -16,10 +16,14 @@ pub fn verify_server_authorization(
     nostr_npub: &str,
     registry: &GovernanceRegistry,
 ) -> Result<bool> {
-    debug!("Verifying server authorization: {} with npub {}", server_id, nostr_npub);
+    debug!(
+        "Verifying server authorization: {} with npub {}",
+        server_id, nostr_npub
+    );
 
     // Check if server is in authorized list
-    let server = registry.authorized_servers
+    let server = registry
+        .authorized_servers
         .iter()
         .find(|s| s.server_id == server_id && s.keys.nostr_npub == nostr_npub);
 
@@ -49,10 +53,14 @@ pub fn verify_server_authorization_detailed(
     nostr_npub: &str,
     registry: &GovernanceRegistry,
 ) -> ServerVerificationResult {
-    debug!("Detailed verification for server: {} with npub {}", server_id, nostr_npub);
+    debug!(
+        "Detailed verification for server: {} with npub {}",
+        server_id, nostr_npub
+    );
 
     // Check if server exists
-    let server = registry.authorized_servers
+    let server = registry
+        .authorized_servers
         .iter()
         .find(|s| s.server_id == server_id);
 
@@ -61,7 +69,7 @@ pub fn verify_server_authorization_detailed(
             // Check status first (regardless of NPUB match)
             let is_active = s.status == "active";
             let is_compromised = s.status == "compromised";
-            
+
             // Check NPUB match
             if s.keys.nostr_npub != nostr_npub {
                 return ServerVerificationResult {
@@ -92,15 +100,13 @@ pub fn verify_server_authorization_detailed(
                 server_info: Some(s.clone().into()),
             }
         }
-        None => {
-            ServerVerificationResult {
-                is_authorized: false,
-                is_active: false,
-                is_compromised: false,
-                error_message: Some("Server not found in authorized list".to_string()),
-                server_info: None,
-            }
-        }
+        None => ServerVerificationResult {
+            is_authorized: false,
+            is_active: false,
+            is_compromised: false,
+            error_message: Some("Server not found in authorized list".to_string()),
+            server_info: None,
+        },
     }
 }
 
@@ -131,9 +137,15 @@ impl ServerVerificationResult {
     /// Get detailed status
     pub fn detailed_status(&self) -> String {
         let mut status = vec![
-            format!("Authorized: {}", if self.is_authorized { "✅" } else { "❌" }),
+            format!(
+                "Authorized: {}",
+                if self.is_authorized { "✅" } else { "❌" }
+            ),
             format!("Active: {}", if self.is_active { "✅" } else { "❌" }),
-            format!("Compromised: {}", if self.is_compromised { "⚠️" } else { "✅" }),
+            format!(
+                "Compromised: {}",
+                if self.is_compromised { "⚠️" } else { "✅" }
+            ),
         ];
 
         if let Some(error) = &self.error_message {
@@ -149,8 +161,11 @@ impl ServerVerificationResult {
 }
 
 /// Get all authorized servers from registry
-pub fn get_authorized_servers(registry: &GovernanceRegistry) -> Vec<crate::authorization::server::AuthorizedServer> {
-    registry.authorized_servers
+pub fn get_authorized_servers(
+    registry: &GovernanceRegistry,
+) -> Vec<crate::authorization::server::AuthorizedServer> {
+    registry
+        .authorized_servers
         .iter()
         .filter(|s| s.status == "active")
         .map(|s| s.clone().into())
@@ -162,7 +177,8 @@ pub fn get_servers_by_status(
     registry: &GovernanceRegistry,
     status: ServerStatus,
 ) -> Vec<crate::authorization::server::AuthorizedServer> {
-    registry.authorized_servers
+    registry
+        .authorized_servers
         .iter()
         .filter(|s| s.status == status.to_string())
         .map(|s| s.clone().into())
@@ -174,7 +190,8 @@ pub fn get_server_by_id<'a>(
     registry: &'a GovernanceRegistry,
     server_id: &'a str,
 ) -> Option<crate::authorization::server::AuthorizedServer> {
-    registry.authorized_servers
+    registry
+        .authorized_servers
         .iter()
         .find(|s| s.server_id == server_id)
         .map(|s| s.clone().into())
@@ -185,7 +202,8 @@ pub fn get_server_by_npub<'a>(
     registry: &'a GovernanceRegistry,
     nostr_npub: &'a str,
 ) -> Option<crate::authorization::server::AuthorizedServer> {
-    registry.authorized_servers
+    registry
+        .authorized_servers
         .iter()
         .find(|s| s.keys.nostr_npub == nostr_npub)
         .map(|s| s.clone().into())
@@ -193,7 +211,8 @@ pub fn get_server_by_npub<'a>(
 
 /// Check if server exists in registry
 pub fn server_exists(registry: &GovernanceRegistry, server_id: &str) -> bool {
-    registry.authorized_servers
+    registry
+        .authorized_servers
         .iter()
         .any(|s| s.server_id == server_id)
 }
@@ -294,7 +313,9 @@ mod tests {
         GovernanceRegistry {
             version: "2025-01".to_string(),
             timestamp: chrono::Utc::now(),
-            previous_registry_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000".to_string(),
+            previous_registry_hash:
+                "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+                    .to_string(),
             maintainers: vec![],
             authorized_servers: vec![
                 AuthorizedServer {
@@ -347,7 +368,7 @@ mod tests {
     #[test]
     fn test_verify_server_authorization() {
         let registry = create_test_registry();
-        
+
         // Test authorized server
         let result = verify_server_authorization("governance-01", "npub1abc123", &registry);
         assert!(result.is_ok());
@@ -366,8 +387,9 @@ mod tests {
     #[test]
     fn test_verify_server_authorization_detailed() {
         let registry = create_test_registry();
-        
-        let result = verify_server_authorization_detailed("governance-01", "npub1abc123", &registry);
+
+        let result =
+            verify_server_authorization_detailed("governance-01", "npub1abc123", &registry);
         assert!(result.is_authorized);
         assert!(result.is_active);
         assert!(!result.is_compromised);
@@ -449,7 +471,8 @@ mod tests {
     #[test]
     fn test_verify_server_authorization_detailed_compromised() {
         let registry = create_test_registry();
-        let result = verify_server_authorization_detailed("governance-02", "npub1def456", &registry);
+        let result =
+            verify_server_authorization_detailed("governance-02", "npub1def456", &registry);
         assert!(!result.is_authorized);
         assert!(!result.is_active);
         assert!(result.is_compromised);
@@ -460,15 +483,15 @@ mod tests {
     #[test]
     fn test_get_servers_by_status() {
         let registry = create_test_registry();
-        
+
         let active = get_servers_by_status(&registry, ServerStatus::Active);
         assert_eq!(active.len(), 1);
         assert_eq!(active[0].server_id, "governance-01");
-        
+
         let compromised = get_servers_by_status(&registry, ServerStatus::Compromised);
         assert_eq!(compromised.len(), 1);
         assert_eq!(compromised[0].server_id, "governance-02");
-        
+
         let inactive = get_servers_by_status(&registry, ServerStatus::Inactive);
         assert_eq!(inactive.len(), 0);
     }
@@ -476,11 +499,11 @@ mod tests {
     #[test]
     fn test_get_server_by_id() {
         let registry = create_test_registry();
-        
+
         let server = get_server_by_id(&registry, "governance-01");
         assert!(server.is_some());
         assert_eq!(server.unwrap().server_id, "governance-01");
-        
+
         let not_found = get_server_by_id(&registry, "non-existent");
         assert!(not_found.is_none());
     }
@@ -488,11 +511,11 @@ mod tests {
     #[test]
     fn test_get_server_by_npub() {
         let registry = create_test_registry();
-        
+
         let server = get_server_by_npub(&registry, "npub1abc123");
         assert!(server.is_some());
         assert_eq!(server.unwrap().server_id, "governance-01");
-        
+
         let not_found = get_server_by_npub(&registry, "npub1nonexistent");
         assert!(not_found.is_none());
     }
@@ -500,7 +523,7 @@ mod tests {
     #[test]
     fn test_server_exists() {
         let registry = create_test_registry();
-        
+
         assert!(server_exists(&registry, "governance-01"));
         assert!(server_exists(&registry, "governance-02"));
         assert!(!server_exists(&registry, "non-existent"));
@@ -510,15 +533,17 @@ mod tests {
     fn test_server_statistics_health_percentage() {
         let registry = create_test_registry();
         let stats = get_server_statistics(&registry);
-        
+
         // 1 active out of 2 total = 50%
         assert_eq!(stats.health_percentage(), 50.0);
-        
+
         // Test with empty registry
         let empty_registry = GovernanceRegistry {
             version: "2025-01".to_string(),
             timestamp: chrono::Utc::now(),
-            previous_registry_hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000".to_string(),
+            previous_registry_hash:
+                "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+                    .to_string(),
             maintainers: vec![],
             authorized_servers: vec![],
             audit_logs: HashMap::new(),
@@ -536,7 +561,7 @@ mod tests {
         let registry = create_test_registry();
         let stats = get_server_statistics(&registry);
         let summary = stats.summary();
-        
+
         assert!(summary.contains("2 total"));
         assert!(summary.contains("1 active"));
         assert!(summary.contains("1 compromised"));
@@ -620,9 +645,10 @@ mod tests {
     #[test]
     fn test_server_verification_result_summary() {
         let registry = create_test_registry();
-        let result = verify_server_authorization_detailed("governance-01", "npub1abc123", &registry);
+        let result =
+            verify_server_authorization_detailed("governance-01", "npub1abc123", &registry);
         let summary = result.summary();
-        
+
         assert!(summary.contains("✅"));
         assert!(summary.contains("authorized"));
     }
@@ -630,9 +656,10 @@ mod tests {
     #[test]
     fn test_server_verification_result_detailed_status() {
         let registry = create_test_registry();
-        let result = verify_server_authorization_detailed("governance-01", "npub1abc123", &registry);
+        let result =
+            verify_server_authorization_detailed("governance-01", "npub1abc123", &registry);
         let detailed = result.detailed_status();
-        
+
         assert!(detailed.contains("Authorized"));
         assert!(detailed.contains("Active"));
         assert!(detailed.contains("Compromised"));

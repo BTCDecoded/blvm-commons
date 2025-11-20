@@ -46,7 +46,7 @@ pub async fn handle_comment_event(
     // Check for governance signature commands
     if body.starts_with("/governance-sign") {
         let remainder = body.strip_prefix("/governance-sign").unwrap_or("").trim();
-        
+
         // Parse signature and optional reasoning
         // Format: /governance-sign <signature> "reasoning" or /governance-sign <signature>
         let (signature, reasoning) = if remainder.contains('"') {
@@ -91,10 +91,14 @@ pub async fn handle_comment_event(
             let signature_manager = SignatureManager::new();
             let message = format!("PR #{} in {}", pr_number, repo_name);
 
-            match signature_manager.verify_governance_signature(&message, signature, &maintainer.public_key) {
+            match signature_manager.verify_governance_signature(
+                &message,
+                signature,
+                &maintainer.public_key,
+            ) {
                 Ok(true) => {
                     info!("Valid signature from {} for PR #{}", commenter, pr_number);
-                    
+
                     // Store the verified signature with reasoning
                     match database
                         .add_signature(repo_name, pr_number as i32, commenter, signature, reasoning)
@@ -132,7 +136,7 @@ pub async fn handle_comment_event(
                 }
                 Ok(false) => {
                     warn!("Invalid signature from {} for PR #{}", commenter, pr_number);
-                    
+
                     // Log failed verification attempt
                     let _ = database
                         .log_governance_event(
@@ -165,9 +169,9 @@ pub async fn handle_comment_event(
         }
     } else {
         info!("Non-governance comment, ignoring");
-            Ok(axum::response::Json(
-                serde_json::json!({"status": "ignored"}),
-            ))
+        Ok(axum::response::Json(
+            serde_json::json!({"status": "ignored"}),
+        ))
     }
 }
 
@@ -180,10 +184,13 @@ async fn handle_tier_override(
     body: &str,
 ) -> Result<axum::response::Json<serde_json::Value>, axum::http::StatusCode> {
     use tracing::{info, warn};
-    
+
     // Parse command: /governance-tier-override <tier> "justification"
-    let remainder = body.strip_prefix("/governance-tier-override").unwrap_or("").trim();
-    
+    let remainder = body
+        .strip_prefix("/governance-tier-override")
+        .unwrap_or("")
+        .trim();
+
     // Extract tier number and justification
     let parts: Vec<&str> = remainder.splitn(2, '"').collect();
     if parts.len() < 2 {
@@ -192,17 +199,17 @@ async fn handle_tier_override(
             serde_json::json!({"status": "error", "error": "Invalid format. Use: /governance-tier-override <tier> \"justification\""}),
         ));
     }
-    
+
     let tier_str = parts[0].trim();
     let justification = parts[1].trim_matches('"').trim();
-    
+
     if justification.is_empty() {
         warn!("Empty justification provided for tier override");
         return Ok(axum::response::Json(
             serde_json::json!({"status": "error", "error": "Justification is required"}),
         ));
     }
-    
+
     let override_tier: u32 = match tier_str.parse() {
         Ok(t) if (1..=5).contains(&t) => t,
         _ => {
@@ -212,7 +219,7 @@ async fn handle_tier_override(
             ));
         }
     };
-    
+
     // Check if user is a maintainer
     let maintainer = match database.get_maintainer_by_username(commenter).await {
         Ok(Some(m)) => m,
@@ -227,15 +234,24 @@ async fn handle_tier_override(
             return Err(axum::http::StatusCode::INTERNAL_SERVER_ERROR);
         }
     };
-    
+
     // Store tier override
     match database
-        .set_tier_override(repo_name, pr_number as i32, override_tier, justification, commenter)
+        .set_tier_override(
+            repo_name,
+            pr_number as i32,
+            override_tier,
+            justification,
+            commenter,
+        )
         .await
     {
         Ok(_) => {
-            info!("Tier override set to {} for PR #{} by {}", override_tier, pr_number, commenter);
-            
+            info!(
+                "Tier override set to {} for PR #{} by {}",
+                override_tier, pr_number, commenter
+            );
+
             // Log governance event
             let _ = database
                 .log_governance_event(
@@ -250,14 +266,12 @@ async fn handle_tier_override(
                     }),
                 )
                 .await;
-            
-            Ok(axum::response::Json(
-                serde_json::json!({
-                    "status": "tier_override_set",
-                    "override_tier": override_tier,
-                    "justification": justification
-                }),
-            ))
+
+            Ok(axum::response::Json(serde_json::json!({
+                "status": "tier_override_set",
+                "override_tier": override_tier,
+                "justification": justification
+            })))
         }
         Err(e) => {
             warn!("Failed to set tier override: {}", e);

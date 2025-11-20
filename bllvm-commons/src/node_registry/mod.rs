@@ -31,7 +31,7 @@ impl NodeType {
             NodeType::Other => "other",
         }
     }
-    
+
     pub fn from_str(s: &str) -> Self {
         match s.to_lowercase().as_str() {
             "miner" => NodeType::Miner,
@@ -66,7 +66,7 @@ impl NodeRegistry {
     pub fn new(pool: SqlitePool) -> Self {
         Self { pool }
     }
-    
+
     /// Register a new node
     pub async fn register_node(
         &self,
@@ -95,17 +95,27 @@ impl NodeRegistry {
         .bind(node_name)
         .bind(node_type.as_str())
         .bind(serde_json::to_string(&bitcoin_addresses)?)
-        .bind(metadata.as_ref().map(|m| serde_json::to_string(m).unwrap_or_default()))
+        .bind(
+            metadata
+                .as_ref()
+                .map(|m| serde_json::to_string(m).unwrap_or_default()),
+        )
         .execute(&self.pool)
         .await?;
-        
+
         // Update address mappings
-        self.update_address_mappings(node_id, &bitcoin_addresses).await?;
-        
-        info!("Registered node: {} ({}) with {} addresses", node_id, node_name, bitcoin_addresses.len());
+        self.update_address_mappings(node_id, &bitcoin_addresses)
+            .await?;
+
+        info!(
+            "Registered node: {} ({}) with {} addresses",
+            node_id,
+            node_name,
+            bitcoin_addresses.len()
+        );
         Ok(())
     }
-    
+
     /// Update address mappings for a node
     async fn update_address_mappings(&self, node_id: &str, addresses: &[String]) -> Result<()> {
         // Delete old mappings
@@ -113,7 +123,7 @@ impl NodeRegistry {
             .bind(node_id)
             .execute(&self.pool)
             .await?;
-        
+
         // Insert new mappings
         for address in addresses {
             sqlx::query("INSERT OR REPLACE INTO address_to_node (address, node_id) VALUES (?, ?)")
@@ -122,22 +132,21 @@ impl NodeRegistry {
                 .execute(&self.pool)
                 .await?;
         }
-        
+
         Ok(())
     }
-    
+
     /// Get node ID for a Bitcoin address
     pub async fn get_node_for_address(&self, address: &str) -> Result<Option<String>> {
-        let node_id: Option<String> = sqlx::query_scalar(
-            "SELECT node_id FROM address_to_node WHERE address = ?"
-        )
-        .bind(address)
-        .fetch_optional(&self.pool)
-        .await?;
-        
+        let node_id: Option<String> =
+            sqlx::query_scalar("SELECT node_id FROM address_to_node WHERE address = ?")
+                .bind(address)
+                .fetch_optional(&self.pool)
+                .await?;
+
         Ok(node_id)
     }
-    
+
     /// Get node registration by ID
     pub async fn get_node(&self, node_id: &str) -> Result<Option<NodeRegistration>> {
         #[derive(sqlx::FromRow)]
@@ -151,19 +160,21 @@ impl NodeRegistry {
             active: bool,
             metadata: Option<String>,
         }
-        
+
         let row: Option<NodeRow> = sqlx::query_as::<_, NodeRow>(
             "SELECT node_id, node_name, node_type, bitcoin_addresses, registered_at, last_seen, active, metadata FROM node_registry WHERE node_id = ?"
         )
         .bind(node_id)
         .fetch_optional(&self.pool)
         .await?;
-        
+
         if let Some(row) = row {
             let addresses: Vec<String> = serde_json::from_str(&row.bitcoin_addresses)?;
-            let metadata = row.metadata.as_ref()
+            let metadata = row
+                .metadata
+                .as_ref()
                 .and_then(|m| serde_json::from_str(m).ok());
-            
+
             Ok(Some(NodeRegistration {
                 node_id: row.node_id,
                 node_name: row.node_name,
@@ -178,7 +189,7 @@ impl NodeRegistry {
             Ok(None)
         }
     }
-    
+
     /// Update last seen timestamp for a node
     pub async fn update_last_seen(&self, node_id: &str) -> Result<()> {
         sqlx::query("UPDATE node_registry SET last_seen = CURRENT_TIMESTAMP WHERE node_id = ?")
@@ -187,7 +198,7 @@ impl NodeRegistry {
             .await?;
         Ok(())
     }
-    
+
     /// Deactivate a node
     pub async fn deactivate_node(&self, node_id: &str) -> Result<()> {
         sqlx::query("UPDATE node_registry SET active = FALSE WHERE node_id = ?")
@@ -197,7 +208,7 @@ impl NodeRegistry {
         info!("Deactivated node: {}", node_id);
         Ok(())
     }
-    
+
     /// Get all active nodes
     pub async fn get_active_nodes(&self) -> Result<Vec<NodeRegistration>> {
         #[derive(sqlx::FromRow)]
@@ -211,19 +222,21 @@ impl NodeRegistry {
             active: bool,
             metadata: Option<String>,
         }
-        
+
         let rows: Vec<NodeRow> = sqlx::query_as::<_, NodeRow>(
             "SELECT node_id, node_name, node_type, bitcoin_addresses, registered_at, last_seen, active, metadata FROM node_registry WHERE active = TRUE ORDER BY node_name"
         )
         .fetch_all(&self.pool)
         .await?;
-        
+
         let mut nodes = Vec::new();
         for row in rows {
             let addresses: Vec<String> = serde_json::from_str(&row.bitcoin_addresses)?;
-            let metadata = row.metadata.as_ref()
+            let metadata = row
+                .metadata
+                .as_ref()
                 .and_then(|m| serde_json::from_str(m).ok());
-            
+
             nodes.push(NodeRegistration {
                 node_id: row.node_id,
                 node_name: row.node_name,
@@ -235,8 +248,7 @@ impl NodeRegistry {
                 metadata,
             });
         }
-        
+
         Ok(nodes)
     }
 }
-

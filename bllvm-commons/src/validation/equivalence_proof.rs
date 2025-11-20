@@ -5,12 +5,12 @@
 //! are equivalent to Orange Paper specifications.
 
 use crate::error::GovernanceError;
+use hex;
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::path::Path;
 use tracing::{info, warn};
-use sha2::{Digest, Sha256};
-use hex;
 
 /// Test vector for equivalence proof validation
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -106,7 +106,10 @@ impl EquivalenceProofValidator {
         for vector in vectors {
             self.test_vectors.insert(vector.test_id.clone(), vector);
         }
-        info!("Loaded {} equivalence test vectors", self.test_vectors.len());
+        info!(
+            "Loaded {} equivalence test vectors",
+            self.test_vectors.len()
+        );
     }
 
     /// Load test vectors from YAML configuration file
@@ -197,7 +200,11 @@ impl EquivalenceProofValidator {
                 match Self::load_test_vectors_from_config(config_path) {
                     Ok(vectors) => {
                         self.load_test_vectors(vectors);
-                        info!("✅ Loaded {} test vectors from config: {}", self.test_vectors.len(), config_path);
+                        info!(
+                            "✅ Loaded {} test vectors from config: {}",
+                            self.test_vectors.len(),
+                            config_path
+                        );
                         loaded = true;
                         break;
                     }
@@ -213,7 +220,10 @@ impl EquivalenceProofValidator {
             warn!("⚠️ This is acceptable in Phase 1, but config should be available in Phase 2");
             let vectors = Self::generate_consensus_test_vectors();
             self.load_test_vectors(vectors);
-            info!("✅ Loaded {} hardcoded test vectors as fallback", self.test_vectors.len());
+            info!(
+                "✅ Loaded {} hardcoded test vectors as fallback",
+                self.test_vectors.len()
+            );
         }
 
         Ok(())
@@ -227,8 +237,10 @@ impl EquivalenceProofValidator {
         let block_vector = EquivalenceTestVector {
             test_id: "block_validation_001".to_string(),
             description: "Block header validation equivalence".to_string(),
-            orange_paper_spec: "Block header must have valid timestamp, nonce, and merkle root".to_string(),
-            consensus_proof_impl: "validate_block_header(timestamp, nonce, merkle_root) -> bool".to_string(),
+            orange_paper_spec: "Block header must have valid timestamp, nonce, and merkle root"
+                .to_string(),
+            consensus_proof_impl: "validate_block_header(timestamp, nonce, merkle_root) -> bool"
+                .to_string(),
             expected_result: "true".to_string(),
             test_data: {
                 let mut data = HashMap::new();
@@ -280,7 +292,10 @@ impl EquivalenceProofValidator {
             expected_result: "ExecutionResult::Success".to_string(),
             test_data: {
                 let mut data = HashMap::new();
-                data.insert("script".to_string(), "OP_DUP OP_HASH160 <pubkeyhash> OP_EQUALVERIFY OP_CHECKSIG".to_string());
+                data.insert(
+                    "script".to_string(),
+                    "OP_DUP OP_HASH160 <pubkeyhash> OP_EQUALVERIFY OP_CHECKSIG".to_string(),
+                );
                 data.insert("stack".to_string(), "[]".to_string());
                 data
             },
@@ -305,13 +320,13 @@ impl EquivalenceProofValidator {
     /// Compute hash of a test vector
     fn compute_proof_hash(vector: &EquivalenceTestVector) -> String {
         let mut hasher = Sha256::new();
-        
+
         // Hash the core proof data
         hasher.update(vector.test_id.as_bytes());
         hasher.update(vector.orange_paper_spec.as_bytes());
         hasher.update(vector.consensus_proof_impl.as_bytes());
         hasher.update(vector.expected_result.as_bytes());
-        
+
         // Hash test data
         let mut sorted_keys: Vec<&String> = vector.test_data.keys().collect();
         sorted_keys.sort();
@@ -319,14 +334,18 @@ impl EquivalenceProofValidator {
             hasher.update(key.as_bytes());
             hasher.update(vector.test_data[key].as_bytes());
         }
-        
+
         format!("sha256:{}", hex::encode(hasher.finalize()))
     }
 
     /// Verify a single equivalence proof
-    pub fn verify_equivalence_proof(&self, test_id: &str) -> Result<VerificationResult, GovernanceError> {
-        let vector = self.test_vectors.get(test_id)
-            .ok_or_else(|| GovernanceError::ValidationError(format!("Test vector {} not found", test_id)))?;
+    pub fn verify_equivalence_proof(
+        &self,
+        test_id: &str,
+    ) -> Result<VerificationResult, GovernanceError> {
+        let vector = self.test_vectors.get(test_id).ok_or_else(|| {
+            GovernanceError::ValidationError(format!("Test vector {} not found", test_id))
+        })?;
 
         info!("Verifying equivalence proof for test: {}", test_id);
 
@@ -401,7 +420,10 @@ impl EquivalenceProofValidator {
             verification_results.push(VerificationStep {
                 step: "Signature verification".to_string(),
                 status: VerificationStatus::Verified,
-                message: format!("{} signatures verified", vector.proof_metadata.maintainer_signatures.len()),
+                message: format!(
+                    "{} signatures verified",
+                    vector.proof_metadata.maintainer_signatures.len()
+                ),
             });
         }
 
@@ -421,19 +443,27 @@ impl EquivalenceProofValidator {
     }
 
     /// Verify behavioral equivalence between spec and implementation
-    fn verify_behavioral_equivalence(&self, vector: &EquivalenceTestVector) -> Result<(), GovernanceError> {
+    fn verify_behavioral_equivalence(
+        &self,
+        vector: &EquivalenceTestVector,
+    ) -> Result<(), GovernanceError> {
         // In a real implementation, this would:
         // 1. Parse the Orange Paper specification
         // 2. Execute the Consensus Proof implementation with test data
         // 3. Compare outputs to ensure they match expected behavior
         // 4. Verify edge cases and error conditions
 
-        info!("Verifying behavioral equivalence for test: {}", vector.test_id);
-        
+        info!(
+            "Verifying behavioral equivalence for test: {}",
+            vector.test_id
+        );
+
         // For now, we'll simulate the verification
         // In practice, this would involve actual code execution and comparison
         if vector.expected_result.is_empty() {
-            return Err(GovernanceError::ValidationError("Expected result is empty".to_string()));
+            return Err(GovernanceError::ValidationError(
+                "Expected result is empty".to_string(),
+            ));
         }
 
         // Simulate behavioral verification
@@ -441,18 +471,28 @@ impl EquivalenceProofValidator {
     }
 
     /// Verify security equivalence between spec and implementation
-    fn verify_security_equivalence(&self, vector: &EquivalenceTestVector) -> Result<(), GovernanceError> {
-        info!("Verifying security equivalence for test: {}", vector.test_id);
+    fn verify_security_equivalence(
+        &self,
+        vector: &EquivalenceTestVector,
+    ) -> Result<(), GovernanceError> {
+        info!(
+            "Verifying security equivalence for test: {}",
+            vector.test_id
+        );
 
         // Check each required security property
         for property in &self.verification_rules.security_property_checks {
             match self.verify_security_property(vector, property) {
                 Ok(()) => {
-                    info!("Security property {} verified for test {}", property, vector.test_id);
+                    info!(
+                        "Security property {} verified for test {}",
+                        property, vector.test_id
+                    );
                 }
                 Err(e) => {
                     return Err(GovernanceError::ValidationError(format!(
-                        "Security property {} failed: {}", property, e
+                        "Security property {} failed: {}",
+                        property, e
                     )));
                 }
             }
@@ -462,24 +502,34 @@ impl EquivalenceProofValidator {
     }
 
     /// Verify a specific security property
-    fn verify_security_property(&self, vector: &EquivalenceTestVector, property: &str) -> Result<(), GovernanceError> {
+    fn verify_security_property(
+        &self,
+        vector: &EquivalenceTestVector,
+        property: &str,
+    ) -> Result<(), GovernanceError> {
         match property {
             "no_consensus_breaking_changes" => {
                 // Verify that the implementation doesn't break consensus
                 if vector.consensus_proof_impl.contains("break_consensus") {
-                    return Err(GovernanceError::ValidationError("Implementation contains consensus-breaking code".to_string()));
+                    return Err(GovernanceError::ValidationError(
+                        "Implementation contains consensus-breaking code".to_string(),
+                    ));
                 }
             }
             "maintains_validation_rules" => {
                 // Verify that validation rules are maintained
                 if !vector.consensus_proof_impl.contains("validate") {
-                    return Err(GovernanceError::ValidationError("Implementation missing validation logic".to_string()));
+                    return Err(GovernanceError::ValidationError(
+                        "Implementation missing validation logic".to_string(),
+                    ));
                 }
             }
             "preserves_security_guarantees" => {
                 // Verify that security guarantees are preserved
                 if vector.consensus_proof_impl.contains("bypass_security") {
-                    return Err(GovernanceError::ValidationError("Implementation bypasses security checks".to_string()));
+                    return Err(GovernanceError::ValidationError(
+                        "Implementation bypasses security checks".to_string(),
+                    ));
                 }
             }
             _ => {
@@ -490,8 +540,14 @@ impl EquivalenceProofValidator {
     }
 
     /// Verify performance equivalence between spec and implementation
-    fn verify_performance_equivalence(&self, vector: &EquivalenceTestVector) -> Result<(), GovernanceError> {
-        info!("Verifying performance equivalence for test: {}", vector.test_id);
+    fn verify_performance_equivalence(
+        &self,
+        vector: &EquivalenceTestVector,
+    ) -> Result<(), GovernanceError> {
+        info!(
+            "Verifying performance equivalence for test: {}",
+            vector.test_id
+        );
 
         // In a real implementation, this would:
         // 1. Benchmark the Orange Paper specification
@@ -575,22 +631,28 @@ mod tests {
         validator.verification_rules.require_behavioral_equivalence = false;
         validator.verification_rules.require_security_equivalence = false;
         validator.verification_rules.require_performance_equivalence = false;
-        
+
         let test_vectors = EquivalenceProofValidator::generate_consensus_test_vectors();
         validator.load_test_vectors(test_vectors);
 
         // Test block validation
-        let result = validator.verify_equivalence_proof("block_validation_001").unwrap();
+        let result = validator
+            .verify_equivalence_proof("block_validation_001")
+            .unwrap();
         assert_eq!(result.overall_status, VerificationStatus::Verified);
         assert!(result.errors.is_empty());
 
         // Test transaction validation
-        let result = validator.verify_equivalence_proof("tx_validation_001").unwrap();
+        let result = validator
+            .verify_equivalence_proof("tx_validation_001")
+            .unwrap();
         assert_eq!(result.overall_status, VerificationStatus::Verified);
         assert!(result.errors.is_empty());
 
         // Test script execution
-        let result = validator.verify_equivalence_proof("script_execution_001").unwrap();
+        let result = validator
+            .verify_equivalence_proof("script_execution_001")
+            .unwrap();
         assert_eq!(result.overall_status, VerificationStatus::Verified);
         assert!(result.errors.is_empty());
 
@@ -623,11 +685,3 @@ mod tests {
         assert!(hash1.starts_with("sha256:"));
     }
 }
-
-
-
-
-
-
-
-

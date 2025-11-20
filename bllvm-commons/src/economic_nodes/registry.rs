@@ -27,18 +27,19 @@ impl EconomicNodeRegistry {
         created_by: Option<&str>,
     ) -> Result<i32, GovernanceError> {
         // Check for duplicate public key
-        let existing = sqlx::query(
-            "SELECT id FROM economic_nodes WHERE public_key = ?"
-        )
-        .bind(public_key)
-        .fetch_optional(&self.pool)
-        .await
-        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to check for duplicate: {}", e)))?;
-        
+        let existing = sqlx::query("SELECT id FROM economic_nodes WHERE public_key = ?")
+            .bind(public_key)
+            .fetch_optional(&self.pool)
+            .await
+            .map_err(|e| {
+                GovernanceError::DatabaseError(format!("Failed to check for duplicate: {}", e))
+            })?;
+
         if existing.is_some() {
-            return Err(GovernanceError::CryptoError(
-                format!("Node with public key {} already registered", public_key)
-            ));
+            return Err(GovernanceError::CryptoError(format!(
+                "Node with public key {} already registered",
+                public_key
+            )));
         }
 
         // Verify qualification meets thresholds
@@ -258,7 +259,8 @@ impl EconomicNodeRegistry {
                 node_type,
                 entity_name: row.get("entity_name"),
                 public_key: row.get("public_key"),
-                qualification_data: serde_json::to_value(&qualification_data).unwrap_or_else(|_| serde_json::json!({})),
+                qualification_data: serde_json::to_value(&qualification_data)
+                    .unwrap_or_else(|_| serde_json::json!({})),
                 weight: row.get("weight"),
                 status,
                 registered_at: row.get("registered_at"),
@@ -286,9 +288,7 @@ impl EconomicNodeRegistry {
         .bind(node_id)
         .fetch_optional(&self.pool)
         .await
-        .map_err(|e| {
-            GovernanceError::DatabaseError(format!("Failed to fetch node: {}", e))
-        })?;
+        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to fetch node: {}", e)))?;
 
         let row = row.ok_or_else(|| {
             GovernanceError::CryptoError(format!("Node with ID {} not found", node_id))
@@ -302,13 +302,12 @@ impl EconomicNodeRegistry {
                 ))
             })?;
 
-        let status =
-            NodeStatus::from_str(&row.get::<String, _>("status")).ok_or_else(|| {
-                GovernanceError::CryptoError(format!(
-                    "Invalid status: {}",
-                    row.get::<String, _>("status")
-                ))
-            })?;
+        let status = NodeStatus::from_str(&row.get::<String, _>("status")).ok_or_else(|| {
+            GovernanceError::CryptoError(format!(
+                "Invalid status: {}",
+                row.get::<String, _>("status")
+            ))
+        })?;
 
         let qualification_data: String = row.get("qualification_data");
         let qualification_data: QualificationProof = serde_json::from_str(&qualification_data)
@@ -321,7 +320,8 @@ impl EconomicNodeRegistry {
             node_type,
             entity_name: row.get("entity_name"),
             public_key: row.get("public_key"),
-            qualification_data: serde_json::to_value(&qualification_data).unwrap_or_else(|_| serde_json::json!({})),
+            qualification_data: serde_json::to_value(&qualification_data)
+                .unwrap_or_else(|_| serde_json::json!({})),
             weight: row.get("weight"),
             status,
             registered_at: row.get("registered_at"),
@@ -346,7 +346,7 @@ impl EconomicNodeRegistry {
             .map_err(|e| {
                 GovernanceError::DatabaseError(format!("Failed to update node status: {}", e))
             })?;
-        
+
         info!("Updated node {} status to {}", node_id, status.as_str());
         Ok(())
     }
@@ -356,9 +356,7 @@ impl EconomicNodeRegistry {
         let nodes = sqlx::query("SELECT id, node_type, qualification_data FROM economic_nodes")
             .fetch_all(&self.pool)
             .await
-            .map_err(|e| {
-                GovernanceError::DatabaseError(format!("Failed to fetch nodes: {}", e))
-            })?;
+            .map_err(|e| GovernanceError::DatabaseError(format!("Failed to fetch nodes: {}", e)))?;
 
         for row in nodes {
             let node_id: i32 = row.get("id");
@@ -366,14 +364,16 @@ impl EconomicNodeRegistry {
             let node_type = NodeType::from_str(&node_type_str).ok_or_else(|| {
                 GovernanceError::CryptoError(format!("Invalid node type: {}", node_type_str))
             })?;
-            
+
             let qualification_data_str: String = row.get("qualification_data");
-            let qualification_data: QualificationProof = serde_json::from_str(&qualification_data_str)
-                .map_err(|e| {
+            let qualification_data: QualificationProof =
+                serde_json::from_str(&qualification_data_str).map_err(|e| {
                     GovernanceError::CryptoError(format!("Invalid qualification data: {}", e))
                 })?;
 
-            let new_weight = self.calculate_weight(node_type, &qualification_data).await?;
+            let new_weight = self
+                .calculate_weight(node_type, &qualification_data)
+                .await?;
 
             sqlx::query("UPDATE economic_nodes SET weight = ? WHERE id = ?")
                 .bind(new_weight)
@@ -394,7 +394,9 @@ impl EconomicNodeRegistry {
 mod tests {
     use super::*;
     use crate::database::Database;
-    use crate::economic_nodes::types::{QualificationProof, HoldingsProof, VolumeProof, ContactInfo};
+    use crate::economic_nodes::types::{
+        ContactInfo, HoldingsProof, QualificationProof, VolumeProof,
+    };
 
     async fn setup_test_registry() -> EconomicNodeRegistry {
         let db = Database::new_in_memory().await.unwrap();
@@ -417,7 +419,10 @@ mod tests {
         })
     }
 
-    fn create_exchange_qualification(holdings_btc: f64, daily_volume_usd: f64) -> serde_json::Value {
+    fn create_exchange_qualification(
+        holdings_btc: f64,
+        daily_volume_usd: f64,
+    ) -> serde_json::Value {
         serde_json::json!({
             "node_type": "exchange",
             "holdings_proof": {
@@ -442,8 +447,11 @@ mod tests {
         let registry = setup_test_registry().await;
         let qual_json = create_mining_pool_qualification(35.0);
         let qual: QualificationProof = serde_json::from_value(qual_json.clone()).unwrap();
-        
-        let weight = registry.calculate_weight(NodeType::MiningPool, &qual).await.unwrap();
+
+        let weight = registry
+            .calculate_weight(NodeType::MiningPool, &qual)
+            .await
+            .unwrap();
         assert_eq!(weight, 0.35, "Mining pool weight should be hashpower / 100");
     }
 
@@ -462,7 +470,7 @@ mod tests {
                 github_username: None,
             },
         };
-        
+
         let result = registry.calculate_weight(NodeType::MiningPool, &qual).await;
         assert!(result.is_err(), "Should fail without hashpower proof");
     }
@@ -472,8 +480,11 @@ mod tests {
         let registry = setup_test_registry().await;
         let qual_json = create_exchange_qualification(5000.0, 50_000_000.0);
         let qual: QualificationProof = serde_json::from_value(qual_json).unwrap();
-        
-        let weight = registry.calculate_weight(NodeType::Exchange, &qual).await.unwrap();
+
+        let weight = registry
+            .calculate_weight(NodeType::Exchange, &qual)
+            .await
+            .unwrap();
         // holdings: 5000/10000 * 0.7 = 0.35
         // volume: 50M/100M * 0.3 = 0.15
         // total: 0.5
@@ -485,8 +496,11 @@ mod tests {
         let registry = setup_test_registry().await;
         let qual_json = create_exchange_qualification(20000.0, 200_000_000.0);
         let qual: QualificationProof = serde_json::from_value(qual_json).unwrap();
-        
-        let weight = registry.calculate_weight(NodeType::Exchange, &qual).await.unwrap();
+
+        let weight = registry
+            .calculate_weight(NodeType::Exchange, &qual)
+            .await
+            .unwrap();
         // Should be capped at 1.0
         assert!(weight <= 1.0, "Weight should be capped at 1.0");
     }
@@ -510,10 +524,16 @@ mod tests {
                 github_username: None,
             },
         };
-        
-        let weight = registry.calculate_weight(NodeType::Custodian, &qual).await.unwrap();
+
+        let weight = registry
+            .calculate_weight(NodeType::Custodian, &qual)
+            .await
+            .unwrap();
         // 5000/10000 = 0.5
-        assert!((weight - 0.5).abs() < 0.01, "Custodian weight should be 0.5");
+        assert!(
+            (weight - 0.5).abs() < 0.01,
+            "Custodian weight should be 0.5"
+        );
     }
 
     #[tokio::test]
@@ -536,10 +556,16 @@ mod tests {
                 github_username: None,
             },
         };
-        
-        let weight = registry.calculate_weight(NodeType::PaymentProcessor, &qual).await.unwrap();
+
+        let weight = registry
+            .calculate_weight(NodeType::PaymentProcessor, &qual)
+            .await
+            .unwrap();
         // 25M/50M = 0.5
-        assert!((weight - 0.5).abs() < 0.01, "Payment processor weight should be 0.5");
+        assert!(
+            (weight - 0.5).abs() < 0.01,
+            "Payment processor weight should be 0.5"
+        );
     }
 
     #[tokio::test]
@@ -561,10 +587,16 @@ mod tests {
                 github_username: None,
             },
         };
-        
-        let weight = registry.calculate_weight(NodeType::MajorHolder, &qual).await.unwrap();
+
+        let weight = registry
+            .calculate_weight(NodeType::MajorHolder, &qual)
+            .await
+            .unwrap();
         // 2500/5000 = 0.5
-        assert!((weight - 0.5).abs() < 0.01, "Major holder weight should be 0.5");
+        assert!(
+            (weight - 0.5).abs() < 0.01,
+            "Major holder weight should be 0.5"
+        );
     }
 
     #[tokio::test]
@@ -572,8 +604,11 @@ mod tests {
         let registry = setup_test_registry().await;
         let qual_json = create_mining_pool_qualification(35.0); // Above 1% threshold (from types.rs)
         let qual: QualificationProof = serde_json::from_value(qual_json).unwrap();
-        
-        let verified = registry.verify_qualification(NodeType::MiningPool, &qual).await.unwrap();
+
+        let verified = registry
+            .verify_qualification(NodeType::MiningPool, &qual)
+            .await
+            .unwrap();
         assert!(verified, "Should verify when hashpower meets threshold");
     }
 
@@ -582,9 +617,15 @@ mod tests {
         let registry = setup_test_registry().await;
         let qual_json = create_mining_pool_qualification(0.5); // Below 1% threshold
         let qual: QualificationProof = serde_json::from_value(qual_json).unwrap();
-        
-        let verified = registry.verify_qualification(NodeType::MiningPool, &qual).await.unwrap();
-        assert!(!verified, "Should not verify when hashpower below threshold");
+
+        let verified = registry
+            .verify_qualification(NodeType::MiningPool, &qual)
+            .await
+            .unwrap();
+        assert!(
+            !verified,
+            "Should not verify when hashpower below threshold"
+        );
     }
 
     #[tokio::test]
@@ -602,8 +643,11 @@ mod tests {
                 github_username: None,
             },
         };
-        
-        let verified = registry.verify_qualification(NodeType::MiningPool, &qual).await.unwrap();
+
+        let verified = registry
+            .verify_qualification(NodeType::MiningPool, &qual)
+            .await
+            .unwrap();
         assert!(!verified, "Should not verify without hashpower proof");
     }
 
@@ -612,8 +656,11 @@ mod tests {
         let registry = setup_test_registry().await;
         let qual_json = create_exchange_qualification(10000.0, 100_000_000.0); // Meets thresholds
         let qual: QualificationProof = serde_json::from_value(qual_json).unwrap();
-        
-        let verified = registry.verify_qualification(NodeType::Exchange, &qual).await.unwrap();
+
+        let verified = registry
+            .verify_qualification(NodeType::Exchange, &qual)
+            .await
+            .unwrap();
         assert!(verified, "Should verify when exchange meets thresholds");
     }
 
@@ -622,8 +669,11 @@ mod tests {
         let registry = setup_test_registry().await;
         let qual_json = create_exchange_qualification(9000.0, 100_000_000.0); // Below 10K BTC threshold
         let qual: QualificationProof = serde_json::from_value(qual_json).unwrap();
-        
-        let verified = registry.verify_qualification(NodeType::Exchange, &qual).await.unwrap();
+
+        let verified = registry
+            .verify_qualification(NodeType::Exchange, &qual)
+            .await
+            .unwrap();
         assert!(!verified, "Should not verify when holdings below threshold");
     }
 
@@ -632,15 +682,18 @@ mod tests {
         let registry = setup_test_registry().await;
         let qual_json = create_exchange_qualification(10000.0, 90_000_000.0); // Below $100M daily threshold
         let qual: QualificationProof = serde_json::from_value(qual_json).unwrap();
-        
-        let verified = registry.verify_qualification(NodeType::Exchange, &qual).await.unwrap();
+
+        let verified = registry
+            .verify_qualification(NodeType::Exchange, &qual)
+            .await
+            .unwrap();
         assert!(!verified, "Should not verify when volume below threshold");
     }
 
     #[tokio::test]
     async fn test_get_node_by_id_not_found() {
         let registry = setup_test_registry().await;
-        
+
         let result = registry.get_node_by_id(999).await;
         assert!(result.is_err(), "Should fail for non-existent node");
     }
@@ -648,8 +701,12 @@ mod tests {
     #[tokio::test]
     async fn test_get_active_nodes_empty() {
         let registry = setup_test_registry().await;
-        
+
         let nodes = registry.get_active_nodes().await.unwrap();
-        assert_eq!(nodes.len(), 0, "Should return empty list when no active nodes");
+        assert_eq!(
+            nodes.len(),
+            0,
+            "Should return empty list when no active nodes"
+        );
     }
 }

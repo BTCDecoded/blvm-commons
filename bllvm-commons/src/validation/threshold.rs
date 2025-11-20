@@ -107,35 +107,29 @@ impl ThresholdValidator {
     }
 
     /// Get combined requirements using "most restrictive wins" rule
-    pub fn get_combined_requirements(
-        layer: i32,
-        tier: u32,
-    ) -> (usize, usize, i64) {
+    pub fn get_combined_requirements(layer: i32, tier: u32) -> (usize, usize, i64) {
         let (layer_sigs_req, layer_sigs_total) = Self::get_threshold_for_layer(layer);
         let layer_review = Self::get_review_period_for_layer(layer, false);
-        
+
         let (tier_sigs_req, tier_sigs_total) = Self::get_tier_threshold(tier);
         let tier_review = Self::get_tier_review_period(tier);
-        
+
         // Take most restrictive (higher requirements)
         let sigs_req = layer_sigs_req.max(tier_sigs_req);
         let sigs_total = layer_sigs_total.max(tier_sigs_total);
         let review = layer_review.max(tier_review);
-        
+
         (sigs_req, sigs_total, review)
     }
 
     /// Get requirement source (for logging/display)
-    pub fn get_requirement_source(
-        layer: i32,
-        tier: u32,
-    ) -> String {
+    pub fn get_requirement_source(layer: i32, tier: u32) -> String {
         let (layer_sigs_req, _) = Self::get_threshold_for_layer(layer);
         let layer_review = Self::get_review_period_for_layer(layer, false);
-        
+
         let (tier_sigs_req, _) = Self::get_tier_threshold(tier);
         let tier_review = Self::get_tier_review_period(tier);
-        
+
         if layer_sigs_req >= tier_sigs_req && layer_review >= tier_review {
             format!("Layer {} requirements", layer)
         } else if tier_sigs_req >= layer_sigs_req && tier_review >= layer_review {

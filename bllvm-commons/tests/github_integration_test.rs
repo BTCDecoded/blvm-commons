@@ -58,7 +58,10 @@ async fn test_webhook_event_processing() -> Result<(), Box<dyn std::error::Error
     });
 
     let event = WebhookProcessor::process_webhook(&pr_opened_payload)?;
-    assert!(matches!(event.event_type, bllvm_commons::github::webhooks::WebhookEventType::PullRequest));
+    assert!(matches!(
+        event.event_type,
+        bllvm_commons::github::webhooks::WebhookEventType::PullRequest
+    ));
     println!("✅ PR opened webhook processed successfully");
 
     // Test PR comment event
@@ -83,7 +86,10 @@ async fn test_webhook_event_processing() -> Result<(), Box<dyn std::error::Error
     });
 
     let event = WebhookProcessor::process_webhook(&pr_comment_payload)?;
-    assert!(matches!(event.event_type, bllvm_commons::github::webhooks::WebhookEventType::Comment));
+    assert!(matches!(
+        event.event_type,
+        bllvm_commons::github::webhooks::WebhookEventType::Comment
+    ));
     println!("✅ PR comment webhook processed successfully");
 
     // Test PR updated event
@@ -109,7 +115,10 @@ async fn test_webhook_event_processing() -> Result<(), Box<dyn std::error::Error
     });
 
     let event = WebhookProcessor::process_webhook(&pr_updated_payload)?;
-    assert!(matches!(event.event_type, bllvm_commons::github::webhooks::WebhookEventType::PullRequest));
+    assert!(matches!(
+        event.event_type,
+        bllvm_commons::github::webhooks::WebhookEventType::PullRequest
+    ));
     println!("✅ PR updated webhook processed successfully");
 
     Ok(())
@@ -302,7 +311,9 @@ async fn test_status_check_generation() -> Result<(), Box<dyn std::error::Error>
         opened_at, 7,     // required days
         false, // emergency mode
     );
-    assert!(review_status.contains("Review Period Met") || review_status.contains("Review period met"));
+    assert!(
+        review_status.contains("Review Period Met") || review_status.contains("Review period met")
+    );
     println!("✅ Review period status generated: {}", review_status);
 
     // Test signature status generation
@@ -317,7 +328,10 @@ async fn test_status_check_generation() -> Result<(), Box<dyn std::error::Error>
         ],
         &["maintainer4".to_string(), "maintainer5".to_string()], // pending signers
     );
-    assert!(signature_status.contains("Signatures Complete") || signature_status.contains("Signatures met"));
+    assert!(
+        signature_status.contains("Signatures Complete")
+            || signature_status.contains("Signatures met")
+    );
     println!("✅ Signature status generated: {}", signature_status);
 
     // Test combined status generation
@@ -327,7 +341,10 @@ async fn test_status_check_generation() -> Result<(), Box<dyn std::error::Error>
         &review_status,
         &signature_status,
     );
-    assert!(combined_status.contains("All Requirements Met") || combined_status.contains("Ready to Merge"));
+    assert!(
+        combined_status.contains("All Requirements Met")
+            || combined_status.contains("Ready to Merge")
+    );
     println!("✅ Combined status generated: {}", combined_status);
 
     Ok(())

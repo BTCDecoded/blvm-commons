@@ -2,9 +2,9 @@ pub mod models;
 pub mod queries;
 pub mod schema;
 
-use sqlx::{SqlitePool, PgPool, sqlite::SqliteConnectOptions, sqlite::SqlitePoolOptions, Row};
-use std::str::FromStr;
 use crate::error::GovernanceError;
+use sqlx::{sqlite::SqliteConnectOptions, sqlite::SqlitePoolOptions, PgPool, Row, SqlitePool};
+use std::str::FromStr;
 
 #[derive(Clone)]
 pub enum DatabaseBackend {
@@ -37,7 +37,9 @@ impl Database {
                 backend: DatabaseBackend::Sqlite(pool),
                 database_url: database_url.to_string(),
             })
-        } else if database_url.starts_with("postgres://") || database_url.starts_with("postgresql://") {
+        } else if database_url.starts_with("postgres://")
+            || database_url.starts_with("postgresql://")
+        {
             let pool = PgPool::connect(database_url)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
@@ -47,7 +49,7 @@ impl Database {
             })
         } else {
             Err(GovernanceError::DatabaseError(
-                "Unsupported database URL format. Use 'sqlite://' or 'postgresql://'".to_string()
+                "Unsupported database URL format. Use 'sqlite://' or 'postgresql://'".to_string(),
             ))
         }
     }
@@ -59,7 +61,7 @@ impl Database {
         let pool = SqlitePool::connect("sqlite::memory:")
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-        
+
         let db = Self {
             backend: DatabaseBackend::Sqlite(pool),
             database_url: "sqlite::memory:".to_string(),
@@ -95,7 +97,9 @@ impl Database {
             };
             db.run_migrations().await?;
             Ok(db)
-        } else if database_url.starts_with("postgres://") || database_url.starts_with("postgresql://") {
+        } else if database_url.starts_with("postgres://")
+            || database_url.starts_with("postgresql://")
+        {
             let pool = PgPool::connect(database_url)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
@@ -112,14 +116,11 @@ impl Database {
         }
     }
 
-
     pub async fn run_migrations(&self) -> Result<(), GovernanceError> {
         match &self.backend {
             DatabaseBackend::Sqlite(pool) => {
-                let result = sqlx::migrate!("./migrations")
-                    .run(pool)
-                    .await;
-                
+                let result = sqlx::migrate!("./migrations").run(pool).await;
+
                 match result {
                     Ok(_) => {
                         // Verify migrations ran by checking if key tables exist
@@ -128,7 +129,7 @@ impl Database {
                         )
                         .fetch_one(pool)
                         .await;
-                        
+
                         if let Ok(count) = tables_check {
                             if count < 3 {
                                 return Err(GovernanceError::DatabaseError(
@@ -137,30 +138,35 @@ impl Database {
                             }
                         }
                         Ok(())
-                    },
+                    }
                     Err(e) => {
                         // Only ignore UNIQUE constraint errors on the _sqlx_migrations table itself
                         // This happens when migrations run in parallel during tests
                         let err_str = e.to_string();
-                        if err_str.contains("_sqlx_migrations") && err_str.contains("UNIQUE constraint") {
+                        if err_str.contains("_sqlx_migrations")
+                            && err_str.contains("UNIQUE constraint")
+                        {
                             // Migration table entry already exists, migrations are already applied
                             Ok(())
                         } else {
-                            Err(GovernanceError::DatabaseError(format!("Migration failed: {}", err_str)))
+                            Err(GovernanceError::DatabaseError(format!(
+                                "Migration failed: {}",
+                                err_str
+                            )))
                         }
                     }
                 }
             }
             DatabaseBackend::Postgres(pool) => {
-                let result = sqlx::migrate!("./migrations-postgres")
-                    .run(pool)
-                    .await;
-                
+                let result = sqlx::migrate!("./migrations-postgres").run(pool).await;
+
                 match result {
                     Ok(_) => Ok(()),
                     Err(e) => {
                         let err_str = e.to_string();
-                        if err_str.contains("_sqlx_migrations") && err_str.contains("UNIQUE constraint") {
+                        if err_str.contains("_sqlx_migrations")
+                            && err_str.contains("UNIQUE constraint")
+                        {
                             Ok(())
                         } else {
                             Err(GovernanceError::DatabaseError(err_str))
@@ -210,7 +216,9 @@ impl Database {
                     .execute(pool)
                     .await
                     .map(|_| true)
-                    .map_err(|e| GovernanceError::DatabaseError(format!("Health check failed: {}", e)))
+                    .map_err(|e| {
+                        GovernanceError::DatabaseError(format!("Health check failed: {}", e))
+                    })
             }
             DatabaseBackend::Postgres(pool) => {
                 // Simple query to test connection
@@ -218,7 +226,9 @@ impl Database {
                     .execute(pool)
                     .await
                     .map(|_| true)
-                    .map_err(|e| GovernanceError::DatabaseError(format!("Health check failed: {}", e)))
+                    .map_err(|e| {
+                        GovernanceError::DatabaseError(format!("Health check failed: {}", e))
+                    })
             }
         }
     }
@@ -226,20 +236,16 @@ impl Database {
     /// Get database connection pool statistics
     pub async fn get_pool_stats(&self) -> Result<PoolStats, GovernanceError> {
         match &self.backend {
-            DatabaseBackend::Sqlite(pool) => {
-                Ok(PoolStats {
-                    size: pool.size(),
-                    idle: pool.num_idle(),
-                    is_closed: pool.is_closed(),
-                })
-            }
-            DatabaseBackend::Postgres(pool) => {
-                Ok(PoolStats {
-                    size: pool.size(),
-                    idle: pool.num_idle(),
-                    is_closed: pool.is_closed(),
-                })
-            }
+            DatabaseBackend::Sqlite(pool) => Ok(PoolStats {
+                size: pool.size(),
+                idle: pool.num_idle(),
+                is_closed: pool.is_closed(),
+            }),
+            DatabaseBackend::Postgres(pool) => Ok(PoolStats {
+                size: pool.size(),
+                idle: pool.num_idle(),
+                is_closed: pool.is_closed(),
+            }),
         }
     }
 
@@ -327,7 +333,7 @@ impl Database {
             DatabaseBackend::Sqlite(pool) => {
                 // Get current signatures
                 let signatures_json: Option<String> = sqlx::query_scalar(
-                    "SELECT signatures FROM pull_requests WHERE repo_name = ? AND pr_number = ?"
+                    "SELECT signatures FROM pull_requests WHERE repo_name = ? AND pr_number = ?",
                 )
                 .bind(repo_name)
                 .bind(pr_number)
@@ -337,19 +343,25 @@ impl Database {
 
                 // Parse existing signatures or create empty array
                 let mut signatures: Vec<Value> = if let Some(json_str) = signatures_json {
-                    serde_json::from_str(&json_str)
-                        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to parse signatures JSON: {}", e)))?
+                    serde_json::from_str(&json_str).map_err(|e| {
+                        GovernanceError::DatabaseError(format!(
+                            "Failed to parse signatures JSON: {}",
+                            e
+                        ))
+                    })?
                 } else {
                     vec![]
                 };
 
                 // Add new signature
-                signatures.push(serde_json::to_value(&new_signature)
-                    .map_err(|e| GovernanceError::DatabaseError(format!("Failed to serialize signature: {}", e)))?);
+                signatures.push(serde_json::to_value(&new_signature).map_err(|e| {
+                    GovernanceError::DatabaseError(format!("Failed to serialize signature: {}", e))
+                })?);
 
                 // Update signatures in database
-                let updated_json = serde_json::to_string(&signatures)
-                    .map_err(|e| GovernanceError::DatabaseError(format!("Failed to serialize signatures: {}", e)))?;
+                let updated_json = serde_json::to_string(&signatures).map_err(|e| {
+                    GovernanceError::DatabaseError(format!("Failed to serialize signatures: {}", e))
+                })?;
 
                 sqlx::query(
                     "UPDATE pull_requests SET signatures = ?, updated_at = CURRENT_TIMESTAMP WHERE repo_name = ? AND pr_number = ?"
@@ -364,7 +376,7 @@ impl Database {
             DatabaseBackend::Postgres(pool) => {
                 // Get current signatures
                 let signatures_json: Option<serde_json::Value> = sqlx::query_scalar(
-                    "SELECT signatures FROM pull_requests WHERE repo_name = $1 AND pr_number = $2"
+                    "SELECT signatures FROM pull_requests WHERE repo_name = $1 AND pr_number = $2",
                 )
                 .bind(repo_name)
                 .bind(pr_number)
@@ -374,19 +386,24 @@ impl Database {
 
                 // Parse existing signatures or create empty array
                 let mut signatures: Vec<Value> = if let Some(json_val) = signatures_json {
-                    serde_json::from_value(json_val)
-                        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to parse signatures JSON: {}", e).into()))?
+                    serde_json::from_value(json_val).map_err(|e| {
+                        GovernanceError::DatabaseError(
+                            format!("Failed to parse signatures JSON: {}", e).into(),
+                        )
+                    })?
                 } else {
                     vec![]
                 };
 
                 // Add new signature
-                signatures.push(serde_json::to_value(&new_signature)
-                    .map_err(|e| GovernanceError::DatabaseError(format!("Failed to serialize signature: {}", e)))?);
+                signatures.push(serde_json::to_value(&new_signature).map_err(|e| {
+                    GovernanceError::DatabaseError(format!("Failed to serialize signature: {}", e))
+                })?);
 
                 // Update signatures in database
-                let updated_json = serde_json::to_value(&signatures)
-                    .map_err(|e| GovernanceError::DatabaseError(format!("Failed to serialize signatures: {}", e)))?;
+                let updated_json = serde_json::to_value(&signatures).map_err(|e| {
+                    GovernanceError::DatabaseError(format!("Failed to serialize signatures: {}", e))
+                })?;
 
                 sqlx::query(
                     "UPDATE pull_requests SET signatures = $1, updated_at = CURRENT_TIMESTAMP WHERE repo_name = $2 AND pr_number = $3"
@@ -489,25 +506,58 @@ impl Database {
 
                 match row {
                     Some(r) => {
-                        let id: i32 = r.try_get(0).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                        let repo_name: String = r.try_get(1).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                        let pr_number: i32 = r.try_get(2).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                        let opened_at: chrono::DateTime<chrono::Utc> = r.try_get(3).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                        let layer: i32 = r.try_get(4).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                        let head_sha: String = r.try_get(5).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                        let signatures_json: String = r.try_get(6).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                        let governance_status: String = r.try_get(7).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                        let linked_prs_json: String = r.try_get(8).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                        let emergency_mode: bool = r.try_get::<i32, _>(9).map_err(|e| GovernanceError::DatabaseError(e.to_string()))? != 0;
-                        let created_at: chrono::DateTime<chrono::Utc> = r.try_get(10).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                        let updated_at: chrono::DateTime<chrono::Utc> = r.try_get(11).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                        let id: i32 = r
+                            .try_get(0)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                        let repo_name: String = r
+                            .try_get(1)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                        let pr_number: i32 = r
+                            .try_get(2)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                        let opened_at: chrono::DateTime<chrono::Utc> = r
+                            .try_get(3)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                        let layer: i32 = r
+                            .try_get(4)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                        let head_sha: String = r
+                            .try_get(5)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                        let signatures_json: String = r
+                            .try_get(6)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                        let governance_status: String = r
+                            .try_get(7)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                        let linked_prs_json: String = r
+                            .try_get(8)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                        let emergency_mode: bool = r
+                            .try_get::<i32, _>(9)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?
+                            != 0;
+                        let created_at: chrono::DateTime<chrono::Utc> = r
+                            .try_get(10)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                        let updated_at: chrono::DateTime<chrono::Utc> = r
+                            .try_get(11)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
-                        let signatures: Vec<crate::database::models::Signature> = 
-                            serde_json::from_str(&signatures_json)
-                                .map_err(|e| GovernanceError::DatabaseError(format!("Failed to parse signatures JSON: {}", e)))?;
-                        let linked_prs: Vec<i32> = 
-                            serde_json::from_str(&linked_prs_json)
-                                .map_err(|e| GovernanceError::DatabaseError(format!("Failed to parse linked_prs JSON: {}", e)))?;
+                        let signatures: Vec<crate::database::models::Signature> =
+                            serde_json::from_str(&signatures_json).map_err(|e| {
+                                GovernanceError::DatabaseError(format!(
+                                    "Failed to parse signatures JSON: {}",
+                                    e
+                                ))
+                            })?;
+                        let linked_prs: Vec<i32> =
+                            serde_json::from_str(&linked_prs_json).map_err(|e| {
+                                GovernanceError::DatabaseError(format!(
+                                    "Failed to parse linked_prs JSON: {}",
+                                    e
+                                ))
+                            })?;
 
                         Ok(Some(crate::database::models::PullRequest {
                             id,
@@ -549,7 +599,7 @@ impl Database {
                     FROM governance_events
                     ORDER BY timestamp DESC
                     LIMIT ?
-                    "#
+                    "#,
                 )
                 .bind(limit)
                 .fetch_all(pool)
@@ -558,17 +608,36 @@ impl Database {
 
                 let mut events = Vec::new();
                 for row in rows {
-                    let id: i32 = row.try_get(0).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let event_type: String = row.try_get(1).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let repo_name: Option<String> = row.try_get(2).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let pr_number: Option<i32> = row.try_get(3).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let maintainer: Option<String> = row.try_get(4).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let details_str: String = row.try_get(5).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let timestamp: chrono::DateTime<chrono::Utc> = row.try_get(6).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    
-                    let details: serde_json::Value = serde_json::from_str(&details_str)
-                        .map_err(|e| GovernanceError::DatabaseError(format!("Failed to parse event details JSON: {}", e)))?;
-                    
+                    let id: i32 = row
+                        .try_get(0)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let event_type: String = row
+                        .try_get(1)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let repo_name: Option<String> = row
+                        .try_get(2)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let pr_number: Option<i32> = row
+                        .try_get(3)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let maintainer: Option<String> = row
+                        .try_get(4)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let details_str: String = row
+                        .try_get(5)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let timestamp: chrono::DateTime<chrono::Utc> = row
+                        .try_get(6)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+                    let details: serde_json::Value =
+                        serde_json::from_str(&details_str).map_err(|e| {
+                            GovernanceError::DatabaseError(format!(
+                                "Failed to parse event details JSON: {}",
+                                e
+                            ))
+                        })?;
+
                     events.push(crate::database::models::GovernanceEvent {
                         id,
                         event_type,
@@ -595,7 +664,7 @@ impl Database {
                     FROM governance_events
                     ORDER BY timestamp DESC
                     LIMIT $1
-                    "#
+                    "#,
                 )
                 .bind(limit)
                 .fetch_all(pool)
@@ -604,14 +673,28 @@ impl Database {
 
                 let mut events = Vec::new();
                 for row in rows {
-                    let id: i32 = row.try_get(0).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let event_type: String = row.try_get(1).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let repo_name: Option<String> = row.try_get(2).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let pr_number: Option<i32> = row.try_get(3).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let maintainer: Option<String> = row.try_get(4).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let details: serde_json::Value = row.try_get(5).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let timestamp: chrono::DateTime<chrono::Utc> = row.try_get(6).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    
+                    let id: i32 = row
+                        .try_get(0)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let event_type: String = row
+                        .try_get(1)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let repo_name: Option<String> = row
+                        .try_get(2)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let pr_number: Option<i32> = row
+                        .try_get(3)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let maintainer: Option<String> = row
+                        .try_get(4)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let details: serde_json::Value = row
+                        .try_get(5)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let timestamp: chrono::DateTime<chrono::Utc> = row
+                        .try_get(6)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
                     events.push(crate::database::models::GovernanceEvent {
                         id,
                         event_type,
@@ -640,15 +723,19 @@ impl Database {
                     WHERE event_type IN ('merge', 'merged', 'pr_merged')
                     ORDER BY timestamp DESC
                     LIMIT 1
-                    "#
+                    "#,
                 )
                 .fetch_optional(pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
                 if let Some(row) = row {
-                    let pr_number: Option<i32> = row.try_get(0).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let timestamp: Option<chrono::DateTime<chrono::Utc>> = row.try_get(1).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let pr_number: Option<i32> = row
+                        .try_get(0)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let timestamp: Option<chrono::DateTime<chrono::Utc>> = row
+                        .try_get(1)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
                     Ok(Some((pr_number, timestamp)))
                 } else {
                     Ok(None)
@@ -662,15 +749,19 @@ impl Database {
                     WHERE event_type IN ('merge', 'merged', 'pr_merged')
                     ORDER BY timestamp DESC
                     LIMIT 1
-                    "#
+                    "#,
                 )
                 .fetch_optional(pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
                 if let Some(row) = row {
-                    let pr_number: Option<i32> = row.try_get(0).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let timestamp: Option<chrono::DateTime<chrono::Utc>> = row.try_get(1).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let pr_number: Option<i32> = row
+                        .try_get(0)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let timestamp: Option<chrono::DateTime<chrono::Utc>> = row
+                        .try_get(1)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
                     Ok(Some((pr_number, timestamp)))
                 } else {
                     Ok(None)
@@ -680,9 +771,7 @@ impl Database {
     }
 
     /// Count merges today
-    pub async fn count_merges_today(
-        &self,
-    ) -> Result<u64, GovernanceError> {
+    pub async fn count_merges_today(&self) -> Result<u64, GovernanceError> {
         match &self.backend {
             DatabaseBackend::Sqlite(pool) => {
                 // Use SQLite date functions for reliable date comparison
@@ -692,7 +781,7 @@ impl Database {
                     FROM governance_events
                     WHERE event_type IN ('merge', 'merged', 'pr_merged')
                     AND date(timestamp) = date('now')
-                    "#
+                    "#,
                 )
                 .fetch_one(pool)
                 .await
@@ -707,7 +796,7 @@ impl Database {
                     FROM governance_events
                     WHERE event_type IN ('merge', 'merged', 'pr_merged')
                     AND date(timestamp) = CURRENT_DATE
-                    "#
+                    "#,
                 )
                 .fetch_one(pool)
                 .await
@@ -794,13 +883,28 @@ impl Database {
 
                 if let Some(row) = row {
                     Ok(Some(crate::database::models::TierOverride {
-                        id: row.try_get(0).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
-                        repo_name: row.try_get(1).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
-                        pr_number: row.try_get(2).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
-                        override_tier: row.try_get::<i32, _>(3).map_err(|e| GovernanceError::DatabaseError(e.to_string()))? as u32,
-                        justification: row.try_get(4).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
-                        overridden_by: row.try_get(5).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
-                        created_at: row.try_get(6).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        id: row
+                            .try_get(0)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        repo_name: row
+                            .try_get(1)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        pr_number: row
+                            .try_get(2)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        override_tier: row
+                            .try_get::<i32, _>(3)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?
+                            as u32,
+                        justification: row
+                            .try_get(4)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        overridden_by: row
+                            .try_get(5)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        created_at: row
+                            .try_get(6)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
                     }))
                 } else {
                     Ok(None)
@@ -822,13 +926,25 @@ impl Database {
 
                 if let Some(row) = row {
                     Ok(Some(crate::database::models::TierOverride {
-                        id: row.try_get(0).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
-                        repo_name: row.try_get(1).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
-                        pr_number: row.try_get(2).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        id: row
+                            .try_get(0)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        repo_name: row
+                            .try_get(1)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        pr_number: row
+                            .try_get(2)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
                         override_tier: row.get::<i32, _>(3) as u32,
-                        justification: row.try_get(4).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
-                        overridden_by: row.try_get(5).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
-                        created_at: row.try_get(6).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        justification: row
+                            .try_get(4)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        overridden_by: row
+                            .try_get(5)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
+                        created_at: row
+                            .try_get(6)
+                            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?,
                     }))
                 } else {
                     Ok(None)
@@ -887,7 +1003,7 @@ impl Database {
                     FROM emergency_keyholders
                     WHERE active = true
                     ORDER BY github_username
-                    "#
+                    "#,
                 )
                 .fetch_all(pool)
                 .await
@@ -895,11 +1011,21 @@ impl Database {
 
                 let mut keyholders = Vec::new();
                 for row in rows {
-                    let id: i32 = row.try_get(0).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let github_username: String = row.try_get(1).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let public_key: String = row.try_get(2).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let active: bool = row.try_get(3).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                    let last_updated: chrono::DateTime<chrono::Utc> = row.try_get(4).map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let id: i32 = row
+                        .try_get(0)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let github_username: String = row
+                        .try_get(1)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let public_key: String = row
+                        .try_get(2)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let active: bool = row
+                        .try_get(3)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                    let last_updated: chrono::DateTime<chrono::Utc> = row
+                        .try_get(4)
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
                     keyholders.push(crate::database::models::EmergencyKeyholder {
                         id,
@@ -968,12 +1094,11 @@ impl Database {
                 let active_connections = connection_count - idle_connections;
 
                 // Check database size
-                let db_size = sqlx::query_scalar::<_, i64>(
-                    "SELECT pg_database_size(current_database())"
-                )
-                .fetch_one(pool)
-                .await
-                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                let db_size =
+                    sqlx::query_scalar::<_, i64>("SELECT pg_database_size(current_database())")
+                        .fetch_one(pool)
+                        .await
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
                 Ok(DatabaseHealth {
                     connection_count,
@@ -999,10 +1124,11 @@ impl Database {
                     .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
                 // Get WAL checkpoint threshold
-                let wal_checkpoint_threshold = sqlx::query_scalar::<_, i64>("PRAGMA wal_autocheckpoint")
-                    .fetch_one(pool)
-                    .await
-                    .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                let wal_checkpoint_threshold =
+                    sqlx::query_scalar::<_, i64>("PRAGMA wal_autocheckpoint")
+                        .fetch_one(pool)
+                        .await
+                        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
                 // Get compile options (as a proxy for slow queries)
                 let compile_options = sqlx::query_scalar::<_, String>("PRAGMA compile_options")
@@ -1139,7 +1265,7 @@ impl Database {
             DatabaseBackend::Sqlite(pool) => {
                 // Get current status
                 let current_status: Option<String> = sqlx::query_scalar(
-                    "SELECT status FROM build_runs WHERE release_version = ? AND repo_name = ?"
+                    "SELECT status FROM build_runs WHERE release_version = ? AND repo_name = ?",
                 )
                 .bind(release_version)
                 .bind(repo_name)
@@ -1148,7 +1274,11 @@ impl Database {
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
                 // Update build run
-                let completed_at = if new_status == "success" || new_status == "failure" || new_status == "cancelled" || new_status == "timed_out" {
+                let completed_at = if new_status == "success"
+                    || new_status == "failure"
+                    || new_status == "cancelled"
+                    || new_status == "timed_out"
+                {
                     Some("CURRENT_TIMESTAMP")
                 } else {
                     None
@@ -1178,7 +1308,7 @@ impl Database {
                         UPDATE build_runs 
                         SET status = ?, error_message = ?, updated_at = CURRENT_TIMESTAMP
                         WHERE release_version = ? AND repo_name = ?
-                        "#
+                        "#,
                     )
                     .bind(new_status)
                     .bind(error_message)
@@ -1193,7 +1323,7 @@ impl Database {
                 if let Some(from_status) = current_status {
                     if from_status != new_status {
                         let build_id: i64 = sqlx::query_scalar(
-                            "SELECT id FROM build_runs WHERE release_version = ? AND repo_name = ?"
+                            "SELECT id FROM build_runs WHERE release_version = ? AND repo_name = ?",
                         )
                         .bind(release_version)
                         .bind(repo_name)
@@ -1220,7 +1350,7 @@ impl Database {
             DatabaseBackend::Postgres(pool) => {
                 // Get current status
                 let current_status: Option<String> = sqlx::query_scalar(
-                    "SELECT status FROM build_runs WHERE release_version = $1 AND repo_name = $2"
+                    "SELECT status FROM build_runs WHERE release_version = $1 AND repo_name = $2",
                 )
                 .bind(release_version)
                 .bind(repo_name)
@@ -1229,7 +1359,11 @@ impl Database {
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
                 // Update build run
-                let completed_at = if new_status == "success" || new_status == "failure" || new_status == "cancelled" || new_status == "timed_out" {
+                let completed_at = if new_status == "success"
+                    || new_status == "failure"
+                    || new_status == "cancelled"
+                    || new_status == "timed_out"
+                {
                     Some("CURRENT_TIMESTAMP")
                 } else {
                     None
@@ -1256,7 +1390,7 @@ impl Database {
                         UPDATE build_runs 
                         SET status = $1, error_message = $2, updated_at = CURRENT_TIMESTAMP
                         WHERE release_version = $3 AND repo_name = $4
-                        "#
+                        "#,
                     )
                     .bind(new_status)
                     .bind(error_message)
@@ -1307,29 +1441,31 @@ impl Database {
         match &self.backend {
             DatabaseBackend::Sqlite(pool) => {
                 let rows = sqlx::query(
-                    "SELECT repo_name, status FROM build_runs WHERE release_version = ?"
+                    "SELECT repo_name, status FROM build_runs WHERE release_version = ?",
                 )
                 .bind(release_version)
                 .fetch_all(pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                
-                Ok(rows.iter().map(|row| {
-                    (row.get::<String, _>(0), row.get::<String, _>(1))
-                }).collect())
+
+                Ok(rows
+                    .iter()
+                    .map(|row| (row.get::<String, _>(0), row.get::<String, _>(1)))
+                    .collect())
             }
             DatabaseBackend::Postgres(pool) => {
                 let rows = sqlx::query(
-                    "SELECT repo_name, status FROM build_runs WHERE release_version = $1"
+                    "SELECT repo_name, status FROM build_runs WHERE release_version = $1",
                 )
                 .bind(release_version)
                 .fetch_all(pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                
-                Ok(rows.iter().map(|row| {
-                    (row.get::<String, _>(0), row.get::<String, _>(1))
-                }).collect())
+
+                Ok(rows
+                    .iter()
+                    .map(|row| (row.get::<String, _>(0), row.get::<String, _>(1)))
+                    .collect())
             }
         }
     }
@@ -1348,14 +1484,17 @@ impl Database {
                 .fetch_all(pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                
-                Ok(rows.iter().map(|row| {
-                    (
-                        row.get::<String, _>(0),
-                        row.get::<Option<i64>, _>(1).map(|id| id as u64),
-                        row.get::<String, _>(2),
-                    )
-                }).collect())
+
+                Ok(rows
+                    .iter()
+                    .map(|row| {
+                        (
+                            row.get::<String, _>(0),
+                            row.get::<Option<i64>, _>(1).map(|id| id as u64),
+                            row.get::<String, _>(2),
+                        )
+                    })
+                    .collect())
             }
             DatabaseBackend::Postgres(pool) => {
                 let rows = sqlx::query(
@@ -1365,14 +1504,17 @@ impl Database {
                 .fetch_all(pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                
-                Ok(rows.iter().map(|row| {
-                    (
-                        row.get::<String, _>(0),
-                        row.get::<Option<i64>, _>(1).map(|id| id as u64),
-                        row.get::<String, _>(2),
-                    )
-                }).collect())
+
+                Ok(rows
+                    .iter()
+                    .map(|row| {
+                        (
+                            row.get::<String, _>(0),
+                            row.get::<Option<i64>, _>(1).map(|id| id as u64),
+                            row.get::<String, _>(2),
+                        )
+                    })
+                    .collect())
             }
         }
     }
@@ -1389,13 +1531,13 @@ impl Database {
                     SELECT COUNT(*) FROM build_runs 
                     WHERE release_version = ? 
                     AND status NOT IN ('success', 'failure', 'cancelled', 'timed_out')
-                    "#
+                    "#,
                 )
                 .bind(release_version)
                 .fetch_one(pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                
+
                 Ok(incomplete_count == 0)
             }
             DatabaseBackend::Postgres(pool) => {
@@ -1404,13 +1546,13 @@ impl Database {
                     SELECT COUNT(*) FROM build_runs 
                     WHERE release_version = $1 
                     AND status NOT IN ('success', 'failure', 'cancelled', 'timed_out')
-                    "#
+                    "#,
                 )
                 .bind(release_version)
                 .fetch_one(pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-                
+
                 Ok(incomplete_count == 0)
             }
         }
@@ -1478,11 +1620,13 @@ mod tests {
     #[tokio::test]
     async fn test_create_pull_request_duplicate() {
         let db = Database::new_in_memory().await.unwrap();
-        db.create_pull_request("test/repo", 1, "abc123", 2).await.unwrap();
+        db.create_pull_request("test/repo", 1, "abc123", 2)
+            .await
+            .unwrap();
         // Should update existing PR
         let result = db.create_pull_request("test/repo", 1, "def456", 2).await;
         assert!(result.is_ok());
-        
+
         let pr = db.get_pull_request("test/repo", 1).await.unwrap().unwrap();
         assert_eq!(pr.head_sha, "def456", "Head SHA should be updated");
     }
@@ -1497,11 +1641,15 @@ mod tests {
     #[tokio::test]
     async fn test_add_signature() {
         let db = Database::new_in_memory().await.unwrap();
-        db.create_pull_request("test/repo", 1, "abc123", 2).await.unwrap();
-        
-        let result = db.add_signature("test/repo", 1, "alice", "sig123", Some("reason")).await;
+        db.create_pull_request("test/repo", 1, "abc123", 2)
+            .await
+            .unwrap();
+
+        let result = db
+            .add_signature("test/repo", 1, "alice", "sig123", Some("reason"))
+            .await;
         assert!(result.is_ok());
-        
+
         let pr = db.get_pull_request("test/repo", 1).await.unwrap().unwrap();
         assert_eq!(pr.signatures.len(), 1);
         assert_eq!(pr.signatures[0].signer, "alice");
@@ -1511,11 +1659,17 @@ mod tests {
     #[tokio::test]
     async fn test_add_multiple_signatures() {
         let db = Database::new_in_memory().await.unwrap();
-        db.create_pull_request("test/repo", 1, "abc123", 2).await.unwrap();
-        
-        db.add_signature("test/repo", 1, "alice", "sig1", None).await.unwrap();
-        db.add_signature("test/repo", 1, "bob", "sig2", None).await.unwrap();
-        
+        db.create_pull_request("test/repo", 1, "abc123", 2)
+            .await
+            .unwrap();
+
+        db.add_signature("test/repo", 1, "alice", "sig1", None)
+            .await
+            .unwrap();
+        db.add_signature("test/repo", 1, "bob", "sig2", None)
+            .await
+            .unwrap();
+
         let pr = db.get_pull_request("test/repo", 1).await.unwrap().unwrap();
         assert_eq!(pr.signatures.len(), 2);
     }
@@ -1524,14 +1678,16 @@ mod tests {
     async fn test_log_governance_event() {
         let db = Database::new_in_memory().await.unwrap();
         let details = json!({"test": "value"});
-        
-        let result = db.log_governance_event(
-            "test_event",
-            Some("test/repo"),
-            Some(1),
-            Some("alice"),
-            &details,
-        ).await;
+
+        let result = db
+            .log_governance_event(
+                "test_event",
+                Some("test/repo"),
+                Some(1),
+                Some("alice"),
+                &details,
+            )
+            .await;
         assert!(result.is_ok());
     }
 
@@ -1539,10 +1695,14 @@ mod tests {
     async fn test_get_governance_events() {
         let db = Database::new_in_memory().await.unwrap();
         let details = json!({"test": "value"});
-        
-        db.log_governance_event("event1", None, None, None, &details).await.unwrap();
-        db.log_governance_event("event2", None, None, None, &details).await.unwrap();
-        
+
+        db.log_governance_event("event1", None, None, None, &details)
+            .await
+            .unwrap();
+        db.log_governance_event("event2", None, None, None, &details)
+            .await
+            .unwrap();
+
         let events = db.get_governance_events(10).await.unwrap();
         assert!(events.len() >= 2);
     }
@@ -1551,11 +1711,13 @@ mod tests {
     async fn test_get_governance_events_limit() {
         let db = Database::new_in_memory().await.unwrap();
         let details = json!({"test": "value"});
-        
+
         for i in 0..5 {
-            db.log_governance_event(&format!("event{}", i), None, None, None, &details).await.unwrap();
+            db.log_governance_event(&format!("event{}", i), None, None, None, &details)
+                .await
+                .unwrap();
         }
-        
+
         let events = db.get_governance_events(3).await.unwrap();
         assert_eq!(events.len(), 3, "Should respect limit");
     }
@@ -1571,8 +1733,10 @@ mod tests {
     async fn test_get_last_merged_pr_exists() {
         let db = Database::new_in_memory().await.unwrap();
         let details = json!({"pr": 123});
-        db.log_governance_event("merge", Some("test/repo"), Some(123), None, &details).await.unwrap();
-        
+        db.log_governance_event("merge", Some("test/repo"), Some(123), None, &details)
+            .await
+            .unwrap();
+
         let result = db.get_last_merged_pr().await.unwrap();
         assert!(result.is_some());
     }
@@ -1581,10 +1745,14 @@ mod tests {
     async fn test_count_merges_today() {
         let db = Database::new_in_memory().await.unwrap();
         let details = json!({});
-        
-        db.log_governance_event("merge", None, Some(1), None, &details).await.unwrap();
-        db.log_governance_event("merge", None, Some(2), None, &details).await.unwrap();
-        
+
+        db.log_governance_event("merge", None, Some(1), None, &details)
+            .await
+            .unwrap();
+        db.log_governance_event("merge", None, Some(2), None, &details)
+            .await
+            .unwrap();
+
         let count = db.count_merges_today().await.unwrap();
         assert_eq!(count, 2, "Should count exactly 2 merges from today");
     }
@@ -1592,18 +1760,26 @@ mod tests {
     #[tokio::test]
     async fn test_set_tier_override() {
         let db = Database::new_in_memory().await.unwrap();
-        db.create_pull_request("test/repo", 1, "abc123", 2).await.unwrap();
-        
-        let result = db.set_tier_override("test/repo", 1, 3, "Justification", "alice").await;
+        db.create_pull_request("test/repo", 1, "abc123", 2)
+            .await
+            .unwrap();
+
+        let result = db
+            .set_tier_override("test/repo", 1, 3, "Justification", "alice")
+            .await;
         assert!(result.is_ok());
     }
 
     #[tokio::test]
     async fn test_get_tier_override() {
         let db = Database::new_in_memory().await.unwrap();
-        db.create_pull_request("test/repo", 1, "abc123", 2).await.unwrap();
-        db.set_tier_override("test/repo", 1, 3, "Justification", "alice").await.unwrap();
-        
+        db.create_pull_request("test/repo", 1, "abc123", 2)
+            .await
+            .unwrap();
+        db.set_tier_override("test/repo", 1, 3, "Justification", "alice")
+            .await
+            .unwrap();
+
         let override_val = db.get_tier_override("test/repo", 1).await.unwrap();
         assert!(override_val.is_some());
         assert_eq!(override_val.unwrap().override_tier, 3);
@@ -1647,15 +1823,24 @@ mod tests {
     #[tokio::test]
     async fn test_upsert_build_run() {
         let db = Database::new_in_memory().await.unwrap();
-        let build_id = db.upsert_build_run("v1.0.0", "test/repo", Some(123), "running").await.unwrap();
+        let build_id = db
+            .upsert_build_run("v1.0.0", "test/repo", Some(123), "running")
+            .await
+            .unwrap();
         assert!(build_id > 0);
     }
 
     #[tokio::test]
     async fn test_upsert_build_run_update() {
         let db = Database::new_in_memory().await.unwrap();
-        let _id1 = db.upsert_build_run("v1.0.0", "test/repo", Some(123), "running").await.unwrap();
-        let _id2 = db.upsert_build_run("v1.0.0", "test/repo", Some(456), "success").await.unwrap();
+        let _id1 = db
+            .upsert_build_run("v1.0.0", "test/repo", Some(123), "running")
+            .await
+            .unwrap();
+        let _id2 = db
+            .upsert_build_run("v1.0.0", "test/repo", Some(456), "success")
+            .await
+            .unwrap();
         // Should update existing, not create new
         assert_eq!(_id1, _id2);
     }
@@ -1663,18 +1848,26 @@ mod tests {
     #[tokio::test]
     async fn test_update_build_run_status() {
         let db = Database::new_in_memory().await.unwrap();
-        db.upsert_build_run("v1.0.0", "test/repo", Some(123), "running").await.unwrap();
-        
-        let result = db.update_build_status("v1.0.0", "test/repo", "success", None).await;
+        db.upsert_build_run("v1.0.0", "test/repo", Some(123), "running")
+            .await
+            .unwrap();
+
+        let result = db
+            .update_build_status("v1.0.0", "test/repo", "success", None)
+            .await;
         assert!(result.is_ok());
     }
 
     #[tokio::test]
     async fn test_get_build_runs_for_release() {
         let db = Database::new_in_memory().await.unwrap();
-        db.upsert_build_run("v1.0.0", "repo1", Some(1), "success").await.unwrap();
-        db.upsert_build_run("v1.0.0", "repo2", Some(2), "running").await.unwrap();
-        
+        db.upsert_build_run("v1.0.0", "repo1", Some(1), "success")
+            .await
+            .unwrap();
+        db.upsert_build_run("v1.0.0", "repo2", Some(2), "running")
+            .await
+            .unwrap();
+
         let builds = db.get_build_runs_for_release("v1.0.0").await.unwrap();
         assert_eq!(builds.len(), 2);
     }
@@ -1682,9 +1875,13 @@ mod tests {
     #[tokio::test]
     async fn test_are_all_builds_complete_true() {
         let db = Database::new_in_memory().await.unwrap();
-        db.upsert_build_run("v1.0.0", "repo1", Some(1), "success").await.unwrap();
-        db.upsert_build_run("v1.0.0", "repo2", Some(2), "success").await.unwrap();
-        
+        db.upsert_build_run("v1.0.0", "repo1", Some(1), "success")
+            .await
+            .unwrap();
+        db.upsert_build_run("v1.0.0", "repo2", Some(2), "success")
+            .await
+            .unwrap();
+
         let complete = db.are_all_builds_complete("v1.0.0").await.unwrap();
         assert!(complete);
     }
@@ -1692,9 +1889,13 @@ mod tests {
     #[tokio::test]
     async fn test_are_all_builds_complete_false() {
         let db = Database::new_in_memory().await.unwrap();
-        db.upsert_build_run("v1.0.0", "repo1", Some(1), "success").await.unwrap();
-        db.upsert_build_run("v1.0.0", "repo2", Some(2), "running").await.unwrap();
-        
+        db.upsert_build_run("v1.0.0", "repo1", Some(1), "success")
+            .await
+            .unwrap();
+        db.upsert_build_run("v1.0.0", "repo2", Some(2), "running")
+            .await
+            .unwrap();
+
         let complete = db.are_all_builds_complete("v1.0.0").await.unwrap();
         assert!(!complete);
     }

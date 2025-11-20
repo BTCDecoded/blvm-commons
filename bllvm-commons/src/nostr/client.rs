@@ -23,11 +23,10 @@ pub struct NostrClient {
 impl NostrClient {
     /// Create new Nostr client with server key and relay URLs
     pub async fn new(nsec: String, relay_urls: Vec<String>) -> Result<Self> {
-        let keys = Keys::from_sk_str(&nsec)
-            .map_err(|e| anyhow!("Invalid nsec key: {}", e))?;
+        let keys = Keys::from_sk_str(&nsec).map_err(|e| anyhow!("Invalid nsec key: {}", e))?;
 
         let client = Client::new(&keys);
-        
+
         // Connect to all relays
         for relay_url in &relay_urls {
             match client.add_relay(relay_url.clone()).await {
@@ -44,7 +43,7 @@ impl NostrClient {
         client.connect().await;
 
         let relay_status = Arc::new(Mutex::new(HashMap::new()));
-        
+
         Ok(Self {
             client: Arc::new(client),
             keys,
@@ -61,11 +60,14 @@ impl NostrClient {
         let relays = (*self.client).relays().await;
 
         for (relay_url, relay) in &relays {
-            match relay.send_event(event.clone(), RelaySendOptions::new()).await {
+            match relay
+                .send_event(event.clone(), RelaySendOptions::new())
+                .await
+            {
                 Ok(_) => {
                     debug!("Published event to relay: {}", relay_url);
                     successful_relays += 1;
-                    
+
                     // Update relay status
                     let mut status = self.relay_status.lock().await;
                     status.insert(relay_url.to_string(), true);
@@ -73,7 +75,7 @@ impl NostrClient {
                 Err(e) => {
                     error!("Failed to publish to relay {}: {}", relay_url, e);
                     failed_relays.push(relay_url.to_string());
-                    
+
                     // Update relay status
                     let mut status = self.relay_status.lock().await;
                     status.insert(relay_url.to_string(), false);
@@ -86,10 +88,18 @@ impl NostrClient {
         }
 
         if !failed_relays.is_empty() {
-            warn!("Failed to publish to {} relays: {:?}", failed_relays.len(), failed_relays);
+            warn!(
+                "Failed to publish to {} relays: {:?}",
+                failed_relays.len(),
+                failed_relays
+            );
         }
 
-        info!("Published event to {}/{} relays", successful_relays, relays.len());
+        info!(
+            "Published event to {}/{} relays",
+            successful_relays,
+            relays.len()
+        );
         Ok(())
     }
 
@@ -117,35 +127,36 @@ impl NostrClient {
         recipient_pubkey: &str,
     ) -> Result<tokio::sync::mpsc::Receiver<ZapEvent>> {
         use nostr_sdk::prelude::*;
-        
+
         // Parse recipient pubkey
         let recipient_key = XOnlyPublicKey::from_str(recipient_pubkey)
             .map_err(|e| anyhow!("Invalid recipient pubkey: {}", e))?;
-        
+
         // Create filter for zap receipts (kind 9735) to this pubkey
         let filter = Filter::new()
-            .kind(Kind::ZapReceipt)  // Kind 9735
+            .kind(Kind::ZapReceipt) // Kind 9735
             .pubkey(recipient_key);
-        
+
         // Subscribe to events
         let (tx, rx) = tokio::sync::mpsc::channel(100);
-        
+
         // Get client handle for spawning task
         let client_handle = self.client.clone();
-        
+
         // Spawn task to handle incoming zap events
         tokio::spawn(async move {
             // Subscribe to the filter (subscribe only takes filters, not subscription_id)
             client_handle.subscribe(vec![filter]).await;
-            
+
             // Listen for events using get_events_of
             loop {
                 // Create filter again for querying
-                let query_filter = Filter::new()
-                    .kind(Kind::ZapReceipt)
-                    .pubkey(recipient_key);
-                
-                match (*client_handle).get_events_of(vec![query_filter], Some(Duration::from_secs(10))).await {
+                let query_filter = Filter::new().kind(Kind::ZapReceipt).pubkey(recipient_key);
+
+                match (*client_handle)
+                    .get_events_of(vec![query_filter], Some(Duration::from_secs(10)))
+                    .await
+                {
                     Ok(events) => {
                         for event in events {
                             if event.kind == Kind::ZapReceipt {
@@ -163,12 +174,12 @@ impl NostrClient {
                         warn!("Error getting zap events: {}", e);
                     }
                 }
-                
+
                 // Wait a bit before next query
                 tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
             }
         });
-        
+
         info!("Subscribed to zap events for pubkey: {}", recipient_pubkey);
         Ok(rx)
     }
@@ -183,7 +194,7 @@ pub struct ZapEvent {
     pub timestamp: i64,
     pub invoice: Option<String>,
     pub message: Option<String>,
-    pub zapped_event_id: Option<String>,  // Event being zapped (for proposal zaps)
+    pub zapped_event_id: Option<String>, // Event being zapped (for proposal zaps)
 }
 
 /// Parse a Nostr event into a ZapEvent
@@ -201,7 +212,7 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
             vec.get(1).map(|s| s.to_string())
         })
         .ok_or_else(|| anyhow!("Missing p tag in zap event"))?;
-    
+
     // Extract amount (amount tag)
     let amount_msat = event
         .tags
@@ -215,7 +226,7 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
             vec.get(1).and_then(|amt| amt.parse::<u64>().ok())
         })
         .unwrap_or(0);
-    
+
     // Extract invoice (bolt11 tag)
     let invoice = event
         .tags
@@ -228,7 +239,7 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
             let vec = tag.as_vec();
             vec.get(1).map(|s| s.to_string())
         });
-    
+
     // Extract description (contains sender info as JSON)
     let (sender_pubkey, message) = event
         .tags
@@ -239,21 +250,22 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
         })
         .and_then(|tag| {
             let vec = tag.as_vec();
-            vec.get(1).and_then(|desc| {
-                serde_json::from_str::<serde_json::Value>(desc).ok()
-            })
+            vec.get(1)
+                .and_then(|desc| serde_json::from_str::<serde_json::Value>(desc).ok())
         })
         .map(|desc| {
-            let sender = desc.get("pubkey")
+            let sender = desc
+                .get("pubkey")
                 .and_then(|p| p.as_str())
                 .map(|s| s.to_string());
-            let msg = desc.get("content")
+            let msg = desc
+                .get("content")
                 .and_then(|c| c.as_str())
                 .map(|s| s.to_string());
             (sender, msg)
         })
         .unwrap_or((None, None));
-    
+
     // Extract zapped event (e tag) - for proposal zaps
     let zapped_event_id = event
         .tags
@@ -266,7 +278,7 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
             let vec = tag.as_vec();
             vec.get(1).map(|s| s.to_string())
         });
-    
+
     Ok(ZapEvent {
         recipient_pubkey: recipient,
         sender_pubkey,
@@ -281,14 +293,13 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
 
     #[tokio::test]
     async fn test_client_creation() {
         // Generate test keys
         let keys = Keys::generate();
         let nsec = keys.secret_key().unwrap().display_secret().to_string();
-        
+
         // This will fail in test environment without real relays
         // but we can test the key parsing
         let result = NostrClient::new(nsec, vec!["wss://relay.damus.io".to_string()]).await;

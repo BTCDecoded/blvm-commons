@@ -2,13 +2,10 @@
 //!
 //! Receives block notifications from bllvm-node and processes them for fee forwarding
 
-use axum::{
-    extract::State,
-    response::Json,
-};
+use axum::{extract::State, response::Json};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use tracing::{info, error};
+use tracing::{error, info};
 
 use crate::config::AppConfig;
 use crate::database::Database;
@@ -20,8 +17,8 @@ use crate::governance::FeeForwardingTracker;
 pub struct BlockNotification {
     pub block_hash: String,
     pub block_height: i32,
-    pub block: Value,  // Block data as JSON - will be converted to bllvm_protocol::Block
-    pub contributor_id: Option<String>,  // Optional: node/miner identifier
+    pub block: Value, // Block data as JSON - will be converted to bllvm_protocol::Block
+    pub contributor_id: Option<String>, // Optional: node/miner identifier
 }
 
 /// Block notification response
@@ -45,7 +42,7 @@ pub async fn handle_block_notification(
             contributions_found: 0,
         });
     }
-    
+
     let pool = match database.get_sqlite_pool() {
         Some(pool) => pool,
         None => {
@@ -56,7 +53,7 @@ pub async fn handle_block_notification(
             });
         }
     };
-    
+
     // Parse block from JSON payload
     // The block field contains the block data as JSON
     let block: bllvm_protocol::Block = match serde_json::from_value(payload.block.clone()) {
@@ -70,20 +67,23 @@ pub async fn handle_block_notification(
             });
         }
     };
-    
+
     // Initialize fee forwarding tracker
     let tracker = FeeForwardingTracker::from_network_string(
         pool.clone(),
         config.governance.commons_addresses.clone(),
         &config.governance.network,
     );
-    
+
     // Process block
-    match tracker.process_block(
-        &block,
-        payload.block_height,
-        payload.contributor_id.as_deref(),
-    ).await {
+    match tracker
+        .process_block(
+            &block,
+            payload.block_height,
+            payload.contributor_id.as_deref(),
+        )
+        .await
+    {
         Ok(contributions) => {
             info!(
                 "Processed block {} at height {}: found {} fee forwarding contributions",
@@ -91,7 +91,7 @@ pub async fn handle_block_notification(
                 payload.block_height,
                 contributions.len()
             );
-            
+
             Json(BlockNotificationResponse {
                 success: true,
                 message: "Block processed successfully".to_string(),
@@ -108,4 +108,3 @@ pub async fn handle_block_notification(
         }
     }
 }
-

@@ -6,8 +6,8 @@ use chrono::{DateTime, Utc};
 use sqlx::{Row, SqlitePool};
 use tracing::info;
 
-use super::types::*;
 use super::registry::EconomicNodeRegistry;
+use super::types::*;
 use crate::crypto::signatures::SignatureManager;
 use crate::error::GovernanceError;
 
@@ -171,7 +171,10 @@ impl VetoManager {
         .fetch_one(&self.pool)
         .await
         .map_err(|e| {
-            GovernanceError::DatabaseError(format!("Failed to fetch total network mining weight: {}", e))
+            GovernanceError::DatabaseError(format!(
+                "Failed to fetch total network mining weight: {}",
+                e
+            ))
         })?;
 
         // Get total network economic activity (sum of all active non-mining pool weights)
@@ -185,7 +188,10 @@ impl VetoManager {
         .fetch_one(&self.pool)
         .await
         .map_err(|e| {
-            GovernanceError::DatabaseError(format!("Failed to fetch total network economic weight: {}", e))
+            GovernanceError::DatabaseError(format!(
+                "Failed to fetch total network economic weight: {}",
+                e
+            ))
         })?;
 
         let total_network_mining_weight = total_network_mining_weight.unwrap_or(0.0);
@@ -256,14 +262,14 @@ impl VetoManager {
                 // Try RFC3339 first, then SQLite format (YYYY-MM-DD HH:MM:SS)
                 match DateTime::parse_from_rfc3339(&ts_str) {
                     Ok(dt) => dt.with_timezone(&Utc),
-                    Err(_) => {
-                        chrono::NaiveDateTime::parse_from_str(&ts_str, "%Y-%m-%d %H:%M:%S")
-                            .map(|dt| dt.and_utc())
-                            .map_err(|e| GovernanceError::CryptoError(format!("Invalid timestamp: {}", e)))?
-                    }
+                    Err(_) => chrono::NaiveDateTime::parse_from_str(&ts_str, "%Y-%m-%d %H:%M:%S")
+                        .map(|dt| dt.and_utc())
+                        .map_err(|e| {
+                            GovernanceError::CryptoError(format!("Invalid timestamp: {}", e))
+                        })?,
                 }
             };
-            
+
             signals.push(VetoSignal {
                 id: Some(row.get::<i32, _>("id")),
                 pr_id: row.get::<i32, _>("pr_id"),
@@ -297,12 +303,12 @@ mod tests {
     async fn setup_test_veto_manager() -> (VetoManager, EconomicNodeRegistry, i32) {
         let db = Database::new_in_memory().await.unwrap();
         let pool = db.pool().unwrap().clone();
-        
+
         // Create test node
         let registry = EconomicNodeRegistry::new(pool.clone());
         let keypair = GovernanceKeypair::generate().unwrap();
         let public_key = hex::encode(keypair.public_key.serialize());
-        
+
         // Create minimal qualification for testing
         let qual_json = serde_json::json!({
             "node_type": "mining_pool",
@@ -318,7 +324,7 @@ mod tests {
             }
         });
         let qual: QualificationProof = serde_json::from_value(qual_json).unwrap();
-        
+
         // Register node (we'll need to set up the table first)
         // For now, just return the manager
         let manager = VetoManager::new(pool);
@@ -328,9 +334,9 @@ mod tests {
     #[tokio::test]
     async fn test_check_veto_threshold_no_signals() {
         let (manager, _, _) = setup_test_veto_manager().await;
-        
+
         let threshold = manager.check_veto_threshold(1).await.unwrap();
-        
+
         assert_eq!(threshold.mining_veto_percent, 0.0);
         assert_eq!(threshold.economic_veto_percent, 0.0);
         assert!(!threshold.threshold_met);
@@ -342,15 +348,18 @@ mod tests {
         // This test would require setting up actual database records
         // For now, we test the logic with empty results
         let (manager, _, _) = setup_test_veto_manager().await;
-        
+
         let threshold = manager.check_veto_threshold(999).await.unwrap();
-        assert!(!threshold.veto_active, "Should not be active with no signals");
+        assert!(
+            !threshold.veto_active,
+            "Should not be active with no signals"
+        );
     }
 
     #[tokio::test]
     async fn test_get_pr_veto_signals_empty() {
         let (manager, _, _) = setup_test_veto_manager().await;
-        
+
         let signals = manager.get_pr_veto_signals(1).await.unwrap();
         assert_eq!(signals.len(), 0, "Should return empty list when no signals");
     }
@@ -360,14 +369,14 @@ mod tests {
         // Test threshold calculation logic
         let mining_veto_percent = 25.0;
         let economic_veto_percent = 35.0;
-        
+
         let threshold_met = mining_veto_percent >= 30.0 || economic_veto_percent >= 40.0;
         assert!(!threshold_met, "Should not meet threshold");
-        
+
         let mining_veto_percent2 = 35.0;
         let threshold_met2 = mining_veto_percent2 >= 30.0 || economic_veto_percent >= 40.0;
         assert!(threshold_met2, "Should meet threshold with 35% mining");
-        
+
         let economic_veto_percent2 = 45.0;
         let threshold_met3 = mining_veto_percent >= 30.0 || economic_veto_percent2 >= 40.0;
         assert!(threshold_met3, "Should meet threshold with 45% economic");

@@ -9,7 +9,7 @@ use sqlx::SqlitePool;
 /// Setup test database for Nostr tests
 async fn setup_test_db() -> SqlitePool {
     let pool = SqlitePool::connect(":memory:").await.unwrap();
-    
+
     sqlx::query(
         r#"
         CREATE TABLE zap_contributions (
@@ -26,12 +26,12 @@ async fn setup_test_db() -> SqlitePool {
             governance_event_id TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
-        "#
+        "#,
     )
     .execute(&pool)
     .await
     .unwrap();
-    
+
     sqlx::query(
         r#"
         CREATE TABLE proposal_zap_votes (
@@ -46,12 +46,12 @@ async fn setup_test_db() -> SqlitePool {
             timestamp DATETIME NOT NULL,
             verified BOOLEAN DEFAULT FALSE
         );
-        "#
+        "#,
     )
     .execute(&pool)
     .await
     .unwrap();
-    
+
     pool
 }
 
@@ -60,15 +60,15 @@ async fn test_vote_type_parsing() {
     assert_eq!(VoteType::from_str("support"), VoteType::Support);
     assert_eq!(VoteType::from_str("Support"), VoteType::Support);
     assert_eq!(VoteType::from_str("SUPPORT"), VoteType::Support);
-    
+
     assert_eq!(VoteType::from_str("veto"), VoteType::Veto);
     assert_eq!(VoteType::from_str("Veto"), VoteType::Veto);
     assert_eq!(VoteType::from_str("oppose"), VoteType::Veto);
     assert_eq!(VoteType::from_str("against"), VoteType::Veto);
-    
+
     assert_eq!(VoteType::from_str("abstain"), VoteType::Abstain);
     assert_eq!(VoteType::from_str("neutral"), VoteType::Abstain);
-    
+
     // Default to support
     assert_eq!(VoteType::from_str("unknown"), VoteType::Support);
     assert_eq!(VoteType::from_str(""), VoteType::Support);
@@ -84,10 +84,10 @@ async fn test_vote_type_to_string() {
 #[tokio::test]
 async fn test_zap_voting_processor_vote_type_parsing() {
     use bllvm_commons::nostr::zap_voting::ZapVotingProcessor;
-    
+
     // Test message parsing
     let processor = ZapVotingProcessor::new(setup_test_db().await);
-    
+
     // These are private methods, but we can test the public interface
     // by checking vote type strings
     assert_eq!(VoteType::from_str("veto"), VoteType::Veto);
@@ -99,7 +99,7 @@ async fn test_zap_voting_processor_vote_type_parsing() {
 async fn test_zap_vote_weight_calculation() {
     let pool = setup_test_db().await;
     let processor = ZapVotingProcessor::new(pool.clone());
-    
+
     // Insert a test zap vote
     sqlx::query(
         r#"
@@ -120,7 +120,7 @@ async fn test_zap_vote_weight_calculation() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     // Get votes
     let votes = processor.get_proposal_votes(1).await.unwrap();
     assert_eq!(votes.len(), 1);
@@ -133,9 +133,9 @@ async fn test_zap_vote_weight_calculation() {
 async fn test_zap_vote_totals() {
     let pool = setup_test_db().await;
     let processor = ZapVotingProcessor::new(pool.clone());
-    
+
     let now = Utc::now();
-    
+
     // Insert multiple votes
     sqlx::query(
         r#"
@@ -156,7 +156,7 @@ async fn test_zap_vote_totals() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     sqlx::query(
         r#"
         INSERT INTO proposal_zap_votes
@@ -176,7 +176,7 @@ async fn test_zap_vote_totals() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     sqlx::query(
         r#"
         INSERT INTO proposal_zap_votes
@@ -196,10 +196,10 @@ async fn test_zap_vote_totals() {
     .execute(&pool)
     .await
     .unwrap();
-    
+
     // Get totals
     let totals = processor.get_proposal_vote_totals(1).await.unwrap();
-    
+
     assert_eq!(totals.support_weight, 3.0); // 1.0 + 2.0
     assert_eq!(totals.veto_weight, 1.0);
     assert_eq!(totals.total_weight, 4.0); // 3.0 + 1.0
@@ -207,4 +207,3 @@ async fn test_zap_vote_totals() {
     assert_eq!(totals.veto_count, 1);
     assert_eq!(totals.total_count, 3);
 }
-

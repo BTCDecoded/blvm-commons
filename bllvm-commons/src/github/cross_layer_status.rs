@@ -3,14 +3,14 @@
 //! This module provides GitHub status check integration for cross-layer validation,
 //! including content hash verification, version pinning, and equivalence proof status.
 
+use crate::database::models::PullRequest as DatabasePullRequest;
 use crate::error::GovernanceError;
+use crate::github::client::GitHubClient;
 use crate::validation::content_hash::{ContentHashValidator, SyncStatus};
-use crate::validation::version_pinning::{VersionPinningValidator, VersionReference};
 use crate::validation::equivalence_proof::EquivalenceProofValidator;
 use crate::validation::verification_check::check_verification_status;
+use crate::validation::version_pinning::{VersionPinningValidator, VersionReference};
 use crate::validation::ValidationResult;
-use crate::database::models::PullRequest as DatabasePullRequest;
-use crate::github::client::GitHubClient;
 use serde::{Deserialize, Serialize};
 use tracing::{info, warn};
 
@@ -101,12 +101,15 @@ impl CrossLayerStatusChecker {
             version_pinning_validator: VersionPinningValidator::default(),
             equivalence_proof_validator: EquivalenceProofValidator::new(),
         };
-        
+
         // Load test vectors with fallback (for future use, even though we use CI now)
-        if let Err(e) = validator.equivalence_proof_validator.load_test_vectors_with_fallback() {
+        if let Err(e) = validator
+            .equivalence_proof_validator
+            .load_test_vectors_with_fallback()
+        {
             warn!("Failed to load test vectors: {}", e);
         }
-        
+
         validator
     }
 
@@ -118,29 +121,53 @@ impl CrossLayerStatusChecker {
         pr_number: u64,
         changed_files: &[String],
     ) -> Result<CrossLayerStatusCheck, GovernanceError> {
-        info!("Generating cross-layer status for {}/{} PR #{}", owner, repo, pr_number);
+        info!(
+            "Generating cross-layer status for {}/{} PR #{}",
+            owner, repo, pr_number
+        );
 
         // 1. Check content hash synchronization
-        let content_hash_status = self.check_content_hash_sync(owner, repo, changed_files).await?;
+        let content_hash_status = self
+            .check_content_hash_sync(owner, repo, changed_files)
+            .await?;
 
         // 2. Check version pinning
-        let version_pinning_status = self.check_version_pinning(owner, repo, changed_files).await?;
+        let version_pinning_status = self
+            .check_version_pinning(owner, repo, changed_files)
+            .await?;
 
         // 3. Check equivalence proofs
-        let equivalence_proof_status = self.check_equivalence_proofs(owner, repo, pr_number, changed_files).await?;
+        let equivalence_proof_status = self
+            .check_equivalence_proofs(owner, repo, pr_number, changed_files)
+            .await?;
 
         // 4. Determine overall status
-        let overall_status = self.determine_overall_status(&content_hash_status, &version_pinning_status, &equivalence_proof_status);
+        let overall_status = self.determine_overall_status(
+            &content_hash_status,
+            &version_pinning_status,
+            &equivalence_proof_status,
+        );
 
         // 5. Generate recommendations
-        let recommendations = self.generate_recommendations(&content_hash_status, &version_pinning_status, &equivalence_proof_status);
+        let recommendations = self.generate_recommendations(
+            &content_hash_status,
+            &version_pinning_status,
+            &equivalence_proof_status,
+        );
 
         // 6. Create status check
         let overall_sync_status = self.map_status_to_sync_status(overall_status.clone());
         let status_check = CrossLayerStatusCheck {
             state: overall_status,
-            description: self.generate_status_description(&content_hash_status, &version_pinning_status, &equivalence_proof_status),
-            target_url: Some(format!("https://github.com/{}/{}/pull/{}", owner, repo, pr_number)),
+            description: self.generate_status_description(
+                &content_hash_status,
+                &version_pinning_status,
+                &equivalence_proof_status,
+            ),
+            target_url: Some(format!(
+                "https://github.com/{}/{}/pull/{}",
+                owner, repo, pr_number
+            )),
             context: "cross-layer-sync".to_string(),
             details: CrossLayerStatusDetails {
                 content_hash_status,
@@ -162,11 +189,15 @@ impl CrossLayerStatusChecker {
         repo: &str,
         changed_files: &[String],
     ) -> Result<ContentHashStatus, GovernanceError> {
-        info!("Checking content hash synchronization for {} files", changed_files.len());
+        info!(
+            "Checking content hash synchronization for {} files",
+            changed_files.len()
+        );
 
         // Load correspondence mappings
         let correspondence_mappings = ContentHashValidator::generate_correspondence_map();
-        self.content_hash_validator.load_correspondence_mappings(correspondence_mappings);
+        self.content_hash_validator
+            .load_correspondence_mappings(correspondence_mappings);
 
         // For now, simulate the check (in real implementation, would fetch files from GitHub)
         let mut files_checked = 0;
@@ -176,7 +207,7 @@ impl CrossLayerStatusChecker {
 
         for file in changed_files {
             files_checked += 1;
-            
+
             // Simulate checking if file has corresponding updates
             if file.contains("consensus-rules") {
                 // Check if corresponding proof file exists and is updated
@@ -197,10 +228,16 @@ impl CrossLayerStatusChecker {
         };
 
         let message = if files_missing.is_empty() {
-            format!("✅ Content Hash Sync: All {} files are synchronized", files_checked)
+            format!(
+                "✅ Content Hash Sync: All {} files are synchronized",
+                files_checked
+            )
         } else {
-            format!("❌ Content Hash Sync: {} files missing updates: {}", 
-                   files_missing.len(), files_missing.join(", "))
+            format!(
+                "❌ Content Hash Sync: {} files missing updates: {}",
+                files_missing.len(),
+                files_missing.join(", ")
+            )
         };
 
         Ok(ContentHashStatus {
@@ -255,9 +292,15 @@ impl CrossLayerStatusChecker {
         };
 
         let message = if references_invalid.is_empty() {
-            format!("✅ Version Pinning: All {} references are valid", references_checked)
+            format!(
+                "✅ Version Pinning: All {} references are valid",
+                references_checked
+            )
         } else {
-            format!("❌ Version Pinning: {} invalid references found", references_invalid.len())
+            format!(
+                "❌ Version Pinning: {} invalid references found",
+                references_invalid.len()
+            )
         };
 
         Ok(VersionPinningStatus {
@@ -278,14 +321,20 @@ impl CrossLayerStatusChecker {
         pr_number: u64,
         _changed_files: &[String],
     ) -> Result<EquivalenceProofStatus, GovernanceError> {
-        info!("Checking equivalence proofs for {}/{} PR #{}", owner, repo, pr_number);
+        info!(
+            "Checking equivalence proofs for {}/{} PR #{}",
+            owner, repo, pr_number
+        );
 
         // Check if this is a verification-required repository
         let repo_name = format!("{}/{}", owner, repo);
         if crate::validation::verification_check::requires_verification(&repo_name)? {
             // Get PR data from GitHub
-            let pr_json = self.github_client.get_pull_request(owner, repo, pr_number).await?;
-            
+            let pr_json = self
+                .github_client
+                .get_pull_request(owner, repo, pr_number)
+                .await?;
+
             // Extract head_sha from PR response
             let head_sha = pr_json["head"]["sha"]
                 .as_str()
@@ -293,14 +342,14 @@ impl CrossLayerStatusChecker {
                     GovernanceError::GitHubError("Missing head SHA in PR response".to_string())
                 })?
                 .to_string();
-            
+
             // Convert to database::models::PullRequest for verification_check
             let pr = DatabasePullRequest {
                 id: 0, // Not needed for verification
                 repo_name: repo_name.clone(),
                 pr_number: pr_number as i32,
                 opened_at: chrono::Utc::now(), // Not critical for verification
-                layer: 0, // Not critical for verification
+                layer: 0,                      // Not critical for verification
                 head_sha,
                 signatures: vec![],
                 governance_status: "pending".to_string(),
@@ -309,13 +358,10 @@ impl CrossLayerStatusChecker {
                 created_at: chrono::Utc::now(),
                 updated_at: chrono::Utc::now(),
             };
-            
+
             // Use actual verification check
-            let verification_result = check_verification_status(
-                &self.github_client,
-                &pr
-            ).await?;
-            
+            let verification_result = check_verification_status(&self.github_client, &pr).await?;
+
             // Extract test counts from CI check runs
             let (tests_run, tests_passed, tests_failed) = self
                 .extract_test_counts_from_ci(owner, &repo_name, &pr.head_sha)
@@ -324,20 +370,21 @@ impl CrossLayerStatusChecker {
                     warn!("Failed to extract test counts from CI: {}", e);
                     (0, 0, vec![])
                 });
-            
+
             // Map verification result to EquivalenceProofStatus
             match verification_result {
-                ValidationResult::Valid { message } => {
-                    Ok(EquivalenceProofStatus {
-                        status: StatusState::Success,
-                        message: format!("✅ Equivalence Proof: {}", message),
-                        tests_run,
-                        tests_passed,
-                        tests_failed,
-                        proof_verification: Some("CI verification passed".to_string()),
-                    })
-                }
-                ValidationResult::Invalid { message, blocking: _ } => {
+                ValidationResult::Valid { message } => Ok(EquivalenceProofStatus {
+                    status: StatusState::Success,
+                    message: format!("✅ Equivalence Proof: {}", message),
+                    tests_run,
+                    tests_passed,
+                    tests_failed,
+                    proof_verification: Some("CI verification passed".to_string()),
+                }),
+                ValidationResult::Invalid {
+                    message,
+                    blocking: _,
+                } => {
                     let mut failed = tests_failed;
                     let message_clone = message.clone();
                     if !message.is_empty() {
@@ -352,16 +399,14 @@ impl CrossLayerStatusChecker {
                         proof_verification: Some("CI verification failed".to_string()),
                     })
                 }
-                ValidationResult::Pending { message } => {
-                    Ok(EquivalenceProofStatus {
-                        status: StatusState::Pending,
-                        message: format!("⏳ Equivalence Proof: {}", message),
-                        tests_run,
-                        tests_passed,
-                        tests_failed,
-                        proof_verification: None,
-                    })
-                }
+                ValidationResult::Pending { message } => Ok(EquivalenceProofStatus {
+                    status: StatusState::Pending,
+                    message: format!("⏳ Equivalence Proof: {}", message),
+                    tests_run,
+                    tests_passed,
+                    tests_failed,
+                    proof_verification: None,
+                }),
                 ValidationResult::NotApplicable => {
                     // Not a verification-required repo, return success
                     Ok(EquivalenceProofStatus {
@@ -378,7 +423,11 @@ impl CrossLayerStatusChecker {
             // Not a verification-required repo, but still try to extract test counts
             let (tests_run, tests_passed, tests_failed) = {
                 // Get PR data to extract head SHA
-                if let Ok(pr_json) = self.github_client.get_pull_request(owner, repo, pr_number).await {
+                if let Ok(pr_json) = self
+                    .github_client
+                    .get_pull_request(owner, repo, pr_number)
+                    .await
+                {
                     if let Some(head_sha) = pr_json["head"]["sha"].as_str() {
                         self.extract_test_counts_from_ci(owner, repo, head_sha)
                             .await
@@ -393,7 +442,7 @@ impl CrossLayerStatusChecker {
                     (0, 0, vec![])
                 }
             };
-            
+
             // Not a verification-required repo
             Ok(EquivalenceProofStatus {
                 status: StatusState::Success,
@@ -405,7 +454,7 @@ impl CrossLayerStatusChecker {
             })
         }
     }
-    
+
     /// Extract test counts from CI check runs
     /// Attempts to parse test counts from check run names and conclusions
     async fn extract_test_counts_from_ci(
@@ -416,18 +465,18 @@ impl CrossLayerStatusChecker {
     ) -> Result<(usize, usize, Vec<String>), GovernanceError> {
         // Get check runs for the commit
         let check_runs = self.github_client.get_check_runs(owner, repo, sha).await?;
-        
+
         let mut tests_run = 0;
         let mut tests_passed = 0;
         let mut tests_failed = Vec::new();
-        
+
         // Look for test-related check runs
         // Common patterns: "Tests", "cargo test", "Test", "CI", etc.
         for check_run in &check_runs {
             let name_lower = check_run.name.to_lowercase();
-            
+
             // Check if this is a test-related check run
-            if name_lower.contains("test") 
+            if name_lower.contains("test")
                 || name_lower.contains("cargo test")
                 || name_lower.contains("unit test")
                 || name_lower.contains("property test")
@@ -442,7 +491,7 @@ impl CrossLayerStatusChecker {
                     // If we can't extract a count, assume at least 1 test was run
                     tests_run += 1;
                 }
-                
+
                 // Check conclusion to determine pass/fail
                 match check_run.conclusion.as_deref() {
                     Some("success") => {
@@ -455,7 +504,11 @@ impl CrossLayerStatusChecker {
                         }
                     }
                     Some("failure") | Some("cancelled") | Some("timed_out") => {
-                        tests_failed.push(format!("{}: {}", check_run.name, check_run.conclusion.as_deref().unwrap_or("failed")));
+                        tests_failed.push(format!(
+                            "{}: {}",
+                            check_run.name,
+                            check_run.conclusion.as_deref().unwrap_or("failed")
+                        ));
                         // If we have a test count, assume at least one failed
                         if tests_run > tests_passed {
                             // Already accounted for
@@ -469,7 +522,7 @@ impl CrossLayerStatusChecker {
                 }
             }
         }
-        
+
         // If we found test-related check runs but couldn't extract counts,
         // use the number of successful test check runs as a proxy
         if tests_run == 0 {
@@ -480,27 +533,27 @@ impl CrossLayerStatusChecker {
                     name_lower.contains("test") || name_lower.contains("cargo test")
                 })
                 .collect();
-            
+
             tests_run = test_check_runs.len();
             tests_passed = test_check_runs
                 .iter()
                 .filter(|cr| cr.conclusion.as_deref() == Some("success"))
                 .count();
         }
-        
+
         Ok((tests_run, tests_passed, tests_failed))
     }
-    
+
     /// Extract test count from check run name using regex patterns
     /// Looks for patterns like "123 tests", "Tests: 456", etc.
     /// This is public for use in tests and fuzz targets.
     pub fn extract_test_count_from_name(name: &str) -> Option<usize> {
         Self::extract_test_count_from_name_impl(name)
     }
-    
+
     fn extract_test_count_from_name_impl(name: &str) -> Option<usize> {
         use regex::Regex;
-        
+
         // Pattern: "123 tests" or "Tests: 456" or "cargo test: 789" (case-insensitive, handles plural)
         let patterns = vec![
             r"(?i)(\d+)\s+test[s]?",
@@ -509,7 +562,7 @@ impl CrossLayerStatusChecker {
             r"(?i)passed[:\s]+(\d+)",
             r"(?i)\((\d+)\s+test[s]?\)", // Matches "(123 tests)" format
         ];
-        
+
         for pattern in patterns {
             if let Ok(re) = Regex::new(pattern) {
                 if let Some(captures) = re.captures(name) {
@@ -521,10 +574,10 @@ impl CrossLayerStatusChecker {
                 }
             }
         }
-        
+
         None
     }
-    
+
     /// Check if repository requires verification
     fn requires_verification(&self, repo: &str) -> Result<bool, GovernanceError> {
         crate::validation::verification_check::requires_verification(repo)
@@ -538,13 +591,15 @@ impl CrossLayerStatusChecker {
         version_pinning: &VersionPinningStatus,
         equivalence_proof: &EquivalenceProofStatus,
     ) -> StatusState {
-        if content_hash.status == StatusState::Success &&
-           version_pinning.status == StatusState::Success &&
-           equivalence_proof.status == StatusState::Success {
+        if content_hash.status == StatusState::Success
+            && version_pinning.status == StatusState::Success
+            && equivalence_proof.status == StatusState::Success
+        {
             StatusState::Success
-        } else if content_hash.status == StatusState::Failure ||
-                  version_pinning.status == StatusState::Failure ||
-                  equivalence_proof.status == StatusState::Failure {
+        } else if content_hash.status == StatusState::Failure
+            || version_pinning.status == StatusState::Failure
+            || equivalence_proof.status == StatusState::Failure
+        {
             StatusState::Failure
         } else {
             StatusState::Pending
@@ -559,7 +614,7 @@ impl CrossLayerStatusChecker {
         equivalence_proof: &EquivalenceProofStatus,
     ) -> String {
         let mut parts = Vec::new();
-        
+
         if content_hash.status == StatusState::Success {
             parts.push("Content Hash: ✅".to_string());
         } else {
@@ -598,11 +653,16 @@ impl CrossLayerStatusChecker {
         }
 
         if !version_pinning.references_invalid.is_empty() {
-            recommendations.push("Update version references to point to valid Orange Paper versions".to_string());
+            recommendations.push(
+                "Update version references to point to valid Orange Paper versions".to_string(),
+            );
         }
 
         if !equivalence_proof.tests_failed.is_empty() {
-            recommendations.push("Fix failing equivalence tests to ensure implementation matches specification".to_string());
+            recommendations.push(
+                "Fix failing equivalence tests to ensure implementation matches specification"
+                    .to_string(),
+            );
         }
 
         if recommendations.is_empty() {
@@ -631,17 +691,15 @@ impl CrossLayerStatusChecker {
 
     fn simulate_parse_version_references(&self, file: &str) -> Vec<VersionReference> {
         if file.contains("consensus") {
-            vec![
-                VersionReference {
-                    file_path: file.to_string(),
-                    line_number: 0,
-                    reference_type: crate::validation::version_pinning::VersionReferenceType::Combined,
-                    version: "v1.2.3".to_string(),
-                    commit_sha: Some("abc123def456".to_string()),
-                    content_hash: Some("sha256:1234567890abcdef".to_string()),
-                    raw_text: "v1.2.3".to_string(),
-                }
-            ]
+            vec![VersionReference {
+                file_path: file.to_string(),
+                line_number: 0,
+                reference_type: crate::validation::version_pinning::VersionReferenceType::Combined,
+                version: "v1.2.3".to_string(),
+                commit_sha: Some("abc123def456".to_string()),
+                content_hash: Some("sha256:1234567890abcdef".to_string()),
+                raw_text: "v1.2.3".to_string(),
+            }]
         } else {
             vec![]
         }
@@ -769,7 +827,7 @@ mod tests {
         let key_path = temp_dir.path().join("test_key.pem");
         let valid_key = include_str!("../../../test_fixtures/test_rsa_key.pem");
         std::fs::write(&key_path, valid_key).ok()?;
-        
+
         let github_client = GitHubClient::new(123456, key_path.to_str()?).ok()?;
         Some(CrossLayerStatusChecker {
             github_client,
@@ -814,7 +872,8 @@ mod tests {
             proof_verification: Some("Verified".to_string()),
         };
 
-        let result = checker.determine_overall_status(&content_hash, &version_pinning, &equivalence_proof);
+        let result =
+            checker.determine_overall_status(&content_hash, &version_pinning, &equivalence_proof);
         assert_eq!(result, StatusState::Success);
     }
 
@@ -853,7 +912,8 @@ mod tests {
             proof_verification: Some("Verified".to_string()),
         };
 
-        let result = checker.determine_overall_status(&content_hash, &version_pinning, &equivalence_proof);
+        let result =
+            checker.determine_overall_status(&content_hash, &version_pinning, &equivalence_proof);
         assert_eq!(result, StatusState::Failure);
     }
 
@@ -892,7 +952,8 @@ mod tests {
             proof_verification: None,
         };
 
-        let result = checker.determine_overall_status(&content_hash, &version_pinning, &equivalence_proof);
+        let result =
+            checker.determine_overall_status(&content_hash, &version_pinning, &equivalence_proof);
         assert_eq!(result, StatusState::Pending);
     }
 
@@ -931,7 +992,8 @@ mod tests {
             proof_verification: Some("Verified".to_string()),
         };
 
-        let result = checker.determine_overall_status(&content_hash, &version_pinning, &equivalence_proof);
+        let result =
+            checker.determine_overall_status(&content_hash, &version_pinning, &equivalence_proof);
         assert_eq!(result, StatusState::Pending);
     }
 
@@ -970,7 +1032,8 @@ mod tests {
             proof_verification: Some("Verified".to_string()),
         };
 
-        let recommendations = checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
+        let recommendations =
+            checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
         assert_eq!(recommendations.len(), 1);
         assert!(recommendations[0].contains("All cross-layer checks passed"));
     }
@@ -1009,7 +1072,8 @@ mod tests {
             proof_verification: Some("Verified".to_string()),
         };
 
-        let recommendations = checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
+        let recommendations =
+            checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
         assert_eq!(recommendations.len(), 1);
         assert!(recommendations[0].contains("Update corresponding Consensus Proof files"));
         assert!(recommendations[0].contains("block-validation.md"));
@@ -1042,7 +1106,8 @@ mod tests {
                 reference: VersionReference {
                     file_path: "src/validation.rs".to_string(),
                     line_number: 42,
-                    reference_type: crate::validation::version_pinning::VersionReferenceType::Version,
+                    reference_type:
+                        crate::validation::version_pinning::VersionReferenceType::Version,
                     version: "v9.9.9".to_string(),
                     commit_sha: None,
                     content_hash: None,
@@ -1062,7 +1127,8 @@ mod tests {
             proof_verification: Some("Verified".to_string()),
         };
 
-        let recommendations = checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
+        let recommendations =
+            checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
         assert_eq!(recommendations.len(), 1);
         assert!(recommendations[0].contains("Update version references"));
         assert!(recommendations[0].contains("Orange Paper"));
@@ -1098,11 +1164,15 @@ mod tests {
             message: "Tests failed".to_string(),
             tests_run: 100,
             tests_passed: 95,
-            tests_failed: vec!["test_block_validation".to_string(), "test_tx_validation".to_string()],
+            tests_failed: vec![
+                "test_block_validation".to_string(),
+                "test_tx_validation".to_string(),
+            ],
             proof_verification: Some("Failed".to_string()),
         };
 
-        let recommendations = checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
+        let recommendations =
+            checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
         assert_eq!(recommendations.len(), 1);
         assert!(recommendations[0].contains("Fix failing equivalence tests"));
         assert!(recommendations[0].contains("implementation matches specification"));
@@ -1135,7 +1205,8 @@ mod tests {
                 reference: VersionReference {
                     file_path: "src/validation.rs".to_string(),
                     line_number: 42,
-                    reference_type: crate::validation::version_pinning::VersionReferenceType::Version,
+                    reference_type:
+                        crate::validation::version_pinning::VersionReferenceType::Version,
                     version: "v9.9.9".to_string(),
                     commit_sha: None,
                     content_hash: None,
@@ -1155,11 +1226,18 @@ mod tests {
             proof_verification: Some("Failed".to_string()),
         };
 
-        let recommendations = checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
+        let recommendations =
+            checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
         assert_eq!(recommendations.len(), 3);
-        assert!(recommendations.iter().any(|r| r.contains("Update corresponding Consensus Proof files")));
-        assert!(recommendations.iter().any(|r| r.contains("Update version references")));
-        assert!(recommendations.iter().any(|r| r.contains("Fix failing equivalence tests")));
+        assert!(recommendations
+            .iter()
+            .any(|r| r.contains("Update corresponding Consensus Proof files")));
+        assert!(recommendations
+            .iter()
+            .any(|r| r.contains("Update version references")));
+        assert!(recommendations
+            .iter()
+            .any(|r| r.contains("Fix failing equivalence tests")));
     }
 
     #[tokio::test]
@@ -1200,7 +1278,8 @@ mod tests {
             proof_verification: Some("Verified".to_string()),
         };
 
-        let recommendations = checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
+        let recommendations =
+            checker.generate_recommendations(&content_hash, &version_pinning, &equivalence_proof);
         assert_eq!(recommendations.len(), 1);
         assert!(recommendations[0].contains("block-validation.md"));
         assert!(recommendations[0].contains("transaction-validation.md"));
@@ -1242,7 +1321,11 @@ mod tests {
             proof_verification: Some("Verified".to_string()),
         };
 
-        let description = checker.generate_status_description(&content_hash, &version_pinning, &equivalence_proof);
+        let description = checker.generate_status_description(
+            &content_hash,
+            &version_pinning,
+            &equivalence_proof,
+        );
         assert!(description.contains("Content Hash: ✅"));
         assert!(description.contains("Version Pinning: ✅"));
         assert!(description.contains("Equivalence Proof: ✅"));
@@ -1283,7 +1366,11 @@ mod tests {
             proof_verification: Some("Failed".to_string()),
         };
 
-        let description = checker.generate_status_description(&content_hash, &version_pinning, &equivalence_proof);
+        let description = checker.generate_status_description(
+            &content_hash,
+            &version_pinning,
+            &equivalence_proof,
+        );
         assert!(description.contains("Content Hash: ❌"));
         assert!(description.contains("Version Pinning: ❌"));
         assert!(description.contains("Equivalence Proof: ❌"));
@@ -1323,7 +1410,11 @@ mod tests {
             proof_verification: None,
         };
 
-        let description = checker.generate_status_description(&content_hash, &version_pinning, &equivalence_proof);
+        let description = checker.generate_status_description(
+            &content_hash,
+            &version_pinning,
+            &equivalence_proof,
+        );
         assert!(description.contains("Content Hash: ✅"));
         assert!(description.contains("Version Pinning: ❌"));
         assert!(description.contains("Equivalence Proof: ❌")); // Pending shows as ❌
@@ -1383,7 +1474,7 @@ mod tests {
         // Note: This is a test key only, not for production use
         let valid_key = include_str!("../../../test_fixtures/test_rsa_key.pem");
         std::fs::write(&key_path, valid_key).unwrap();
-        
+
         // Try to create GitHub client - if it fails due to invalid key, skip the test
         // In a real scenario, we'd use a proper test key or mock the client
         let github_client = match GitHubClient::new(123456, key_path.to_str().unwrap()) {
@@ -1395,24 +1486,19 @@ mod tests {
             }
         };
         let mut checker = CrossLayerStatusChecker::new(github_client);
-        
+
         let changed_files = vec![
             "consensus-rules/block-validation.md".to_string(),
             "proofs/block-validation.rs".to_string(),
         ];
 
-        let status = checker.generate_cross_layer_status("test_owner", "test_repo", 123, &changed_files).await
+        let status = checker
+            .generate_cross_layer_status("test_owner", "test_repo", 123, &changed_files)
+            .await
             .expect("Failed to generate cross-layer status in test");
-        
+
         assert_eq!(status.context, "cross-layer-sync");
         assert!(status.target_url.is_some());
         assert!(!status.details.recommendations.is_empty());
     }
 }
-
-
-
-
-
-
-

@@ -59,11 +59,11 @@ impl KeyType {
     /// Matches documented policy: 6 months for routine maintainers, 3 months for emergency
     pub fn rotation_period(&self) -> Duration {
         match self {
-            KeyType::Maintainer => Duration::from_secs(180 * 24 * 60 * 60),  // 6 months
+            KeyType::Maintainer => Duration::from_secs(180 * 24 * 60 * 60), // 6 months
             KeyType::EconomicNode => Duration::from_secs(365 * 24 * 60 * 60), // 1 year
-            KeyType::Emergency => Duration::from_secs(90 * 24 * 60 * 60),    // 3 months
-            KeyType::GitHubApp => Duration::from_secs(90 * 24 * 60 * 60),    // 3 months
-            KeyType::System => Duration::from_secs(365 * 24 * 60 * 60),      // 1 year
+            KeyType::Emergency => Duration::from_secs(90 * 24 * 60 * 60),   // 3 months
+            KeyType::GitHubApp => Duration::from_secs(90 * 24 * 60 * 60),   // 3 months
+            KeyType::System => Duration::from_secs(365 * 24 * 60 * 60),     // 1 year
         }
     }
 
@@ -437,10 +437,7 @@ impl KeyManager {
         .execute(&self.pool)
         .await
         .map_err(|e| {
-            GovernanceError::DatabaseError(format!(
-                "Failed to update maintainer public key: {}",
-                e
-            ))
+            GovernanceError::DatabaseError(format!("Failed to update maintainer public key: {}", e))
         })?;
 
         Ok(())

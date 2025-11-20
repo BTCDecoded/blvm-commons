@@ -283,26 +283,25 @@ impl EmergencyValidator {
         }
 
         // Parse public key from hex string
-        let public_key_bytes = hex::decode(sig.public_key.trim_start_matches("0x"))
-            .map_err(|e| GovernanceAppError::InvalidSignature(
-                format!("Invalid public key hex: {}", e)
-            ))?;
-        
-        let public_key = bllvm_sdk::governance::PublicKey::from_bytes(&public_key_bytes)
-            .map_err(|e| GovernanceAppError::InvalidSignature(
-                format!("Invalid public key format: {}", e)
-            ))?;
+        let public_key_bytes =
+            hex::decode(sig.public_key.trim_start_matches("0x")).map_err(|e| {
+                GovernanceAppError::InvalidSignature(format!("Invalid public key hex: {}", e))
+            })?;
+
+        let public_key =
+            bllvm_sdk::governance::PublicKey::from_bytes(&public_key_bytes).map_err(|e| {
+                GovernanceAppError::InvalidSignature(format!("Invalid public key format: {}", e))
+            })?;
 
         // Parse signature from hex string
-        let signature_bytes = hex::decode(sig.signature.trim_start_matches("0x"))
-            .map_err(|e| GovernanceAppError::InvalidSignature(
-                format!("Invalid signature hex: {}", e)
-            ))?;
-        
-        let signature = bllvm_sdk::governance::Signature::from_bytes(&signature_bytes)
-            .map_err(|e| GovernanceAppError::InvalidSignature(
-                format!("Invalid signature format: {}", e)
-            ))?;
+        let signature_bytes = hex::decode(sig.signature.trim_start_matches("0x")).map_err(|e| {
+            GovernanceAppError::InvalidSignature(format!("Invalid signature hex: {}", e))
+        })?;
+
+        let signature =
+            bllvm_sdk::governance::Signature::from_bytes(&signature_bytes).map_err(|e| {
+                GovernanceAppError::InvalidSignature(format!("Invalid signature format: {}", e))
+            })?;
 
         // Create message to verify: serialize activation data
         let message = serde_json::to_vec(&serde_json::json!({
@@ -313,20 +312,24 @@ impl EmergencyValidator {
             "keyholder": sig.keyholder,
             "timestamp": sig.timestamp.to_rfc3339(),
         }))
-        .map_err(|e| GovernanceAppError::InvalidSignature(
-            format!("Failed to serialize activation message: {}", e)
-        ))?;
+        .map_err(|e| {
+            GovernanceAppError::InvalidSignature(format!(
+                "Failed to serialize activation message: {}",
+                e
+            ))
+        })?;
 
         // Verify signature using bllvm-sdk
         let verified = bllvm_sdk::governance::verify_signature(&signature, &message, &public_key)
-            .map_err(|e| GovernanceAppError::InvalidSignature(
-                format!("Signature verification error: {}", e)
-            ))?;
+            .map_err(|e| {
+            GovernanceAppError::InvalidSignature(format!("Signature verification error: {}", e))
+        })?;
 
         if !verified {
-            return Err(GovernanceAppError::InvalidSignature(
-                format!("Signature verification failed for keyholder: {}", sig.keyholder)
-            ));
+            return Err(GovernanceAppError::InvalidSignature(format!(
+                "Signature verification failed for keyholder: {}",
+                sig.keyholder
+            )));
         }
 
         Ok(())
@@ -524,7 +527,10 @@ mod tests {
 
     #[test]
     fn test_emergency_tier_security_audit_deadline_days() {
-        assert_eq!(EmergencyTier::Critical.security_audit_deadline_days(), Some(60));
+        assert_eq!(
+            EmergencyTier::Critical.security_audit_deadline_days(),
+            Some(60)
+        );
         assert_eq!(EmergencyTier::Urgent.security_audit_deadline_days(), None);
         assert_eq!(EmergencyTier::Elevated.security_audit_deadline_days(), None);
     }
@@ -545,9 +551,15 @@ mod tests {
 
     #[test]
     fn test_emergency_tier_description() {
-        assert!(EmergencyTier::Critical.description().contains("Network-threatening"));
-        assert!(EmergencyTier::Urgent.description().contains("Serious security"));
-        assert!(EmergencyTier::Elevated.description().contains("Important priority"));
+        assert!(EmergencyTier::Critical
+            .description()
+            .contains("Network-threatening"));
+        assert!(EmergencyTier::Urgent
+            .description()
+            .contains("Serious security"));
+        assert!(EmergencyTier::Elevated
+            .description()
+            .contains("Important priority"));
     }
 
     #[test]
@@ -664,7 +676,7 @@ mod tests {
             activated_by: "alice".to_string(),
             reason: "Test".to_string(),
             evidence: "x".repeat(100), // Sufficient evidence
-            signatures: vec![], // Need 5-of-7, have 0
+            signatures: vec![],        // Need 5-of-7, have 0
         };
 
         let result = EmergencyValidator::validate_activation(&activation);
@@ -822,7 +834,7 @@ mod tests {
     fn test_calculate_expiration() {
         let expiration = EmergencyValidator::calculate_expiration(EmergencyTier::Critical);
         let expected = Utc::now() + Duration::try_days(7).unwrap_or_default();
-        
+
         // Allow small time difference
         let diff = (expiration - expected).num_seconds().abs();
         assert!(diff < 5);
@@ -835,7 +847,7 @@ mod tests {
             EmergencyTier::Critical,
             activated_at,
         );
-        
+
         let expected = activated_at + Duration::try_days(30).unwrap_or_default();
         let diff = (deadline - expected).num_seconds().abs();
         assert!(diff < 5);
@@ -848,7 +860,7 @@ mod tests {
             EmergencyTier::Critical,
             activated_at,
         );
-        
+
         assert!(deadline.is_some());
         let expected = activated_at + Duration::try_days(60).unwrap_or_default();
         let diff = (deadline.unwrap() - expected).num_seconds().abs();
@@ -862,7 +874,7 @@ mod tests {
             EmergencyTier::Urgent,
             activated_at,
         );
-        
+
         assert!(deadline.is_none()); // Urgent doesn't require audit
     }
 
@@ -873,7 +885,7 @@ mod tests {
             EmergencyTier::Elevated,
             activated_at,
         );
-        
+
         assert!(deadline.is_none()); // Elevated doesn't require audit
     }
 
@@ -892,9 +904,11 @@ mod tests {
 
         let extension_expiration = emergency.calculate_extension_expiration();
         assert!(extension_expiration.is_some());
-        
+
         let expected = emergency.expires_at + Duration::try_days(30).unwrap_or_default();
-        let diff = (extension_expiration.unwrap() - expected).num_seconds().abs();
+        let diff = (extension_expiration.unwrap() - expected)
+            .num_seconds()
+            .abs();
         assert!(diff < 5);
     }
 
@@ -913,11 +927,11 @@ mod tests {
 
         // First extension allowed
         assert!(emergency.can_extend());
-        
+
         emergency.extension_count = 1;
         // Second extension allowed
         assert!(emergency.can_extend());
-        
+
         emergency.extension_count = 2;
         // Max extensions reached
         assert!(!emergency.can_extend());

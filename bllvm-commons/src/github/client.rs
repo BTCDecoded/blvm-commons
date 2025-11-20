@@ -1,8 +1,8 @@
 use octocrab::Octocrab;
-use serde_json::json;
-use tracing::{error, info, warn};
 use reqwest::Client as ReqwestClient;
+use serde_json::json;
 use std::sync::Arc;
+use tracing::{error, info, warn};
 
 use crate::error::GovernanceError;
 use crate::github::types::{CheckRun, WorkflowStatus};
@@ -51,9 +51,9 @@ impl GitHubClient {
             },
         ));
 
-        Ok(Self { 
-            client, 
-            app_id, 
+        Ok(Self {
+            client,
+            app_id,
             http_client,
             circuit_breaker,
         })
@@ -71,10 +71,10 @@ impl GitHubClient {
     ) -> Result<(), GovernanceError> {
         // Input validation
         if owner.is_empty() || repo.is_empty() || sha.is_empty() {
-            return Err(GovernanceError::GitHubError(
-                format!("Invalid input: owner, repo, and sha must be non-empty (owner={}, repo={}, sha={})", 
-                       owner, repo, sha)
-            ));
+            return Err(GovernanceError::GitHubError(format!(
+                "Invalid input: owner, repo, and sha must be non-empty (owner={}, repo={}, sha={})",
+                owner, repo, sha
+            )));
         }
 
         if !sha.chars().all(|c| c.is_ascii_hexdigit()) || sha.len() != 40 {
@@ -95,7 +95,7 @@ impl GitHubClient {
             _ => {
                 warn!("Unknown status state '{}', defaulting to Error", state);
                 octocrab::models::StatusState::Error
-            },
+            }
         };
 
         // Create status check payload
@@ -109,7 +109,7 @@ impl GitHubClient {
                     .create_status(sha.to_string(), github_state)
                     .description(description.to_string())
                     .context(context.to_string());
-                
+
                 // target_url is optional in octocrab 0.38 - can be omitted if not needed
                 status_builder
                     .send()
@@ -170,20 +170,17 @@ impl GitHubClient {
         // octocrab 0.38 API - use checks().update_check_run()
         // Note: output_title/output_summary may not be available in 0.38
         let checks_handler = self.client.checks(owner, repo);
-        let mut builder = checks_handler
-            .update_check_run(octocrab::models::CheckRunId(check_run_id));
-        
+        let mut builder =
+            checks_handler.update_check_run(octocrab::models::CheckRunId(check_run_id));
+
         if let Some(conclusion) = conclusion_opt {
             builder = builder.conclusion(conclusion);
         }
-        
-        builder
-            .send()
-            .await
-            .map_err(|e| {
-                error!("Failed to update status check: {}", e);
-                GovernanceError::GitHubError(format!("Failed to update status check: {}", e))
-            })?;
+
+        builder.send().await.map_err(|e| {
+            error!("Failed to update status check: {}", e);
+            GovernanceError::GitHubError(format!("Failed to update status check: {}", e))
+        })?;
 
         info!(
             "Successfully updated status check: {} - {} ({})",
@@ -201,9 +198,10 @@ impl GitHubClient {
     ) -> Result<serde_json::Value, GovernanceError> {
         // Input validation
         if owner.is_empty() || repo.is_empty() {
-            return Err(GovernanceError::GitHubError(
-                format!("Invalid input: owner and repo must be non-empty (owner={}, repo={})", owner, repo)
-            ));
+            return Err(GovernanceError::GitHubError(format!(
+                "Invalid input: owner and repo must be non-empty (owner={}, repo={})",
+                owner, repo
+            )));
         }
 
         info!("Getting repository info for {}/{}", owner, repo);
@@ -250,15 +248,17 @@ impl GitHubClient {
     ) -> Result<serde_json::Value, GovernanceError> {
         // Input validation
         if owner.is_empty() || repo.is_empty() {
-            return Err(GovernanceError::GitHubError(
-                format!("Invalid input: owner and repo must be non-empty (owner={}, repo={})", owner, repo)
-            ));
+            return Err(GovernanceError::GitHubError(format!(
+                "Invalid input: owner and repo must be non-empty (owner={}, repo={})",
+                owner, repo
+            )));
         }
 
         if pr_number == 0 {
-            return Err(GovernanceError::GitHubError(
-                format!("Invalid PR number: {} (must be > 0)", pr_number)
-            ));
+            return Err(GovernanceError::GitHubError(format!(
+                "Invalid PR number: {} (must be > 0)",
+                pr_number
+            )));
         }
 
         info!(
@@ -422,7 +422,13 @@ impl GitHubClient {
             });
         }
 
-        info!("Found {} check runs for {}/{}@{}", results.len(), owner, repo, sha);
+        info!(
+            "Found {} check runs for {}/{}@{}",
+            results.len(),
+            owner,
+            repo,
+            sha
+        );
         Ok(results)
     }
 
@@ -441,7 +447,8 @@ impl GitHubClient {
 
         // Get the PR to find the head SHA
         let pr = self.get_pull_request(owner, repo, pr_number).await?;
-        let head_sha = pr.get("head")
+        let head_sha = pr
+            .get("head")
             .and_then(|h| h.get("sha"))
             .and_then(|s| s.as_str())
             .ok_or_else(|| {
@@ -501,7 +508,7 @@ impl GitHubClient {
         // For now, return error indicating API needs update
         warn!("Repository dispatch API needs update for octocrab 0.38");
         Err(GovernanceError::GitHubError(
-            "Repository dispatch API needs update for octocrab 0.38".to_string()
+            "Repository dispatch API needs update for octocrab 0.38".to_string(),
         ))
     }
 
@@ -512,14 +519,17 @@ impl GitHubClient {
         repo: &str,
         run_id: u64,
     ) -> Result<serde_json::Value, GovernanceError> {
-        info!("Getting workflow run status for {}/{} (run ID: {})", owner, repo, run_id);
+        info!(
+            "Getting workflow run status for {}/{} (run ID: {})",
+            owner, repo, run_id
+        );
 
         // octocrab 0.38 API - workflows API has changed
         // TODO: Update to use correct octocrab 0.38 API for workflows
         // For now, return error indicating API needs update
         warn!("Workflows API needs update for octocrab 0.38");
         Err(GovernanceError::GitHubError(
-            "Workflows API needs update for octocrab 0.38".to_string()
+            "Workflows API needs update for octocrab 0.38".to_string(),
         ))
     }
 
@@ -550,14 +560,16 @@ impl GitHubClient {
         _event_type: &str,
     ) -> Result<u64, GovernanceError> {
         use tokio::time::{sleep, Duration};
-        
+
         // Wait a moment for the workflow to start
         sleep(Duration::from_secs(2)).await;
-        
+
         // Poll for recent workflow runs (up to 5 attempts)
         for attempt in 0..5 {
-            let runs = self.list_workflow_runs(owner, repo, None, None, Some(5)).await?;
-            
+            let runs = self
+                .list_workflow_runs(owner, repo, None, None, Some(5))
+                .await?;
+
             // Find the most recent run that matches our event type
             // We look for runs created in the last minute
             let now = chrono::Utc::now();
@@ -575,14 +587,17 @@ impl GitHubClient {
                     }
                 }
             }
-            
+
             if attempt < 4 {
                 sleep(Duration::from_secs(2)).await;
             }
         }
-        
+
         // If we can't find it, return 0 and let monitoring handle it
-        warn!("Could not find workflow run ID for {}/{} - will poll for status", owner, repo);
+        warn!(
+            "Could not find workflow run ID for {}/{} - will poll for status",
+            owner, repo
+        );
         Ok(0)
     }
 
@@ -593,7 +608,10 @@ impl GitHubClient {
         repo: &str,
         run_id: u64,
     ) -> Result<Vec<serde_json::Value>, GovernanceError> {
-        info!("Listing artifacts for {}/{} (run ID: {})", owner, repo, run_id);
+        info!(
+            "Listing artifacts for {}/{} (run ID: {})",
+            owner, repo, run_id
+        );
 
         // octocrab 0.38 API - artifacts API has changed
         // TODO: Update to use correct octocrab 0.38 API for artifacts
@@ -605,7 +623,8 @@ impl GitHubClient {
     /// Get installation token for organization
     async fn get_installation_token(&self, org: &str) -> Result<String, GovernanceError> {
         // Get installation ID for the organization
-        let installations = self.client
+        let installations = self
+            .client
             .apps()
             .installations()
             .send()
@@ -619,7 +638,7 @@ impl GitHubClient {
         // octocrab 0.38 API - account field is now Option<InstallationAccount>
         // Collect installations into Vec to allow multiple passes
         let installations_vec: Vec<_> = installations.into_iter().collect();
-        
+
         // First, try to find installation matching organization
         let installation = installations_vec
             .iter()
@@ -636,7 +655,10 @@ impl GitHubClient {
             // Fallback to first installation if no match found
             .or_else(|| installations_vec.first())
             .ok_or_else(|| {
-                GovernanceError::GitHubError(format!("No installation found for organization: {}", org))
+                GovernanceError::GitHubError(format!(
+                    "No installation found for organization: {}",
+                    org
+                ))
             })?;
 
         // octocrab 0.38 API - installation token API has changed
@@ -644,7 +666,7 @@ impl GitHubClient {
         // For now, return error indicating API needs update
         warn!("Installation token API needs update for octocrab 0.38");
         Err(GovernanceError::GitHubError(
-            "Installation token API needs update for octocrab 0.38".to_string()
+            "Installation token API needs update for octocrab 0.38".to_string(),
         ))
     }
 
@@ -702,7 +724,12 @@ impl GitHubClient {
     ) -> Result<(), GovernanceError> {
         info!(
             "Uploading asset '{}' to release {} in {}/{} ({} bytes, type: {})",
-            asset_name, release_id, owner, repo, asset_data.len(), content_type
+            asset_name,
+            release_id,
+            owner,
+            repo,
+            asset_data.len(),
+            content_type
         );
 
         // Get installation token

@@ -1,15 +1,17 @@
-use bllvm_commons::database::Database;
-use bllvm_commons::crypto::signatures::SignatureManager;
 use bllvm_commons::crypto::multisig::MultisigManager;
+use bllvm_commons::crypto::signatures::SignatureManager;
+use bllvm_commons::database::Database;
 use bllvm_commons::enforcement::decision_log::DecisionLogger;
 use bllvm_sdk::governance::GovernanceKeypair;
-use secp256k1::{SecretKey, Secp256k1, PublicKey};
+use chrono::{DateTime, Duration, Utc};
 use rand::rngs::OsRng;
-use chrono::{DateTime, Utc, Duration};
+use secp256k1::{PublicKey, Secp256k1, SecretKey};
 
 /// Setup an in-memory SQLite database for testing
 pub async fn setup_test_db() -> Database {
-    Database::new_in_memory().await.expect("Failed to create test database")
+    Database::new_in_memory()
+        .await
+        .expect("Failed to create test database")
 }
 
 /// Create a test signature manager
@@ -42,15 +44,15 @@ pub fn create_test_governance_signature(message: &str) -> (String, String) {
 pub fn generate_test_keypairs(count: usize) -> Vec<(String, SecretKey, PublicKey)> {
     let secp = Secp256k1::new();
     let mut keypairs = Vec::new();
-    
+
     for i in 0..count {
         let secret_key = SecretKey::new(&mut OsRng);
         let public_key = PublicKey::from_secret_key(&secp, &secret_key);
         let username = format!("testuser{}", i);
-        
+
         keypairs.push((username, secret_key, public_key));
     }
-    
+
     keypairs
 }
 
@@ -68,13 +70,34 @@ pub fn create_test_maintainers() -> Vec<(String, String, i32)> {
 /// Create test emergency keyholders
 pub fn create_test_emergency_keyholders() -> Vec<(String, String)> {
     vec![
-        ("emergency_alice".to_string(), "emergency_pubkey_alice".to_string()),
-        ("emergency_bob".to_string(), "emergency_pubkey_bob".to_string()),
-        ("emergency_charlie".to_string(), "emergency_pubkey_charlie".to_string()),
-        ("emergency_dave".to_string(), "emergency_pubkey_dave".to_string()),
-        ("emergency_eve".to_string(), "emergency_pubkey_eve".to_string()),
-        ("emergency_frank".to_string(), "emergency_pubkey_frank".to_string()),
-        ("emergency_grace".to_string(), "emergency_pubkey_grace".to_string()),
+        (
+            "emergency_alice".to_string(),
+            "emergency_pubkey_alice".to_string(),
+        ),
+        (
+            "emergency_bob".to_string(),
+            "emergency_pubkey_bob".to_string(),
+        ),
+        (
+            "emergency_charlie".to_string(),
+            "emergency_pubkey_charlie".to_string(),
+        ),
+        (
+            "emergency_dave".to_string(),
+            "emergency_pubkey_dave".to_string(),
+        ),
+        (
+            "emergency_eve".to_string(),
+            "emergency_pubkey_eve".to_string(),
+        ),
+        (
+            "emergency_frank".to_string(),
+            "emergency_pubkey_frank".to_string(),
+        ),
+        (
+            "emergency_grace".to_string(),
+            "emergency_pubkey_grace".to_string(),
+        ),
     ]
 }
 
@@ -87,7 +110,7 @@ pub fn create_test_pull_request(
 ) -> (String, i32, String, i32, DateTime<Utc>) {
     let opened_at = Utc::now() - Duration::days(opened_days_ago);
     let head_sha = format!("abc123def456{}", pr_number);
-    
+
     (repo_name.to_string(), pr_number, head_sha, layer, opened_at)
 }
 
@@ -113,19 +136,22 @@ pub fn create_test_cross_layer_rules() -> Vec<serde_json::Value> {
 
 /// Create test signatures for a pull request
 pub fn create_test_signatures(signers: &[String]) -> Vec<serde_json::Value> {
-    signers.iter().map(|signer| {
-        serde_json::json!({
-            "signer": signer,
-            "signature": format!("signature_{}", signer),
-            "timestamp": Utc::now()
+    signers
+        .iter()
+        .map(|signer| {
+            serde_json::json!({
+                "signer": signer,
+                "signature": format!("signature_{}", signer),
+                "timestamp": Utc::now()
+            })
         })
-    }).collect()
+        .collect()
 }
 
 /// Mock GitHub webhook payloads
 pub mod github_mocks {
     use serde_json::Value;
-    
+
     pub fn pull_request_opened_payload(repo: &str, pr_number: u64) -> Value {
         serde_json::json!({
             "action": "opened",
@@ -140,7 +166,7 @@ pub mod github_mocks {
             }
         })
     }
-    
+
     pub fn pull_request_synchronize_payload(repo: &str, pr_number: u64) -> Value {
         serde_json::json!({
             "action": "synchronize",
@@ -155,8 +181,13 @@ pub mod github_mocks {
             }
         })
     }
-    
-    pub fn review_submitted_payload(repo: &str, pr_number: u64, reviewer: &str, state: &str) -> Value {
+
+    pub fn review_submitted_payload(
+        repo: &str,
+        pr_number: u64,
+        reviewer: &str,
+        state: &str,
+    ) -> Value {
         serde_json::json!({
             "action": "submitted",
             "repository": {
@@ -173,8 +204,13 @@ pub mod github_mocks {
             }
         })
     }
-    
-    pub fn comment_created_payload(repo: &str, pr_number: u64, commenter: &str, body: &str) -> Value {
+
+    pub fn comment_created_payload(
+        repo: &str,
+        pr_number: u64,
+        commenter: &str,
+        body: &str,
+    ) -> Value {
         serde_json::json!({
             "action": "created",
             "repository": {
@@ -191,7 +227,7 @@ pub mod github_mocks {
             }
         })
     }
-    
+
     pub fn push_payload(repo: &str, pusher: &str, ref_name: &str) -> Value {
         serde_json::json!({
             "repository": {
@@ -382,63 +418,23 @@ pub mod mock_github {
 /// Test data fixtures
 pub mod fixtures {
     use super::*;
-    
+
     pub async fn setup_test_database_with_data() -> Database {
         let db = setup_test_db().await;
-        
+
         // Insert test maintainers
         let maintainers = create_test_maintainers();
         for (username, public_key, layer) in maintainers {
             // This would use actual database insertion in a real implementation
             // For now, we'll just return the database
         }
-        
+
         // Insert test emergency keyholders
         let keyholders = create_test_emergency_keyholders();
         for (username, public_key) in keyholders {
             // This would use actual database insertion in a real implementation
         }
-        
+
         db
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -18,14 +18,14 @@ impl ContributionTracker {
     pub fn new(pool: SqlitePool) -> Self {
         Self { pool }
     }
-    
+
     /// Record a merge mining contribution (1% of secondary chain rewards)
     pub async fn record_merge_mining_contribution(
         &self,
         contributor_id: &str,
         chain_id: &str,
         reward_amount_btc: f64,
-        contribution_amount_btc: f64,  // 1% of reward
+        contribution_amount_btc: f64, // 1% of reward
         timestamp: DateTime<Utc>,
     ) -> Result<()> {
         // Record in unified contributions table
@@ -44,18 +44,15 @@ impl ContributionTracker {
         .bind(true)  // Verified (on-chain)
         .execute(&self.pool)
         .await?;
-        
+
         info!(
             "Recorded merge mining contribution: {} BTC (from {} BTC reward on {}) for {}",
-            contribution_amount_btc,
-            reward_amount_btc,
-            chain_id,
-            contributor_id
+            contribution_amount_btc, reward_amount_btc, chain_id, contributor_id
         );
-        
+
         Ok(())
     }
-    
+
     /// Record a fee forwarding contribution
     pub async fn record_fee_forwarding_contribution(
         &self,
@@ -83,7 +80,7 @@ impl ContributionTracker {
         .bind(true)  // Verified (on-chain)
         .execute(&self.pool)
         .await?;
-        
+
         // Also record in unified contributions table
         sqlx::query(
             r#"
@@ -100,27 +97,29 @@ impl ContributionTracker {
         .bind(true)  // Verified (on-chain)
         .execute(&self.pool)
         .await?;
-        
+
         info!(
             "Recorded fee forwarding contribution: {} BTC (tx: {}) for {}",
-            amount_btc,
-            tx_hash,
-            contributor_id
+            amount_btc, tx_hash, contributor_id
         );
-        
+
         Ok(())
     }
-    
+
     /// Record a zap contribution (called from zap tracker)
     pub async fn record_zap_contribution(
         &self,
-        contributor_id: &str,  // Sender pubkey
+        contributor_id: &str, // Sender pubkey
         amount_btc: f64,
         timestamp: DateTime<Utc>,
         is_proposal_zap: bool,
     ) -> Result<()> {
         // Record in unified contributions table
-        let contribution_type = if is_proposal_zap { "zap:proposal" } else { "zap:general" };
+        let contribution_type = if is_proposal_zap {
+            "zap:proposal"
+        } else {
+            "zap:general"
+        };
         sqlx::query(
             r#"
             INSERT INTO unified_contributions
@@ -137,10 +136,10 @@ impl ContributionTracker {
         .bind(true)  // Verified (Nostr event)
         .execute(&self.pool)
         .await?;
-        
+
         Ok(())
     }
-    
+
     /// Get total contributions for a contributor in a time period
     pub async fn get_contributor_total(
         &self,
@@ -165,11 +164,11 @@ impl ContributionTracker {
         .bind(end_time)
         .fetch_all(&self.pool)
         .await?;
-        
+
         let mut merge_mining_btc = 0.0;
         let mut fee_forwarding_btc = 0.0;
         let mut zaps_btc = 0.0;
-        
+
         for (contribution_type, total_btc) in rows {
             let total = total_btc.unwrap_or(0.0);
             if contribution_type.starts_with("merge_mining:") {
@@ -180,7 +179,7 @@ impl ContributionTracker {
                 zaps_btc += total;
             }
         }
-        
+
         Ok(ContributorTotal {
             merge_mining_btc,
             fee_forwarding_btc,
@@ -188,7 +187,7 @@ impl ContributionTracker {
             total_btc: merge_mining_btc + fee_forwarding_btc + zaps_btc,
         })
     }
-    
+
     /// Update contribution age for cooling-off period calculation
     pub async fn update_contribution_ages(&self) -> Result<()> {
         sqlx::query(
@@ -204,7 +203,7 @@ impl ContributionTracker {
         )
         .execute(&self.pool)
         .await?;
-        
+
         Ok(())
     }
 }
@@ -217,4 +216,3 @@ pub struct ContributorTotal {
     pub zaps_btc: f64,
     pub total_btc: f64,
 }
-

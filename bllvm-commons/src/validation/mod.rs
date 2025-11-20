@@ -17,18 +17,11 @@ use serde::{Deserialize, Serialize};
 #[allow(dead_code)] // Used across multiple modules
 pub enum ValidationResult {
     /// Validation passed
-    Valid {
-        message: String,
-    },
+    Valid { message: String },
     /// Validation failed
-    Invalid {
-        message: String,
-        blocking: bool,
-    },
+    Invalid { message: String, blocking: bool },
     /// Validation is still pending
-    Pending {
-        message: String,
-    },
+    Pending { message: String },
     /// Validation not applicable to this case
     NotApplicable,
 }

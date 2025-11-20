@@ -34,7 +34,8 @@ impl NostrBotManager {
             let nsec = Self::resolve_nsec(&bot_config.nsec_path)?;
 
             // Create Nostr client for this bot
-            let client = NostrClient::new(nsec, config.relays.clone()).await
+            let client = NostrClient::new(nsec, config.relays.clone())
+                .await
                 .map_err(|e| anyhow!("Failed to create Nostr client for bot {}: {}", bot_id, e))?;
 
             bots.insert(bot_id.clone(), client);
@@ -72,8 +73,13 @@ impl NostrBotManager {
 
     /// Get a bot client by ID
     pub fn get_bot(&self, bot_id: &str) -> Result<&NostrClient> {
-        self.bots.get(bot_id)
-            .ok_or_else(|| anyhow!("Bot '{}' not found. Available bots: {:?}", bot_id, self.bots.keys().collect::<Vec<_>>()))
+        self.bots.get(bot_id).ok_or_else(|| {
+            anyhow!(
+                "Bot '{}' not found. Available bots: {:?}",
+                bot_id,
+                self.bots.keys().collect::<Vec<_>>()
+            )
+        })
     }
 
     /// Get bot config by ID
@@ -93,12 +99,16 @@ impl NostrBotManager {
 
     /// Get the research bot (defaults to "dev" or "gov" if not available)
     pub fn get_research_bot(&self) -> Result<&NostrClient> {
-        self.get_bot("research").or_else(|_| self.get_bot("dev")).or_else(|_| self.get_bot("gov"))
+        self.get_bot("research")
+            .or_else(|_| self.get_bot("dev"))
+            .or_else(|_| self.get_bot("gov"))
     }
 
     /// Get the network bot (defaults to "dev" or "gov" if not available)
     pub fn get_network_bot(&self) -> Result<&NostrClient> {
-        self.get_bot("network").or_else(|_| self.get_bot("dev")).or_else(|_| self.get_bot("gov"))
+        self.get_bot("network")
+            .or_else(|_| self.get_bot("dev"))
+            .or_else(|_| self.get_bot("gov"))
     }
 
     /// Get all bot IDs
@@ -113,7 +123,8 @@ impl NostrBotManager {
 
     /// Get the lightning address for a bot
     pub fn get_lightning_address(&self, bot_id: &str) -> Option<String> {
-        self.bot_configs.get(bot_id)
+        self.bot_configs
+            .get(bot_id)
             .map(|c| c.lightning_address.clone())
     }
 
@@ -131,7 +142,6 @@ impl NostrBotManager {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
 
     #[tokio::test]
     async fn test_bot_manager_creation() {
@@ -142,23 +152,23 @@ mod tests {
     #[test]
     fn test_resolve_nsec_from_env() {
         std::env::set_var("TEST_NSEC_VAR", "test_nsec_value");
-        
+
         let result = NostrBotManager::resolve_nsec("env:TEST_NSEC_VAR");
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), "test_nsec_value");
-        
+
         std::env::remove_var("TEST_NSEC_VAR");
     }
 
     #[test]
     fn test_resolve_nsec_from_file() {
-        use tempfile::NamedTempFile;
         use std::io::Write;
-        
+        use tempfile::NamedTempFile;
+
         let mut file = NamedTempFile::new().unwrap();
         writeln!(file, "test_nsec_from_file").unwrap();
         let path = file.path().to_str().unwrap().to_string();
-        
+
         let result = NostrBotManager::resolve_nsec(&path);
         assert!(result.is_ok());
         assert_eq!(result.unwrap().trim(), "test_nsec_from_file");
@@ -176,4 +186,3 @@ mod tests {
         assert!(result.is_err());
     }
 }
-

@@ -1,6 +1,6 @@
+use crate::enforcement::decision_log::DecisionLogger;
 use crate::error::GovernanceError;
 use crate::github::client::GitHubClient;
-use crate::enforcement::decision_log::DecisionLogger;
 use tracing::{info, warn};
 
 pub struct MergeBlocker {
@@ -10,7 +10,7 @@ pub struct MergeBlocker {
 
 impl MergeBlocker {
     pub fn new(github_client: Option<GitHubClient>, decision_logger: DecisionLogger) -> Self {
-        Self { 
+        Self {
             github_client,
             decision_logger,
         }
@@ -103,9 +103,19 @@ impl MergeBlocker {
 
         if let Some(client) = &self.github_client {
             client
-                .post_status_check(owner, repo, sha, state, &final_description, "governance/merge")
+                .post_status_check(
+                    owner,
+                    repo,
+                    sha,
+                    state,
+                    &final_description,
+                    "governance/merge",
+                )
                 .await?;
-            info!("Posted merge status: {} for {}/{}@{}", state, owner, repo, sha);
+            info!(
+                "Posted merge status: {} for {}/{}@{}",
+                state, owner, repo, sha
+            );
         } else {
             warn!("No GitHub client available, skipping status check");
         }
@@ -126,8 +136,9 @@ mod tests {
             false, // economic_veto_active
             2,     // tier
             false, // emergency_mode
-        ).unwrap();
-        
+        )
+        .unwrap();
+
         assert!(!result, "Should not block when all requirements met");
     }
 
@@ -139,8 +150,9 @@ mod tests {
             false, // economic_veto_active
             2,     // tier
             false, // emergency_mode
-        ).unwrap();
-        
+        )
+        .unwrap();
+
         assert!(result, "Should block when review period not met");
     }
 
@@ -152,8 +164,9 @@ mod tests {
             false, // economic_veto_active
             2,     // tier
             false, // emergency_mode
-        ).unwrap();
-        
+        )
+        .unwrap();
+
         assert!(result, "Should block when signatures not met");
     }
 
@@ -165,8 +178,9 @@ mod tests {
             true,  // economic_veto_active
             3,     // tier (Tier 3+)
             false, // emergency_mode
-        ).unwrap();
-        
+        )
+        .unwrap();
+
         assert!(result, "Should block when economic veto active for Tier 3+");
     }
 
@@ -178,8 +192,9 @@ mod tests {
             true,  // economic_veto_active
             2,     // tier (Tier 2, veto doesn't apply)
             false, // emergency_mode
-        ).unwrap();
-        
+        )
+        .unwrap();
+
         assert!(!result, "Should not block Tier 2 even with economic veto");
     }
 
@@ -191,9 +206,13 @@ mod tests {
             false, // economic_veto_active (ignored in emergency)
             4,     // tier (ignored in emergency)
             true,  // emergency_mode
-        ).unwrap();
-        
-        assert!(!result, "Should not block in emergency mode when signatures met");
+        )
+        .unwrap();
+
+        assert!(
+            !result,
+            "Should not block in emergency mode when signatures met"
+        );
     }
 
     #[test]
@@ -204,48 +223,45 @@ mod tests {
             false, // economic_veto_active (ignored in emergency)
             4,     // tier (ignored in emergency)
             true,  // emergency_mode
-        ).unwrap();
-        
-        assert!(result, "Should block in emergency mode when signatures not met");
+        )
+        .unwrap();
+
+        assert!(
+            result,
+            "Should block in emergency mode when signatures not met"
+        );
     }
 
     #[test]
     fn test_get_block_reason_all_met() {
         let reason = MergeBlocker::get_block_reason(
-            true, true, false, 2, false  // All requirements met: review_period_met=true, signatures_met=true
+            true, true, false, 2,
+            false, // All requirements met: review_period_met=true, signatures_met=true
         );
         assert_eq!(reason, "All governance requirements met");
     }
 
     #[test]
     fn test_get_block_reason_review_period() {
-        let reason = MergeBlocker::get_block_reason(
-            false, true, false, 2, false
-        );
+        let reason = MergeBlocker::get_block_reason(false, true, false, 2, false);
         assert!(reason.contains("Review period requirement not met"));
     }
 
     #[test]
     fn test_get_block_reason_signatures() {
-        let reason = MergeBlocker::get_block_reason(
-            true, false, false, 2, false
-        );
+        let reason = MergeBlocker::get_block_reason(true, false, false, 2, false);
         assert!(reason.contains("Signature threshold requirement not met"));
     }
 
     #[test]
     fn test_get_block_reason_economic_veto() {
-        let reason = MergeBlocker::get_block_reason(
-            true, true, true, 3, false
-        );
+        let reason = MergeBlocker::get_block_reason(true, true, true, 3, false);
         assert!(reason.contains("Economic node veto active"));
     }
 
     #[test]
     fn test_get_block_reason_multiple() {
-        let reason = MergeBlocker::get_block_reason(
-            false, false, true, 3, false
-        );
+        let reason = MergeBlocker::get_block_reason(false, false, true, 3, false);
         assert!(reason.contains("Review period requirement not met"));
         assert!(reason.contains("Signature threshold requirement not met"));
         assert!(reason.contains("Economic node veto active"));
@@ -253,17 +269,13 @@ mod tests {
 
     #[test]
     fn test_get_block_reason_emergency_signatures_met() {
-        let reason = MergeBlocker::get_block_reason(
-            false, true, false, 4, true
-        );
+        let reason = MergeBlocker::get_block_reason(false, true, false, 4, true);
         assert_eq!(reason, "Emergency mode: All requirements met");
     }
 
     #[test]
     fn test_get_block_reason_emergency_signatures_not_met() {
-        let reason = MergeBlocker::get_block_reason(
-            true, false, false, 4, true
-        );
+        let reason = MergeBlocker::get_block_reason(true, false, false, 4, true);
         assert_eq!(reason, "Emergency mode: Signature threshold not met");
     }
 

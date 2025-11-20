@@ -90,12 +90,13 @@ impl ContentHashValidator {
     /// Load correspondence mappings from configuration
     pub fn load_correspondence_mappings(&mut self, mappings: Vec<FileCorrespondence>) {
         for mapping in mappings {
-            self.correspondence_mappings.insert(
-                mapping.orange_paper_file.clone(),
-                mapping,
-            );
+            self.correspondence_mappings
+                .insert(mapping.orange_paper_file.clone(), mapping);
         }
-        println!("Loaded {} correspondence mappings", self.correspondence_mappings.len());
+        println!(
+            "Loaded {} correspondence mappings",
+            self.correspondence_mappings.len()
+        );
     }
 
     /// Compute SHA256 hash of file content
@@ -110,7 +111,9 @@ impl ContentHashValidator {
         if files.is_empty() {
             return DirectoryHashResult {
                 directory_path: "empty".to_string(),
-                merkle_root: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855".to_string(),
+                merkle_root:
+                    "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                        .to_string(),
                 file_count: 0,
                 total_size: 0,
             };
@@ -134,7 +137,10 @@ impl ContentHashValidator {
 
         // Build Merkle tree
         let merkle_root = self.build_merkle_tree(&file_hashes);
-        let total_size: u64 = sorted_files.iter().map(|(_, content)| content.len() as u64).sum();
+        let total_size: u64 = sorted_files
+            .iter()
+            .map(|(_, content)| content.len() as u64)
+            .sum();
 
         DirectoryHashResult {
             directory_path: "directory".to_string(),
@@ -155,10 +161,10 @@ impl ContentHashValidator {
         }
 
         let mut current_level = hashes.to_vec();
-        
+
         while current_level.len() > 1 {
             let mut next_level = Vec::new();
-            
+
             for i in (0..current_level.len()).step_by(2) {
                 if i + 1 < current_level.len() {
                     // Combine two hashes
@@ -171,7 +177,7 @@ impl ContentHashValidator {
                     next_level.push(current_level[i].clone());
                 }
             }
-            
+
             current_level = next_level;
         }
 
@@ -186,27 +192,39 @@ impl ContentHashValidator {
         target_repo_files: &HashMap<String, Vec<u8>>,
     ) -> Result<HashVerificationResult, String> {
         let source_hash = self.compute_file_hash(source_content);
-        
+
         // Find correspondence mapping
-        let mapping = self.correspondence_mappings.get(source_file)
+        let mapping = self
+            .correspondence_mappings
+            .get(source_file)
             .ok_or_else(|| format!("No correspondence mapping found for file: {}", source_file))?;
 
         // Check if target file exists
-        let target_content = target_repo_files.get(&mapping.consensus_proof_file)
-            .ok_or_else(|| format!("Corresponding file not found: {}", mapping.consensus_proof_file))?;
+        let target_content = target_repo_files
+            .get(&mapping.consensus_proof_file)
+            .ok_or_else(|| {
+                format!(
+                    "Corresponding file not found: {}",
+                    mapping.consensus_proof_file
+                )
+            })?;
 
         let target_hash = self.compute_file_hash(target_content);
-        
+
         // For now, we just verify the file exists and has content
         // In a real implementation, we would verify the content matches the specification
         let is_valid = !target_content.is_empty();
-        
+
         Ok(HashVerificationResult {
             file_path: source_file.to_string(),
             computed_hash: source_hash,
             expected_hash: Some(target_hash),
             is_valid,
-            error_message: if is_valid { None } else { Some("Target file is empty".to_string()) },
+            error_message: if is_valid {
+                None
+            } else {
+                Some("Target file is empty".to_string())
+            },
         })
     }
 
@@ -217,7 +235,10 @@ impl ContentHashValidator {
         consensus_proof_files: &HashMap<String, Vec<u8>>,
         changed_files: &[String],
     ) -> Result<SyncReport, String> {
-        println!("Checking bidirectional sync for {} changed files", changed_files.len());
+        println!(
+            "Checking bidirectional sync for {} changed files",
+            changed_files.len()
+        );
 
         let mut verification_results = Vec::new();
         let mut missing_files = Vec::new();
@@ -226,7 +247,11 @@ impl ContentHashValidator {
         // Check each changed file for correspondence
         for changed_file in changed_files {
             if let Some(orange_content) = orange_paper_files.get(changed_file) {
-                match self.verify_correspondence(changed_file, orange_content, consensus_proof_files) {
+                match self.verify_correspondence(
+                    changed_file,
+                    orange_content,
+                    consensus_proof_files,
+                ) {
                     Ok(result) => {
                         if result.is_valid {
                             verification_results.push(result);
@@ -235,7 +260,10 @@ impl ContentHashValidator {
                         }
                     }
                     Err(e) => {
-                        println!("Failed to verify correspondence for {}: {}", changed_file, e);
+                        println!(
+                            "Failed to verify correspondence for {}: {}",
+                            changed_file, e
+                        );
                         missing_files.push(changed_file.clone());
                     }
                 }
@@ -306,21 +334,24 @@ impl ContentHashValidator {
 
 fn main() {
     println!("Testing Content Hash Verification System (Track 1)");
-    
+
     // Create a content hash validator
     let mut validator = ContentHashValidator::new();
-    
+
     // Load correspondence mappings
     let mappings = ContentHashValidator::generate_correspondence_map();
     validator.load_correspondence_mappings(mappings);
-    
-    println!("Loaded {} correspondence mappings", validator.correspondence_mappings.len());
-    
+
+    println!(
+        "Loaded {} correspondence mappings",
+        validator.correspondence_mappings.len()
+    );
+
     // Test file hash computation
     let test_content = b"test consensus rule content";
     let hash = validator.compute_file_hash(test_content);
     println!("File hash: {}", hash);
-    
+
     // Test directory hash computation
     let test_files = vec![
         ("file1.txt".to_string(), b"content1".to_vec()),
@@ -330,20 +361,26 @@ fn main() {
     println!("Directory hash: {}", dir_result.merkle_root);
     println!("File count: {}", dir_result.file_count);
     println!("Total size: {}", dir_result.total_size);
-    
+
     // Test correspondence verification
     let mut orange_files = HashMap::new();
-    orange_files.insert("consensus-rules/block-validation.md".to_string(), b"block validation rules".to_vec());
-    
+    orange_files.insert(
+        "consensus-rules/block-validation.md".to_string(),
+        b"block validation rules".to_vec(),
+    );
+
     let mut consensus_files = HashMap::new();
-    consensus_files.insert("proofs/block-validation.rs".to_string(), b"proof implementation".to_vec());
-    
+    consensus_files.insert(
+        "proofs/block-validation.rs".to_string(),
+        b"proof implementation".to_vec(),
+    );
+
     let result = validator.verify_correspondence(
         "consensus-rules/block-validation.md",
         &b"block validation rules"[..],
         &consensus_files,
     );
-    
+
     match result {
         Ok(verification) => {
             println!("Correspondence verification: {}", verification.is_valid);
@@ -356,11 +393,12 @@ fn main() {
             println!("Correspondence verification failed: {}", e);
         }
     }
-    
+
     // Test bidirectional sync
     let changed_files = vec!["consensus-rules/block-validation.md".to_string()];
-    let sync_result = validator.check_bidirectional_sync(&orange_files, &consensus_files, &changed_files);
-    
+    let sync_result =
+        validator.check_bidirectional_sync(&orange_files, &consensus_files, &changed_files);
+
     match sync_result {
         Ok(sync_report) => {
             println!("Sync status: {:?}", sync_report.sync_status);
@@ -372,14 +410,6 @@ fn main() {
             println!("Bidirectional sync failed: {}", e);
         }
     }
-    
+
     println!("Content Hash Verification System test completed!");
 }
-
-
-
-
-
-
-
-
