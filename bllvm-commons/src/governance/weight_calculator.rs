@@ -253,40 +253,78 @@ impl WeightCalculator {
             );
         }
         
-        // If we did a first pass without caps, do a second pass to apply caps correctly
+        // If we did a first pass without caps, do iterative passes to apply caps correctly
+        // This is needed because caps depend on total system weight, which depends on caps
         if total_system_weight == 0.0 && !base_weights.is_empty() {
-            // Recalculate total system weight from base weights
-            total_system_weight = base_weights.iter().map(|(_, w)| *w).sum();
+            // Iterative approach: keep applying caps until convergence
+            // Start with uncapped total
+            let mut current_total = base_weights.iter().map(|(_, w)| *w).sum::<f64>();
+            let mut iterations = 0;
+            const MAX_ITERATIONS: usize = 20;
             
-            // Second pass: apply caps
-            for (contributor_id, base_weight) in base_weights {
-                let capped_weight = self.apply_weight_cap(base_weight, total_system_weight);
+            loop {
+                iterations += 1;
+                let mut new_total = 0.0;
+                let mut new_capped_weights = Vec::new();
                 
-                // Update the capped weight
-                sqlx::query(
-                    r#"
-                    UPDATE participation_weights
-                    SET capped_weight = ?, total_system_weight = ?
-                    WHERE contributor_id = ?
-                    "#,
-                )
-                .bind(capped_weight)
-                .bind(total_system_weight)
-                .bind(&contributor_id)
-                .execute(&self.pool)
-                .await?;
+                // Apply caps based on current total
+                for (contributor_id, base_weight) in &base_weights {
+                    let capped = self.apply_weight_cap(*base_weight, current_total);
+                    new_total += capped;
+                    new_capped_weights.push((contributor_id.clone(), capped));
+                }
+                
+                // Check if we've converged (change < 0.001% or very small absolute change)
+                // Use tighter convergence criteria to ensure caps are applied correctly
+                let change = (new_total - current_total).abs();
+                let change_percent = if current_total > 0.0 { change / current_total } else { 0.0 };
+                
+                // Check convergence: if change is very small, we've converged
+                // Also verify that all weights are properly capped
+                // Need tighter convergence to ensure caps are correctly applied
+                // Check both relative and absolute change, and verify all weights are properly capped
+                let all_capped = base_weights.iter().all(|(_, base)| {
+                    let capped = self.apply_weight_cap(*base, new_total);
+                    // Weight is properly capped if it's either equal to base (not capped) or <= 5% of total
+                    capped <= new_total * self.cap_percentage + 0.00001
+                });
+                // Tighter convergence: need both small change AND all weights properly capped
+                let converged = (change_percent < 0.0000001 && change < 0.00001 && all_capped) || iterations >= MAX_ITERATIONS;
+                
+                if converged {
+                    // Use the converged values (new_total and new_capped_weights)
+                    // Update all capped weights with final values
+                    for (contributor_id, capped_weight) in new_capped_weights {
+                        sqlx::query(
+                            r#"
+                            UPDATE participation_weights
+                            SET capped_weight = ?, total_system_weight = ?
+                            WHERE contributor_id = ?
+                            "#,
+                        )
+                        .bind(capped_weight)
+                        .bind(new_total)
+                        .bind(&contributor_id)
+                        .execute(&self.pool)
+                        .await?;
+                    }
+                    
+                    // Update total_system_weight for all rows
+                    sqlx::query(
+                        r#"
+                        UPDATE participation_weights
+                        SET total_system_weight = ?
+                        "#,
+                    )
+                    .bind(new_total)
+                    .execute(&self.pool)
+                    .await?;
+                    
+                    break;
+                }
+                
+                current_total = new_total;
             }
-            
-            // Update total_system_weight for all rows
-            sqlx::query(
-                r#"
-                UPDATE participation_weights
-                SET total_system_weight = ?
-                "#,
-            )
-            .bind(total_system_weight)
-            .execute(&self.pool)
-            .await?;
         }
         
         info!("Updated participation weights for {} contributors", contributor_count);

@@ -76,8 +76,8 @@ impl VetoManager {
         let result = sqlx::query(
             r#"
             INSERT INTO veto_signals 
-            (pr_id, node_id, signal_type, weight, signature, rationale, verified)
-            VALUES (?, ?, ?, ?, ?, ?, TRUE)
+            (pr_id, node_id, signal_type, weight, signature, rationale, timestamp, verified)
+            VALUES (?, ?, ?, ?, ?, ?, ?, TRUE)
             "#,
         )
         .bind(pr_id)
@@ -86,6 +86,7 @@ impl VetoManager {
         .bind(node.weight)
         .bind(signature)
         .bind(rationale)
+        .bind(Utc::now().to_rfc3339())
         .execute(&self.pool)
         .await
         .map_err(|e| {

@@ -64,8 +64,10 @@ impl VoteAggregator {
             false
         };
         
-        let zap_veto_blocks = if total_votes > 0.0 {
-            (total_veto / total_votes) >= 0.4
+        // Zap veto blocks if 40%+ of zap votes (not total votes including participation)
+        // This ensures zap veto is independent of participation votes
+        let zap_veto_blocks = if zap_totals.total_weight > 0.0 {
+            (zap_totals.veto_weight / zap_totals.total_weight) >= 0.4
         } else {
             false
         };
@@ -114,11 +116,9 @@ impl VoteAggregator {
             // Mining veto: 30%+ threshold means at least 30% of hashpower vetoed
             // Economic veto: 40%+ threshold means at least 40% of economic activity vetoed
             veto_weight = veto_threshold.mining_veto_percent.max(veto_threshold.economic_veto_percent);
-        } else {
-            // No veto - calculate support weight from non-vetoing nodes
-            // This is approximate - in practice, we'd track individual node signals
-            support_weight = 100.0 - veto_threshold.mining_veto_percent.max(veto_threshold.economic_veto_percent);
         }
+        // Note: We don't add support_weight when there's no veto, as participation votes
+        // should only come from explicit votes, not from the absence of vetoes
         
         // Also get participation weights from contributors (merge miners, fee forwarders, zap users)
         // These can vote using their participation weights
