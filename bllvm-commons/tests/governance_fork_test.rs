@@ -194,20 +194,19 @@ async fn test_adoption_tracking() -> Result<(), Box<dyn std::error::Error>> {
     let db = Database::new_in_memory().await?;
     let pool = db.pool().expect("Database should have SQLite pool").clone();
     
-    // Ensure tables exist
-    let table_exists: bool = sqlx::query_scalar(
-        "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type='table' AND name='governance_rulesets')"
-    )
-    .fetch_one(&pool)
-    .await
-    .unwrap_or(false);
-    
     // Enable foreign key constraints
     sqlx::query("PRAGMA foreign_keys = ON")
         .execute(&pool)
         .await?;
     
-    if !table_exists {
+    // Drop existing tables to ensure clean state with foreign keys
+    sqlx::query("DROP TABLE IF EXISTS adoption_metrics").execute(&pool).await.ok();
+    sqlx::query("DROP TABLE IF EXISTS fork_events").execute(&pool).await.ok();
+    sqlx::query("DROP TABLE IF EXISTS fork_decisions").execute(&pool).await.ok();
+    sqlx::query("DROP TABLE IF EXISTS governance_rulesets").execute(&pool).await.ok();
+    
+    // Create tables fresh
+    {
         sqlx::query(
             r#"
             CREATE TABLE governance_rulesets (
@@ -286,16 +285,6 @@ async fn test_adoption_tracking() -> Result<(), Box<dyn std::error::Error>> {
                 calculated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (ruleset_id) REFERENCES governance_rulesets(id)
             )
-            "#
-        )
-        .execute(&pool)
-        .await?;
-    } else {
-        // Tables exist, but ensure ruleset exists
-        sqlx::query(
-            r#"
-            INSERT OR IGNORE INTO governance_rulesets (id, name, version_major, version_minor, version_patch, hash, config, description, status)
-            VALUES ('ruleset-v1.0.0', 'Ruleset v1.0.0', 1, 0, 0, 'hash_v1_0_0', '{}', 'Test ruleset', 'active')
             "#
         )
         .execute(&pool)
