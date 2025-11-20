@@ -7,7 +7,7 @@
 ## Executive Summary
 
 The Bitcoin Commons system is a comprehensive Bitcoin implementation ecosystem with:
-- **bllvm-consensus**: Consensus proof with formal verification (176 Kani proofs)
+- **bllvm-consensus**: Consensus proof with formal verification (184 Kani proofs)
 - **bllvm-protocol**: Protocol abstraction layer
 - **bllvm-node**: Full reference node implementation
 - **bllvm-sdk**: Developer SDK for governance crypto
@@ -286,7 +286,7 @@ After code validation, all three critical blockers were found to be **already im
 ## Summary by Component
 
 ### bllvm-consensus
-- **Status**: ✅ Complete (176 Kani proofs, comprehensive tests)
+- **Status**: ✅ Complete (184 Kani proofs, comprehensive tests)
 - **Issues**: Minor placeholders for future optimizations (P2)
 
 ### bllvm-protocol
@@ -379,7 +379,7 @@ The Bitcoin Commons system demonstrates:
 - Comprehensive core functionality
 - Production-quality code organization
 - Good documentation structure
-- Formal verification (176 Kani proofs in consensus)
+- Formal verification (184 Kani proofs in consensus)
 
 **Main Issues**:
 - Mining feature completeness (Stratum V2 template extraction)

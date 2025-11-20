@@ -8,7 +8,7 @@
 
 ## Current Kani Usage in bllvm
 
-### What's Already Verified (176 Proofs)
+### What's Already Verified (184 Proofs)
 
 bllvm already uses Kani extensively for consensus verification:
 
@@ -238,7 +238,7 @@ fn verify_version_message_with_string() {
 |--------|---------------------|----------------------|
 | **Input Type** | Structured data (Block, Transaction) | Byte arrays + structured data |
 | **Input Size** | Bounded (blocks have limits) | Bounded (messages have limits) |
-| **Verification** | ✅ 176 proofs working | ✅ Same pattern applies |
+| **Verification** | ✅ 184 proofs working | ✅ Same pattern applies |
 | **Complexity** | High (consensus rules) | Medium (parsing logic) |
 | **Kani Suitability** | ✅ Excellent | ✅ Good (with bounds) |
 
@@ -359,7 +359,7 @@ fn verify_byte_parsing() {
 **Yes, Kani is advisable for networking/protocol verification.**
 
 **Reasons**:
-1. ✅ **Proven**: Already used for 176 consensus proofs
+1. ✅ **Proven**: Already used for 184 consensus proofs
 2. ✅ **Suitable**: Works well for bounded parsing verification
 3. ✅ **Consistent**: Same tool as consensus layer
 4. ✅ **Effective**: Can verify critical properties (round-trip, correctness)

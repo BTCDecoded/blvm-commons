@@ -15,7 +15,7 @@
 ## Current State
 
 ### What Exists
-- ✅ **Consensus Verification**: 176 Kani proofs in `bllvm-consensus`
+- ✅ **Consensus Verification**: 184 Kani proofs in `bllvm-consensus`
 - ✅ **Kani Infrastructure**: `kani_helpers.rs`, `verify` feature, CI integration
 - ✅ **Networking Code**: Protocol parsing in `bllvm-node/src/network/protocol.rs`
 - ✅ **Message Types**: Version, Block, Tx, Ping/Pong, Headers, etc.

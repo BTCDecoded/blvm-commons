@@ -5,7 +5,7 @@
 This document identifies areas of the codebase that would benefit from formal verification using Kani model checking, beyond what's already implemented.
 
 **Current Verification Status**:
-- ✅ **bllvm-consensus**: 176 Kani proofs (comprehensive)
+- ✅ **bllvm-consensus**: 184 Kani proofs (comprehensive)
 - ✅ **bllvm-node network protocol**: Phase 1 complete (8 proofs)
 - ✅ **bllvm-node rate limiting**: 3 proofs (already exists)
 

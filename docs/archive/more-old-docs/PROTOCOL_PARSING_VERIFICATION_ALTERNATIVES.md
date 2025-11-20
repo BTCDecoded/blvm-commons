@@ -5,7 +5,7 @@
 **Recommendation**: **Use Kani + Property-Based Testing** (existing tools) rather than Vest for protocol parsing verification.
 
 **Rationale**:
-1. ✅ **Already in use**: bllvm already has Kani (176 proofs) and Proptest
+1. ✅ **Already in use**: bllvm already has Kani (184 proofs) and Proptest
 2. ✅ **Mature & Stable**: Kani is production-ready, Vest is research (2025)
 3. ✅ **No new dependencies**: Avoids adding Verus toolchain
 4. ✅ **Consistent tooling**: Same verification approach across codebase
@@ -16,7 +16,7 @@
 ### Existing Tools (Already Integrated)
 
 1. **Kani Model Checker** (Amazon Kani)
-   - ✅ Already used for 176 consensus proofs
+   - ✅ Already used for 184 consensus proofs
    - ✅ Optional dependency (`verify` feature)
    - ✅ Not included in release builds
    - ✅ Mature and production-ready
@@ -71,7 +71,7 @@ mod kani_proofs {
 - ✅ **No new dependencies**: Uses existing toolchain
 - ✅ **Consistent**: Same verification approach as consensus layer
 - ✅ **Mature**: Kani is production-ready (0.41.0)
-- ✅ **Proven**: Already used for 176 proofs
+- ✅ **Proven**: Already used for 184 proofs
 - ✅ **Feature-gated**: `verify` feature keeps it out of releases
 
 **Implementation**:
@@ -407,7 +407,7 @@ proptest = "=1.5.0"
 1. ✅ **Already integrated**: No new dependencies
 2. ✅ **Mature tooling**: Kani is production-ready
 3. ✅ **Consistent approach**: Same as consensus layer
-4. ✅ **Proven effective**: 176 proofs already working
+4. ✅ **Proven effective**: 184 proofs already working
 5. ✅ **Feature-gated**: Already excluded from releases
 
 ### Implementation

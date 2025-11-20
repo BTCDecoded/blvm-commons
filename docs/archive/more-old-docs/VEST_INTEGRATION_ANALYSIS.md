@@ -369,7 +369,7 @@ fn parse_version_message(data: &[u8]) -> Result<(usize, VersionMessage)> {
 
 bllvm already has extensive formal verification:
 
-- **Kani Model Checking**: 176 proofs in `bllvm-consensus` for consensus rules
+- **Kani Model Checking**: 184 proofs in `bllvm-consensus` for consensus rules
 - **Property-Based Testing**: Proptest for randomized testing
 - **Mathematical Specifications**: Orange Paper synchronization
 
@@ -412,7 +412,7 @@ Node Implementation (Layer 4)
 
 | Component | Current Verification | With Vest |
 |----------|---------------------|----------|
-| **Consensus Logic** | ✅ Kani (176 proofs) | ✅ Kani (unchanged) |
+| **Consensus Logic** | ✅ Kani (184 proofs) | ✅ Kani (unchanged) |
 | **Message Parsing** | ❌ Manual + bincode | ✅ Vest (formally verified) |
 | **Message Serialization** | ❌ Manual + bincode | ✅ Vest (formally verified) |
 | **Round-Trip Properties** | ❌ Not verified | ✅ Vest (mathematically proven) |
@@ -467,7 +467,7 @@ Node Implementation (Layer 4)
 
 After analysis, **Kani + Proptest (existing tools) is recommended over Vest**:
 
-1. ✅ **Already Integrated**: bllvm already uses Kani (176 proofs)
+1. ✅ **Already Integrated**: bllvm already uses Kani (184 proofs)
 2. ✅ **Mature & Stable**: Kani is production-ready, Vest is research (2025)
 3. ✅ **No New Dependencies**: Avoids adding Verus toolchain
 4. ✅ **Consistent Tooling**: Same verification approach across codebase
