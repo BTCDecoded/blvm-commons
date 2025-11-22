@@ -4,9 +4,9 @@
 
 This document identifies the minimum required security controls that MUST be in place before BTCDecoded can undergo a proper security audit. These controls establish the baseline security posture required for audit readiness.
 
-**Current Status**: BTCDecoded consensus layer is **complete and ready for audit**. All consensus integrity controls (A-001 through A-005) are fully implemented. Governance-app has placeholder implementations (excluded from this review scope).
+**Current Status**: BTCDecoded consensus layer is **complete and ready for audit**. All consensus integrity controls (A-001 through A-005) are fully implemented. bllvm-commons has placeholder implementations (excluded from this review scope).
 
-**Audit Readiness**: ✅ **CONSENSUS LAYER READY** - All consensus integrity controls are complete. Governance-app placeholders are separate concern.
+**Audit Readiness**: ✅ **CONSENSUS LAYER READY** - All consensus integrity controls are complete. bllvm-commons placeholders are separate concern.
 
 ## Control Categories & Definitions
 
@@ -34,22 +34,22 @@ Controls that validate inputs and enforce security boundaries.
 | **A-003** | Taproot Support | bllvm-consensus | ✅ Complete | - | No | - |
 | **A-004** | Script Execution Limits | bllvm-consensus | Implemented | P1 | No | Audit |
 | **A-005** | UTXO Set Validation | bllvm-consensus | Implemented | P1 | No | Audit |
-| **B-001** | Maintainer Key Management | governance-app | Placeholder | P0 | Yes | Production |
-| **B-002** | Emergency Signature Verification | governance-app | ✅ Complete | - | No | - |
-| **B-003** | Multisig Threshold Enforcement | governance-app | Implemented | P1 | No | Audit |
-| **B-004** | Key Rotation Implementation | governance-app | Implemented | P2 | No | Audit |
+| **B-001** | Maintainer Key Management | bllvm-commons | Placeholder | P0 | Yes | Production |
+| **B-002** | Emergency Signature Verification | bllvm-commons | ✅ Complete | - | No | - |
+| **B-003** | Multisig Threshold Enforcement | bllvm-commons | Implemented | P1 | No | Audit |
+| **B-004** | Key Rotation Implementation | bllvm-commons | Implemented | P2 | No | Audit |
 | **B-005** | Cryptographic Library Pinning | All | Implemented | P1 | No | Audit |
-| **C-001** | Database Query Implementation | governance-app | ✅ Complete | - | No | - |
-| **C-002** | Cross-layer File Verification | governance-app | ✅ Complete | - | No | - |
-| **C-003** | Tier Classification Logic | governance-app | Partial | P1 | No | Audit |
-| **C-004** | Economic Node Veto System | governance-app | Placeholder | P1 | No | Audit |
-| **D-001** | Audit Log Hash Chain | governance-app | Implemented | P1 | No | Audit |
-| **D-002** | OTS Timestamping | governance-app | Placeholder | P1 | No | Audit |
-| **D-003** | Database Transaction Integrity | governance-app | Implemented | P1 | No | Audit |
-| **E-001** | GitHub Webhook Signature Verification | governance-app | Implemented | P1 | No | Audit |
-| **E-002** | Input Sanitization | governance-app | Partial | P1 | No | Audit |
-| **E-003** | SQL Injection Prevention | governance-app | Implemented | P1 | No | Audit |
-| **E-004** | API Rate Limiting | governance-app | Missing | P2 | No | Audit |
+| **C-001** | Database Query Implementation | bllvm-commons | ✅ Complete | - | No | - |
+| **C-002** | Cross-layer File Verification | bllvm-commons | ✅ Complete | - | No | - |
+| **C-003** | Tier Classification Logic | bllvm-commons | Partial | P1 | No | Audit |
+| **C-004** | Economic Node Veto System | bllvm-commons | Placeholder | P1 | No | Audit |
+| **D-001** | Audit Log Hash Chain | bllvm-commons | Implemented | P1 | No | Audit |
+| **D-002** | OTS Timestamping | bllvm-commons | Placeholder | P1 | No | Audit |
+| **D-003** | Database Transaction Integrity | bllvm-commons | Implemented | P1 | No | Audit |
+| **E-001** | GitHub Webhook Signature Verification | bllvm-commons | Implemented | P1 | No | Audit |
+| **E-002** | Input Sanitization | bllvm-commons | Partial | P1 | No | Audit |
+| **E-003** | SQL Injection Prevention | bllvm-commons | Implemented | P1 | No | Audit |
+| **E-004** | API Rate Limiting | bllvm-commons | Missing | P2 | No | Audit |
 
 ## Current State Assessment
 
@@ -342,7 +342,7 @@ cargo test genesis_block_regtest
 **Description**: Cryptographic verification of emergency activation signatures
 
 **Current State**: Placeholder validation (line 266 in emergency.rs)
-**Location**: `governance-app/src/validation/emergency.rs:266`
+**Location**: `bllvm-commons/src/validation/emergency.rs:266`
 
 **Implementation Requirements**:
 - [ ] Integrate with bllvm-sdk signature verification
@@ -414,7 +414,7 @@ cargo test genesis_block_regtest
 - **Controls**: A-001
 
 ### Governance Layer (Medium Trust)
-- **governance-app**: Cryptographic enforcement, database
+- **bllvm-commons**: Cryptographic enforcement, database
 - **Trust Boundary**: Maintainer keys, database integrity
 - **Attack Surface**: Key compromise, database injection
 - **Controls**: B-001, B-002, B-003, C-001, C-002, D-001

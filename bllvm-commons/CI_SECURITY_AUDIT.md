@@ -61,7 +61,7 @@ If the script isn't available, use the direct command:
 
 The following workflows have been updated to use suppressions:
 
-1. ✅ `.github/workflows/governance-app-ci.yml` - Security audit job
+1. ✅ `.github/workflows/ci.yml` - Security audit job
 2. ✅ `scripts/test_cross_layer_sync.sh` - Local test script
 
 ## Why Suppressions Are Needed

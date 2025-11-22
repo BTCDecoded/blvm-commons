@@ -1,4 +1,4 @@
-//! Integration tests for governance-app
+//! Integration tests for bllvm-commons
 //! Tests the core functionality with test data
 
 use bllvm_commons::database::Database;

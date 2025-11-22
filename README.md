@@ -61,7 +61,7 @@ Bitcoin Commons implements a **5-tier constitutional governance system**:
 
 ### Core Components
 
-- **`governance-app/`** - GitHub App for governance enforcement
+- **`bllvm-commons/`** - GitHub App for governance enforcement
 - **`developer-sdk/`** - Cryptographic primitives and CLI tools
 - **`governance/`** - Governance configuration and documentation
 
@@ -76,11 +76,11 @@ Bitcoin Commons implements a **5-tier constitutional governance system**:
 
 ```bash
 # Clone repositories (BTCDecoded is the GitHub organization)
-git clone https://github.com/btcdecoded/governance-app.git
-cd governance-app
+git clone https://github.com/btcdecoded/bllvm-commons.git
+cd bllvm-commons
 
-# Set up governance-app
-cd governance-app
+# Set up bllvm-commons
+cd bllvm-commons
 cargo build
 cargo test
 
@@ -113,7 +113,7 @@ cargo test --test e2e_test
 ### Development Guides
 - [Maintainer Guide](governance/MAINTAINER_GUIDE.md) - For maintainers
 - [Economic Node Guide](governance/ECONOMIC_NODE_GUIDE.md) - For economic nodes
-- [Deployment Guide](governance-app/DEPLOYMENT.md) - Deployment instructions
+- [Deployment Guide](bllvm-commons/DEPLOYMENT.md) - Deployment instructions
 
 ### Development Roadmap
 - [Phase 1B Plan](governance-system-review.plan.md) - Current development plan
