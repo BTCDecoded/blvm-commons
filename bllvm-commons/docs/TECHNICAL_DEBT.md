@@ -1,24 +1,16 @@
 # Technical Debt Documentation
 
-**Last Updated**: 2025-01-XX  
-**Status**: Active tracking and remediation
-
-## Recent Completions (2025-01-XX)
-
-- ✅ **GitHub API Client** - Octocrab 0.38 Migration (7/8 APIs updated)
-- ✅ **Nostr Zap Tracking** - Invoice Parsing (lightning-invoice integration)
-- ✅ **OTS Registry Generation** - Database queries implemented
-- ✅ **Fee Forwarding** - Transaction Hashing (using bllvm-consensus calculate_tx_id)
+Technical debt items across the bllvm-commons codebase, prioritized by impact and urgency.
 
 ## Overview
 
-This document tracks technical debt items across the bllvm-commons codebase, prioritizing critical issues and documenting why non-critical items remain.
+Tracks technical debt items across the bllvm-commons codebase, prioritizing critical issues and documenting why non-critical items remain.
 
 ## Critical TODOs (High Priority)
 
 ### 1. GitHub API Client - Octocrab 0.38 Migration ✅ COMPLETE
 **Location**: `src/github/client.rs`  
-**Status**: ✅ **COMPLETE** (2025-01-XX)  
+**Status**: Complete  
 **Resolution**: All 7 API calls updated to octocrab 0.38
 
 **Completed Items**:
@@ -37,7 +29,7 @@ This document tracks technical debt items across the bllvm-commons codebase, pri
 
 ### 2. Nostr Zap Tracking - Invoice Parsing ✅ COMPLETE
 **Location**: `src/nostr/zap_tracker.rs`  
-**Status**: ✅ **COMPLETE** (2025-01-XX)  
+**Status**: Complete  
 **Resolution**: Implemented using `lightning-invoice` crate
 
 **Completed**:
@@ -49,7 +41,7 @@ This document tracks technical debt items across the bllvm-commons codebase, pri
 
 ### 3. Fee Forwarding - Transaction Hashing ✅ COMPLETE
 **Location**: `src/governance/fee_forwarding.rs`  
-**Status**: ✅ **COMPLETE** (2025-01-XX)  
+**Status**: Complete  
 **Resolution**: Replaced manual serialization with `bllvm_protocol::block::calculate_tx_id`
 
 **Completed**:
@@ -68,7 +60,7 @@ This document tracks technical debt items across the bllvm-commons codebase, pri
 **Priority**: LOW  
 **Reason**: Test uses real RSA key generation, should use mocks  
 **Impact**: Tests may be slower or require external dependencies  
-**Status**: Acceptable for now - tests work correctly
+**Current State**: Acceptable - tests work correctly
 
 **Why It Remains**:
 - Tests are functional and pass
@@ -98,7 +90,7 @@ This document tracks technical debt items across the bllvm-commons codebase, pri
 **Priority**: LOW  
 **Reason**: Future enhancement to query explicit votes from database  
 **Impact**: Feature enhancement, not a bug  
-**Status**: Planned for future release
+**Current State**: Planned for future release
 
 **Why It Remains**:
 - Current voting mechanism works via zap tracking
@@ -113,7 +105,7 @@ This document tracks technical debt items across the bllvm-commons codebase, pri
 **Priority**: LOW  
 **Reason**: Should query actual signature count from database  
 **Impact**: Status checks may show approximate counts  
-**Status**: Acceptable - approximate counts are sufficient
+**Current State**: Acceptable - approximate counts are sufficient
 
 **Why It Remains**:
 - Current implementation provides sufficient information
@@ -128,7 +120,7 @@ This document tracks technical debt items across the bllvm-commons codebase, pri
 **Priority**: LOW  
 **Reason**: Hardcoded tier value, should detect from PR  
 **Impact**: Tier classification may be incorrect  
-**Status**: Acceptable - tier classification happens elsewhere
+**Current State**: Acceptable - tier classification happens elsewhere
 
 **Why It Remains**:
 - Tier classification is handled by tier_classification module
@@ -181,9 +173,9 @@ This document tracks technical debt items across the bllvm-commons codebase, pri
 
 ## Review Process
 
-This document should be reviewed:
-- Weekly during active development
-- Before each release
+Review this document:
+- During active development
+- Before releases
 - When addressing specific technical debt items
 
 ## Notes
