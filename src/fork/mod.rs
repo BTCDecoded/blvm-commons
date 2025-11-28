@@ -8,18 +8,14 @@ pub mod detection;
 pub mod executor;
 pub mod export;
 pub mod types;
-pub mod versioning;
 pub mod verification;
+pub mod versioning;
 
 pub use adoption::AdoptionTracker;
 pub use dashboard::AdoptionDashboard;
-pub use detection::{ForkDetector, ForkDetectionEvent, ForkTriggerType, ForkAction};
+pub use detection::{ForkAction, ForkDetectionEvent, ForkDetector, ForkTriggerType};
 pub use executor::ForkExecutor;
 pub use export::GovernanceExporter;
 pub use types::*;
-pub use versioning::RulesetVersioning;
 pub use verification::verify_fork_decision_signature;
-
-
-
-
+pub use versioning::RulesetVersioning;

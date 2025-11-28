@@ -4,11 +4,10 @@
 //! from GitHub repositories via the GitHub API.
 
 use crate::error::GovernanceError;
+use base64::{engine::general_purpose, Engine as _};
 use octocrab::Octocrab;
-use octocrab::models::repos::{ContentItems, Content};
 use std::collections::HashMap;
-use tracing::{info, warn, error, debug};
-use base64::{Engine as _, engine::general_purpose};
+use tracing::{debug, error, info, warn};
 
 /// Represents a file in a GitHub repository
 #[derive(Debug, Clone)]
@@ -59,7 +58,9 @@ impl GitHubFileOperations {
         let client = Octocrab::builder()
             .personal_token(token)
             .build()
-            .map_err(|e| GovernanceError::GitHubError(format!("Failed to create GitHub client: {}", e)))?;
+            .map_err(|e| {
+                GovernanceError::GitHubError(format!("Failed to create GitHub client: {}", e))
+            })?;
 
         Ok(Self { client })
     }
@@ -75,7 +76,7 @@ impl GitHubFileOperations {
         info!("Fetching file content: {}/{}:{}", owner, repo, file_path);
 
         let branch = branch.unwrap_or("main");
-        
+
         let response = self
             .client
             .repos(owner, repo)
@@ -90,24 +91,32 @@ impl GitHubFileOperations {
         // For a single file, items should contain one Content with type "file"
         let items = response.items;
         if items.len() != 1 {
-            return Err(GovernanceError::GitHubError(format!("Expected single file, got {} items", items.len())));
+            return Err(GovernanceError::GitHubError(format!(
+                "Expected single file, got {} items",
+                items.len()
+            )));
         }
-        
+
         let content = &items[0];
         match content.r#type.as_str() {
             "file" => {
                 // Decode base64 content
                 let content_bytes = match &content.content {
-                    Some(encoded) => {
-                        general_purpose::STANDARD
-                            .decode(encoded.trim_end_matches('\n'))
-                            .map_err(|e| GovernanceError::GitHubError(format!("Failed to decode base64 content: {}", e)))?
-                    }
+                    Some(encoded) => general_purpose::STANDARD
+                        .decode(encoded.trim_end_matches('\n'))
+                        .map_err(|e| {
+                            GovernanceError::GitHubError(format!(
+                                "Failed to decode base64 content: {}",
+                                e
+                            ))
+                        })?,
                     None => {
-                        return Err(GovernanceError::GitHubError("File content is empty".to_string()));
+                        return Err(GovernanceError::GitHubError(
+                            "File content is empty".to_string(),
+                        ));
                     }
                 };
-                
+
                 Ok(GitHubFile {
                     path: content.path.clone(),
                     content: content_bytes,
@@ -116,18 +125,22 @@ impl GitHubFileOperations {
                     download_url: content.download_url.as_ref().map(|u| u.to_string()),
                 })
             }
-            "dir" => {
-                Err(GovernanceError::GitHubError(format!("Path '{}' is a directory, not a file", file_path)))
-            }
-            "symlink" => {
-                Err(GovernanceError::GitHubError(format!("Path '{}' is a symlink, not a file", file_path)))
-            }
-            "submodule" => {
-                Err(GovernanceError::GitHubError(format!("Path '{}' is a submodule, not a file", file_path)))
-            }
-            _ => {
-                Err(GovernanceError::GitHubError(format!("Unknown content type: {}", content.r#type)))
-            }
+            "dir" => Err(GovernanceError::GitHubError(format!(
+                "Path '{}' is a directory, not a file",
+                file_path
+            ))),
+            "symlink" => Err(GovernanceError::GitHubError(format!(
+                "Path '{}' is a symlink, not a file",
+                file_path
+            ))),
+            "submodule" => Err(GovernanceError::GitHubError(format!(
+                "Path '{}' is a submodule, not a file",
+                file_path
+            ))),
+            _ => Err(GovernanceError::GitHubError(format!(
+                "Unknown content type: {}",
+                content.r#type
+            ))),
         }
     }
 
@@ -139,10 +152,13 @@ impl GitHubFileOperations {
         directory_path: &str,
         branch: Option<&str>,
     ) -> Result<GitHubDirectory, GovernanceError> {
-        info!("Fetching directory tree: {}/{}:{}", owner, repo, directory_path);
+        info!(
+            "Fetching directory tree: {}/{}:{}",
+            owner, repo, directory_path
+        );
 
         let branch = branch.unwrap_or("main");
-        
+
         let response = self
             .client
             .repos(owner, repo)
@@ -151,15 +167,17 @@ impl GitHubFileOperations {
             .r#ref(branch)
             .send()
             .await
-            .map_err(|e| GovernanceError::GitHubError(format!("Failed to fetch directory: {}", e)))?;
+            .map_err(|e| {
+                GovernanceError::GitHubError(format!("Failed to fetch directory: {}", e))
+            })?;
 
         // Handle the response - octocrab 0.38 returns ContentItems with items: Vec<Content>
         // For a directory, items contains multiple Content items
         let items = response.items;
         let mut files = Vec::new();
-        let mut subdirectories = Vec::new();
+        let subdirectories = Vec::new();
         let mut total_size = 0u64;
-        
+
         // Process each item in the directory
         for item in items {
             match item.r#type.as_str() {
@@ -168,7 +186,7 @@ impl GitHubFileOperations {
                     // Content can be fetched later if needed via fetch_file_content()
                     let size = item.size as u64;
                     total_size += size;
-                    
+
                     files.push(GitHubFile {
                         path: item.path.clone(),
                         content: Vec::new(), // Content not loaded by default (can fetch later)
@@ -180,7 +198,10 @@ impl GitHubFileOperations {
                 "dir" => {
                     // For subdirectories, we can recursively fetch them if needed
                     // For now, skip nested directories - they can be fetched separately if needed
-                    debug!("Skipping nested directory: {} - fetch separately if needed", item.path);
+                    debug!(
+                        "Skipping nested directory: {} - fetch separately if needed",
+                        item.path
+                    );
                 }
                 "symlink" | "submodule" => {
                     // Skip symlinks and submodules
@@ -191,7 +212,7 @@ impl GitHubFileOperations {
                 }
             }
         }
-        
+
         Ok(GitHubDirectory {
             path: directory_path.to_string(),
             files,
@@ -211,7 +232,7 @@ impl GitHubFileOperations {
         info!("Computing repository hash: {}/{}", owner, repo);
 
         let branch = branch.unwrap_or("main");
-        
+
         // Get the branch reference to get the latest commit SHA
         // Try using repos().get_branch() - if it doesn't exist, use commits API
         // For now, use a workaround: get the latest commit from the default branch
@@ -224,15 +245,20 @@ impl GitHubFileOperations {
             .send()
             .await
             .map_err(|e| GovernanceError::GitHubError(format!("Failed to get branch: {}", e)))?;
-        
+
         // Extract commit SHA from first commit
-        let commit_sha = commits.items.first()
+        let commit_sha = commits
+            .items
+            .first()
             .ok_or_else(|| GovernanceError::GitHubError("No commits found".to_string()))?
             .sha
             .clone();
-        
-        info!("Repository hash for {}/{}:{} = {}", owner, repo, branch, commit_sha);
-        
+
+        info!(
+            "Repository hash for {}/{}:{} = {}",
+            owner, repo, branch, commit_sha
+        );
+
         Ok(commit_sha)
     }
 
@@ -247,17 +273,23 @@ impl GitHubFileOperations {
         target_file: &str,
         branch: Option<&str>,
     ) -> Result<FileComparison, GovernanceError> {
-        info!("Comparing files: {}/{}:{} vs {}/{}:{}", 
-              source_owner, source_repo, source_file,
-              target_owner, target_repo, target_file);
+        info!(
+            "Comparing files: {}/{}:{} vs {}/{}:{}",
+            source_owner, source_repo, source_file, target_owner, target_repo, target_file
+        );
 
         let branch = branch.unwrap_or("main");
 
         // Fetch source file
-        let source_file_data = self.fetch_file_content(source_owner, source_repo, source_file, Some(branch)).await?;
+        let source_file_data = self
+            .fetch_file_content(source_owner, source_repo, source_file, Some(branch))
+            .await?;
 
         // Try to fetch target file
-        let target_file_data = match self.fetch_file_content(target_owner, target_repo, target_file, Some(branch)).await {
+        let target_file_data = match self
+            .fetch_file_content(target_owner, target_repo, target_file, Some(branch))
+            .await
+        {
             Ok(file) => Some(file),
             Err(e) => {
                 warn!("Target file not found: {}", e);
@@ -271,14 +303,17 @@ impl GitHubFileOperations {
             false
         };
 
-        let size_diff = target_file_data.as_ref().map(|target| {
-            source_file_data.size as i64 - target.size as i64
-        });
+        let size_diff = target_file_data
+            .as_ref()
+            .map(|target| source_file_data.size as i64 - target.size as i64);
 
         let content_diff = if let Some(ref target) = target_file_data {
             if source_file_data.content != target.content {
-                Some(format!("Content differs: {} bytes vs {} bytes", 
-                            source_file_data.content.len(), target.content.len()))
+                Some(format!(
+                    "Content differs: {} bytes vs {} bytes",
+                    source_file_data.content.len(),
+                    target.content.len()
+                ))
             } else {
                 None
             }
@@ -305,24 +340,24 @@ impl GitHubFileOperations {
         info!("Getting repository info: {}/{}", owner, repo);
 
         // Get repository information using octocrab API
-        let repository = self
-            .client
-            .repos(owner, repo)
-            .get()
-            .await
-            .map_err(|e| GovernanceError::GitHubError(format!("Failed to get repository info: {}", e)))?;
-        
+        let repository = self.client.repos(owner, repo).get().await.map_err(|e| {
+            GovernanceError::GitHubError(format!("Failed to get repository info: {}", e))
+        })?;
+
         // Get the default branch's latest commit SHA
         let default_branch = repository.default_branch.as_deref().unwrap_or("main");
-        let last_commit_sha = self.compute_repo_hash(owner, repo, Some(default_branch)).await?;
-        
+        let last_commit_sha = self
+            .compute_repo_hash(owner, repo, Some(default_branch))
+            .await?;
+
         // In octocrab 0.38, owner structure - extract login
         // Owner is Option<Author>, need to unwrap first
-        let owner_name = repository.owner
+        let owner_name = repository
+            .owner
             .as_ref()
             .map(|author| author.login.clone())
             .unwrap_or_else(|| "unknown".to_string());
-        
+
         Ok(GitHubRepo {
             owner: owner_name,
             name: repository.name.clone(),
@@ -352,7 +387,15 @@ impl GitHubFileOperations {
             let branch = branch.map(|s| s.to_string());
 
             let task = tokio::spawn(async move {
-                match Self::fetch_file_content_static(&client, &owner, &repo, &file_path, branch.as_deref()).await {
+                match Self::fetch_file_content_static(
+                    &client,
+                    &owner,
+                    &repo,
+                    &file_path,
+                    branch.as_deref(),
+                )
+                .await
+                {
                     Ok(file) => Some((file_path, file)),
                     Err(e) => {
                         error!("Failed to fetch file {}: {}", file_path, e);
@@ -383,7 +426,7 @@ impl GitHubFileOperations {
         branch: Option<&str>,
     ) -> Result<GitHubFile, GovernanceError> {
         let branch = branch.unwrap_or("main");
-        
+
         let response = client
             .repos(owner, repo)
             .get_content()
@@ -397,24 +440,32 @@ impl GitHubFileOperations {
         // For a single file, items should contain one Content with type "file"
         let items = response.items;
         if items.len() != 1 {
-            return Err(GovernanceError::GitHubError(format!("Expected single file, got {} items", items.len())));
+            return Err(GovernanceError::GitHubError(format!(
+                "Expected single file, got {} items",
+                items.len()
+            )));
         }
-        
+
         let content = &items[0];
         match content.r#type.as_str() {
             "file" => {
                 // Decode base64 content
                 let content_bytes = match &content.content {
-                    Some(encoded) => {
-                        general_purpose::STANDARD
-                            .decode(encoded.trim_end_matches('\n'))
-                            .map_err(|e| GovernanceError::GitHubError(format!("Failed to decode base64 content: {}", e)))?
-                    }
+                    Some(encoded) => general_purpose::STANDARD
+                        .decode(encoded.trim_end_matches('\n'))
+                        .map_err(|e| {
+                            GovernanceError::GitHubError(format!(
+                                "Failed to decode base64 content: {}",
+                                e
+                            ))
+                        })?,
                     None => {
-                        return Err(GovernanceError::GitHubError("File content is empty".to_string()));
+                        return Err(GovernanceError::GitHubError(
+                            "File content is empty".to_string(),
+                        ));
                     }
                 };
-                
+
                 Ok(GitHubFile {
                     path: content.path.clone(),
                     content: content_bytes,
@@ -423,18 +474,22 @@ impl GitHubFileOperations {
                     download_url: content.download_url.as_ref().map(|u| u.to_string()),
                 })
             }
-            "dir" => {
-                Err(GovernanceError::GitHubError(format!("Path '{}' is a directory, not a file", file_path)))
-            }
-            "symlink" => {
-                Err(GovernanceError::GitHubError(format!("Path '{}' is a symlink, not a file", file_path)))
-            }
-            "submodule" => {
-                Err(GovernanceError::GitHubError(format!("Path '{}' is a submodule, not a file", file_path)))
-            }
-            _ => {
-                Err(GovernanceError::GitHubError(format!("Unknown content type: {}", content.r#type)))
-            }
+            "dir" => Err(GovernanceError::GitHubError(format!(
+                "Path '{}' is a directory, not a file",
+                file_path
+            ))),
+            "symlink" => Err(GovernanceError::GitHubError(format!(
+                "Path '{}' is a symlink, not a file",
+                file_path
+            ))),
+            "submodule" => Err(GovernanceError::GitHubError(format!(
+                "Path '{}' is a submodule, not a file",
+                file_path
+            ))),
+            _ => Err(GovernanceError::GitHubError(format!(
+                "Unknown content type: {}",
+                content.r#type
+            ))),
         }
     }
 }

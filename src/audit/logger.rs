@@ -9,7 +9,7 @@ use std::io::{BufRead, BufReader, Write};
 use std::path::Path;
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use tracing::{debug, error, info, warn};
+use tracing::{debug, info};
 
 use crate::audit::entry::AuditLogEntry;
 
@@ -66,7 +66,7 @@ impl AuditLogger {
             .map_err(|e| anyhow!("Failed to serialize entry: {}", e))?;
 
         // Write to file
-        if let Some(mut file) = self.file.lock().await.as_mut() {
+        if let Some(file) = self.file.lock().await.as_mut() {
             writeln!(file, "{}", json)
                 .map_err(|e| anyhow!("Failed to write to audit log: {}", e))?;
             file.flush()
@@ -104,7 +104,7 @@ impl AuditLogger {
     async fn load_existing_entries(&self) -> Result<()> {
         let path = Path::new(&self.log_path);
         let file_size = path.metadata().map(|m| m.len()).unwrap_or(0);
-        
+
         if !path.exists() || file_size == 0 {
             // Create genesis entry for new log
             let genesis = crate::audit::entry::create_genesis_entry("governance-01".to_string());
@@ -112,8 +112,8 @@ impl AuditLogger {
             return Ok(());
         }
 
-        let file = File::open(path)
-            .map_err(|e| anyhow!("Failed to open existing log file: {}", e))?;
+        let file =
+            File::open(path).map_err(|e| anyhow!("Failed to open existing log file: {}", e))?;
 
         let reader = BufReader::new(file);
         let mut last_hash = String::new();
@@ -163,8 +163,7 @@ impl AuditLogger {
             return Ok(vec![]);
         }
 
-        let file = File::open(path)
-            .map_err(|e| anyhow!("Failed to open log file: {}", e))?;
+        let file = File::open(path).map_err(|e| anyhow!("Failed to open log file: {}", e))?;
 
         let reader = BufReader::new(file);
         let mut entries = Vec::new();
@@ -191,7 +190,7 @@ impl AuditLogger {
         end: chrono::DateTime<chrono::Utc>,
     ) -> Result<Vec<AuditLogEntry>> {
         let all_entries = self.get_all_entries().await?;
-        
+
         let filtered: Vec<AuditLogEntry> = all_entries
             .into_iter()
             .filter(|entry| entry.timestamp >= start && entry.timestamp <= end)
@@ -203,7 +202,7 @@ impl AuditLogger {
     /// Get entries by job type
     pub async fn get_entries_by_type(&self, job_type: &str) -> Result<Vec<AuditLogEntry>> {
         let all_entries = self.get_all_entries().await?;
-        
+
         let filtered: Vec<AuditLogEntry> = all_entries
             .into_iter()
             .filter(|entry| entry.job_type == job_type)
@@ -214,7 +213,7 @@ impl AuditLogger {
 
     /// Close the audit logger
     pub async fn close(&self) -> Result<()> {
-        if let Some(mut file) = self.file.lock().await.as_mut() {
+        if let Some(file) = self.file.lock().await.as_mut() {
             file.flush()
                 .map_err(|e| anyhow!("Failed to flush audit log on close: {}", e))?;
         }
@@ -225,14 +224,18 @@ impl AuditLogger {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile::tempdir;
     use std::collections::HashMap;
+    use tempfile::tempdir;
 
     #[tokio::test]
     async fn test_audit_logger_creation() {
         let temp_dir = tempdir().unwrap();
-        let log_path = temp_dir.path().join("audit.log").to_string_lossy().to_string();
-        
+        let log_path = temp_dir
+            .path()
+            .join("audit.log")
+            .to_string_lossy()
+            .to_string();
+
         let logger = AuditLogger::new(log_path).unwrap();
         // Initialize by loading existing entries (which will create genesis if empty)
         logger.load_existing_entries().await.unwrap();
@@ -242,15 +245,19 @@ mod tests {
     #[tokio::test]
     async fn test_append_entry() {
         let temp_dir = tempdir().unwrap();
-        let log_path = temp_dir.path().join("audit.log").to_string_lossy().to_string();
-        
+        let log_path = temp_dir
+            .path()
+            .join("audit.log")
+            .to_string_lossy()
+            .to_string();
+
         let logger = AuditLogger::new(log_path).unwrap();
         // Initialize by loading existing entries (which will create genesis if empty)
         logger.load_existing_entries().await.unwrap();
-        
+
         let mut metadata = HashMap::new();
         metadata.insert("test".to_string(), "value".to_string());
-        
+
         let entry = AuditLogEntry::new(
             "test-job".to_string(),
             "test_type".to_string(),
@@ -268,17 +275,21 @@ mod tests {
     #[tokio::test]
     async fn test_hash_chain_verification() {
         let temp_dir = tempdir().unwrap();
-        let log_path = temp_dir.path().join("audit.log").to_string_lossy().to_string();
-        
+        let log_path = temp_dir
+            .path()
+            .join("audit.log")
+            .to_string_lossy()
+            .to_string();
+
         let logger = AuditLogger::new(log_path).unwrap();
         // Initialize by loading existing entries (which will create genesis if empty)
         logger.load_existing_entries().await.unwrap();
-        
+
         // Add multiple entries
         for i in 0..5 {
             let mut metadata = HashMap::new();
             metadata.insert("index".to_string(), i.to_string());
-            
+
             let entry = AuditLogEntry::new(
                 format!("job-{}", i),
                 "test_type".to_string(),
@@ -298,7 +309,7 @@ mod tests {
 
         // Verify hash chain
         for i in 1..entries.len() {
-            assert_eq!(entries[i].previous_log_hash, entries[i-1].this_log_hash);
+            assert_eq!(entries[i].previous_log_hash, entries[i - 1].this_log_hash);
         }
     }
 }

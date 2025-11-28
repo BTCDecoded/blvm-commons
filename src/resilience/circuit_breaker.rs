@@ -6,7 +6,7 @@
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 use tokio::sync::Mutex;
-use tracing::{debug, info, warn};
+use tracing::{info, warn};
 
 /// Circuit breaker state
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -75,7 +75,7 @@ impl CircuitBreaker {
     pub async fn is_open(&self) -> bool {
         // Check state first without holding lock for long
         let state = *self.state.lock().await;
-        
+
         match state {
             CircuitState::Closed => false,
             CircuitState::Open => {
@@ -84,7 +84,10 @@ impl CircuitBreaker {
                 let last_failure = *self.last_failure_time.lock().await;
                 if let Some(last_failure_time) = last_failure {
                     if last_failure_time.elapsed() >= self.config.timeout {
-                        info!("Circuit breaker '{}' transitioning to half-open state", self.name);
+                        info!(
+                            "Circuit breaker '{}' transitioning to half-open state",
+                            self.name
+                        );
                         // Release last_failure_time lock before acquiring state lock
                         let mut state_guard = self.state.lock().await;
                         // Double-check state hasn't changed
@@ -105,7 +108,7 @@ impl CircuitBreaker {
     pub async fn record_success(&self) {
         let mut state = self.state.lock().await;
         let mut successes = self.successes.lock().await;
-        
+
         match *state {
             CircuitState::Closed => {
                 // Clean up old failures outside the window
@@ -117,7 +120,10 @@ impl CircuitBreaker {
             CircuitState::HalfOpen => {
                 *successes += 1;
                 if *successes >= self.config.success_threshold {
-                    info!("Circuit breaker '{}' transitioning to closed state (recovered)", self.name);
+                    info!(
+                        "Circuit breaker '{}' transitioning to closed state (recovered)",
+                        self.name
+                    );
                     *state = CircuitState::Closed;
                     *successes = 0;
                     // Release locks before cleanup to avoid deadlock
@@ -128,7 +134,10 @@ impl CircuitBreaker {
             }
             CircuitState::Open => {
                 // Should not happen - success in open state
-                warn!("Circuit breaker '{}' recorded success in open state (unexpected)", self.name);
+                warn!(
+                    "Circuit breaker '{}' recorded success in open state (unexpected)",
+                    self.name
+                );
             }
         }
     }
@@ -138,19 +147,18 @@ impl CircuitBreaker {
         let mut state = self.state.lock().await;
         let mut failures = self.failures.lock().await;
         let mut last_failure_time = self.last_failure_time.lock().await;
-        
+
         let now = Instant::now();
         failures.push(now);
         *last_failure_time = Some(now);
-        
+
         // Clean up old failures outside the window (inline to avoid deadlock)
-        failures.retain(|&failure_time| {
-            now.duration_since(failure_time) < self.config.window_duration
-        });
-        
+        failures
+            .retain(|&failure_time| now.duration_since(failure_time) < self.config.window_duration);
+
         // Re-count failures after cleanup
         let failure_count = failures.len() as u32;
-        
+
         match *state {
             CircuitState::Closed => {
                 if failure_count >= self.config.failure_threshold {
@@ -163,7 +171,10 @@ impl CircuitBreaker {
             }
             CircuitState::HalfOpen => {
                 // Any failure in half-open state immediately opens the circuit
-                warn!("Circuit breaker '{}' opening after failure in half-open state", self.name);
+                warn!(
+                    "Circuit breaker '{}' opening after failure in half-open state",
+                    self.name
+                );
                 *state = CircuitState::Open;
                 *self.successes.lock().await = 0;
             }
@@ -177,9 +188,8 @@ impl CircuitBreaker {
     async fn cleanup_old_failures(&self) {
         let mut failures = self.failures.lock().await;
         let now = Instant::now();
-        failures.retain(|&failure_time| {
-            now.duration_since(failure_time) < self.config.window_duration
-        });
+        failures
+            .retain(|&failure_time| now.duration_since(failure_time) < self.config.window_duration);
     }
 
     /// Get current state
@@ -337,4 +347,3 @@ mod tests {
         assert_eq!(cb.state().await, CircuitState::Closed);
     }
 }
-

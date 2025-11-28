@@ -63,7 +63,7 @@ pub struct SecurityImpact {
 pub enum ImpactLevel {
     None,
     Low,      // P2 controls
-    Medium,   // P1 controls  
+    Medium,   // P1 controls
     High,     // P0 controls
     Critical, // Multiple P0 controls
 }
@@ -92,33 +92,39 @@ impl SecurityControlValidator {
     pub fn new(config_path: &str) -> Result<Self> {
         let config_content = std::fs::read_to_string(config_path)
             .map_err(|e| anyhow!("Failed to read security control mapping: {}", e))?;
-        
+
         let mapping: SecurityControlMapping = serde_yaml::from_str(&config_content)
             .map_err(|e| anyhow!("Failed to parse security control mapping: {}", e))?;
-        
-        info!("Loaded {} security controls from config", mapping.security_controls.len());
-        
+
+        info!(
+            "Loaded {} security controls from config",
+            mapping.security_controls.len()
+        );
+
         Ok(Self { mapping })
     }
 
     /// Analyze security impact of changed files
     pub fn analyze_security_impact(&self, changed_files: &[String]) -> Result<SecurityImpact> {
-        debug!("Analyzing security impact for {} changed files", changed_files.len());
-        
+        debug!(
+            "Analyzing security impact for {} changed files",
+            changed_files.len()
+        );
+
         let mut affected_controls = Vec::new();
         let mut additional_requirements = Vec::new();
         let mut max_priority = "P3".to_string();
         let mut blocks_production = false;
         let mut blocks_audit = false;
-        
+
         // Check each changed file against security controls
         for file in changed_files {
             debug!("Checking file: {}", file);
-            
+
             for control in &self.mapping.security_controls {
                 if self.file_matches_control(file, control)? {
                     debug!("File {} matches control {}", file, control.id);
-                    
+
                     let affected_control = AffectedControl {
                         id: control.id.clone(),
                         name: control.name.clone(),
@@ -131,20 +137,20 @@ impl SecurityControlValidator {
                         requires_cryptography_expert: control.requires_cryptography_expert,
                         economic_node_veto_enabled: control.economic_node_veto_enabled,
                     };
-                    
+
                     affected_controls.push(affected_control);
-                    
+
                     // Track highest priority (lower number = higher priority: P0=0, P1=1, etc.)
                     if self.priority_level(&control.priority) < self.priority_level(&max_priority) {
                         max_priority = control.priority.clone();
                     }
-                    
+
                     // Check if this blocks production or audit
                     if control.priority == "P0" {
                         blocks_production = true;
                         blocks_audit = true;
                     }
-                    
+
                     // Collect additional requirements
                     if let Some(reqs) = &control.additional_requirements {
                         additional_requirements.extend(reqs.clone());
@@ -152,16 +158,16 @@ impl SecurityControlValidator {
                 }
             }
         }
-        
+
         // Determine impact level and required tier
         let impact_level = self.determine_impact_level(&affected_controls, &max_priority);
         let required_tier = self.determine_required_tier(&impact_level, &affected_controls);
-        
+
         // Add tier-specific requirements
         if let Some(tier) = &required_tier {
             additional_requirements.extend(self.get_tier_requirements(tier));
         }
-        
+
         let result = SecurityImpact {
             impact_level,
             affected_controls,
@@ -170,8 +176,11 @@ impl SecurityControlValidator {
             blocks_production,
             blocks_audit,
         };
-        
-        info!("Security impact analysis complete: {:?}", result.impact_level);
+
+        info!(
+            "Security impact analysis complete: {:?}",
+            result.impact_level
+        );
         Ok(result)
     }
 
@@ -195,23 +204,23 @@ impl SecurityControlValidator {
             if parts.len() == 2 {
                 let prefix = parts[0].trim_end_matches('/');
                 let suffix = parts[1].trim_start_matches('/');
-                
+
                 // Normalize: ensure prefix comparison works
                 let normalized_prefix = if prefix.ends_with('/') {
-                    &prefix[..prefix.len()-1]
+                    &prefix[..prefix.len() - 1]
                 } else {
                     prefix
                 };
-                
+
                 // Check if file contains normalized prefix (works with absolute paths)
                 // For absolute paths, check if any path segment matches
                 if !file.contains(normalized_prefix) {
                     return Ok(false);
                 }
-                
+
                 // Find the position where prefix appears in file
                 let prefix_pos = file.find(normalized_prefix).unwrap_or(0);
-                
+
                 // Get remaining part after prefix (skip the / if present)
                 let remaining_start = if file.len() > prefix_pos + normalized_prefix.len() {
                     let next_char_pos = prefix_pos + normalized_prefix.len();
@@ -224,13 +233,13 @@ impl SecurityControlValidator {
                 } else {
                     prefix_pos + normalized_prefix.len()
                 };
-                
+
                 let remaining = if file.len() > remaining_start {
                     &file[remaining_start..]
                 } else {
                     ""
                 };
-                
+
                 // For suffix like "/*.rs", we need to match any path ending with .rs
                 // The pattern "bllvm-protocol/**/*.rs" means: prefix + any dirs + / + *.rs
                 if suffix.starts_with("/*") {
@@ -269,12 +278,12 @@ impl SecurityControlValidator {
             let pattern = pattern.replace("**", "*");
             return Ok(self.simple_glob_match(file, &pattern));
         }
-        
+
         // Handle * glob patterns
         if pattern.contains('*') {
             return Ok(self.simple_glob_match(file, pattern));
         }
-        
+
         // Exact match
         Ok(file == pattern)
     }
@@ -284,41 +293,43 @@ impl SecurityControlValidator {
         // Convert glob pattern to regex-like matching
         let pattern_parts: Vec<&str> = pattern.split('*').collect();
         let file_parts: Vec<&str> = file.split('/').collect();
-        
+
         if pattern_parts.len() == 1 {
             // No wildcards, exact match
             return file == pattern;
         }
-        
+
         // Simple prefix/suffix matching
         if pattern.starts_with('*') && pattern.ends_with('*') {
-            let inner = &pattern[1..pattern.len()-1];
+            let inner = &pattern[1..pattern.len() - 1];
             return file.contains(inner);
         }
-        
-        if pattern.ends_with('*') {
-            let prefix = &pattern[..pattern.len()-1];
+
+        if let Some(prefix) = pattern.strip_suffix('*') {
             return file.starts_with(prefix);
         }
-        
-        if pattern.starts_with('*') {
-            let suffix = &pattern[1..];
+
+        if let Some(suffix) = pattern.strip_prefix('*') {
             return file.ends_with(suffix);
         }
-        
+
         // Fallback to contains
         file.contains(pattern)
     }
 
     /// Determine impact level based on affected controls
-    fn determine_impact_level(&self, controls: &[AffectedControl], max_priority: &str) -> ImpactLevel {
+    fn determine_impact_level(
+        &self,
+        controls: &[AffectedControl],
+        max_priority: &str,
+    ) -> ImpactLevel {
         if controls.is_empty() {
             return ImpactLevel::None;
         }
-        
+
         let p0_count = controls.iter().filter(|c| c.priority == "P0").count();
         let p1_count = controls.iter().filter(|c| c.priority == "P1").count();
-        
+
         match max_priority {
             "P0" if p0_count > 1 => ImpactLevel::Critical,
             "P0" => ImpactLevel::High,
@@ -329,13 +340,18 @@ impl SecurityControlValidator {
     }
 
     /// Determine required governance tier based on impact
-    fn determine_required_tier(&self, impact_level: &ImpactLevel, controls: &[AffectedControl]) -> Option<String> {
+    fn determine_required_tier(
+        &self,
+        impact_level: &ImpactLevel,
+        controls: &[AffectedControl],
+    ) -> Option<String> {
         match impact_level {
             ImpactLevel::Critical | ImpactLevel::High => {
                 // Check if any P0 controls require cryptography expert
-                let needs_crypto_expert = controls.iter()
+                let needs_crypto_expert = controls
+                    .iter()
                     .any(|c| c.priority == "P0" && c.requires_cryptography_expert);
-                
+
                 if needs_crypto_expert {
                     Some("security_critical".to_string())
                 } else {
@@ -344,9 +360,8 @@ impl SecurityControlValidator {
             }
             ImpactLevel::Medium => {
                 // Check if any controls require cryptography expert
-                let needs_crypto_expert = controls.iter()
-                    .any(|c| c.requires_cryptography_expert);
-                
+                let needs_crypto_expert = controls.iter().any(|c| c.requires_cryptography_expert);
+
                 if needs_crypto_expert {
                     Some("cryptographic".to_string())
                 } else {
@@ -395,9 +410,12 @@ impl SecurityControlValidator {
     }
 
     /// Check if PR should be blocked due to placeholder implementations
-    pub fn check_for_placeholders(&self, changed_files: &[String]) -> Result<Vec<PlaceholderViolation>> {
+    pub fn check_for_placeholders(
+        &self,
+        changed_files: &[String],
+    ) -> Result<Vec<PlaceholderViolation>> {
         let mut violations = Vec::new();
-        
+
         for file in changed_files {
             if self.is_security_critical_file(file)? {
                 if let Ok(content) = std::fs::read_to_string(file) {
@@ -406,7 +424,7 @@ impl SecurityControlValidator {
                 }
             }
         }
-        
+
         Ok(violations)
     }
 
@@ -423,7 +441,7 @@ impl SecurityControlValidator {
     /// Find placeholder patterns in file content
     fn find_placeholders_in_content(&self, file: &str, content: &str) -> Vec<PlaceholderViolation> {
         let mut violations = Vec::new();
-        
+
         let placeholder_patterns = [
             "PLACEHOLDER",
             "TODO: Implement",
@@ -437,7 +455,7 @@ impl SecurityControlValidator {
             "For now, return",
             "This is a placeholder",
         ];
-        
+
         for (line_num, line) in content.lines().enumerate() {
             for pattern in &placeholder_patterns {
                 if line.contains(pattern) {
@@ -450,7 +468,7 @@ impl SecurityControlValidator {
                 }
             }
         }
-        
+
         violations
     }
 
@@ -459,40 +477,49 @@ impl SecurityControlValidator {
         if impact.affected_controls.is_empty() {
             return "## Security Control Impact\n\n✅ **No security controls affected** - Standard review process applies.".to_string();
         }
-        
+
         let mut comment = String::new();
         comment.push_str("## Security Control Impact\n\n");
-        
+
         // Impact level
         match impact.impact_level {
-            ImpactLevel::Critical => comment.push_str("🚨 **CRITICAL IMPACT** - Multiple P0 security controls affected\n\n"),
-            ImpactLevel::High => comment.push_str("🔴 **HIGH IMPACT** - P0 security controls affected\n\n"),
-            ImpactLevel::Medium => comment.push_str("🟡 **MEDIUM IMPACT** - P1 security controls affected\n\n"),
-            ImpactLevel::Low => comment.push_str("🟢 **LOW IMPACT** - P2 security controls affected\n\n"),
-            ImpactLevel::None => comment.push_str("✅ **NO IMPACT** - No security controls affected\n\n"),
+            ImpactLevel::Critical => comment
+                .push_str("🚨 **CRITICAL IMPACT** - Multiple P0 security controls affected\n\n"),
+            ImpactLevel::High => {
+                comment.push_str("🔴 **HIGH IMPACT** - P0 security controls affected\n\n")
+            }
+            ImpactLevel::Medium => {
+                comment.push_str("🟡 **MEDIUM IMPACT** - P1 security controls affected\n\n")
+            }
+            ImpactLevel::Low => {
+                comment.push_str("🟢 **LOW IMPACT** - P2 security controls affected\n\n")
+            }
+            ImpactLevel::None => {
+                comment.push_str("✅ **NO IMPACT** - No security controls affected\n\n")
+            }
         }
-        
+
         // Affected controls
         comment.push_str("### Affected Security Controls\n\n");
         for control in &impact.affected_controls {
             let priority_emoji = match control.priority.as_str() {
                 "P0" => "🔴",
-                "P1" => "🟡", 
+                "P1" => "🟡",
                 "P2" => "🟢",
                 _ => "⚪",
             };
-            
+
             comment.push_str(&format!(
                 "- {} **{}** ({})\n",
                 priority_emoji, control.name, control.id
             ));
         }
-        
+
         // Required tier
         if let Some(tier) = &impact.required_tier {
             comment.push_str(&format!("\n### Required Governance Tier: **{}**\n\n", tier));
         }
-        
+
         // Additional requirements
         if !impact.additional_requirements.is_empty() {
             comment.push_str("### Additional Requirements\n\n");
@@ -500,16 +527,20 @@ impl SecurityControlValidator {
                 comment.push_str(&format!("- {}\n", req));
             }
         }
-        
+
         // Production/audit blocking
         if impact.blocks_production {
-            comment.push_str("\n⚠️ **This PR blocks production deployment** until P0 controls are certified.\n");
+            comment.push_str(
+                "\n⚠️ **This PR blocks production deployment** until P0 controls are certified.\n",
+            );
         }
-        
+
         if impact.blocks_audit {
-            comment.push_str("\n⚠️ **This PR blocks security audit** until P0 controls are implemented.\n");
+            comment.push_str(
+                "\n⚠️ **This PR blocks security audit** until P0 controls are implemented.\n",
+            );
         }
-        
+
         comment
     }
 }
@@ -526,30 +557,35 @@ pub struct PlaceholderViolation {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile::tempdir;
 
     #[test]
     fn test_file_pattern_matching() {
         let validator = create_test_validator();
-        
+
         // Test exact match
-        assert!(validator.matches_pattern("bllvm-protocol/src/lib.rs", "bllvm-protocol/src/lib.rs").unwrap());
-        
+        assert!(validator
+            .matches_pattern("bllvm-protocol/src/lib.rs", "bllvm-protocol/src/lib.rs")
+            .unwrap());
+
         // Test wildcard match
-        assert!(validator.matches_pattern("bllvm-protocol/src/lib.rs", "bllvm-protocol/**/*.rs").unwrap());
-        
+        assert!(validator
+            .matches_pattern("bllvm-protocol/src/lib.rs", "bllvm-protocol/**/*.rs")
+            .unwrap());
+
         // Test no match
-        assert!(!validator.matches_pattern("other/file.rs", "bllvm-protocol/**/*.rs").unwrap());
+        assert!(!validator
+            .matches_pattern("other/file.rs", "bllvm-protocol/**/*.rs")
+            .unwrap());
     }
 
     #[test]
     fn test_security_impact_analysis() {
         let validator = create_test_validator();
-        
+
         // Test P0 control impact
         let changed_files = vec!["bllvm-protocol/src/lib.rs".to_string()];
         let impact = validator.analyze_security_impact(&changed_files).unwrap();
-        
+
         assert!(matches!(impact.impact_level, ImpactLevel::High));
         assert!(impact.blocks_production);
         assert!(impact.blocks_audit);
@@ -559,7 +595,7 @@ mod tests {
     #[test]
     fn test_placeholder_detection() {
         let validator = create_test_validator();
-        
+
         // Create a temporary file with placeholder that matches the security control pattern
         // Use a relative path that matches the pattern "bllvm-protocol/**/*.rs"
         let temp_dir = tempfile::tempdir().unwrap();
@@ -567,11 +603,11 @@ mod tests {
         std::fs::create_dir_all(&test_dir).unwrap();
         let temp_file = test_dir.join("test_security.rs");
         std::fs::write(&temp_file, "// TODO: Implement actual cryptographic verification\nlet key = 0x02[PLACEHOLDER_64_CHAR_HEX];").unwrap();
-        
+
         // Use the file path relative to temp_dir to match the pattern
         let file_path = temp_file.to_string_lossy().to_string();
         let violations = validator.check_for_placeholders(&[file_path]).unwrap();
-        
+
         assert!(!violations.is_empty());
         assert!(violations.iter().any(|v| v.pattern == "TODO: Implement"));
         assert!(violations.iter().any(|v| v.pattern == "0x02[PLACEHOLDER"));
@@ -579,27 +615,25 @@ mod tests {
 
     fn create_test_validator() -> SecurityControlValidator {
         let mapping = SecurityControlMapping {
-            security_controls: vec![
-                SecurityControl {
-                    id: "A-001".to_string(),
-                    name: "Genesis Block Implementation".to_string(),
-                    category: "consensus_integrity".to_string(),
-                    priority: "P0".to_string(),
-                    description: "Proper genesis blocks".to_string(),
-                    files: vec!["bllvm-protocol/**/*.rs".to_string()],
-                    required_signatures: "7-of-7".to_string(),
-                    review_period_days: 180,
-                    requires_security_audit: true,
-                    requires_formal_verification: true,
-                    requires_cryptography_expert: false,
-                    economic_node_veto_enabled: true,
-                    additional_requirements: None,
-                }
-            ],
+            security_controls: vec![SecurityControl {
+                id: "A-001".to_string(),
+                name: "Genesis Block Implementation".to_string(),
+                category: "consensus_integrity".to_string(),
+                priority: "P0".to_string(),
+                description: "Proper genesis blocks".to_string(),
+                files: vec!["bllvm-protocol/**/*.rs".to_string()],
+                required_signatures: "7-of-7".to_string(),
+                review_period_days: 180,
+                requires_security_audit: true,
+                requires_formal_verification: true,
+                requires_cryptography_expert: false,
+                economic_node_veto_enabled: true,
+                additional_requirements: None,
+            }],
             categories: HashMap::new(),
             priorities: HashMap::new(),
         };
-        
+
         SecurityControlValidator { mapping }
     }
 }

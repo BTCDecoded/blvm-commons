@@ -10,6 +10,12 @@ use crate::error::GovernanceError;
 
 pub struct RulesetVersioning;
 
+impl Default for RulesetVersioning {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl RulesetVersioning {
     pub fn new() -> Self {
         Self

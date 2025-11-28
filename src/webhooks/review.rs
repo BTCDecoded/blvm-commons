@@ -57,7 +57,10 @@ pub async fn handle_review_event(
 
 /// Check if review state is valid
 pub fn is_valid_review_state(state: &str) -> bool {
-    matches!(state, "approved" | "changes_requested" | "commented" | "dismissed")
+    matches!(
+        state,
+        "approved" | "changes_requested" | "commented" | "dismissed"
+    )
 }
 
 #[cfg(test)]

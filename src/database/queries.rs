@@ -1,7 +1,6 @@
 use crate::database::models::*;
-use crate::error::GovernanceError;
 use chrono::Utc;
-use sqlx::{SqlitePool, Row, FromRow};
+use sqlx::{FromRow, Row, SqlitePool};
 
 pub struct Queries;
 
@@ -192,8 +191,8 @@ impl Queries {
             signatures.push(new_sig);
 
             // Update PR with new signatures
-            let signatures_json = serde_json::to_string(&signatures)
-                .map_err(|e| sqlx::Error::Decode(Box::new(e)))?;
+            let signatures_json =
+                serde_json::to_string(&signatures).map_err(|e| sqlx::Error::Decode(Box::new(e)))?;
             let now = Utc::now();
 
             sqlx::query(
@@ -222,8 +221,8 @@ impl Queries {
         maintainer: Option<String>,
         details: serde_json::Value,
     ) -> Result<(), sqlx::Error> {
-        let details_json = serde_json::to_string(&details)
-            .map_err(|e| sqlx::Error::Decode(Box::new(e)))?;
+        let details_json =
+            serde_json::to_string(&details).map_err(|e| sqlx::Error::Decode(Box::new(e)))?;
 
         sqlx::query(
             r#"
@@ -283,10 +282,9 @@ impl<'r> sqlx::FromRow<'r, sqlx::sqlite::SqliteRow> for PullRequestRow {
 
 impl From<PullRequestRow> for PullRequest {
     fn from(row: PullRequestRow) -> Self {
-        let signatures: Vec<Signature> = serde_json::from_str(&row.signatures)
-            .unwrap_or_else(|_| vec![]);
-        let linked_prs: Vec<i32> = serde_json::from_str(&row.linked_prs)
-            .unwrap_or_else(|_| vec![]);
+        let signatures: Vec<Signature> =
+            serde_json::from_str(&row.signatures).unwrap_or_else(|_| vec![]);
+        let linked_prs: Vec<i32> = serde_json::from_str(&row.linked_prs).unwrap_or_else(|_| vec![]);
 
         PullRequest {
             id: row.id,
@@ -401,8 +399,8 @@ impl<'r> sqlx::FromRow<'r, sqlx::sqlite::SqliteRow> for GovernanceEventRow {
 
 impl From<GovernanceEventRow> for GovernanceEvent {
     fn from(row: GovernanceEventRow) -> Self {
-        let details: serde_json::Value = serde_json::from_str(&row.details)
-            .unwrap_or_else(|_| serde_json::json!({}));
+        let details: serde_json::Value =
+            serde_json::from_str(&row.details).unwrap_or_else(|_| serde_json::json!({}));
 
         GovernanceEvent {
             id: row.id,

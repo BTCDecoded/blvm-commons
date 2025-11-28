@@ -1,0 +1,7 @@
+---
+source: tests/snapshot_tests.rs
+expression: "format!(\"file_count: {}\\ntotal_size: {}\\nmerkle_root: {}\", result.file_count,\nresult.total_size, result.merkle_root)"
+---
+file_count: 3
+total_size: 24
+merkle_root: sha256:616c609e96d2d84e6ea192ad8def0b571541d42366ff1b7be8b1dd2484097ed6

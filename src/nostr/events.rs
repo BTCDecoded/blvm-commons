@@ -5,7 +5,6 @@
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 /// Governance status event published to Nostr
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -22,8 +21,8 @@ pub struct GovernanceStatus {
 /// File hashes for verification
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Hashes {
-    pub binary: String,  // sha256:...
-    pub config: String,  // sha256:...
+    pub binary: String, // sha256:...
+    pub config: String, // sha256:...
 }
 
 /// Server health information
@@ -105,30 +104,30 @@ pub struct GovernanceActionEvent {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LayerRequirement {
     pub layer: u32,
-    pub signatures: String,  // e.g., "6-of-7"
+    pub signatures: String, // e.g., "6-of-7"
     pub review_days: u32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TierRequirement {
     pub tier: u32,
-    pub signatures: String,  // e.g., "3-of-5"
+    pub signatures: String, // e.g., "3-of-5"
     pub review_days: u32,
     pub economic_veto: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CombinedRequirement {
-    pub signatures: String,  // e.g., "6-of-7"
+    pub signatures: String, // e.g., "6-of-7"
     pub review_days: u32,
     pub economic_veto: bool,
-    pub source: String,  // "layer" or "tier"
+    pub source: String, // "layer" or "tier"
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KeyholderSignature {
-    pub keyholder: String,  // pubkey
-    pub keyholder_type: String,  // "maintainer" or "emergency_keyholder"
+    pub keyholder: String,      // pubkey
+    pub keyholder_type: String, // "maintainer" or "emergency_keyholder"
     pub signature: String,
     pub timestamp: i64,
 }
@@ -159,9 +158,9 @@ pub struct KeyholderAnnouncement {
     pub backup_contact: Option<String>,
     pub joined: i64,
     pub layer: Option<u32>,
-    pub keyholder_type: String,  // "maintainer" or "emergency_keyholder"
+    pub keyholder_type: String, // "maintainer" or "emergency_keyholder"
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub zap_address: Option<String>,  // Lightning address for donations
+    pub zap_address: Option<String>, // Lightning address for donations
 }
 
 impl KeyholderAnnouncement {
@@ -174,9 +173,9 @@ impl KeyholderAnnouncement {
 /// Published by nodes for telemetry (opt-in)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NodeStatusReport {
-    pub node_type: String,  // "full" | "archival" | "pruned"
+    pub node_type: String, // "full" | "archival" | "pruned"
     pub uptime_hours: u64,
-    pub sync_status: String,  // "synced" | "syncing"
+    pub sync_status: String, // "synced" | "syncing"
     pub modules_enabled: Vec<String>,
     pub reported_at: i64,
 }

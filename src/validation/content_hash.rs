@@ -8,7 +8,7 @@ use crate::error::GovernanceError;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
-use tracing::{info, warn, error};
+use tracing::{error, info, warn};
 
 /// Represents a file correspondence mapping between repositories
 #[derive(Debug, Clone)]
@@ -91,12 +91,13 @@ impl ContentHashValidator {
     /// Load correspondence mappings from configuration
     pub fn load_correspondence_mappings(&mut self, mappings: Vec<FileCorrespondence>) {
         for mapping in mappings {
-            self.correspondence_mappings.insert(
-                mapping.orange_paper_file.clone(),
-                mapping,
-            );
+            self.correspondence_mappings
+                .insert(mapping.orange_paper_file.clone(), mapping);
         }
-        info!("Loaded {} correspondence mappings", self.correspondence_mappings.len());
+        info!(
+            "Loaded {} correspondence mappings",
+            self.correspondence_mappings.len()
+        );
     }
 
     /// Compute SHA256 hash of file content
@@ -111,7 +112,9 @@ impl ContentHashValidator {
         if files.is_empty() {
             return DirectoryHashResult {
                 directory_path: "empty".to_string(),
-                merkle_root: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855".to_string(),
+                merkle_root:
+                    "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                        .to_string(),
                 file_count: 0,
                 total_size: 0,
             };
@@ -135,7 +138,10 @@ impl ContentHashValidator {
 
         // Build Merkle tree
         let merkle_root = self.build_merkle_tree(&file_hashes);
-        let total_size: u64 = sorted_files.iter().map(|(_, content)| content.len() as u64).sum();
+        let total_size: u64 = sorted_files
+            .iter()
+            .map(|(_, content)| content.len() as u64)
+            .sum();
 
         DirectoryHashResult {
             directory_path: "directory".to_string(),
@@ -156,10 +162,10 @@ impl ContentHashValidator {
         }
 
         let mut current_level = hashes.to_vec();
-        
+
         while current_level.len() > 1 {
             let mut next_level = Vec::new();
-            
+
             for i in (0..current_level.len()).step_by(2) {
                 if i + 1 < current_level.len() {
                     // Combine two hashes
@@ -172,7 +178,7 @@ impl ContentHashValidator {
                     next_level.push(current_level[i].clone());
                 }
             }
-            
+
             current_level = next_level;
         }
 
@@ -187,31 +193,44 @@ impl ContentHashValidator {
         target_repo_files: &HashMap<String, Vec<u8>>,
     ) -> Result<HashVerificationResult, GovernanceError> {
         let source_hash = self.compute_file_hash(source_content);
-        
+
         // Find correspondence mapping
-        let mapping = self.correspondence_mappings.get(source_file)
-            .ok_or_else(|| GovernanceError::ValidationError(
-                format!("No correspondence mapping found for file: {}", source_file)
-            ))?;
+        let mapping = self
+            .correspondence_mappings
+            .get(source_file)
+            .ok_or_else(|| {
+                GovernanceError::ValidationError(format!(
+                    "No correspondence mapping found for file: {}",
+                    source_file
+                ))
+            })?;
 
         // Check if target file exists
-        let target_content = target_repo_files.get(&mapping.consensus_proof_file)
-            .ok_or_else(|| GovernanceError::ValidationError(
-                format!("Corresponding file not found: {}", mapping.consensus_proof_file)
-            ))?;
+        let target_content = target_repo_files
+            .get(&mapping.consensus_proof_file)
+            .ok_or_else(|| {
+                GovernanceError::ValidationError(format!(
+                    "Corresponding file not found: {}",
+                    mapping.consensus_proof_file
+                ))
+            })?;
 
         let target_hash = self.compute_file_hash(target_content);
-        
+
         // For now, we just verify the file exists and has content
         // In a real implementation, we would verify the content matches the specification
         let is_valid = !target_content.is_empty();
-        
+
         Ok(HashVerificationResult {
             file_path: source_file.to_string(),
             computed_hash: source_hash,
             expected_hash: Some(target_hash),
             is_valid,
-            error_message: if is_valid { None } else { Some("Target file is empty".to_string()) },
+            error_message: if is_valid {
+                None
+            } else {
+                Some("Target file is empty".to_string())
+            },
         })
     }
 
@@ -222,7 +241,10 @@ impl ContentHashValidator {
         consensus_proof_files: &HashMap<String, Vec<u8>>,
         changed_files: &[String],
     ) -> Result<SyncReport, GovernanceError> {
-        info!("Checking bidirectional sync for {} changed files", changed_files.len());
+        info!(
+            "Checking bidirectional sync for {} changed files",
+            changed_files.len()
+        );
 
         let mut verification_results = Vec::new();
         let mut missing_files = Vec::new();
@@ -231,7 +253,11 @@ impl ContentHashValidator {
         // Check each changed file for correspondence
         for changed_file in changed_files {
             if let Some(orange_content) = orange_paper_files.get(changed_file) {
-                match self.verify_correspondence(changed_file, orange_content, consensus_proof_files) {
+                match self.verify_correspondence(
+                    changed_file,
+                    orange_content,
+                    consensus_proof_files,
+                ) {
                     Ok(result) => {
                         if result.is_valid {
                             verification_results.push(result);
@@ -240,7 +266,10 @@ impl ContentHashValidator {
                         }
                     }
                     Err(e) => {
-                        warn!("Failed to verify correspondence for {}: {}", changed_file, e);
+                        warn!(
+                            "Failed to verify correspondence for {}: {}",
+                            changed_file, e
+                        );
                         missing_files.push(changed_file.clone());
                     }
                 }
@@ -326,7 +355,10 @@ impl ContentHashValidator {
                 ) {
                     Ok(result) => results.push(result),
                     Err(e) => {
-                        error!("Failed to validate correspondence for {}: {}", mapping.orange_paper_file, e);
+                        error!(
+                            "Failed to validate correspondence for {}: {}",
+                            mapping.orange_paper_file, e
+                        );
                         return Err(e);
                     }
                 }
@@ -354,7 +386,7 @@ mod tests {
         let validator = ContentHashValidator::new();
         let content = b"test content";
         let hash = validator.compute_file_hash(content);
-        
+
         // Verify it's a valid SHA256 hash
         assert!(hash.starts_with("sha256:"));
         assert_eq!(hash.len(), 71); // "sha256:" + 64 hex chars
@@ -367,9 +399,9 @@ mod tests {
             ("file1.txt".to_string(), b"content1".to_vec()),
             ("file2.txt".to_string(), b"content2".to_vec()),
         ];
-        
+
         let result = validator.compute_directory_hash(&files);
-        
+
         assert_eq!(result.file_count, 2);
         assert_eq!(result.total_size, 16); // 8 + 8 bytes
         assert!(result.merkle_root.starts_with("sha256:"));
@@ -379,21 +411,28 @@ mod tests {
     fn test_empty_directory_hash() {
         let validator = ContentHashValidator::new();
         let files = vec![];
-        
+
         let result = validator.compute_directory_hash(&files);
-        
+
         assert_eq!(result.file_count, 0);
         assert_eq!(result.total_size, 0);
-        assert_eq!(result.merkle_root, "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
+        assert_eq!(
+            result.merkle_root,
+            "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        );
     }
 
     #[test]
     fn test_correspondence_mapping_generation() {
         let mappings = ContentHashValidator::generate_correspondence_map();
-        
+
         assert!(!mappings.is_empty());
-        assert!(mappings.iter().any(|m| m.orange_paper_file == "consensus-rules/block-validation.md"));
-        assert!(mappings.iter().any(|m| m.consensus_proof_file == "proofs/block-validation.rs"));
+        assert!(mappings
+            .iter()
+            .any(|m| m.orange_paper_file == "consensus-rules/block-validation.md"));
+        assert!(mappings
+            .iter()
+            .any(|m| m.consensus_proof_file == "proofs/block-validation.rs"));
     }
 
     #[test]
@@ -404,12 +443,15 @@ mod tests {
 
         let source_file = "consensus-rules/block-validation.md";
         let source_content = b"block validation rules";
-        
+
         let mut target_files = HashMap::new();
-        target_files.insert("proofs/block-validation.rs".to_string(), b"proof implementation".to_vec());
+        target_files.insert(
+            "proofs/block-validation.rs".to_string(),
+            b"proof implementation".to_vec(),
+        );
 
         let result = validator.verify_correspondence(source_file, source_content, &target_files);
-        
+
         assert!(result.is_ok());
         let result = result.unwrap();
         assert!(result.is_valid);
@@ -427,8 +469,11 @@ mod tests {
         let target_files = HashMap::new(); // Empty target files
 
         let result = validator.verify_correspondence(source_file, source_content, &target_files);
-        
+
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("Corresponding file not found"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("Corresponding file not found"));
     }
 }

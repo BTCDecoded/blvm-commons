@@ -138,7 +138,7 @@ impl AdoptionTracker {
         let rulesets_result = sqlx::query("SELECT DISTINCT ruleset_id FROM fork_decisions")
             .fetch_all(&self.pool)
             .await;
-        
+
         let rulesets = match rulesets_result {
             Ok(r) => r,
             Err(e) => {
@@ -155,7 +155,10 @@ impl AdoptionTracker {
                         last_updated: Utc::now(),
                     });
                 }
-                return Err(GovernanceError::DatabaseError(format!("Failed to fetch rulesets: {}", e)));
+                return Err(GovernanceError::DatabaseError(format!(
+                    "Failed to fetch rulesets: {}",
+                    e
+                )));
             }
         };
 
@@ -293,6 +296,7 @@ impl AdoptionTracker {
             decision.weight,
             &decision.decision_reason,
             &decision.signature,
-        ).await
+        )
+        .await
     }
 }

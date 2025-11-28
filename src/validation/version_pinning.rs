@@ -7,9 +7,7 @@
 use crate::error::GovernanceError;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::collections::HashMap;
-use std::str::FromStr;
-use tracing::{info, warn, error, debug};
+use tracing::{debug, info, warn};
 
 /// Version reference found in code
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -128,14 +126,19 @@ impl VersionPinningValidator {
     }
 
     /// Load version manifest from configuration
-    pub fn load_version_manifest(&mut self, manifest: VersionManifest) -> Result<(), GovernanceError> {
+    pub fn load_version_manifest(
+        &mut self,
+        manifest: VersionManifest,
+    ) -> Result<(), GovernanceError> {
         // Verify manifest integrity
         self.verify_manifest_integrity(&manifest)?;
-        
+
         self.version_manifest = Some(manifest);
-        info!("Loaded version manifest with {} versions", 
-              self.version_manifest.as_ref().unwrap().versions.len());
-        
+        info!(
+            "Loaded version manifest with {} versions",
+            self.version_manifest.as_ref().unwrap().versions.len()
+        );
+
         Ok(())
     }
 
@@ -155,7 +158,11 @@ impl VersionPinningValidator {
             }
         }
 
-        debug!("Found {} version references in {}", references.len(), file_path);
+        debug!(
+            "Found {} version references in {}",
+            references.len(),
+            file_path
+        );
         Ok(references)
     }
 
@@ -167,7 +174,7 @@ impl VersionPinningValidator {
         line: &str,
     ) -> Option<VersionReference> {
         let trimmed = line.trim();
-        
+
         // Pattern: @orange-paper-version: v1.2.3
         if let Some(captures) = regex::Regex::new(r"@orange-paper-version:\s*(v?\d+\.\d+\.\d+)")
             .unwrap()
@@ -220,9 +227,10 @@ impl VersionPinningValidator {
         // This should be checked last, after all specific patterns
         if trimmed.contains("@orange-paper") && trimmed.contains(":") {
             // Check if it's not already matched by a specific pattern
-            if !trimmed.contains("@orange-paper-version") 
+            if !trimmed.contains("@orange-paper-version")
                 && !trimmed.contains("@orange-paper-commit")
-                && !trimmed.contains("@orange-paper-hash") {
+                && !trimmed.contains("@orange-paper-hash")
+            {
                 return Some(VersionReference {
                     file_path: file_path.to_string(),
                     line_number,
@@ -248,7 +256,7 @@ impl VersionPinningValidator {
         // 1. Parse the public key
         // 2. Verify the signature against the version data
         // 3. Check signature format and validity
-        
+
         // For now, we'll implement a basic validation
         if signature.signature.is_empty() || public_key.is_empty() {
             return Ok(false);
@@ -271,8 +279,7 @@ impl VersionPinningValidator {
         manifest: &VersionManifest,
     ) -> Result<ValidationStatus, GovernanceError> {
         // Find the version in the manifest
-        let version_entry = manifest.versions.iter()
-            .find(|v| v.version == version);
+        let version_entry = manifest.versions.iter().find(|v| v.version == version);
 
         match version_entry {
             Some(entry) => {
@@ -319,7 +326,7 @@ impl VersionPinningValidator {
         for reference in references {
             if reference.reference_type == VersionReferenceType::Version {
                 let status = self.check_version_compatibility(&reference.version, manifest)?;
-                
+
                 match status {
                     ValidationStatus::Invalid => {
                         errors.push(format!(
@@ -358,7 +365,7 @@ impl VersionPinningValidator {
         content: &str,
     ) -> Result<VersionPinningResult, GovernanceError> {
         let references = self.parse_version_references(file_path, content)?;
-        
+
         let mut errors = Vec::new();
         let mut warnings = Vec::new();
 
@@ -367,7 +374,7 @@ impl VersionPinningValidator {
             for reference in &references {
                 if reference.reference_type == VersionReferenceType::Version {
                     let status = self.check_version_compatibility(&reference.version, manifest)?;
-                    
+
                     match status {
                         ValidationStatus::Invalid => {
                             errors.push(format!(
@@ -429,7 +436,7 @@ impl VersionPinningValidator {
         let computed_hash = self.compute_manifest_hash(manifest);
         if computed_hash != manifest.manifest_hash {
             return Err(GovernanceError::ValidationError(
-                "Version manifest hash verification failed".to_string()
+                "Version manifest hash verification failed".to_string(),
             ));
         }
 
@@ -438,7 +445,9 @@ impl VersionPinningValidator {
             if version.signatures.len() < self.config.minimum_signatures {
                 return Err(GovernanceError::ValidationError(format!(
                     "Version {} has insufficient signatures: {} < {}",
-                    version.version, version.signatures.len(), self.config.minimum_signatures
+                    version.version,
+                    version.signatures.len(),
+                    self.config.minimum_signatures
                 )));
             }
 
@@ -459,11 +468,11 @@ impl VersionPinningValidator {
     /// Compute manifest hash
     fn compute_manifest_hash(&self, manifest: &VersionManifest) -> String {
         let mut hasher = Sha256::new();
-        
+
         // Hash the manifest data (excluding the hash field itself)
         let manifest_data = serde_json::to_string(&manifest).unwrap_or_default();
         hasher.update(manifest_data.as_bytes());
-        
+
         format!("sha256:{}", hex::encode(hasher.finalize()))
     }
 
@@ -482,12 +491,15 @@ impl VersionPinningValidator {
 
     /// Get latest version from manifest
     pub fn get_latest_version(&self) -> Option<String> {
-        self.version_manifest.as_ref().map(|m| m.latest_version.clone())
+        self.version_manifest
+            .as_ref()
+            .map(|m| m.latest_version.clone())
     }
 
     /// Get version entry by version string
     pub fn get_version_entry(&self, version: &str) -> Option<&VersionManifestEntry> {
-        self.version_manifest.as_ref()
+        self.version_manifest
+            .as_ref()
             .and_then(|m| m.versions.iter().find(|v| v.version == version))
     }
 }
@@ -511,22 +523,33 @@ mod tests {
 // @orange-paper-hash: sha256:fedcba123456
 "#;
 
-        let references = validator.parse_version_references("test.rs", content).unwrap();
-        
+        let references = validator
+            .parse_version_references("test.rs", content)
+            .unwrap();
+
         assert_eq!(references.len(), 3);
         assert_eq!(references[0].reference_type, VersionReferenceType::Version);
         assert_eq!(references[0].version, "v1.2.3");
         assert_eq!(references[1].reference_type, VersionReferenceType::Commit);
-        assert_eq!(references[1].commit_sha, Some("abc123def456789".to_string()));
-        assert_eq!(references[2].reference_type, VersionReferenceType::ContentHash);
-        assert_eq!(references[2].content_hash, Some("sha256:fedcba123456".to_string()));
+        assert_eq!(
+            references[1].commit_sha,
+            Some("abc123def456789".to_string())
+        );
+        assert_eq!(
+            references[2].reference_type,
+            VersionReferenceType::ContentHash
+        );
+        assert_eq!(
+            references[2].content_hash,
+            Some("sha256:fedcba123456".to_string())
+        );
     }
 
     #[test]
     fn test_generate_reference_format() {
         let validator = VersionPinningValidator::default();
         let format = validator.generate_reference_format("v1.2.3", "abc123", "sha256:def456");
-        
+
         assert!(format.contains("@orange-paper-version: v1.2.3"));
         assert!(format.contains("@orange-paper-commit: abc123"));
         assert!(format.contains("@orange-paper-hash: sha256:def456"));
@@ -535,38 +558,33 @@ mod tests {
     #[test]
     fn test_version_compatibility() {
         let validator = VersionPinningValidator::default();
-        
+
         let manifest = VersionManifest {
             repository: "orange-paper".to_string(),
             created_at: chrono::Utc::now(),
-            versions: vec![
-                VersionManifestEntry {
-                    version: "v1.2.3".to_string(),
-                    commit_sha: "abc123".to_string(),
-                    content_hash: "sha256:def456".to_string(),
-                    created_at: chrono::Utc::now() - chrono::Duration::try_days(1).unwrap_or(chrono::Duration::zero()),
-                    signatures: vec![],
-                    ots_timestamp: None,
-                    is_stable: true,
-                    is_latest: true,
-                }
-            ],
+            versions: vec![VersionManifestEntry {
+                version: "v1.2.3".to_string(),
+                commit_sha: "abc123".to_string(),
+                content_hash: "sha256:def456".to_string(),
+                created_at: chrono::Utc::now()
+                    - chrono::Duration::try_days(1).unwrap_or(chrono::Duration::zero()),
+                signatures: vec![],
+                ots_timestamp: None,
+                is_stable: true,
+                is_latest: true,
+            }],
             latest_version: "v1.2.3".to_string(),
             manifest_hash: "sha256:test".to_string(),
         };
 
-        let status = validator.check_version_compatibility("v1.2.3", &manifest).unwrap();
+        let status = validator
+            .check_version_compatibility("v1.2.3", &manifest)
+            .unwrap();
         assert_eq!(status, ValidationStatus::Valid);
 
-        let status = validator.check_version_compatibility("v1.0.0", &manifest).unwrap();
+        let status = validator
+            .check_version_compatibility("v1.0.0", &manifest)
+            .unwrap();
         assert_eq!(status, ValidationStatus::Invalid);
     }
 }
-
-
-
-
-
-
-
-

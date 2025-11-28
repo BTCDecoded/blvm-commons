@@ -2,13 +2,14 @@
 //!
 //! Handles posting status checks and updating merge status based on governance requirements
 
+use chrono::Utc;
 use serde_json::Value;
 use tracing::{info, warn};
 
 use crate::database::Database;
+use crate::enforcement::decision_log::DecisionLogger;
 use crate::enforcement::merge_block::MergeBlocker;
 use crate::enforcement::status_checks::StatusCheckGenerator;
-use crate::enforcement::decision_log::DecisionLogger;
 use crate::error::GovernanceError;
 use crate::github::client::GitHubClient;
 use crate::validation::review_period::ReviewPeriodValidator;
@@ -24,7 +25,11 @@ pub struct GitHubIntegration {
 }
 
 impl GitHubIntegration {
-    pub fn new(github_client: GitHubClient, database: Database, decision_logger: DecisionLogger) -> Self {
+    pub fn new(
+        github_client: GitHubClient,
+        database: Database,
+        decision_logger: DecisionLogger,
+    ) -> Self {
         let merge_blocker = MergeBlocker::new(Some(github_client.clone()), decision_logger.clone());
         Self {
             github_client,
@@ -51,7 +56,7 @@ impl GitHubIntegration {
         let tier_name = self.get_tier_name(tier);
 
         // Post initial status check
-        self.post_initial_status_check(&owner, &repo, &head_sha, tier, &tier_name)
+        self.post_initial_status_check(&owner, &repo, &head_sha, tier, tier_name)
             .await?;
 
         // Set up required status checks for the branch
@@ -150,24 +155,26 @@ impl GitHubIntegration {
             let tier = tier_classification::classify_pr_tier(payload).await;
             let tier_name = self.get_tier_name(tier);
 
-        // Get combined requirements (Layer + Tier)
-        let (sigs_req, sigs_total, review_days) = 
-            ThresholdValidator::get_combined_requirements(layer, tier);
-        let _source = ThresholdValidator::get_requirement_source(layer, tier);
+            // Get combined requirements (Layer + Tier)
+            let (sigs_req, sigs_total, review_days) =
+                ThresholdValidator::get_combined_requirements(layer, tier);
+            let _source = ThresholdValidator::get_requirement_source(layer, tier);
 
-        // Check review period
-        let review_period_met = self.check_review_period(&pr, review_days).await?;
-        let review_period_status = self.generate_review_period_status(&pr, review_days).await?;
+            // Check review period
+            let review_period_met = self.check_review_period(&pr, review_days).await?;
+            let review_period_status = self.generate_review_period_status(&pr, review_days).await?;
 
-        // Check signatures
-        let (signatures_met, signature_status) = self.check_signatures(&pr, sigs_req, sigs_total).await?;
+            // Check signatures
+            let (signatures_met, signature_status) =
+                self.check_signatures(&pr, sigs_req, sigs_total).await?;
 
-        // Check economic node veto (Tier 3+)
-        let (economic_veto_active, economic_veto_status) = if tier >= 3 {
-            self.check_economic_veto(pr.id).await?
-        } else {
-            (false, String::new())
-        };
+            // Check economic node veto (Tier 3+)
+            let (economic_veto_active, economic_veto_status, veto_threshold) = if tier >= 3 {
+                let (active, status, threshold) = self.check_economic_veto(pr.id, tier).await?;
+                (active, status, Some(threshold))
+            } else {
+                (false, String::new(), None)
+            };
 
             // Post individual status checks
             self.post_review_period_status(owner, repo, sha, &review_period_status)
@@ -187,7 +194,7 @@ impl GitHubIntegration {
                 sha,
                 layer,
                 tier,
-                &tier_name,
+                tier_name,
                 review_period_met,
                 signatures_met,
                 economic_veto_active,
@@ -198,13 +205,24 @@ impl GitHubIntegration {
             .await?;
 
             // Update merge blocking status
-            let should_block = crate::enforcement::merge_block::MergeBlocker::should_block_merge(
-                review_period_met,
-                signatures_met,
-                economic_veto_active,
-                tier,
-                false, // emergency_mode
-            )?;
+            // Use sequential veto mechanism if available
+            let should_block = if let Some(veto) = &veto_threshold {
+                crate::enforcement::merge_block::MergeBlocker::should_block_merge_with_veto(
+                    review_period_met,
+                    signatures_met,
+                    veto,
+                    tier,
+                    false, // emergency_mode
+                )?
+            } else {
+                crate::enforcement::merge_block::MergeBlocker::should_block_merge(
+                    review_period_met,
+                    signatures_met,
+                    economic_veto_active,
+                    tier,
+                    false, // emergency_mode
+                )?
+            };
             let reason = crate::enforcement::merge_block::MergeBlocker::get_block_reason(
                 review_period_met,
                 signatures_met,
@@ -220,93 +238,165 @@ impl GitHubIntegration {
         Ok(())
     }
 
-        /// Check review period requirements
-        async fn check_review_period(
-            &self,
-            pr: &crate::database::models::PullRequest,
-            required_days: i64,
-        ) -> Result<bool, GovernanceError> {
-            let opened_at = pr.opened_at;
-            Ok(ReviewPeriodValidator::validate_review_period(opened_at, required_days, false).is_ok())
-        }
-
-        /// Generate review period status message
-        async fn generate_review_period_status(
-            &self,
-            pr: &crate::database::models::PullRequest,
-            required_days: i64,
-        ) -> Result<String, GovernanceError> {
-            let opened_at = pr.opened_at;
-            Ok(StatusCheckGenerator::generate_review_period_status(
-                opened_at,
-                required_days,
-                false,
-            ))
-        }
-
-        /// Check signature requirements
-        async fn check_signatures(
-            &self,
-            _pr: &crate::database::models::PullRequest,
-            required: usize,
-            total: usize,
-        ) -> Result<(bool, String), GovernanceError> {
-            // TODO: Get actual signature count from database
-            let current_signatures = 0; // Placeholder
-            let signers = vec![]; // Placeholder
-            let pending = vec![]; // Placeholder
-
-            let signatures_met = current_signatures >= required;
-            let status = StatusCheckGenerator::generate_signature_status(
-                current_signatures,
-                required,
-                total,
-                &signers,
-                &pending,
-            );
-
-            Ok((signatures_met, status))
-        }
-
-    /// Check economic node veto status
-    async fn check_economic_veto(&self, _pr_id: i32) -> Result<(bool, String), GovernanceError> {
-        // let veto_manager = VetoManager::new(self.database.pool().clone());
-        // let threshold = veto_manager.check_veto_threshold(pr_id).await?;
-        // let statistics = veto_manager.get_veto_statistics(pr_id).await?;
-
-        // For now, return mock data
-        let veto_active = false;
-        let status = "Economic node veto: No veto signals received".to_string();
-
-        Ok((veto_active, status))
+    /// Check review period requirements
+    async fn check_review_period(
+        &self,
+        pr: &crate::database::models::PullRequest,
+        required_days: i64,
+    ) -> Result<bool, GovernanceError> {
+        let opened_at = pr.opened_at;
+        Ok(ReviewPeriodValidator::validate_review_period(opened_at, required_days, false).is_ok())
     }
 
-        /// Post review period status check
-        async fn post_review_period_status(
-            &self,
-            owner: &str,
-            repo: &str,
-            sha: &str,
-            status: &str,
-        ) -> Result<(), GovernanceError> {
-            let state = if status.contains("✅") {
-                "success"
-            } else {
-                "pending"
-            };
+    /// Generate review period status message
+    async fn generate_review_period_status(
+        &self,
+        pr: &crate::database::models::PullRequest,
+        required_days: i64,
+    ) -> Result<String, GovernanceError> {
+        let opened_at = pr.opened_at;
+        Ok(StatusCheckGenerator::generate_review_period_status(
+            opened_at,
+            required_days,
+            false,
+        ))
+    }
 
-            // Log the status check
-            self.decision_logger.log_status_check(
-                sha.parse().unwrap_or(0),
-                "governance/review-period",
-                state,
-                status,
+    /// Check signature requirements
+    async fn check_signatures(
+        &self,
+        _pr: &crate::database::models::PullRequest,
+        required: usize,
+        total: usize,
+    ) -> Result<(bool, String), GovernanceError> {
+        // TODO: Get actual signature count from database
+        let current_signatures = 0; // Placeholder
+        let signers = vec![]; // Placeholder
+        let pending = vec![]; // Placeholder
+
+        let signatures_met = current_signatures >= required;
+        let status = StatusCheckGenerator::generate_signature_status(
+            current_signatures,
+            required,
+            total,
+            &signers,
+            &pending,
+        );
+
+        Ok((signatures_met, status))
+    }
+
+    /// Check economic node veto status
+    /// This now integrates with the new voting system (zap votes + participation votes)
+    async fn check_economic_veto(&self, pr_id: i32, tier: u32) -> Result<(bool, String, crate::economic_nodes::VetoThreshold), GovernanceError> {
+        use crate::economic_nodes::VetoManager;
+        use crate::governance::VoteAggregator;
+
+        let pool = self.database.pool().ok_or_else(|| {
+            GovernanceError::DatabaseError("Database pool not available".to_string())
+        })?;
+
+        // Check traditional economic node veto with tier-specific thresholds
+        // AND logic: both mining and economic thresholds must be met
+        let veto_manager = VetoManager::new(pool.clone());
+        let veto_threshold = veto_manager
+            .check_veto_threshold(pr_id, tier)
+            .await
+            .map_err(|e| GovernanceError::DatabaseError(format!("Failed to check veto: {}", e)))?;
+
+        // Also check zap votes and participation votes via VoteAggregator
+        // This gives us the complete picture of all voting mechanisms
+        let vote_aggregator = VoteAggregator::new(pool.clone());
+
+        // Get tier from PR (we need to look it up)
+        // For now, assume Tier 3 if we can't determine (conservative)
+        let tier = 3; // TODO: Get actual tier from PR
+
+        let economic_veto_blocks = vote_aggregator
+            .check_economic_veto_blocking(pr_id, tier)
+            .await
+            .map_err(|e| {
+                GovernanceError::DatabaseError(format!("Failed to check veto blocking: {}", e))
+            })?;
+
+        // Get tier-specific thresholds for status message
+        let (mining_threshold, economic_threshold) = match tier {
+            3 => (30.0, 40.0),
+            4 => (25.0, 35.0),
+            5 => (50.0, 60.0),
+            _ => (30.0, 40.0),
+        };
+
+        // Build status message (AND logic: both thresholds must be met)
+        let status = if veto_threshold.veto_active || economic_veto_blocks {
+            let mut msg = format!(
+                "⚠️ Economic Node Veto Active\n\
+                Mining Veto: {:.1}% (threshold: {:.0}%)\n\
+                Economic Veto: {:.1}% (threshold: {:.0}%)\n\
+                Status: BLOCKED (Both thresholds required)",
+                veto_threshold.mining_veto_percent, mining_threshold,
+                veto_threshold.economic_veto_percent, economic_threshold
             );
+            
+            // Add review period information if available
+            if let Some(ends_at) = veto_threshold.review_period_ends_at {
+                let remaining = ends_at - Utc::now();
+                if remaining.num_days() > 0 {
+                    msg.push_str(&format!("\nReview Period: {} days remaining", remaining.num_days()));
+                } else if remaining.num_hours() > 0 {
+                    msg.push_str(&format!("\nReview Period: {} hours remaining", remaining.num_hours()));
+                } else if veto_threshold.maintainer_override {
+                    msg.push_str("\nReview Period: Expired - Maintainer override active");
+                } else {
+                    msg.push_str("\nReview Period: Expired - Override available");
+                }
+            }
+            
+            if let Some(path) = &veto_threshold.resolution_path {
+                msg.push_str(&format!("\nResolution: {}", path));
+            }
+            
+            msg
+        } else {
+            format!(
+                "✅ Economic Node Veto: Not Active\n\
+                Mining Veto: {:.1}% (threshold: {:.0}%)\n\
+                Economic Veto: {:.1}% (threshold: {:.0}%)\n\
+                Status: No veto (Both thresholds required)",
+                veto_threshold.mining_veto_percent, mining_threshold,
+                veto_threshold.economic_veto_percent, economic_threshold
+            )
+        };
 
-            self.github_client
-                .post_status_check(owner, repo, sha, state, status, "governance/review-period")
-                .await
-        }
+        Ok((veto_threshold.veto_active || economic_veto_blocks, status, veto_threshold))
+    }
+
+    /// Post review period status check
+    async fn post_review_period_status(
+        &self,
+        owner: &str,
+        repo: &str,
+        sha: &str,
+        status: &str,
+    ) -> Result<(), GovernanceError> {
+        let state = if status.contains("✅") {
+            "success"
+        } else {
+            "pending"
+        };
+
+        // Log the status check
+        self.decision_logger.log_status_check(
+            sha.parse().unwrap_or(0),
+            "governance/review-period",
+            state,
+            status,
+        );
+
+        self.github_client
+            .post_status_check(owner, repo, sha, state, status, "governance/review-period")
+            .await
+    }
 
     /// Post signature status check
     async fn post_signature_status(

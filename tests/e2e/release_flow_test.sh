@@ -28,7 +28,7 @@ log_warn() {
 # Test 1: Dependency Graph
 log_info "Test 1: Dependency Graph"
 cd "$PROJECT_ROOT"
-cargo test --package governance-app --lib build::dependency::tests -- --nocapture || {
+cargo test --package bllvm-commons --lib build::dependency::tests -- --nocapture || {
     log_error "Dependency graph tests failed"
     exit 1
 }
@@ -36,7 +36,7 @@ log_info "✓ Dependency graph tests passed"
 
 # Test 2: Build Order
 log_info "Test 2: Build Order Calculation"
-cargo test --package governance-app --lib build::tests::test_dependency_graph_build_order -- --nocapture || {
+cargo test --package bllvm-commons --lib build::tests::test_dependency_graph_build_order -- --nocapture || {
     log_error "Build order tests failed"
     exit 1
 }
@@ -44,7 +44,7 @@ log_info "✓ Build order tests passed"
 
 # Test 3: Circular Dependency Detection
 log_info "Test 3: Circular Dependency Detection"
-cargo test --package governance-app --lib build::tests::test_circular_dependency_detection -- --nocapture || {
+cargo test --package bllvm-commons --lib build::tests::test_circular_dependency_detection -- --nocapture || {
     log_error "Circular dependency detection tests failed"
     exit 1
 }
@@ -52,7 +52,7 @@ log_info "✓ Circular dependency detection tests passed"
 
 # Test 4: Parallel Groups
 log_info "Test 4: Parallel Build Groups"
-cargo test --package governance-app --lib build::tests::test_parallel_build_groups -- --nocapture || {
+cargo test --package bllvm-commons --lib build::tests::test_parallel_build_groups -- --nocapture || {
     log_error "Parallel groups tests failed"
     exit 1
 }
@@ -60,7 +60,7 @@ log_info "✓ Parallel groups tests passed"
 
 # Test 5: Integration Tests
 log_info "Test 5: Integration Tests"
-cargo test --package governance-app --test build_orchestration_test -- --nocapture || {
+cargo test --package bllvm-commons --test build_orchestration_test -- --nocapture || {
     log_warn "Integration tests require mocks - skipping for now"
 }
 log_info "✓ Integration tests completed"

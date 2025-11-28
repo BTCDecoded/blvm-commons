@@ -3,14 +3,12 @@
 //! Helper functions for publishing governance events to Nostr
 
 use anyhow::Result;
-use chrono::Utc;
 
 use crate::config::AppConfig;
 use crate::database::Database;
 use crate::nostr::{
-    GovernanceActionPublisher, NostrClient,
-    LayerRequirement, TierRequirement, CombinedRequirement,
-    KeyholderSignature, EconomicVetoStatus,
+    CombinedRequirement, EconomicVetoStatus, GovernanceActionPublisher, KeyholderSignature,
+    LayerRequirement, NostrClient, TierRequirement,
 };
 use crate::validation::threshold::ThresholdValidator;
 
@@ -33,7 +31,10 @@ pub async fn publish_merge_action(
     let pr = match pr_info {
         Some(p) => p,
         None => {
-            tracing::warn!("PR #{} not found in database, skipping Nostr publish", pr_number);
+            tracing::warn!(
+                "PR #{} not found in database, skipping Nostr publish",
+                pr_number
+            );
             return Ok(());
         }
     };
@@ -41,13 +42,13 @@ pub async fn publish_merge_action(
     // Get layer and tier requirements
     let (layer_sigs_req, layer_sigs_total) = ThresholdValidator::get_threshold_for_layer(layer);
     let layer_review = ThresholdValidator::get_review_period_for_layer(layer, false);
-    
+
     let (tier_sigs_req, tier_sigs_total) = ThresholdValidator::get_tier_threshold(tier);
     let tier_review = ThresholdValidator::get_tier_review_period(tier);
     let tier_economic_veto = ThresholdValidator::requires_economic_veto(layer, tier);
 
     // Get combined requirements
-    let (final_sigs_req, final_sigs_total, final_review_days) = 
+    let (final_sigs_req, final_sigs_total, final_review_days) =
         ThresholdValidator::get_combined_requirements(layer, tier);
     let source = ThresholdValidator::get_requirement_source(layer, tier);
 
@@ -86,7 +87,7 @@ pub async fn publish_merge_action(
     // Create Nostr client and publisher
     let nsec = std::fs::read_to_string(&config.nostr.server_nsec_path)
         .map_err(|e| anyhow::anyhow!("Failed to read Nostr key: {}", e))?;
-    
+
     let client = NostrClient::new(nsec, config.nostr.relays.clone()).await?;
     let publisher = GovernanceActionPublisher::new(
         client,
@@ -95,23 +96,25 @@ pub async fn publish_merge_action(
     );
 
     // Publish action
-    publisher.publish_action(
-        "merge",
-        tier,
-        layer as u32,
-        repository,
-        &combined_req.signatures,
-        combined_req.review_days,
-        Some(commit_hash),
-        Some(pr_number),
-        &format!("Merge PR #{}: {}", pr_number, pr.head_sha),
-        layer_req,
-        tier_req,
-        combined_req.clone(),
-        signatures,
-        economic_veto_status,
-        None, // review_period_ends - already merged
-    ).await?;
+    publisher
+        .publish_action(
+            "merge",
+            tier,
+            layer as u32,
+            repository,
+            &combined_req.signatures,
+            combined_req.review_days,
+            Some(commit_hash),
+            Some(pr_number),
+            &format!("Merge PR #{}: {}", pr_number, pr.head_sha),
+            layer_req,
+            tier_req,
+            combined_req.clone(),
+            signatures,
+            economic_veto_status,
+            None, // review_period_ends - already merged
+        )
+        .await?;
 
     Ok(())
 }
@@ -124,16 +127,17 @@ async fn get_signatures_from_db(
 ) -> Result<Vec<KeyholderSignature>> {
     // Get PR to access signatures
     let pr = database.get_pull_request(repository, pr_number).await?;
-    
+
     match pr {
         Some(p) => {
             // Convert database signatures to Nostr format
             let mut nostr_sigs = Vec::new();
             for sig in &p.signatures {
                 // Determine keyholder type from maintainer registry
-                let keyholder_type = determine_keyholder_type(database, &sig.signer).await
+                let keyholder_type = determine_keyholder_type(database, &sig.signer)
+                    .await
                     .unwrap_or_else(|_| "maintainer".to_string()); // Default to maintainer on error
-                
+
                 nostr_sigs.push(KeyholderSignature {
                     keyholder: sig.signer.clone(),
                     keyholder_type,
@@ -157,15 +161,20 @@ async fn determine_keyholder_type(
     if let Ok(Some(_)) = database.get_maintainer_by_username(signer).await {
         return Ok("maintainer".to_string());
     }
-    
+
     // Then check if it's an emergency keyholder
-    let emergency_keyholders = database.get_emergency_keyholders().await
+    let emergency_keyholders = database
+        .get_emergency_keyholders()
+        .await
         .map_err(|e| anyhow::anyhow!("Failed to get emergency keyholders: {}", e))?;
-    
-    if emergency_keyholders.iter().any(|ek| ek.github_username == signer) {
+
+    if emergency_keyholders
+        .iter()
+        .any(|ek| ek.github_username == signer)
+    {
         return Ok("emergency".to_string());
     }
-    
+
     // Default to maintainer if not found (for backward compatibility)
     Ok("maintainer".to_string())
 }
@@ -184,13 +193,13 @@ pub async fn publish_review_period_notification(
     }
 
     // Get combined requirements
-    let (final_sigs_req, final_sigs_total, final_review_days) = 
+    let (final_sigs_req, final_sigs_total, final_review_days) =
         ThresholdValidator::get_combined_requirements(layer, tier);
 
     // Create Nostr client
     let nsec = std::fs::read_to_string(&config.nostr.server_nsec_path)
         .map_err(|e| anyhow::anyhow!("Failed to read Nostr key: {}", e))?;
-    
+
     let client = NostrClient::new(nsec, config.nostr.relays.clone()).await?;
     let keys = &client.keys;
 
@@ -247,7 +256,10 @@ pub async fn publish_review_period_notification(
         ),
         nostr_sdk::prelude::Tag::Generic(
             nostr_sdk::prelude::TagKind::Custom("pr".into()),
-            vec![format!("https://github.com/BTCDecoded/{}/pull/{}", repository, pr_number)],
+            vec![format!(
+                "https://github.com/BTCDecoded/{}/pull/{}",
+                repository, pr_number
+            )],
         ),
     ];
 
@@ -255,8 +267,9 @@ pub async fn publish_review_period_notification(
         nostr_sdk::prelude::Kind::LongFormTextNote,
         content,
         tags,
-    ).to_event(keys)
-        .map_err(|e| anyhow::anyhow!("Failed to create Nostr event: {}", e))?;
+    )
+    .to_event(keys)
+    .map_err(|e| anyhow::anyhow!("Failed to create Nostr event: {}", e))?;
 
     client.publish_event(event).await?;
 
@@ -271,10 +284,11 @@ pub fn create_keyholder_announcement_event(
     keyholder: &crate::nostr::KeyholderAnnouncement,
 ) -> Result<nostr_sdk::prelude::Event> {
     // Add logo/picture if configured
-    let mut announcement = keyholder.clone();
+    let announcement = keyholder.clone();
     // Note: picture field removed from KeyholderAnnouncement, logo_url is handled elsewhere
 
-    let content = announcement.to_json()
+    let content = announcement
+        .to_json()
         .map_err(|e| anyhow::anyhow!("Failed to serialize keyholder announcement: {}", e))?;
 
     let mut tags = vec![
@@ -306,13 +320,11 @@ pub fn create_keyholder_announcement_event(
     // This function just creates the event structure
     // The keyholder would sign it with their own keys
     let keys = nostr_sdk::prelude::Keys::generate(); // Placeholder - actual keys come from keyholder
-    
-    let event = nostr_sdk::prelude::EventBuilder::new(
-        nostr_sdk::prelude::Kind::Metadata,
-        content,
-        tags,
-    ).to_event(&keys)
-        .map_err(|e| anyhow::anyhow!("Failed to create Nostr event: {}", e))?;
+
+    let event =
+        nostr_sdk::prelude::EventBuilder::new(nostr_sdk::prelude::Kind::Metadata, content, tags)
+            .to_event(&keys)
+            .map_err(|e| anyhow::anyhow!("Failed to create Nostr event: {}", e))?;
 
     Ok(event)
 }
@@ -337,7 +349,7 @@ mod tests {
     async fn test_publish_merge_action_disabled() {
         let config = setup_test_config().await;
         let db = Database::new_in_memory().await.unwrap();
-        
+
         // Should return Ok immediately when Nostr is disabled
         let result = publish_merge_action(
             &config,
@@ -347,15 +359,16 @@ mod tests {
             "abc123",
             2,
             3,
-        ).await;
-        
+        )
+        .await;
+
         assert!(result.is_ok());
     }
 
     #[tokio::test]
     async fn test_publish_review_period_notification_disabled() {
         let config = setup_test_config().await;
-        
+
         // Should return Ok immediately when Nostr is disabled
         let result = publish_review_period_notification(
             &config,
@@ -364,8 +377,9 @@ mod tests {
             2,
             3,
             chrono::Utc::now(),
-        ).await;
-        
+        )
+        .await;
+
         assert!(result.is_ok());
     }
 
@@ -384,10 +398,10 @@ mod tests {
             keyholder_type: "maintainer".to_string(),
             zap_address: Some("alice@example.com".to_string()),
         };
-        
+
         let result = create_keyholder_announcement_event(&config, &keyholder);
         assert!(result.is_ok());
-        
+
         let event = result.unwrap();
         assert_eq!(event.kind, nostr_sdk::prelude::Kind::Metadata);
     }
@@ -407,9 +421,8 @@ mod tests {
             keyholder_type: "emergency_keyholder".to_string(),
             zap_address: None,
         };
-        
+
         let result = create_keyholder_announcement_event(&config, &keyholder);
         assert!(result.is_ok());
     }
 }
-

@@ -2,9 +2,9 @@
 //!
 //! Command-line tool for managing keys in the Bitcoin Commons governance system
 
-use clap::{Parser, Subcommand};
 use bllvm_commons::crypto::key_management::{KeyManagementConfig, KeyManager, KeyStatus, KeyType};
 use bllvm_commons::database::Database;
+use clap::{Parser, Subcommand};
 use std::collections::HashMap;
 
 #[derive(Parser)]
@@ -232,16 +232,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         success_count += 1;
                     }
                     Err(e) => {
-                        println!(
-                            "❌ Failed to rotate {} ({}): {}",
-                            key.key_id, key.owner, e
-                        );
+                        println!("❌ Failed to rotate {} ({}): {}", key.key_id, key.owner, e);
                         error_count += 1;
                     }
                 }
             }
 
-            println!("\nRotation complete: {} succeeded, {} failed", success_count, error_count);
+            println!(
+                "\nRotation complete: {} succeeded, {} failed",
+                success_count, error_count
+            );
         }
 
         Commands::Stats => {
@@ -347,7 +347,3 @@ fn print_key_details(key: &bllvm_commons::crypto::key_management::KeyMetadata) {
         }
     }
 }
-
-
-
-

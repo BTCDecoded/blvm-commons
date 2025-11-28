@@ -1,4 +1,3 @@
-use crate::validation::emergency::{ActiveEmergency, EmergencyTier};
 use crate::validation::review_period::ReviewPeriodValidator;
 use crate::validation::threshold::ThresholdValidator;
 use chrono::{DateTime, Utc};
@@ -11,7 +10,12 @@ impl StatusCheckGenerator {
         required_days: i64,
         emergency_mode: bool,
     ) -> String {
-        Self::generate_review_period_status_with_dry_run(opened_at, required_days, emergency_mode, false)
+        Self::generate_review_period_status_with_dry_run(
+            opened_at,
+            required_days,
+            emergency_mode,
+            false,
+        )
     }
 
     pub fn generate_review_period_status_with_dry_run(
@@ -70,7 +74,7 @@ impl StatusCheckGenerator {
         dry_run: bool,
     ) -> String {
         let prefix = if dry_run { "[DRY-RUN] " } else { "" };
-        
+
         if current_signatures >= required_signatures {
             format!("{}✅ Governance: Signatures Complete", prefix)
         } else {
@@ -136,7 +140,7 @@ impl StatusCheckGenerator {
             ));
 
             if economic_veto_active && tier >= 3 {
-                status.push_str("\n\n⚠️ Economic Node Veto: 30%+ hashpower or 40%+ economic activity has vetoed this change");
+                status.push_str("\n\n⚠️ Economic Node Veto: 30%+ hashpower AND 40%+ economic activity has vetoed this change");
             }
         }
 
@@ -180,13 +184,10 @@ mod tests {
     fn test_generate_review_period_status_met() {
         let opened_at = Utc::now() - Duration::days(10);
         let required_days = 7;
-        
-        let status = StatusCheckGenerator::generate_review_period_status(
-            opened_at,
-            required_days,
-            false,
-        );
-        
+
+        let status =
+            StatusCheckGenerator::generate_review_period_status(opened_at, required_days, false);
+
         assert!(status.contains("✅"), "Should show review period met");
     }
 
@@ -194,30 +195,33 @@ mod tests {
     fn test_generate_review_period_status_not_met() {
         let opened_at = Utc::now() - Duration::days(3);
         let required_days = 7;
-        
-        let status = StatusCheckGenerator::generate_review_period_status(
-            opened_at,
-            required_days,
-            false,
-        );
-        
+
+        let status =
+            StatusCheckGenerator::generate_review_period_status(opened_at, required_days, false);
+
         assert!(status.contains("❌"), "Should show review period not met");
-        assert!(status.contains("Required: 7 days"), "Should show required days");
+        assert!(
+            status.contains("Required: 7 days"),
+            "Should show required days"
+        );
     }
 
     #[test]
     fn test_generate_review_period_status_dry_run() {
         let opened_at = Utc::now() - Duration::days(3);
         let required_days = 7;
-        
+
         let status = StatusCheckGenerator::generate_review_period_status_with_dry_run(
             opened_at,
             required_days,
             false,
             true, // dry_run
         );
-        
-        assert!(status.contains("[DRY-RUN]"), "Should include dry-run prefix");
+
+        assert!(
+            status.contains("[DRY-RUN]"),
+            "Should include dry-run prefix"
+        );
     }
 
     #[test]
@@ -229,7 +233,7 @@ mod tests {
             &["alice".to_string(), "bob".to_string()],
             &[],
         );
-        
+
         assert!(status.contains("✅"), "Should show signatures complete");
     }
 
@@ -242,34 +246,44 @@ mod tests {
             &["alice".to_string(), "bob".to_string()],
             &["charlie".to_string()],
         );
-        
-        assert!(!status.contains("✅ Governance: Signatures Complete"), 
-            "Should not show complete when threshold not met");
+
+        assert!(
+            !status.contains("✅ Governance: Signatures Complete"),
+            "Should not show complete when threshold not met"
+        );
     }
 
     #[test]
     fn test_generate_signature_status_dry_run() {
         let status = StatusCheckGenerator::generate_signature_status_with_dry_run(
-            5, 4, 5,
+            5,
+            4,
+            5,
             &["alice".to_string()],
             &[],
             true, // dry_run
         );
-        
-        assert!(status.contains("[DRY-RUN]"), "Should include dry-run prefix");
+
+        assert!(
+            status.contains("[DRY-RUN]"),
+            "Should include dry-run prefix"
+        );
     }
 
     #[test]
     fn test_generate_combined_status_all_met() {
         let status = StatusCheckGenerator::generate_combined_status(
-            true,  // review_period_met
-            true,  // signatures_met
+            true, // review_period_met
+            true, // signatures_met
             "Review period met",
             "Signatures complete",
         );
-        
+
         assert!(status.contains("✅"), "Should show all requirements met");
-        assert!(status.contains("Ready to Merge"), "Should indicate ready to merge");
+        assert!(
+            status.contains("Ready to Merge"),
+            "Should indicate ready to merge"
+        );
     }
 
     #[test]
@@ -280,9 +294,12 @@ mod tests {
             "Review period not met",
             "Signatures complete",
         );
-        
+
         assert!(status.contains("❌"), "Should show requirements not met");
-        assert!(status.contains("Review period not met"), "Should include review period status");
+        assert!(
+            status.contains("Review period not met"),
+            "Should include review period status"
+        );
     }
 
     #[test]
@@ -290,11 +307,13 @@ mod tests {
         let status = StatusCheckGenerator::generate_tier_status(
             1, // tier
             "Routine Maintenance",
-            true, true, false,
+            true,
+            true,
+            false,
             "Review period met",
             "Signatures complete",
         );
-        
+
         assert!(status.contains("🔧"), "Should have routine emoji");
         assert!(status.contains("Tier 1"), "Should show tier number");
     }
@@ -304,11 +323,13 @@ mod tests {
         let status = StatusCheckGenerator::generate_tier_status(
             4, // tier
             "Emergency",
-            true, true, false,
+            true,
+            true,
+            false,
             "Review period met",
             "Signatures complete",
         );
-        
+
         assert!(status.contains("🚨"), "Should have emergency emoji");
         assert!(status.contains("Tier 4"), "Should show tier number");
     }
@@ -318,27 +339,35 @@ mod tests {
         let status = StatusCheckGenerator::generate_tier_status(
             3, // tier
             "Consensus-Adjacent",
-            true, true, true, // economic_veto_active
+            true,
+            true,
+            true, // economic_veto_active
             "Review period met",
             "Signatures complete",
         );
-        
-        assert!(status.contains("⚠️ Economic Node Veto Active"), "Should show veto active");
+
+        assert!(
+            status.contains("⚠️ Economic Node Veto Active"),
+            "Should show veto active"
+        );
     }
 
     #[test]
     fn test_generate_economic_veto_status_active() {
         let status = StatusCheckGenerator::generate_economic_veto_status(
-            true,  // veto_active
-            35.0,  // mining_veto_percent
-            45.0,  // economic_veto_percent
-            10,    // total_nodes
-            4,     // veto_count
+            true, // veto_active
+            35.0, // mining_veto_percent
+            45.0, // economic_veto_percent
+            10,   // total_nodes
+            4,    // veto_count
         );
-        
+
         assert!(status.contains("⚠️"), "Should show veto active");
         assert!(status.contains("35.0%"), "Should show mining veto percent");
-        assert!(status.contains("45.0%"), "Should show economic veto percent");
+        assert!(
+            status.contains("45.0%"),
+            "Should show economic veto percent"
+        );
     }
 
     #[test]
@@ -350,7 +379,7 @@ mod tests {
             10,    // total_nodes
             2,     // veto_count
         );
-        
+
         assert!(status.contains("✅"), "Should show veto not active");
         assert!(status.contains("20.0%"), "Should show mining veto percent");
     }

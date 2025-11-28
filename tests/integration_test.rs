@@ -1,4 +1,4 @@
-//! Integration tests for governance-app
+//! Integration tests for bllvm-commons
 //! Tests the core functionality with test data
 
 use bllvm_commons::database::Database;
@@ -56,8 +56,8 @@ async fn test_database_operations() {
 
 #[tokio::test]
 async fn test_signature_verification() {
-    use bllvm_sdk::governance::GovernanceKeypair;
     use bllvm_commons::crypto::signatures::SignatureManager;
+    use bllvm_sdk::governance::GovernanceKeypair;
 
     // Generate test keypair
     let keypair = GovernanceKeypair::generate().expect("Failed to generate keypair");
@@ -87,7 +87,3 @@ async fn test_signature_verification() {
         "Signature should be invalid for wrong message"
     );
 }
-
-
-
-

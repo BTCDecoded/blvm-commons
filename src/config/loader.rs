@@ -1,11 +1,11 @@
 //! Configuration file loader for governance system
 //! Loads YAML configuration files from the governance repository
 
+use crate::error::GovernanceError;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
 use tracing::info;
-use crate::error::GovernanceError;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ActionTiersConfig {
@@ -73,10 +73,120 @@ pub struct ClassificationConfig {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct CommonsContributorThresholdsConfig {
+    pub commons_contributor_thresholds: CommonsContributorThresholds,
+    pub weight_calculation: WeightCalculationConfig,
+    #[serde(default)]
+    pub maintainer_notes: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct CommonsContributorThresholds {
+    pub measurement_period_days: u32,
+    #[serde(default = "default_or_logic")]
+    pub qualification_logic: String, // "OR" or "AND"
+    pub merge_mining: ContributionThreshold,
+    pub fee_forwarding: ContributionThreshold,
+    pub zaps: ContributionThreshold,
+    pub marketplace: ContributionThreshold, // BIP70 payments (BTC, not USD)
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct ContributionThreshold {
+    pub enabled: bool,
+    pub minimum_contribution_btc: f64,
+    pub description: String,
+    pub verification: String,
+}
+
+// RevenueThreshold removed - all contributions are in BTC now
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct WeightCalculationConfig {
+    pub formula: String,
+    pub normalization_factor: f64,
+    pub minimum_weight: f64,
+    pub contribution_types: Vec<String>,
+    pub total_calculation: String,
+}
+
+fn default_or_logic() -> String {
+    "OR".to_string()
+}
+
+fn default_conversion_rate() -> String {
+    "current_market_rate".to_string()
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct TeamsConfig {
+    pub teams: Vec<TeamConfig>,
+    pub team_consensus: TeamConsensusConfig,
+    pub inter_team_consensus: InterTeamConsensusConfig,
+    pub tier_requirements: TierRequirementsConfig,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct TeamConfig {
+    pub id: String,
+    pub name: String,
+    pub description: String,
+    pub maintainers: Vec<TeamMaintainerConfig>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct TeamMaintainerConfig {
+    pub github: String,
+    pub public_key: String,
+    pub role: String,
+    pub added: String,
+    pub status: String,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct TeamConsensusConfig {
+    pub description: String,
+    pub threshold_per_team: u32,
+    pub total_per_team: u32,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct InterTeamConsensusConfig {
+    pub description: String,
+    pub threshold_teams: u32,
+    pub total_teams: u32,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct TierRequirementsConfig {
+    #[serde(rename = "tier_1")]
+    pub tier_1: TierRequirement,
+    #[serde(rename = "tier_2")]
+    pub tier_2: TierRequirement,
+    #[serde(rename = "tier_3")]
+    pub tier_3: TierRequirement,
+    #[serde(rename = "tier_4")]
+    pub tier_4: TierRequirement,
+    #[serde(rename = "tier_5")]
+    pub tier_5: TierRequirement,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct TierRequirement {
+    pub teams_required: u32,
+    pub maintainers_per_team: u32,
+    pub description: String,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct GovernanceConfigFiles {
     pub action_tiers: ActionTiersConfig,
     pub repository_layers: RepositoryLayersConfig,
     pub tier_classification: TierClassificationConfig,
+    #[serde(default)]
+    pub commons_contributor_thresholds: Option<CommonsContributorThresholdsConfig>,
+    #[serde(default)]
+    pub teams: Option<TeamsConfig>,
 }
 
 impl GovernanceConfigFiles {
@@ -87,6 +197,16 @@ impl GovernanceConfigFiles {
         let action_tiers = Self::load_yaml(path.join("action-tiers.yml"))?;
         let repository_layers = Self::load_yaml(path.join("repository-layers.yml"))?;
         let tier_classification = Self::load_yaml(path.join("tier-classification-rules.yml"))?;
+        
+        // Load Commons contributor thresholds (optional - may not exist)
+        let commons_contributor_thresholds = Self::load_yaml_optional(
+            path.join("commons-contributor-thresholds.yml")
+        ).ok();
+
+        // Load teams configuration (optional - may not exist initially)
+        let teams = Self::load_yaml_optional(
+            path.join("maintainers/teams.yml")
+        ).ok();
 
         info!("Successfully loaded all governance configuration files");
 
@@ -94,7 +214,28 @@ impl GovernanceConfigFiles {
             action_tiers,
             repository_layers,
             tier_classification,
+            commons_contributor_thresholds,
+            teams,
         })
+    }
+
+    /// Load a YAML file optionally (returns None if file doesn't exist)
+    fn load_yaml_optional<T: for<'de> Deserialize<'de>>(path: PathBuf) -> Result<T, GovernanceError> {
+        if !path.exists() {
+            return Err(GovernanceError::ConfigError(format!(
+                "Configuration file not found: {:?}",
+                path
+            )));
+        }
+        Self::load_yaml(path)
+    }
+
+    /// Load a YAML file optionally (returns Ok(None) if file doesn't exist, Ok(Some(T)) if it does)
+    fn load_yaml_optional_safe<T: for<'de> Deserialize<'de>>(path: PathBuf) -> Result<Option<T>, GovernanceError> {
+        if !path.exists() {
+            return Ok(None);
+        }
+        Self::load_yaml(path).map(Some)
     }
 
     /// Load a YAML file and deserialize it
@@ -106,21 +247,12 @@ impl GovernanceConfigFiles {
             )));
         }
 
-        let contents = fs::read_to_string(&path)
-            .map_err(|e| {
-                GovernanceError::ConfigError(format!(
-                    "Failed to read {:?}: {}",
-                    path, e
-                ))
-            })?;
+        let contents = fs::read_to_string(&path).map_err(|e| {
+            GovernanceError::ConfigError(format!("Failed to read {:?}: {}", path, e))
+        })?;
 
         serde_yaml::from_str(&contents)
-            .map_err(|e| {
-                GovernanceError::ConfigError(format!(
-                    "Failed to parse {:?}: {}",
-                    path, e
-                ))
-            })
+            .map_err(|e| GovernanceError::ConfigError(format!("Failed to parse {:?}: {}", path, e)))
     }
 
     /// Validate the loaded configuration
@@ -250,7 +382,9 @@ impl GovernanceConfigFiles {
     }
 
     /// Get tier classification rules
-    pub fn get_classification_rules(&self) -> &std::collections::HashMap<String, ClassificationRule> {
+    pub fn get_classification_rules(
+        &self,
+    ) -> &std::collections::HashMap<String, ClassificationRule> {
         &self.tier_classification.classification_rules
     }
 
@@ -314,13 +448,13 @@ impl ConfigCache {
     /// Reload configuration from disk
     pub fn reload(&mut self) -> Result<(), GovernanceError> {
         info!("Reloading governance configuration");
-        
+
         let new_config = GovernanceConfigFiles::load_from_directory(&self.config_path)?;
         new_config.validate()?;
-        
+
         self.config = new_config;
         self.last_updated = std::time::SystemTime::now();
-        
+
         info!("Configuration reloaded successfully");
         Ok(())
     }
@@ -334,14 +468,17 @@ mod tests {
     #[test]
     fn test_config_validation() {
         let mut tiers = HashMap::new();
-        tiers.insert("tier_1".to_string(), TierConfig {
-            name: "Routine".to_string(),
-            signatures_required: 3,
-            signatures_total: 5,
-            review_period_days: 7,
-            economic_veto_required: false,
-            description: "Routine maintenance".to_string(),
-        });
+        tiers.insert(
+            "tier_1".to_string(),
+            TierConfig {
+                name: "Routine".to_string(),
+                signatures_required: 3,
+                signatures_total: 5,
+                review_period_days: 7,
+                economic_veto_required: false,
+                description: "Routine maintenance".to_string(),
+            },
+        );
 
         let action_tiers = ActionTiersConfig { tiers };
         let repository_layers = RepositoryLayersConfig {
@@ -369,14 +506,17 @@ mod tests {
     #[test]
     fn test_tier_config_access() {
         let mut tiers = HashMap::new();
-        tiers.insert("tier_1".to_string(), TierConfig {
-            name: "Routine".to_string(),
-            signatures_required: 3,
-            signatures_total: 5,
-            review_period_days: 7,
-            economic_veto_required: false,
-            description: "Routine maintenance".to_string(),
-        });
+        tiers.insert(
+            "tier_1".to_string(),
+            TierConfig {
+                name: "Routine".to_string(),
+                signatures_required: 3,
+                signatures_total: 5,
+                review_period_days: 7,
+                economic_veto_required: false,
+                description: "Routine maintenance".to_string(),
+            },
+        );
 
         let action_tiers = ActionTiersConfig { tiers };
         let repository_layers = RepositoryLayersConfig {
@@ -405,7 +545,3 @@ mod tests {
         assert!(tier_2.is_none());
     }
 }
-
-
-
-

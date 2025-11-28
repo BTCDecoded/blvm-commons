@@ -1,3 +1,4 @@
+pub mod block;
 pub mod comment;
 pub mod github;
 pub mod github_integration;

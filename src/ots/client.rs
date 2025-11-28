@@ -21,10 +21,16 @@ impl OtsClient {
     pub fn new(aggregator_url: String) -> Self {
         let http_client = Client::new();
         let mut calendars = HashMap::new();
-        
+
         // Add default calendar servers
-        calendars.insert("alice".to_string(), "https://alice.btc.calendar.opentimestamps.org".to_string());
-        calendars.insert("bob".to_string(), "https://bob.btc.calendar.opentimestamps.org".to_string());
+        calendars.insert(
+            "alice".to_string(),
+            "https://alice.btc.calendar.opentimestamps.org".to_string(),
+        );
+        calendars.insert(
+            "bob".to_string(),
+            "https://bob.btc.calendar.opentimestamps.org".to_string(),
+        );
 
         Self {
             aggregator_url,
@@ -47,7 +53,7 @@ impl OtsClient {
         // Production implementation should POST hash to calendar server and receive OTS proof
         // See: https://github.com/opentimestamps/opentimestamps-server
         let mock_proof = format!("MOCK_OTS_PROOF:{}", hex::encode(hash)).into_bytes();
-        
+
         info!("Created mock OTS proof for {} bytes", data.len());
         Ok(mock_proof)
     }
@@ -99,7 +105,6 @@ impl OtsClient {
         // In a real implementation, this would upgrade from OpenTimestamps
         Ok(proof.to_vec())
     }
-
 }
 
 /// Result of timestamp verification

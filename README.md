@@ -13,10 +13,13 @@ Rust-based GitHub App for enforcing cryptographic governance rules across all Bi
 - ✅ **Core Infrastructure**: All major components implemented
 - ✅ **Database Schema**: Complete with migrations
 - ✅ **Economic Node System**: Registry and veto mechanism
-- ✅ **GitHub Integration**: Status checks and merge blocking
+- ✅ **GitHub Integration**: Status checks and merge blocking (octocrab 0.38)
 - ✅ **Comprehensive Testing**: Full test suite implemented
+- ✅ **OTS Registry**: Database queries implemented for registry generation
+- ✅ **Nostr Integration**: Payment hash extraction and audit log info implemented
+- ✅ **Consensus Verification**: Diff parsing for import-only validation implemented
 - ⚠️ **NOT ACTIVATED**: Governance rules are not enforced
-- 🔧 **Test Keys Only**: No real cryptographic enforcement
+- 🔧 **Test Keys Only**: No real cryptographic enforcement (maintainer keys need replacement)
 
 ### What This Means
 

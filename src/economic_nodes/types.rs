@@ -12,6 +12,7 @@ pub enum NodeType {
     Custodian,
     PaymentProcessor,
     MajorHolder,
+    CommonsContributor, // Nodes contributing through merge mining, fee forwarding, zaps, treasury, marketplace, services
 }
 
 impl NodeType {
@@ -22,6 +23,7 @@ impl NodeType {
             NodeType::Custodian => "custodian",
             NodeType::PaymentProcessor => "payment_processor",
             NodeType::MajorHolder => "major_holder",
+            NodeType::CommonsContributor => "commons_contributor",
         }
     }
 
@@ -32,11 +34,13 @@ impl NodeType {
             "custodian" => Some(NodeType::Custodian),
             "payment_processor" => Some(NodeType::PaymentProcessor),
             "major_holder" => Some(NodeType::MajorHolder),
+            "commons_contributor" => Some(NodeType::CommonsContributor),
             _ => None,
         }
     }
 
     /// Get minimum qualification thresholds for this node type
+    /// Note: For CommonsContributor, thresholds are loaded from config (maintainer-configurable)
     pub fn qualification_thresholds(&self) -> QualificationThresholds {
         match self {
             NodeType::MiningPool => QualificationThresholds {
@@ -44,30 +48,65 @@ impl NodeType {
                 minimum_holdings_btc: None,
                 minimum_volume_usd: None,
                 minimum_transactions_monthly: None,
+                // Commons contributor thresholds (None = use config)
+                minimum_merge_mining_btc: None,
+                minimum_fee_forwarding_btc: None,
+                minimum_zap_quantity_btc: None,
+                minimum_marketplace_sales_btc: None,
             },
             NodeType::Exchange => QualificationThresholds {
                 minimum_hashpower_percent: None,
                 minimum_holdings_btc: Some(10_000),
                 minimum_volume_usd: Some(100_000_000), // $100M daily
                 minimum_transactions_monthly: None,
+                minimum_merge_mining_btc: None,
+                minimum_fee_forwarding_btc: None,
+                minimum_zap_quantity_btc: None,
+                minimum_marketplace_sales_btc: None,
             },
             NodeType::Custodian => QualificationThresholds {
                 minimum_hashpower_percent: None,
                 minimum_holdings_btc: Some(10_000),
                 minimum_volume_usd: None,
                 minimum_transactions_monthly: None,
+                minimum_merge_mining_btc: None,
+                minimum_fee_forwarding_btc: None,
+                minimum_zap_quantity_btc: None,
+                minimum_marketplace_sales_btc: None,
             },
             NodeType::PaymentProcessor => QualificationThresholds {
                 minimum_hashpower_percent: None,
                 minimum_holdings_btc: None,
                 minimum_volume_usd: Some(50_000_000), // $50M monthly
                 minimum_transactions_monthly: None,
+                minimum_merge_mining_btc: None,
+                minimum_fee_forwarding_btc: None,
+                minimum_zap_quantity_btc: None,
+                minimum_marketplace_sales_btc: None,
             },
             NodeType::MajorHolder => QualificationThresholds {
                 minimum_hashpower_percent: None,
                 minimum_holdings_btc: Some(5_000),
                 minimum_volume_usd: None,
                 minimum_transactions_monthly: None,
+                minimum_merge_mining_btc: None,
+                minimum_fee_forwarding_btc: None,
+                minimum_zap_quantity_btc: None,
+                minimum_marketplace_sales_btc: None,
+            },
+            NodeType::CommonsContributor => {
+                // Thresholds loaded from config (maintainer-configurable)
+                // Default values provided here, but should be overridden by config
+                QualificationThresholds {
+                    minimum_hashpower_percent: None,
+                    minimum_holdings_btc: None,
+                    minimum_volume_usd: None,
+                    minimum_transactions_monthly: None,
+                    minimum_merge_mining_btc: Some(0.01), // Default: 0.01 BTC
+                    minimum_fee_forwarding_btc: Some(0.1), // Default: 0.1 BTC
+                    minimum_zap_quantity_btc: Some(0.01), // Default: 0.01 BTC
+                    minimum_marketplace_sales_btc: Some(0.01), // Default: 0.01 BTC
+                }
             },
         }
     }
@@ -76,10 +115,18 @@ impl NodeType {
 /// Qualification thresholds for different node types
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct QualificationThresholds {
+    // Traditional economic node thresholds
     pub minimum_hashpower_percent: Option<f64>,
     pub minimum_holdings_btc: Option<u64>,
     pub minimum_volume_usd: Option<u64>,
     pub minimum_transactions_monthly: Option<u64>,
+    
+    // Commons contributor thresholds (maintainer-configurable)
+    // All thresholds are in BTC - no USD conversion needed
+    pub minimum_merge_mining_btc: Option<f64>, // Minimum merge mining contribution (90-day period)
+    pub minimum_fee_forwarding_btc: Option<f64>, // Minimum fee forwarding contribution (90-day period)
+    pub minimum_zap_quantity_btc: Option<f64>, // Minimum zap contributions (90-day period)
+    pub minimum_marketplace_sales_btc: Option<f64>, // Minimum module marketplace sales (90-day period, BIP70 payments)
 }
 
 /// Economic node registration data
@@ -177,6 +224,16 @@ pub struct VetoThreshold {
     pub economic_veto_percent: f64,
     pub threshold_met: bool,
     pub veto_active: bool,
+    /// Sequential veto mechanism: review period information
+    pub review_period_start: Option<DateTime<Utc>>,
+    pub review_period_days: u32,
+    pub review_period_ends_at: Option<DateTime<Utc>>,
+    /// Maintainer override capability
+    pub maintainer_override: bool,
+    pub override_timestamp: Option<DateTime<Utc>>,
+    pub override_by: Option<String>,
+    /// Resolution path: 'consensus', 'override', 'dissolution', or None if still in review
+    pub resolution_path: Option<String>,
 }
 
 /// Economic node qualification proof data
@@ -187,6 +244,97 @@ pub struct QualificationProof {
     pub holdings_proof: Option<HoldingsProof>,
     pub volume_proof: Option<VolumeProof>,
     pub contact_info: ContactInfo,
+    // Commons contributor proofs (for CommonsContributor node type)
+    // Only includes verifiable contribution types (all in BTC)
+    pub commons_contributor_proof: Option<CommonsContributorProof>,
+}
+
+/// Commons contributor qualification proof
+/// Only includes verifiable contribution types (all in BTC, no USD conversion needed)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CommonsContributorProof {
+    /// Merge mining contribution proof (on-chain, BTC)
+    pub merge_mining_proof: Option<MergeMiningProof>,
+    /// Fee forwarding contribution proof (on-chain, BTC)
+    pub fee_forwarding_proof: Option<FeeForwardingProof>,
+    /// Zap contribution proof (Lightning, BTC)
+    pub zap_proof: Option<ZapProof>,
+    /// Marketplace sales proof (BIP70 payments, BTC)
+    pub marketplace_sales_proof: Option<MarketplaceSalesProof>,
+}
+
+/// Merge mining contribution proof
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MergeMiningProof {
+    pub total_revenue_btc: f64,
+    pub period_days: u32,
+    pub blocks_mined: Vec<MergeMiningBlockProof>,
+    pub contributor_id: String,
+}
+
+/// Merge mining block proof
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MergeMiningBlockProof {
+    pub block_hash: String,
+    pub chain_id: String,
+    pub commons_fee_amount: u64, // Satoshis
+    pub coinbase_signature: String,
+}
+
+/// Fee forwarding contribution proof
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FeeForwardingProof {
+    pub total_fees_forwarded_btc: f64,
+    pub period_days: u32,
+    pub blocks_with_forwarding: Vec<FeeForwardingBlockProof>,
+    pub contributor_id: String,
+}
+
+/// Fee forwarding block proof
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FeeForwardingBlockProof {
+    pub block_hash: String,
+    pub block_height: u32,
+    pub forwarded_amount: u64, // Satoshis
+    pub commons_address: String,
+    pub tx_hash: String,
+}
+
+/// Zap contribution proof
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ZapProof {
+    pub total_zaps_btc: f64,
+    pub period_days: u32,
+    pub zap_events: Vec<ZapEventProof>,
+    pub contributor_id: String, // Nostr pubkey
+}
+
+/// Zap event proof
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ZapEventProof {
+    pub nostr_event_id: String,
+    pub zap_amount: u64, // Satoshis
+    pub payment_hash: String,
+    pub timestamp: i64,
+}
+
+/// Marketplace sales proof
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MarketplaceSalesProof {
+    pub total_sales_btc: f64, // BIP70 payments are in BTC
+    pub period_days: u32,
+    pub module_payments: Vec<ModulePaymentProof>,
+    pub contributor_id: String,
+}
+
+/// Module payment proof
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ModulePaymentProof {
+    pub payment_id: String,
+    pub module_id: String,
+    pub amount_btc: f64, // BIP70 payments are in BTC (satoshis)
+    pub payment_hash: String, // BIP70 payment hash
+    pub timestamp: i64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

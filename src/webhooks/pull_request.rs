@@ -3,9 +3,9 @@ use tracing::{info, warn};
 
 use crate::config::AppConfig;
 use crate::database::Database;
-use crate::nostr::{publish_merge_action, publish_review_period_notification};
-use crate::validation::tier_classification;
+use crate::nostr::publish_merge_action;
 use crate::validation::threshold::ThresholdValidator;
+use crate::validation::tier_classification;
 
 pub async fn handle_pull_request_event(
     config: &AppConfig,
@@ -40,7 +40,12 @@ pub async fn handle_pull_request_event(
         repo if repo.contains("bllvm-protocol") || repo.contains("protocol-engine") => 3,
         repo if repo.contains("bllvm-sdk") || repo.contains("developer-sdk") => 5,
         repo if repo.contains("bllvm-commons") || repo.contains("governance-app") => 6,
-        repo if repo.contains("bllvm-node") || repo.contains("reference-node") || repo.contains("/bllvm") => 4,
+        repo if repo.contains("bllvm-node")
+            || repo.contains("reference-node")
+            || repo.contains("/bllvm") =>
+        {
+            4
+        }
         _ => {
             warn!("Unknown repository: {}", repo_name);
             return Ok(axum::response::Json(
@@ -55,7 +60,8 @@ pub async fn handle_pull_request_event(
         payload,
         repo_name,
         pr_number as i32,
-    ).await;
+    )
+    .await;
     info!("PR #{} classified as Tier {}", pr_number, tier);
 
     // Store PR in database
@@ -85,8 +91,9 @@ pub async fn handle_pull_request_event(
             if config.nostr.enabled {
                 // Calculate review period end date
                 let review_days = ThresholdValidator::get_combined_requirements(layer, tier).2;
-                let review_period_ends = chrono::Utc::now() + chrono::Duration::days(review_days as i64);
-                
+                let review_period_ends =
+                    chrono::Utc::now() + chrono::Duration::days(review_days as i64);
+
                 // Publish review period notification
                 if let Err(e) = crate::nostr::helpers::publish_review_period_notification(
                     config,
@@ -95,8 +102,13 @@ pub async fn handle_pull_request_event(
                     layer,
                     tier,
                     review_period_ends,
-                ).await {
-                    warn!("Failed to publish review period notification to Nostr: {}", e);
+                )
+                .await
+                {
+                    warn!(
+                        "Failed to publish review period notification to Nostr: {}",
+                        e
+                    );
                     // Don't fail the webhook if Nostr publishing fails
                 }
             }
@@ -138,38 +150,42 @@ pub async fn handle_pr_merged(
         .and_then(|s| s.as_str())
         .unwrap_or("unknown");
 
-    info!("PR #{} merged in {}, publishing to Nostr", pr_number, repo_name);
+    info!(
+        "PR #{} merged in {}, publishing to Nostr",
+        pr_number, repo_name
+    );
 
     // Get PR info to determine layer and tier
     let pr_info = database.get_pull_request(repo_name, pr_number).await?;
-    
+
     if let Some(pr) = pr_info {
         let layer = pr.layer;
-        
+
         // Get tier from database or re-classify
         // For now, we'll need to get it from the PR details or re-classify
         // This is a simplified version - in practice, tier should be stored with PR
-        let tier = tier_classification::classify_pr_tier_with_db(
-            database,
-            payload,
-            repo_name,
-            pr_number,
-        ).await;
+        let tier =
+            tier_classification::classify_pr_tier_with_db(database, payload, repo_name, pr_number)
+                .await;
 
         // Publish merge action to Nostr
         publish_merge_action(
             config,
-            &database,
+            database,
             repo_name,
             pr_number,
             commit_hash,
             layer,
             tier,
-        ).await?;
+        )
+        .await?;
 
         info!("Successfully published merge action to Nostr");
     } else {
-        warn!("PR #{} not found in database, cannot publish to Nostr", pr_number);
+        warn!(
+            "PR #{} not found in database, cannot publish to Nostr",
+            pr_number
+        );
     }
 
     Ok(())
@@ -188,7 +204,10 @@ pub fn determine_layer(repo_name: &str) -> Option<i32> {
         Some(5)
     } else if repo_name.contains("bllvm-commons") || repo_name.contains("governance-app") {
         Some(6)
-    } else if repo_name.contains("bllvm-node") || repo_name.contains("reference-node") || repo_name.contains("/bllvm") {
+    } else if repo_name.contains("bllvm-node")
+        || repo_name.contains("reference-node")
+        || repo_name.contains("/bllvm")
+    {
         Some(4)
     } else {
         None

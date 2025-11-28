@@ -8,7 +8,6 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
-use tracing::debug;
 
 use crate::audit::logger::AuditLogger;
 
@@ -38,7 +37,7 @@ impl AuditLogEntry {
         metadata: HashMap<String, String>,
     ) -> Self {
         let timestamp = Utc::now();
-        
+
         let mut entry = Self {
             job_id,
             job_type,
@@ -82,7 +81,8 @@ impl AuditLogEntry {
 
     /// Serialize metadata to string for hashing
     fn serialize_metadata(&self) -> String {
-        let mut items: Vec<String> = self.metadata
+        let mut items: Vec<String> = self
+            .metadata
             .iter()
             .map(|(k, v)| format!("{}:{}", k, v))
             .collect();
@@ -99,10 +99,7 @@ impl AuditLogEntry {
     pub fn summary(&self) -> String {
         format!(
             "{}: {} ({} -> {})",
-            self.job_type,
-            self.job_id,
-            self.inputs_hash,
-            self.outputs_hash
+            self.job_type, self.job_id, self.inputs_hash, self.outputs_hash
         )
     }
 }
@@ -152,8 +149,8 @@ where
     let result = job().map_err(|e| anyhow!("Job execution failed: {}", e))?;
 
     // Hash outputs (serialize result to bytes)
-    let outputs_bytes = serde_json::to_vec(&result)
-        .unwrap_or_else(|_| format!("{:?}", result).into_bytes());
+    let outputs_bytes =
+        serde_json::to_vec(&result).unwrap_or_else(|_| format!("{:?}", result).into_bytes());
     let mut hasher = Sha256::new();
     hasher.update(&outputs_bytes);
     let outputs_hash = format!("sha256:{}", hex::encode(hasher.finalize()));

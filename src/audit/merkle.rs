@@ -67,10 +67,7 @@ pub fn build_merkle_tree(entries: &[AuditLogEntry]) -> Result<MerkleNode> {
     info!("Building Merkle tree from {} entries", entries.len());
 
     // Create leaf nodes
-    let mut nodes: VecDeque<MerkleNode> = entries
-        .iter()
-        .map(MerkleNode::leaf)
-        .collect();
+    let mut nodes: VecDeque<MerkleNode> = entries.iter().map(MerkleNode::leaf).collect();
 
     // Build tree bottom-up
     while nodes.len() > 1 {
@@ -78,7 +75,7 @@ pub fn build_merkle_tree(entries: &[AuditLogEntry]) -> Result<MerkleNode> {
 
         while !nodes.is_empty() {
             let left = nodes.pop_front().unwrap();
-            
+
             if let Some(right) = nodes.pop_front() {
                 // Two nodes - create internal node
                 next_level.push_back(MerkleNode::internal(left, right));
@@ -117,29 +114,35 @@ pub fn generate_merkle_proof(entries: &[AuditLogEntry], entry_index: usize) -> R
     // Build tree and collect proof hashes by traversing from leaf to root
     let tree = build_merkle_tree(entries)?;
     let mut proof_hashes = Vec::new();
-    
+
     // Rebuild tree structure to find path
-    let mut current_index = entry_index;
-    let mut current_level = entries.len();
-    
+    let current_index = entry_index;
+    let current_level = entries.len();
+
     // Build levels bottom-up to track path
-    let mut levels: Vec<Vec<String>> = vec![entries.iter().map(|e| e.this_log_hash.clone()).collect()];
+    let mut levels: Vec<Vec<String>> =
+        vec![entries.iter().map(|e| e.this_log_hash.clone()).collect()];
     let mut current_entries = entries.len();
-    
+
     while current_entries > 1 {
         let mut next_level = Vec::new();
         let mut i = 0;
         while i < current_entries {
             if i + 1 < current_entries {
                 // Two entries - combine them
-                let combined = format!("{}{}", levels.last().unwrap()[i], levels.last().unwrap()[i + 1]);
+                let combined = format!(
+                    "{}{}",
+                    levels.last().unwrap()[i],
+                    levels.last().unwrap()[i + 1]
+                );
                 let mut hasher = Sha256::new();
                 hasher.update(combined.as_bytes());
                 next_level.push(format!("sha256:{}", hex::encode(hasher.finalize())));
                 i += 2;
             } else {
                 // One entry left - duplicate it
-                let combined = format!("{}{}", levels.last().unwrap()[i], levels.last().unwrap()[i]);
+                let combined =
+                    format!("{}{}", levels.last().unwrap()[i], levels.last().unwrap()[i]);
                 let mut hasher = Sha256::new();
                 hasher.update(combined.as_bytes());
                 next_level.push(format!("sha256:{}", hex::encode(hasher.finalize())));
@@ -149,14 +152,14 @@ pub fn generate_merkle_proof(entries: &[AuditLogEntry], entry_index: usize) -> R
         levels.push(next_level);
         current_entries = levels.last().unwrap().len();
     }
-    
+
     // Now traverse from leaf to root to collect proof hashes with order info
     let mut idx = entry_index;
     let mut proof_order = Vec::new();
     for level in 0..levels.len() - 1 {
         let level_size = levels[level].len();
-        let is_left = idx % 2 == 0;
-        
+        let is_left = idx.is_multiple_of(2);
+
         if is_left && idx + 1 < level_size {
             // We're on the left, add right sibling (current_hash + proof_hash)
             proof_hashes.push(levels[level][idx + 1].clone());
@@ -170,8 +173,8 @@ pub fn generate_merkle_proof(entries: &[AuditLogEntry], entry_index: usize) -> R
             proof_hashes.push(levels[level][idx].clone());
             proof_order.push(true); // current is on left
         }
-        
-        idx = idx / 2;
+
+        idx /= 2;
     }
 
     Ok(MerkleProof {
@@ -189,7 +192,7 @@ pub fn verify_merkle_proof(proof: &MerkleProof, leaf_hash: &str, root_hash: &str
     for (i, proof_hash) in proof.proof_hashes.iter().enumerate() {
         // Use the order information if available
         let is_left = proof.proof_order.get(i).copied().unwrap_or(true);
-        
+
         let combined = if is_left {
             // Current hash is on left: (current_hash, proof_hash)
             format!("{}{}", current_hash, proof_hash)
@@ -197,7 +200,7 @@ pub fn verify_merkle_proof(proof: &MerkleProof, leaf_hash: &str, root_hash: &str
             // Current hash is on right: (proof_hash, current_hash)
             format!("{}{}", proof_hash, current_hash)
         };
-        
+
         let mut hasher = Sha256::new();
         hasher.update(combined.as_bytes());
         current_hash = format!("sha256:{}", hex::encode(hasher.finalize()));
@@ -246,10 +249,12 @@ pub fn calculate_monthly_merkle_root(
 ) -> Result<MonthlyMerkleRoot> {
     let root = get_merkle_root(entries)?;
     let entry_count = entries.len();
-    
-    let first_entry = entries.first()
+
+    let first_entry = entries
+        .first()
         .ok_or_else(|| anyhow!("No entries for month {}", month))?;
-    let last_entry = entries.last()
+    let last_entry = entries
+        .last()
         .ok_or_else(|| anyhow!("No entries for month {}", month))?;
 
     Ok(MonthlyMerkleRoot {
@@ -276,9 +281,7 @@ impl MonthlyMerkleRoot {
     pub fn summary(&self) -> String {
         format!(
             "Month {}: {} entries, root: {}",
-            self.month,
-            self.entry_count,
-            self.merkle_root
+            self.month, self.entry_count, self.merkle_root
         )
     }
 }
@@ -290,7 +293,7 @@ mod tests {
 
     fn create_test_entries(count: usize) -> Vec<AuditLogEntry> {
         let mut entries = Vec::new();
-        
+
         // Create genesis entry
         let genesis = crate::audit::entry::create_genesis_entry("test".to_string());
         entries.push(genesis);
@@ -299,7 +302,7 @@ mod tests {
         for i in 1..count {
             let mut metadata = HashMap::new();
             metadata.insert("index".to_string(), i.to_string());
-            
+
             let entry = AuditLogEntry::new(
                 format!("job-{}", i),
                 "test_type".to_string(),
@@ -319,7 +322,7 @@ mod tests {
     fn test_merkle_tree_construction() {
         let entries = create_test_entries(4);
         let tree = build_merkle_tree(&entries).unwrap();
-        
+
         assert!(!tree.hash.is_empty());
         assert!(tree.hash.starts_with("sha256:"));
     }
@@ -328,7 +331,7 @@ mod tests {
     fn test_merkle_root_verification() {
         let entries = create_test_entries(8);
         let root = get_merkle_root(&entries).unwrap();
-        
+
         assert!(verify_merkle_root(&entries, &root).unwrap());
         assert!(!verify_merkle_root(&entries, "sha256:invalid").unwrap());
     }
@@ -337,7 +340,7 @@ mod tests {
     fn test_merkle_proof_generation() {
         let entries = create_test_entries(8);
         let proof = generate_merkle_proof(&entries, 0).unwrap();
-        
+
         assert_eq!(proof.leaf_hash, entries[0].this_log_hash);
         assert!(!proof.proof_hashes.is_empty());
         assert!(proof.verify());
@@ -347,7 +350,7 @@ mod tests {
     fn test_merkle_proof_verification() {
         let entries = create_test_entries(4);
         let proof = generate_merkle_proof(&entries, 1).unwrap();
-        
+
         assert!(verify_merkle_proof(
             &proof,
             &entries[1].this_log_hash,
@@ -359,7 +362,7 @@ mod tests {
     fn test_monthly_merkle_root() {
         let entries = create_test_entries(10);
         let monthly_root = calculate_monthly_merkle_root(&entries, "2025-01").unwrap();
-        
+
         assert_eq!(monthly_root.month, "2025-01");
         assert_eq!(monthly_root.entry_count, 10);
         assert!(!monthly_root.merkle_root.is_empty());
