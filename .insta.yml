@@ -1,0 +1,14 @@
+# Insta snapshot testing configuration
+
+# Snapshot directory
+snapshot_path: tests/snapshots
+
+# Review mode (interactive by default)
+review_mode: auto
+
+# Fail on new snapshots (set to false for CI)
+fail_on_new_snapshots: false
+
+# Sort snapshots
+sort_snapshots: true
+

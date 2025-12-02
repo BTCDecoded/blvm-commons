@@ -1,0 +1,73 @@
+# BTCDecoded Governance App Configuration
+# Copy this file to config.toml and customize for your deployment
+
+[server]
+database_url = "sqlite://governance.db"
+github_app_id = 123456
+github_private_key_path = "/etc/governance/github-app.pem"
+github_webhook_secret = "env:GITHUB_WEBHOOK_SECRET"
+governance_repo = "BTCDecoded/governance"
+server_host = "0.0.0.0"
+server_port = 8080
+dry_run_mode = true
+log_enforcement_decisions = true
+enforcement_log_path = "/var/log/governance/enforcement.log"
+server_id = "governance-01"
+
+[nostr]
+enabled = true
+server_nsec_path = "/etc/governance/server.nsec"  # Legacy: single bot (deprecated, use bots instead)
+relays = [
+    "wss://relay.damus.io",
+    "wss://nos.lol",
+    "wss://relay.nostr.band"
+]
+publish_interval_secs = 3600  # 1 hour
+governance_config = "commons_mainnet"  # Governance fork identifier
+zap_address = "donations@btcdecoded.org"  # Legacy: single zap address (deprecated, use bots instead)
+logo_url = "https://btcdecoded.org/assets/bitcoin-commons-logo.png"  # Bitcoin Commons logo for Nostr bots
+
+# Multi-bot Nostr configuration
+[nostr.bots.gov]
+nsec_path = "env:NOSTR_NSEC_GOV"  # GitHub Secret or file path
+npub = "npub1..."  # Public key (npub)
+lightning_address = "donations@btcdecoded.org"
+profile_name = "🏛️ @BTCCommons_Gov"
+profile_about = "Official governance announcements from Bitcoin Commons. Transparent, cryptographically-signed decisions. Zaps fund decentralized development."
+profile_picture = "https://btcdecoded.org/assets/bitcoin-commons-logo.png"
+
+[nostr.bots.dev]
+nsec_path = "env:NOSTR_NSEC_DEV"
+npub = "npub1..."
+lightning_address = "dev@btcdecoded.org"
+profile_name = "⚙️ @BTCCommons_Dev"
+profile_about = "Development updates from Bitcoin Commons. Performance benchmarks, code releases, technical achievements. Zaps fund open source work."
+profile_picture = "https://btcdecoded.org/assets/bitcoin-commons-logo.png"
+
+[nostr.bots.research]
+nsec_path = "env:NOSTR_NSEC_RESEARCH"
+npub = "npub1..."
+lightning_address = "research@btcdecoded.org"
+profile_name = "📚 @BTCCommons_Research"
+profile_about = "Educational content and research from Bitcoin Commons. Governance analysis, Bitcoin development insights, research findings."
+profile_picture = "https://btcdecoded.org/assets/bitcoin-commons-logo.png"
+
+[nostr.bots.network]
+nsec_path = "env:NOSTR_NSEC_NETWORK"
+npub = "npub1..."
+lightning_address = "network@btcdecoded.org"
+profile_name = "📊 @BTCCommons_Network"
+profile_about = "Network metrics and statistics from Bitcoin Commons. Node adoption, miner participation, network health."
+profile_picture = "https://btcdecoded.org/assets/bitcoin-commons-logo.png"
+
+[ots]
+enabled = true
+aggregator_url = "https://alice.btc.calendar.opentimestamps.org"
+monthly_anchor_day = 1  # First day of month
+registry_path = "/var/lib/governance/registries"
+proofs_path = "/var/lib/governance/ots-proofs"
+
+[audit]
+enabled = true
+log_path = "/var/lib/governance/audit-log.jsonl"
+rotation_interval_days = 30

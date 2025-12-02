@@ -1,0 +1,37 @@
+name: Fuzzing
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+  workflow_dispatch:
+
+jobs:
+  fuzz:
+    name: Fuzz Target
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: rust-lang/rustup-action@v1
+        with:
+          components: rustfmt, clippy
+      
+      - name: Install cargo-fuzz
+        run: cargo install cargo-fuzz
+      
+      - name: Run fuzzer
+        run: |
+          cd fuzz
+          cargo fuzz run fuzz_content_hash -- -max_total_time=300
+          cargo fuzz run fuzz_version_parsing -- -max_total_time=300
+          cargo fuzz run fuzz_test_count_extraction -- -max_total_time=300
+        continue-on-error: true
+      
+      - name: Upload crashes
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: fuzz-crashes
+          path: fuzz/artifacts/
+

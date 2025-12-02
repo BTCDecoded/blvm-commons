@@ -1,0 +1,17 @@
+[package]
+name = "bllvm-commons-fuzz"
+version = "0.0.0"
+authors = ["AutoFuzz <fuzz@example.com>"]
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+bllvm-commons = { path = ".." }
+libfuzzer-sys = "0.4"
+
+[dependencies.arbitrary]
+version = "1"
+features = ["derive"]
+

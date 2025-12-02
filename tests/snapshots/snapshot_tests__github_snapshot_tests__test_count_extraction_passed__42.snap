@@ -1,0 +1,5 @@
+---
+source: tests/snapshot_tests.rs
+expression: "format!(\"input: '{}', output: {:?}\", test_case, result)"
+---
+input: 'passed: 42', output: Some(42)
