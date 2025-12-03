@@ -62,7 +62,7 @@ impl WeightCalculator {
         zap_amount_btc.sqrt()
     }
 
-    /// Get vote weight for proposal (uses higher of zap or participation)
+    ///
     pub fn get_proposal_vote_weight(
         &self,
         participation_weight: f64,
@@ -122,23 +122,25 @@ impl WeightCalculator {
         .fetch_all(&self.pool)
         .await?;
 
-        // Calculate total system weight first (needed for caps)
-        // On first pass, this will be 0, so we'll do a second pass to apply caps correctly
-        let mut total_system_weight = self.calculate_total_system_weight().await?;
-
-        // Save contributor count before moving
         let contributor_count = contributors.len();
 
-        // First pass: calculate base weights without cap (if total_system_weight is 0)
-        let mut base_weights: Vec<(String, f64)> = Vec::new();
+        // First pass: calculate all base weights and store contribution data
+        struct ContributorData {
+            contributor_id: String,
+            contributor_type: String,
+            merge_mining_btc: f64,
+            fee_forwarding_btc: f64,
+            cumulative_zaps_btc: f64,
+            total_contribution_btc: f64,
+            base_weight: f64,
+        }
 
-        // Update weights for each contributor
+        let mut contributor_data = Vec::new();
+        let now = Utc::now();
+        let thirty_days_ago = now - chrono::Duration::days(30);
+
         for contributor in contributors {
-            let contributor_id = contributor.contributor_id;
-
-            // Get contributions (30-day rolling for merge mining and fee forwarding, cumulative for zaps)
-            let now = Utc::now();
-            let thirty_days_ago = now - chrono::Duration::days(30);
+            let contributor_id = contributor.contributor_id.clone();
 
             // Merge mining (30-day rolling)
             let merge_mining_btc: Option<f64> = sqlx::query_scalar(
@@ -201,20 +203,40 @@ impl WeightCalculator {
                 cumulative_zaps_btc,
             );
 
-            // Store base weight for second pass if needed
-            if total_system_weight == 0.0 {
-                base_weights.push((contributor_id.clone(), base_weight));
-            }
+            contributor_data.push(ContributorData {
+                contributor_id,
+                contributor_type: contributor.contributor_type,
+                merge_mining_btc,
+                fee_forwarding_btc,
+                cumulative_zaps_btc,
+                total_contribution_btc,
+                base_weight,
+            });
+        }
 
-            // Apply weight cap (only if we have a valid total system weight)
-            // On first iteration, total_system_weight is 0, so we skip the cap
-            let capped_weight = if total_system_weight > 0.0 {
-                self.apply_weight_cap(base_weight, total_system_weight)
+        // Calculate uncapped total for cap calculation
+        let uncapped_total: f64 = contributor_data.iter().map(|d| d.base_weight).sum();
+        
+        // Apply caps based on uncapped total (one pass only - prevents iterative convergence to zero)
+        // Only apply caps if there are multiple contributors (single contributor has 100% by definition)
+        let mut final_total = 0.0;
+        let mut capped_weights = Vec::new();
+        for data in &contributor_data {
+            let capped_weight = if contributor_count > 1 {
+                // Cap is 5% of the uncapped total
+                let max_allowed = uncapped_total * self.cap_percentage;
+                data.base_weight.min(max_allowed)
             } else {
-                base_weight
+                // Single contributor: no cap applied
+                data.base_weight
             };
+            final_total += capped_weight;
+            capped_weights.push((data.contributor_id.clone(), capped_weight));
+        }
 
-            // Update or insert participation weight
+        // Update all weights in database
+        for (idx, data) in contributor_data.iter().enumerate() {
+            let capped_weight = capped_weights[idx].1;
             sqlx::query(
                 r#"
                 INSERT INTO participation_weights
@@ -232,110 +254,22 @@ impl WeightCalculator {
                     last_updated = CURRENT_TIMESTAMP
                 "#,
             )
-            .bind(&contributor_id)
-            .bind(&contributor.contributor_type)
-            .bind(merge_mining_btc)
-            .bind(fee_forwarding_btc)
-            .bind(cumulative_zaps_btc)
-            .bind(total_contribution_btc)
-            .bind(base_weight)
-            .bind(capped_weight)
-            .bind(total_system_weight)
+            .bind(&data.contributor_id)
+            .bind(&data.contributor_type)
+            .bind(data.merge_mining_btc)
+            .bind(data.fee_forwarding_btc)
+            .bind(data.cumulative_zaps_btc)
+            .bind(data.total_contribution_btc)
+            .bind(data.base_weight) // Actual base weight
+            .bind(capped_weight) // Capped weight
+            .bind(final_total)
             .execute(&self.pool)
             .await?;
 
             debug!(
                 "Updated participation weight for {}: base={:.2}, capped={:.2} (contributions: {:.8} BTC)",
-                contributor_id, base_weight, capped_weight, total_contribution_btc
+                data.contributor_id, data.base_weight, capped_weight, data.total_contribution_btc
             );
-        }
-
-        // If we did a first pass without caps, do iterative passes to apply caps correctly
-        // This is needed because caps depend on total system weight, which depends on caps
-        if total_system_weight == 0.0 && !base_weights.is_empty() {
-            // Iterative approach: keep applying caps until convergence
-            // Start with uncapped total
-            let mut current_total = base_weights.iter().map(|(_, w)| *w).sum::<f64>();
-            let mut iterations = 0;
-            const MAX_ITERATIONS: usize = 20;
-
-            loop {
-                iterations += 1;
-                let mut new_total = 0.0;
-                let mut new_capped_weights = Vec::new();
-
-                // Apply caps based on current total
-                for (contributor_id, base_weight) in &base_weights {
-                    let capped = self.apply_weight_cap(*base_weight, current_total);
-                    new_total += capped;
-                    new_capped_weights.push((contributor_id.clone(), capped));
-                }
-
-                // Check if we've converged (change < 0.001% or very small absolute change)
-                // Use tighter convergence criteria to ensure caps are applied correctly
-                let change = (new_total - current_total).abs();
-                let change_percent = if current_total > 0.0 {
-                    change / current_total
-                } else {
-                    0.0
-                };
-
-                // Check convergence: if change is very small, we've converged
-                // Also verify that all weights are properly capped
-                // Need tighter convergence to ensure caps are correctly applied
-                // Check both relative and absolute change, and verify all weights are properly capped
-                let all_capped = base_weights.iter().all(|(_, base)| {
-                    let capped = self.apply_weight_cap(*base, new_total);
-                    // Weight is properly capped if it's either equal to base (not capped) or <= 5% of total
-                    capped <= new_total * self.cap_percentage + 0.00001
-                });
-                // Tighter convergence: need both small change AND all weights properly capped
-                // Also verify that the largest weight (whale) is exactly at the cap
-                let largest_weight = new_capped_weights
-                    .iter()
-                    .map(|(_, w)| *w)
-                    .fold(0.0, f64::max);
-                let expected_cap = new_total * self.cap_percentage;
-                let cap_correct = (largest_weight - expected_cap).abs() < 0.0001
-                    || largest_weight <= expected_cap + 0.0001;
-                let converged =
-                    (change_percent < 0.0000001 && change < 0.00001 && all_capped && cap_correct)
-                        || iterations >= MAX_ITERATIONS;
-
-                if converged {
-                    // Use the converged values (new_total and new_capped_weights)
-                    // Update all capped weights with final values
-                    for (contributor_id, capped_weight) in new_capped_weights {
-                        sqlx::query(
-                            r#"
-                            UPDATE participation_weights
-                            SET capped_weight = ?, total_system_weight = ?
-                            WHERE contributor_id = ?
-                            "#,
-                        )
-                        .bind(capped_weight)
-                        .bind(new_total)
-                        .bind(&contributor_id)
-                        .execute(&self.pool)
-                        .await?;
-                    }
-
-                    // Update total_system_weight for all rows
-                    sqlx::query(
-                        r#"
-                        UPDATE participation_weights
-                        SET total_system_weight = ?
-                        "#,
-                    )
-                    .bind(new_total)
-                    .execute(&self.pool)
-                    .await?;
-
-                    break;
-                }
-
-                current_total = new_total;
-            }
         }
 
         info!(

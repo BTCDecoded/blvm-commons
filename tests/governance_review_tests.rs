@@ -77,7 +77,8 @@ async fn test_case_creation_off_platform_rejection() {
             response_deadline TEXT,
             resolution_deadline TEXT,
             resolved_at TEXT,
-            resolution_reason TEXT
+            resolution_reason TEXT,
+            github_issue_number INTEGER
         )
         "#,
     )
@@ -125,7 +126,8 @@ async fn test_sanction_thresholds() {
             response_deadline TEXT,
             resolution_deadline TEXT,
             resolved_at TEXT,
-            resolution_reason TEXT
+            resolution_reason TEXT,
+            github_issue_number INTEGER
         );
         CREATE TABLE IF NOT EXISTS governance_review_warnings (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -266,7 +268,8 @@ async fn test_removal_deactivation() {
             response_deadline TEXT,
             resolution_deadline TEXT,
             resolved_at TEXT,
-            resolution_reason TEXT
+            resolution_reason TEXT,
+            github_issue_number INTEGER
         );
         CREATE TABLE IF NOT EXISTS governance_review_sanction_approvals (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
