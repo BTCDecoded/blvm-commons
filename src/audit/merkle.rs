@@ -116,10 +116,6 @@ pub fn generate_merkle_proof(entries: &[AuditLogEntry], entry_index: usize) -> R
     let mut proof_hashes = Vec::new();
 
     // Rebuild tree structure to find path
-    let current_index = entry_index;
-    let current_level = entries.len();
-
-    // Build levels bottom-up to track path
     let mut levels: Vec<Vec<String>> =
         vec![entries.iter().map(|e| e.this_log_hash.clone()).collect()];
     let mut current_entries = entries.len();
@@ -156,21 +152,21 @@ pub fn generate_merkle_proof(entries: &[AuditLogEntry], entry_index: usize) -> R
     // Now traverse from leaf to root to collect proof hashes with order info
     let mut idx = entry_index;
     let mut proof_order = Vec::new();
-    for level in 0..levels.len() - 1 {
-        let level_size = levels[level].len();
-        let is_left = idx.is_multiple_of(2);
+    for level in levels.iter().take(levels.len().saturating_sub(1)) {
+        let level_size = level.len();
+        let is_left = idx % 2 == 0;
 
         if is_left && idx + 1 < level_size {
             // We're on the left, add right sibling (current_hash + proof_hash)
-            proof_hashes.push(levels[level][idx + 1].clone());
+            proof_hashes.push(level[idx + 1].clone());
             proof_order.push(true); // current is on left
         } else if !is_left {
             // We're on the right, add left sibling (proof_hash + current_hash)
-            proof_hashes.push(levels[level][idx - 1].clone());
+            proof_hashes.push(level[idx - 1].clone());
             proof_order.push(false); // current is on right
         } else if is_left && idx + 1 >= level_size {
             // Odd number, duplicate last entry (current_hash + current_hash)
-            proof_hashes.push(levels[level][idx].clone());
+            proof_hashes.push(level[idx].clone());
             proof_order.push(true); // current is on left
         }
 

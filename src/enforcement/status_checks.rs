@@ -142,7 +142,7 @@ mod tests {
 
     #[test]
     fn test_generate_review_period_status_met() {
-        let opened_at = Utc::now() - Duration::days(10);
+        let opened_at = Utc::now() - Duration::try_days(10).unwrap();
         let required_days = 7;
 
         let status =
@@ -153,7 +153,7 @@ mod tests {
 
     #[test]
     fn test_generate_review_period_status_not_met() {
-        let opened_at = Utc::now() - Duration::days(3);
+        let opened_at = Utc::now() - Duration::try_days(3).unwrap();
         let required_days = 7;
 
         let status =
@@ -168,7 +168,7 @@ mod tests {
 
     #[test]
     fn test_generate_review_period_status_dry_run() {
-        let opened_at = Utc::now() - Duration::days(3);
+        let opened_at = Utc::now() - Duration::try_days(3).unwrap();
         let required_days = 7;
 
         let status = StatusCheckGenerator::generate_review_period_status_with_dry_run(

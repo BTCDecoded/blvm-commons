@@ -365,7 +365,9 @@ impl BackupManager {
     /// Clean up old backups based on retention policy
     pub async fn cleanup_old_backups(&self) -> Result<usize, GovernanceError> {
         let cutoff_time = Utc::now()
-            .checked_sub_signed(chrono::Duration::days(self.config.retention_days as i64))
+            .checked_sub_signed(
+                chrono::TimeDelta::try_days(self.config.retention_days as i64).unwrap(),
+            )
             .ok_or_else(|| {
                 GovernanceError::ConfigError("Failed to calculate cutoff time".to_string())
             })?;

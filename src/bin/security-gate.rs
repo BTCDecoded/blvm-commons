@@ -511,7 +511,7 @@ async fn generate_report(output: Option<String>) -> Result<()> {
 
 // Helper functions
 
-async fn get_pr_changed_files(pr_number: u32) -> Result<Vec<String>> {
+async fn get_pr_changed_files(_pr_number: u32) -> Result<Vec<String>> {
     // Simplified implementation - in reality would use GitHub API
     // For now, return some example files
     Ok(vec![

@@ -16,7 +16,7 @@ use tracing::info;
 pub struct VoteAggregator {
     pool: SqlitePool,
     zap_voting: ZapVotingProcessor,
-    weight_calculator: WeightCalculator,
+    _weight_calculator: WeightCalculator,
 }
 
 impl VoteAggregator {
@@ -25,7 +25,7 @@ impl VoteAggregator {
         Self {
             pool: pool.clone(),
             zap_voting: ZapVotingProcessor::new(pool.clone()),
-            weight_calculator: WeightCalculator::new(pool.clone()),
+            _weight_calculator: WeightCalculator::new(pool.clone()),
         }
     }
 
@@ -39,7 +39,7 @@ impl VoteAggregator {
         let threshold = self.get_threshold_for_tier(tier)?;
 
         // Get zap votes for reporting/transparency only (not used for governance)
-        let zap_votes = self.zap_voting.get_proposal_votes(pr_id).await?;
+        let _zap_votes = self.zap_voting.get_proposal_votes(pr_id).await?;
         let zap_totals = self.zap_voting.get_proposal_vote_totals(pr_id).await?;
 
         // Governance is maintainer-only: votes come from maintainer signatures in DB

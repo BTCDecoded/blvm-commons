@@ -26,7 +26,8 @@ impl MediationManager {
         mediator_maintainer_id: Option<i32>, // Optional neutral maintainer
     ) -> Result<Mediation, sqlx::Error> {
         // Policy: 30-day mediation period
-        let mediation_deadline = Utc::now() + Duration::days(policy::MEDIATION_PERIOD_DAYS);
+        let mediation_deadline =
+            Utc::now() + Duration::try_days(policy::MEDIATION_PERIOD_DAYS).unwrap();
 
         let mediation_id: i32 = sqlx::query_scalar::<_, i32>(
             r#"

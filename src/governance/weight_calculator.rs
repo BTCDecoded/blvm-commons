@@ -43,7 +43,7 @@ impl WeightCalculator {
 
     /// Calculate zap "weight" for reporting purposes only (not used in governance)
     /// Governance is maintainer-only - zaps are tracked for transparency only
-    pub fn calculate_zap_vote_weight(&self, zap_amount_btc: f64) -> f64 {
+    pub fn calculate_zap_vote_weight(&self, _zap_amount_btc: f64) -> f64 {
         // Return 0 - zaps don't affect governance
         0.0
     }

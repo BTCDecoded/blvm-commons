@@ -1,9 +1,12 @@
+//! blvm-commons server binary — compiles governance modules as a standalone crate root.
+
 use axum::{
     Router,
     extract::State,
     response::Json,
     routing::{get, post},
 };
+use chrono::Datelike;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::time::Duration;

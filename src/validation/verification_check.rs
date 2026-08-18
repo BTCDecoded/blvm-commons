@@ -217,7 +217,7 @@ fn load_governance_config() -> Result<GovernanceConfig> {
 pub async fn validate_verification_requirements<C: GitHubVerificationClient>(
     client: &C,
     repo: &str,
-    pr_number: u64,
+    _pr_number: u64,
 ) -> Result<VerificationValidationResult> {
     let config = load_governance_config()?;
 

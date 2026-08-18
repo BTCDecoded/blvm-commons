@@ -174,6 +174,7 @@ impl GovernanceConfigFiles {
     }
 
     /// Load a YAML file optionally (returns Ok(None) if file doesn't exist, Ok(Some(T)) if it does)
+    #[allow(dead_code)]
     fn load_yaml_optional_safe<T: for<'de> Deserialize<'de>>(
         path: PathBuf,
     ) -> Result<Option<T>, GovernanceError> {

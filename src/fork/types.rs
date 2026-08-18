@@ -2,6 +2,7 @@
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use std::fmt;
 
 /// Governance ruleset with versioning information
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -25,6 +26,19 @@ pub struct RulesetVersion {
     pub build_metadata: Option<String>,
 }
 
+impl fmt::Display for RulesetVersion {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}.{}.{}", self.major, self.minor, self.patch)?;
+        if let Some(pre) = &self.pre_release {
+            write!(f, "-{pre}")?;
+        }
+        if let Some(build) = &self.build_metadata {
+            write!(f, "+{build}")?;
+        }
+        Ok(())
+    }
+}
+
 impl RulesetVersion {
     pub fn new(major: u32, minor: u32, patch: u32) -> Self {
         Self {
@@ -34,22 +48,6 @@ impl RulesetVersion {
             pre_release: None,
             build_metadata: None,
         }
-    }
-
-    pub fn to_string(&self) -> String {
-        let mut version = format!("{}.{}.{}", self.major, self.minor, self.patch);
-
-        if let Some(pre) = &self.pre_release {
-            version.push('-');
-            version.push_str(pre);
-        }
-
-        if let Some(build) = &self.build_metadata {
-            version.push('+');
-            version.push_str(build);
-        }
-
-        version
     }
 
     pub fn from_string(version_str: &str) -> Result<Self, String> {

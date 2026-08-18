@@ -202,12 +202,7 @@ impl SecurityControlValidator {
                 let prefix = parts[0].trim_end_matches('/');
                 let suffix = parts[1].trim_start_matches('/');
 
-                // Normalize: ensure prefix comparison works
-                let normalized_prefix = if prefix.ends_with('/') {
-                    &prefix[..prefix.len() - 1]
-                } else {
-                    prefix
-                };
+                let normalized_prefix = prefix.strip_suffix('/').unwrap_or(prefix);
 
                 // Check if file contains normalized prefix (works with absolute paths)
                 // For absolute paths, check if any path segment matches
@@ -344,18 +339,7 @@ impl SecurityControlValidator {
         controls: &[AffectedControl],
     ) -> Option<String> {
         match impact_level {
-            ImpactLevel::Critical | ImpactLevel::High => {
-                // Check if any P0 controls require cryptography expert
-                let needs_crypto_expert = controls
-                    .iter()
-                    .any(|c| c.priority == "P0" && c.requires_cryptography_expert);
-
-                if needs_crypto_expert {
-                    Some("security_critical".to_string())
-                } else {
-                    Some("security_critical".to_string())
-                }
-            }
+            ImpactLevel::Critical | ImpactLevel::High => Some("security_critical".to_string()),
             ImpactLevel::Medium => {
                 // Check if any controls require cryptography expert
                 let needs_crypto_expert = controls.iter().any(|c| c.requires_cryptography_expert);

@@ -51,13 +51,12 @@ impl DiffParser {
                 let clean_path = path.strip_prefix("a/").unwrap_or(path);
                 let clean_path = clean_path.strip_prefix("b/").unwrap_or(clean_path);
 
-                // If we have a current file, save it
-                if let Some(file) = current_file.take() {
-                    file_diffs.push(file);
-                }
-
-                // Start new file (only on --- line, +++ will follow)
+                // Start a new file only on ---. Do not flush on +++ or hunks
+                // arriving after the --- header are dropped (BAD-02).
                 if line.starts_with("---") {
+                    if let Some(file) = current_file.take() {
+                        file_diffs.push(file);
+                    }
                     current_file = Some(FileDiff {
                         filename: clean_path.to_string(),
                         additions: Vec::new(),
@@ -85,18 +84,16 @@ impl DiffParser {
 
             // Process diff lines within a hunk
             if in_hunk {
-                if let Some(ref mut file) = current_file {
-                    if line.starts_with("+") && !line.starts_with("+++") {
-                        // Added line (remove the + prefix)
-                        let content = line.strip_prefix("+").unwrap_or(line).to_string();
-                        hunk_additions.push(content);
-                    } else if line.starts_with("-") && !line.starts_with("---") {
-                        // Deleted line (remove the - prefix)
-                        let content = line.strip_prefix("-").unwrap_or(line).to_string();
-                        hunk_deletions.push(content);
-                    }
-                    // Lines starting with space are context (unchanged), ignore them
+                if line.starts_with("+") && !line.starts_with("+++") {
+                    // Added line (remove the + prefix)
+                    let content = line.strip_prefix("+").unwrap_or(line).to_string();
+                    hunk_additions.push(content);
+                } else if line.starts_with("-") && !line.starts_with("---") {
+                    // Deleted line (remove the - prefix)
+                    let content = line.strip_prefix("-").unwrap_or(line).to_string();
+                    hunk_deletions.push(content);
                 }
+                // Lines starting with space are context (unchanged), ignore them
             }
         }
 

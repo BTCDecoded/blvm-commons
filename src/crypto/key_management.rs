@@ -162,7 +162,7 @@ pub struct KeyManagementConfig {
 pub struct KeyManager {
     pool: SqlitePool,
     signature_manager: SignatureManager,
-    config: KeyManagementConfig,
+    _config: KeyManagementConfig,
     key_cache: Arc<RwLock<HashMap<String, KeyMetadata>>>,
 }
 
@@ -172,7 +172,7 @@ impl KeyManager {
         Self {
             pool,
             signature_manager: SignatureManager::new(),
-            config,
+            _config: config,
             key_cache: Arc::new(RwLock::new(HashMap::new())),
         }
     }

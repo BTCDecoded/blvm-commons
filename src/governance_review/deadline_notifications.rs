@@ -73,7 +73,7 @@ impl DeadlineNotificationManager {
 
     /// Check for cases with approaching deadlines
     async fn check_case_deadlines(&self) -> Result<Vec<i32>, sqlx::Error> {
-        let threshold = Utc::now() + Duration::days(NOTIFICATION_DAYS_BEFORE);
+        let threshold = Utc::now() + Duration::try_days(NOTIFICATION_DAYS_BEFORE).unwrap();
 
         let rows = sqlx::query(
             r#"
@@ -94,7 +94,7 @@ impl DeadlineNotificationManager {
 
     /// Check for appeals with approaching deadlines
     async fn check_appeal_deadlines(&self) -> Result<Vec<i32>, sqlx::Error> {
-        let threshold = Utc::now() + Duration::days(NOTIFICATION_DAYS_BEFORE);
+        let threshold = Utc::now() + Duration::try_days(NOTIFICATION_DAYS_BEFORE).unwrap();
 
         let rows = sqlx::query(
             r#"
@@ -115,7 +115,7 @@ impl DeadlineNotificationManager {
 
     /// Check for mediations with approaching deadlines
     async fn check_mediation_deadlines(&self) -> Result<Vec<i32>, sqlx::Error> {
-        let threshold = Utc::now() + Duration::days(NOTIFICATION_DAYS_BEFORE);
+        let threshold = Utc::now() + Duration::try_days(NOTIFICATION_DAYS_BEFORE).unwrap();
 
         let rows = sqlx::query(
             r#"

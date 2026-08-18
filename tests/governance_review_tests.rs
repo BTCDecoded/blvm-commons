@@ -10,48 +10,51 @@ use std::env;
 
 #[tokio::test]
 async fn test_env_variables() {
-    // Test get_database_url with default
-    env::remove_var("DATABASE_URL");
-    let url = get_database_url();
-    assert_eq!(url, "sqlite://governance.db");
+    // Edition 2024: set_var/remove_var are unsafe (process-global).
+    unsafe {
+        // Test get_database_url with default
+        env::remove_var("DATABASE_URL");
+        let url = get_database_url();
+        assert_eq!(url, "sqlite://governance.db");
 
-    // Test get_database_url with env var
-    env::set_var("DATABASE_URL", "sqlite://test.db");
-    let url = get_database_url();
-    assert_eq!(url, "sqlite://test.db");
-    env::remove_var("DATABASE_URL");
+        // Test get_database_url with env var
+        env::set_var("DATABASE_URL", "sqlite://test.db");
+        let url = get_database_url();
+        assert_eq!(url, "sqlite://test.db");
+        env::remove_var("DATABASE_URL");
 
-    // Test get_github_token
-    env::remove_var("GITHUB_TOKEN");
-    env::remove_var("GITHUB_INSTALLATION_TOKEN");
-    assert!(get_github_token().is_none());
+        // Test get_github_token
+        env::remove_var("GITHUB_TOKEN");
+        env::remove_var("GITHUB_INSTALLATION_TOKEN");
+        assert!(get_github_token().is_none());
 
-    env::set_var("GITHUB_TOKEN", "test_token");
-    assert_eq!(get_github_token(), Some("test_token".to_string()));
-    env::remove_var("GITHUB_TOKEN");
+        env::set_var("GITHUB_TOKEN", "test_token");
+        assert_eq!(get_github_token(), Some("test_token".to_string()));
+        env::remove_var("GITHUB_TOKEN");
 
-    env::set_var("GITHUB_INSTALLATION_TOKEN", "install_token");
-    assert_eq!(get_github_token(), Some("install_token".to_string()));
-    env::remove_var("GITHUB_INSTALLATION_TOKEN");
+        env::set_var("GITHUB_INSTALLATION_TOKEN", "install_token");
+        assert_eq!(get_github_token(), Some("install_token".to_string()));
+        env::remove_var("GITHUB_INSTALLATION_TOKEN");
 
-    // Test get_governance_repo
-    env::remove_var("GOVERNANCE_REPO");
-    env::remove_var("GOVERNANCE_REPO_OWNER");
-    env::remove_var("GOVERNANCE_REPO_NAME");
-    assert!(get_governance_repo().is_none());
+        // Test get_governance_repo
+        env::remove_var("GOVERNANCE_REPO");
+        env::remove_var("GOVERNANCE_REPO_OWNER");
+        env::remove_var("GOVERNANCE_REPO_NAME");
+        assert!(get_governance_repo().is_none());
 
-    env::set_var("GOVERNANCE_REPO", "owner/repo");
-    let repo = get_governance_repo();
-    assert_eq!(repo, Some(("owner".to_string(), "repo".to_string())));
-    env::remove_var("GOVERNANCE_REPO");
+        env::set_var("GOVERNANCE_REPO", "owner/repo");
+        let repo = get_governance_repo();
+        assert_eq!(repo, Some(("owner".to_string(), "repo".to_string())));
+        env::remove_var("GOVERNANCE_REPO");
 
-    // Test is_github_actions
-    env::remove_var("GITHUB_ACTIONS");
-    assert!(!is_github_actions());
+        // Test is_github_actions
+        env::remove_var("GITHUB_ACTIONS");
+        assert!(!is_github_actions());
 
-    env::set_var("GITHUB_ACTIONS", "true");
-    assert!(is_github_actions());
-    env::remove_var("GITHUB_ACTIONS");
+        env::set_var("GITHUB_ACTIONS", "true");
+        assert!(is_github_actions());
+        env::remove_var("GITHUB_ACTIONS");
+    }
 }
 
 #[tokio::test]
@@ -223,8 +226,8 @@ async fn test_time_limits() {
 
     let time_limit_manager = TimeLimitManager::new(pool);
 
-    let response_deadline = Utc::now() + Duration::days(30);
-    let resolution_deadline = Utc::now() + Duration::days(180);
+    let response_deadline = Utc::now() + Duration::try_days(30).unwrap();
+    let resolution_deadline = Utc::now() + Duration::try_days(180).unwrap();
 
     // Create time limits
     let result = time_limit_manager

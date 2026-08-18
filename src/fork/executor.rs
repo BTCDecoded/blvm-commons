@@ -24,7 +24,7 @@ pub struct ForkExecutor {
     available_rulesets: HashMap<String, Ruleset>,
     adoption_tracker: AdoptionTracker,
     exporter: GovernanceExporter,
-    versioning: RulesetVersioning,
+    _versioning: RulesetVersioning,
     fork_thresholds: ForkThresholds,
     executor_secret_key: Option<SecretKey>,
 }
@@ -55,7 +55,7 @@ impl ForkExecutor {
             available_rulesets: HashMap::new(),
             adoption_tracker,
             exporter,
-            versioning,
+            _versioning: versioning,
             fork_thresholds: fork_thresholds.unwrap_or_default(),
             executor_secret_key,
         })

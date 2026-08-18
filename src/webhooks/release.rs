@@ -118,7 +118,7 @@ pub async fn handle_repository_dispatch(
                 .get("release_version")
                 .and_then(|v| v.as_str())
                 .unwrap_or("unknown");
-            let workflow_run_id = client_payload
+            let _workflow_run_id = client_payload
                 .get("workflow_run_id")
                 .and_then(|v| v.as_u64());
             let error_message = client_payload.get("error_message").and_then(|v| v.as_str());

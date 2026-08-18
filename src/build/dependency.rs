@@ -9,7 +9,7 @@ pub struct DependencyGraph {
     /// Map of repository name to its dependencies
     dependencies: HashMap<String, Vec<String>>,
     /// Organization name (e.g., "BTCDecoded" - the GitHub organization)
-    organization: String,
+    _organization: String,
 }
 
 impl DependencyGraph {
@@ -34,7 +34,7 @@ impl DependencyGraph {
 
         Self {
             dependencies,
-            organization,
+            _organization: organization,
         }
     }
 

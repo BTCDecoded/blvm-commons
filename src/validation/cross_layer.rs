@@ -124,7 +124,7 @@ impl CrossLayerValidator {
         })?;
 
         // Parse repository names (format: owner/repo)
-        let (source_owner, source_repo_name) = Self::parse_repo_name(source_repo)?;
+        let (_source_owner, _source_repo_name) = Self::parse_repo_name(source_repo)?;
         let (target_owner, target_repo_name) = Self::parse_repo_name(target_repo)?;
 
         // Create GitHub file operations client
@@ -225,17 +225,13 @@ impl CrossLayerValidator {
                 content_hash:
                     "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
                         .to_string(),
-                created_at: Utc::now() - chrono::Duration::days(1),
-                signatures: {
-                    let mut sigs: Vec<VersionSignature> = Vec::new();
-                    sigs.push(VersionSignature {
-                        maintainer_id: "maintainer1".to_string(),
-                        signature: "test_signature_1".to_string(),
-                        public_key: "test_public_key_1".to_string(),
-                        signed_at: Utc::now() - chrono::Duration::days(1),
-                    });
-                    sigs
-                },
+                created_at: Utc::now() - chrono::TimeDelta::try_days(1).unwrap(),
+                signatures: vec![VersionSignature {
+                    maintainer_id: "maintainer1".to_string(),
+                    signature: "test_signature_1".to_string(),
+                    public_key: "test_public_key_1".to_string(),
+                    signed_at: Utc::now() - chrono::TimeDelta::try_days(1).unwrap(),
+                }],
                 ots_timestamp: Some("bitcoin:test_timestamp".to_string()),
                 is_stable: true,
                 is_latest: true,
@@ -407,7 +403,7 @@ impl CrossLayerValidator {
 
     /// Get PR diff from GitHub API
     async fn get_pr_diff(
-        client: &octocrab::Octocrab,
+        _client: &octocrab::Octocrab,
         owner: &str,
         repo: &str,
         pr_number: u64,
