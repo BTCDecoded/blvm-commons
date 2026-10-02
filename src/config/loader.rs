@@ -173,17 +173,6 @@ impl GovernanceConfigFiles {
         Self::load_yaml(path)
     }
 
-    /// Load a YAML file optionally (returns Ok(None) if file doesn't exist, Ok(Some(T)) if it does)
-    #[allow(dead_code)]
-    fn load_yaml_optional_safe<T: for<'de> Deserialize<'de>>(
-        path: PathBuf,
-    ) -> Result<Option<T>, GovernanceError> {
-        if !path.exists() {
-            return Ok(None);
-        }
-        Self::load_yaml(path).map(Some)
-    }
-
     /// Load a YAML file and deserialize it
     fn load_yaml<T: for<'de> Deserialize<'de>>(path: PathBuf) -> Result<T, GovernanceError> {
         if !path.exists() {

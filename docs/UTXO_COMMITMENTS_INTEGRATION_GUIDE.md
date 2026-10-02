@@ -56,9 +56,11 @@ See `examples/utxo_commitments_config_example.json` for a complete example.
 - `safety_margin`: Blocks back from tip for checkpoint (default: 2016)
 
 **Spam Filter Settings:**
-- `filter_ordinals`: Filter Ordinals/Inscriptions (default: true)
+- `filter_unexec_if`: Filter UnexecIf templates (default: true)
+- `filter_null_data_op13`: Filter `OP_RETURN OP_13` outputs (default: true)
+- `filter_null_data_magic`: Filter `OP_RETURN` with a known prefix (default: true)
+- `filter_data_like_ms`: Filter data-like n-of-m (default: true)
 - `filter_dust`: Filter dust outputs (default: true)
-- `filter_brc20`: Filter BRC-20 tokens (default: true)
 - `dust_threshold`: Dust threshold in satoshis (default: 546)
 - `min_output_value`: Minimum output value to include (default: 546)
 

@@ -678,54 +678,6 @@ impl GitHubClient {
         Ok(vec![])
     }
 
-    /// Find the workflow run that was just triggered
-    /// Polls for recent workflow runs and matches by event type and timestamp
-    #[allow(dead_code)]
-    async fn find_triggered_workflow_run(
-        &self,
-        owner: &str,
-        repo: &str,
-        _event_type: &str,
-    ) -> Result<u64, GovernanceError> {
-        use tokio::time::{Duration, sleep};
-
-        // Wait a moment for the workflow to start
-        sleep(Duration::from_secs(2)).await;
-
-        // Poll for recent workflow runs (up to 5 attempts)
-        for attempt in 0..5 {
-            let runs = self
-                .list_workflow_runs(owner, repo, None, None, Some(5))
-                .await?;
-
-            // Find the most recent run that matches our event type
-            // We look for runs created in the last minute
-            let now = chrono::Utc::now();
-            for run in &runs {
-                if let Some(created_at_str) = run.get("created_at").and_then(|v| v.as_str()) {
-                    if let Ok(created_at) = chrono::DateTime::parse_from_rfc3339(created_at_str) {
-                        let age = now.signed_duration_since(created_at.with_timezone(&chrono::Utc));
-                        // Check if run was created in the last 2 minutes
-                        if age.num_seconds() < 120 && age.num_seconds() >= 0 {
-                            if let Some(id) = run.get("id").and_then(|v| v.as_u64()) {
-                                info!("Found workflow run ID {} for {}/{}", id, owner, repo);
-                                return Ok(id);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if attempt < 4 {
-                sleep(Duration::from_secs(2)).await;
-            }
-        }
-
-        Err(GovernanceError::GitHubError(format!(
-            "Could not find workflow run ID for {owner}/{repo}"
-        )))
-    }
-
     /// List artifacts from a workflow run
     pub async fn list_workflow_run_artifacts(
         &self,

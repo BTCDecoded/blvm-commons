@@ -571,13 +571,6 @@ impl CrossLayerStatusChecker {
         None
     }
 
-    /// Check if repository requires verification
-    #[allow(dead_code)]
-    fn requires_verification(&self, repo: &str) -> Result<bool, GovernanceError> {
-        crate::validation::verification_check::requires_verification(repo)
-            .map_err(|e| GovernanceError::ValidationError(e.to_string()))
-    }
-
     /// Determine overall status from individual checks
     fn determine_overall_status(
         &self,
@@ -702,12 +695,6 @@ impl CrossLayerStatusChecker {
     fn simulate_verify_version_reference(&self, reference: &VersionReference) -> bool {
         // Simulate version verification
         reference.version.starts_with("v1.")
-    }
-
-    #[allow(dead_code)]
-    fn simulate_equivalence_test(&self, file: &str) -> bool {
-        // Simulate equivalence test
-        !file.contains("script-execution") // Simulate that script-execution test fails
     }
 }
 
