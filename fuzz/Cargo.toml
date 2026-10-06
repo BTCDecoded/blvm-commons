@@ -1,17 +1,38 @@
 [package]
-name = "bllvm-commons-fuzz"
+name = "blvm-commons-fuzz"
 version = "0.0.0"
 authors = ["AutoFuzz <fuzz@example.com>"]
 edition = "2021"
+publish = false
 
 [package.metadata]
 cargo-fuzz = true
 
 [dependencies]
-bllvm-commons = { path = ".." }
+blvm-commons = { path = ".." }
 libfuzzer-sys = "0.4"
 
 [dependencies.arbitrary]
 version = "1"
 features = ["derive"]
 
+[[bin]]
+name = "fuzz_test_count_extraction"
+path = "fuzz_targets/fuzz_test_count_extraction.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_version_parsing"
+path = "fuzz_targets/fuzz_version_parsing.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_content_hash"
+path = "fuzz_targets/fuzz_content_hash.rs"
+test = false
+doc = false
+bench = false
