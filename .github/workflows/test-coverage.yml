@@ -10,7 +10,7 @@ on:
 jobs:
   coverage:
     name: Generate Coverage Report
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, builds]
     
     steps:
       - uses: actions/checkout@v6
