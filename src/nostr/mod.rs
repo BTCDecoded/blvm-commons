@@ -21,3 +21,4 @@ pub use governance_publisher::GovernanceActionPublisher;
 pub use helpers::publish_merge_action;
 pub use publisher::StatusPublisher;
 pub use zap_tracker::ZapTracker;
+pub use zap_voting::{VoteType, ZapVotingProcessor};

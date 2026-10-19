@@ -251,7 +251,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             loop {
                 interval.tick().await;
                 let now = chrono::Utc::now();
-                if now.day() == config_clone.ots.monthly_anchor_day as u32 {
+                if chrono::Datelike::day(&now) == config_clone.ots.monthly_anchor_day as u32 {
                     if let Err(e) = anchorer.anchor_registry().await {
                         error!("Failed to anchor registry: {}", e);
                     }
