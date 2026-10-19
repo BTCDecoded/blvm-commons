@@ -22,7 +22,9 @@ jobs:
         uses: BTCDecoded/rust-ci/install-rust-toolchain@main
       
       - name: Install cargo-tarpaulin
-        run: cargo install cargo-tarpaulin
+        # 0.35.2 is the newest release whose Cargo.lock builds on the pinned 1.88.0
+        # (0.35.4+ lock cargo-platform 0.3.3, which requires rustc 1.91)
+        run: cargo install cargo-tarpaulin --version 0.35.2 --locked
       
       - name: Generate coverage
         run: |
