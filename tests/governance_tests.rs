@@ -157,17 +157,11 @@ async fn test_weight_calculator_cap() {
     let pool = setup_test_db().await;
     let calculator = WeightCalculator::new(pool.clone());
 
-    // Test 5% cap
+    // Since dabfdbf governance is maintainer-only and apply_weight_cap is a
+    // reporting stub: the weight is returned unchanged (no 5% cap).
     let total_system_weight = 100.0;
-    let calculated_weight = 10.0; // Would be 10% without cap
-    let capped_weight = calculator.apply_weight_cap(calculated_weight, total_system_weight);
-
-    assert_eq!(capped_weight, 5.0); // Capped at 5% of 100 = 5.0
-
-    // Test weight below cap
-    let small_weight = 2.0;
-    let capped_small = calculator.apply_weight_cap(small_weight, total_system_weight);
-    assert_eq!(capped_small, 2.0); // No cap applied
+    assert_eq!(calculator.apply_weight_cap(10.0, total_system_weight), 10.0);
+    assert_eq!(calculator.apply_weight_cap(2.0, total_system_weight), 2.0);
 }
 
 #[tokio::test]
@@ -175,14 +169,13 @@ async fn test_weight_calculator_cooling_off() {
     let pool = setup_test_db().await;
     let calculator = WeightCalculator::new(pool.clone());
 
-    // Test cooling-off: contributions >= 0.1 BTC need 30 days
-    assert!(!calculator.check_cooling_off(0.1, 29)); // 29 days, not eligible
-    assert!(calculator.check_cooling_off(0.1, 30)); // 30 days, eligible
-    assert!(calculator.check_cooling_off(0.1, 31)); // 31 days, eligible
-
-    // Test small contributions: no cooling-off
-    assert!(calculator.check_cooling_off(0.05, 0)); // Small, no cooling-off
-    assert!(calculator.check_cooling_off(0.09, 1)); // Small, no cooling-off
+    // Since dabfdbf governance is maintainer-only and check_cooling_off is a
+    // reporting stub: no cooling-off period for any contribution.
+    assert!(calculator.check_cooling_off(0.1, 29));
+    assert!(calculator.check_cooling_off(0.1, 30));
+    assert!(calculator.check_cooling_off(0.1, 31));
+    assert!(calculator.check_cooling_off(0.05, 0));
+    assert!(calculator.check_cooling_off(0.09, 1));
 }
 
 #[tokio::test]

@@ -23,7 +23,7 @@ impl DiffParser {
     /// Parse unified diff format
     ///
     /// Unified diff format:
-    /// ```
+    /// ```text
     /// --- a/path/to/file.rs
     /// +++ b/path/to/file.rs
     /// @@ -start,count +start,count @@

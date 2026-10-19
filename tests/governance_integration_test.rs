@@ -114,6 +114,13 @@ async fn setup_complete_test_db() -> SqlitePool {
     .await
     .unwrap();
 
+    // Core schema (repos, maintainers, pull_requests, ...) from the real
+    // migration; VoteAggregator reads maintainer signatures from pull_requests.
+    sqlx::raw_sql(include_str!("../migrations/001_initial_schema.sql"))
+        .execute(&pool)
+        .await
+        .unwrap();
+
     pool
 }
 
@@ -122,14 +129,12 @@ async fn test_cooling_off_period() {
     let pool = setup_complete_test_db().await;
     let calculator = WeightCalculator::new(pool);
 
-    // Test cooling-off logic
-    // Large contribution (>= 0.1 BTC) needs 30 days
-    assert!(!calculator.check_cooling_off(0.1, 29));
+    // Since dabfdbf governance is maintainer-only and check_cooling_off is a
+    // reporting stub: every contribution is eligible regardless of size/age.
+    assert!(calculator.check_cooling_off(0.1, 29));
     assert!(calculator.check_cooling_off(0.1, 30));
     assert!(calculator.check_cooling_off(0.1, 31));
-    assert!(calculator.check_cooling_off(1.0, 30));
-
-    // Small contribution (< 0.1 BTC) has no cooling-off
+    assert!(calculator.check_cooling_off(1.0, 0));
     assert!(calculator.check_cooling_off(0.05, 0));
     assert!(calculator.check_cooling_off(0.09, 1));
     assert!(calculator.check_cooling_off(0.099, 29));
@@ -184,16 +189,44 @@ async fn test_vote_aggregation_integration() {
     .await
     .unwrap();
 
+    // Maintainer signatures recorded on the PR (populated by webhooks)
+    sqlx::query(
+        r#"
+        INSERT INTO pull_requests (id, repo_name, pr_number, opened_at, layer, head_sha, signatures)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        "#,
+    )
+    .bind(123)
+    .bind("BTCDecoded/blvm-commons")
+    .bind(42)
+    .bind(now)
+    .bind(3)
+    .bind("abc123")
+    .bind(
+        serde_json::json!([
+            {"signer": "alice", "signature": "sig_a", "timestamp": now},
+            {"signer": "bob", "signature": "sig_b", "timestamp": now}
+        ])
+        .to_string(),
+    )
+    .execute(&pool)
+    .await
+    .unwrap();
+
     // Aggregate votes
     let result = vote_aggregator
         .aggregate_proposal_votes(123, 3)
         .await
         .unwrap();
 
+    // Since 997e33b governance is maintainer multisig only: votes are the
+    // PR's maintainer signatures; zaps are counted for transparency only.
     assert_eq!(result.pr_id, 123);
     assert_eq!(result.tier, 3);
-    assert_eq!(result.support_votes, 1.0);
-    assert_eq!(result.veto_votes, 2.0);
-    assert_eq!(result.total_votes, 3.0);
+    assert_eq!(result.support_votes, 2.0);
+    assert_eq!(result.veto_votes, 0.0);
+    assert_eq!(result.total_votes, 2.0);
     assert_eq!(result.zap_vote_count, 2);
+    assert!(!result.threshold_met);
+    assert!(!result.veto_blocks);
 }
