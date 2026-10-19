@@ -281,30 +281,31 @@ impl StatusPublisher {
         let current_month = Utc::now().format("%Y-%m").to_string();
 
         let tags = vec![
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("d".into()),
                 vec!["governance-status".to_string()],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("server".into()),
                 vec![self.server_id.clone()],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("authorized_by".into()),
                 vec![format!("registry-{}", current_month)],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("btcdecoded".into()),
                 vec!["governance-infrastructure".to_string()],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("t".into()),
                 vec!["bitcoin".to_string(), "governance".to_string()],
             ),
         ];
 
-        let event = EventBuilder::new(Kind::Custom(30078), content, tags)
-            .to_event(&self.client.keys)
+        let event = EventBuilder::new(Kind::Custom(30078), content)
+            .tags(tags)
+            .sign_with_keys(&self.client.keys)
             .map_err(|e| anyhow!("Failed to create Nostr event: {}", e))?;
 
         Ok(event)
@@ -326,7 +327,7 @@ mod tests {
 
         // Generate valid Nostr keys for testing
         let keys = Keys::generate();
-        let nsec = keys.secret_key().unwrap().display_secret().to_string();
+        let nsec = keys.secret_key().to_secret_hex();
 
         let publisher = StatusPublisher {
             client: NostrClient::new(nsec, vec![]).await.unwrap(),
@@ -349,7 +350,7 @@ mod tests {
     async fn test_next_ots_anchor_calculation() {
         // Generate valid Nostr keys for testing
         let keys = Keys::generate();
-        let nsec = keys.secret_key().unwrap().display_secret().to_string();
+        let nsec = keys.secret_key().to_secret_hex();
 
         let publisher = StatusPublisher {
             client: NostrClient::new(nsec, vec![]).await.unwrap(),
