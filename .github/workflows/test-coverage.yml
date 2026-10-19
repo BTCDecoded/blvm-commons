@@ -28,7 +28,7 @@ jobs:
       
       - name: Generate coverage
         run: |
-          cargo tarpaulin --out Xml --output-dir coverage/ --timeout 120
+          cargo tarpaulin --all-features --out Xml --output-dir coverage/ --timeout 120
       
       - name: Upload to Codecov
         uses: codecov/codecov-action@v3
@@ -40,5 +40,5 @@ jobs:
       
       - name: Coverage Report
         run: |
-          cargo tarpaulin --out Stdout --timeout 120
+          cargo tarpaulin --all-features --out Stdout --timeout 120
 
