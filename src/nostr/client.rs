@@ -281,7 +281,7 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
         recipient_pubkey: recipient,
         sender_pubkey,
         amount_msat,
-        timestamp: event.created_at.as_u64() as i64,
+        timestamp: event.created_at.as_secs() as i64,
         invoice,
         message,
         zapped_event_id,
