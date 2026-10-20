@@ -353,15 +353,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Build application
     let port = config.server_port;
     // Add node registry API routes
+    // Node registration and block ingest have no credentials, so they are
+    // not mounted. Turning merge checks on does not put them back.
+    // Referencing the handlers keeps them available to tests and the library
+    // without serving them.
+    let _unmounted_block = webhooks::block::handle_block_notification;
+    let _unmounted_nodes = node_registry::api::create_router;
     let app = Router::new()
         .route("/health", get(health_check))
         .route("/webhooks/github", post(webhooks::github::handle_webhook))
-        .route(
-            "/webhooks/block",
-            post(webhooks::block::handle_block_notification),
-        )
         .route("/status", get(status_endpoint))
-        .merge(node_registry::api::create_router())
         .layer(
             ServiceBuilder::new()
                 .layer(TraceLayer::new_for_http())

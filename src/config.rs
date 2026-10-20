@@ -16,6 +16,10 @@ pub struct AppConfig {
     pub log_enforcement_decisions: bool,
     pub enforcement_log_path: Option<String>,
     pub server_id: String,
+    /// Signature intake, tier override, and release builds stay off until
+    /// merge checks are actually wired. Defaults off.
+    #[serde(default)]
+    pub merge_checks_wired: bool,
     pub nostr: NostrConfig,
     pub ots: OtsConfig,
     pub audit: AuditConfig,
@@ -152,6 +156,12 @@ impl AppConfig {
 
         let server_id = env::var("SERVER_ID").unwrap_or_else(|_| "governance-01".to_string());
 
+        // Fail closed: anything other than an explicit true leaves enforcement off.
+        let merge_checks_wired = env::var("MERGE_CHECKS_WIRED")
+            .ok()
+            .as_deref()
+            .is_some_and(|value| value.eq_ignore_ascii_case("true"));
+
         let nostr_enabled = env::var("NOSTR_ENABLED")
             .unwrap_or_else(|_| "false".to_string())
             .parse()
@@ -226,6 +236,7 @@ impl AppConfig {
             log_enforcement_decisions,
             enforcement_log_path,
             server_id,
+            merge_checks_wired,
             nostr: NostrConfig {
                 enabled: nostr_enabled,
                 server_nsec_path: nostr_server_nsec_path,
@@ -296,6 +307,7 @@ impl Default for AppConfig {
             log_enforcement_decisions: true,
             enforcement_log_path: None,
             server_id: "governance-01".to_string(),
+            merge_checks_wired: false,
             nostr: NostrConfig::default(),
             ots: OtsConfig::default(),
             audit: AuditConfig::default(),

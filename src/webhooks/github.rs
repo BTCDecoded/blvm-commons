@@ -77,11 +77,21 @@ pub async fn handle_webhook(
             Ok(response) => (StatusCode::OK, response),
             Err(status) => (status, Json(serde_json::json!({"error": "failed"}))),
         },
-        "issue_comment" => match comment::handle_comment_event(&database, &payload).await {
-            Ok(response) => (StatusCode::OK, response),
-            Err(status) => (status, Json(serde_json::json!({"error": "failed"}))),
-        },
+        "issue_comment" => {
+            match comment::handle_comment_event(&database, &payload, config.merge_checks_wired)
+                .await
+            {
+                Ok(response) => (StatusCode::OK, response),
+                Err(status) => (status, Json(serde_json::json!({"error": "failed"}))),
+            }
+        }
         "release" => {
+            if !config.merge_checks_wired {
+                return (
+                    StatusCode::OK,
+                    Json(serde_json::json!({"status": "enforcement_disabled"})),
+                );
+            }
             // Initialize build orchestrator
             let github_client =
                 match GitHubClient::new(config.github_app_id, &config.github_private_key_path) {
@@ -117,6 +127,12 @@ pub async fn handle_webhook(
             }
         }
         "repository_dispatch" => {
+            if !config.merge_checks_wired {
+                return (
+                    StatusCode::OK,
+                    Json(serde_json::json!({"status": "enforcement_disabled"})),
+                );
+            }
             // Initialize build orchestrator
             let github_client =
                 match GitHubClient::new(config.github_app_id, &config.github_private_key_path) {
