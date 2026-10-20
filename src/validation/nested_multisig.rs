@@ -45,7 +45,7 @@ impl NestedMultisigVerifier {
         tier: u32,
     ) -> Result<NestedMultisigResult, GovernanceError> {
         // Get tier requirements
-        let (teams_required, maintainers_per_team_required) = Self::get_tier_requirements(tier);
+        let (teams_required, maintainers_per_team_required) = Self::get_tier_requirements(tier)?;
 
         // Group signatures by team
         let mut team_signatures: HashMap<String, Vec<(String, String)>> = HashMap::new();
@@ -106,16 +106,11 @@ impl NestedMultisigVerifier {
         None
     }
 
-    /// Get tier requirements for nested multisig
-    fn get_tier_requirements(tier: u32) -> (usize, usize) {
-        match tier {
-            1 => (4, 5), // Tier 1: 4-of-7 teams × 5-of-7 per team = 20 maintainers
-            2 => (5, 6), // Tier 2: 5-of-7 teams × 6-of-7 per team = 30 maintainers
-            3 => (6, 6), // Tier 3: 6-of-7 teams × 6-of-7 per team = 36 maintainers (73.5%)
-            4 => (5, 5), // Tier 4: 5-of-7 teams × 5-of-7 per team = 25 maintainers
-            5 => (7, 6), // Tier 5: 7-of-7 teams × 6-of-7 per team = 42 maintainers (86%)
-            _ => (1, 1), // Default fallback
-        }
+    /// Nested multisig quorums are not adopted. Refuse 1-of-1 and the old team counts.
+    fn get_tier_requirements(tier: u32) -> Result<(usize, usize), GovernanceError> {
+        Err(GovernanceError::ThresholdError(format!(
+            "Nested multisig quorum for tier {tier} is not adopted; refusing 1-of-1"
+        )))
     }
 }
 

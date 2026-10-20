@@ -170,9 +170,11 @@ impl GitHubIntegration {
             let tier = tier_classification::classify_pr_tier(payload).await;
             let tier_name = self.get_tier_name(tier);
 
-            // Get combined requirements (Layer + Tier)
-            let (sigs_req, sigs_total, review_days) =
-                ThresholdValidator::get_combined_requirements(layer, tier);
+            // Get combined requirements (Layer + Tier), then raise for security-control paths.
+            let (sigs_req, sigs_total, review_days) = ThresholdValidator::raise_to_security_floor(
+                ThresholdValidator::get_combined_requirements(layer, tier),
+                &changed_paths(payload),
+            );
             let _source = ThresholdValidator::get_requirement_source(layer, tier);
 
             // Check review period
@@ -417,4 +419,30 @@ impl GitHubIntegration {
             _ => "Unknown",
         }
     }
+}
+
+fn push_filenames<'a>(files: &'a [Value], paths: &mut Vec<&'a str>) {
+    for file in files {
+        if let Some(name) = file.get("filename").and_then(|name| name.as_str()) {
+            paths.push(name);
+        } else if let Some(name) = file.as_str() {
+            paths.push(name);
+        }
+    }
+}
+
+fn changed_paths(payload: &Value) -> Vec<&str> {
+    let mut paths = Vec::new();
+    for key in ["files", "changed_files"] {
+        if let Some(files) = payload.get(key).and_then(|value| value.as_array()) {
+            push_filenames(files, &mut paths);
+        }
+    }
+    if let Some(files) = payload
+        .pointer("/pull_request/files")
+        .and_then(|value| value.as_array())
+    {
+        push_filenames(files, &mut paths);
+    }
+    paths
 }
