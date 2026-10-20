@@ -114,20 +114,55 @@ impl Default for GovernanceConfig {
     }
 }
 
+const PLACEHOLDER_WEBHOOK_SECRETS: &[&str] = &[
+    "your_webhook_secret_here",
+    "your-webhook-secret-here",
+    "your_webhook_secret",
+    "your-secret",
+    "CHANGE_THIS_SECRET",
+    "testnet-webhook-secret",
+];
+
+fn required_webhook_secret() -> Result<String, Box<dyn std::error::Error>> {
+    let secret = env::var("GITHUB_WEBHOOK_SECRET")
+        .map_err(|_| "GITHUB_WEBHOOK_SECRET is required; refusing to boot with a placeholder")?;
+    let trimmed = secret.trim();
+    if trimmed.is_empty()
+        || PLACEHOLDER_WEBHOOK_SECRETS
+            .iter()
+            .any(|placeholder| placeholder.eq_ignore_ascii_case(trimmed))
+    {
+        return Err(
+            "GITHUB_WEBHOOK_SECRET is missing or still a placeholder; refusing to boot".into(),
+        );
+    }
+    Ok(trimmed.to_string())
+}
+
+fn required_github_app_id() -> Result<u64, Box<dyn std::error::Error>> {
+    let raw = env::var("GITHUB_APP_ID")
+        .map_err(|_| "GITHUB_APP_ID is required; refusing to boot with a placeholder")?;
+    let app_id: u64 = raw
+        .trim()
+        .parse()
+        .map_err(|_| "GITHUB_APP_ID must be an integer")?;
+    if app_id == 0 || app_id == 12345 || app_id == 123456 {
+        return Err("GITHUB_APP_ID is still a placeholder; refusing to boot".into());
+    }
+    Ok(app_id)
+}
+
 impl AppConfig {
     pub fn load() -> Result<Self, Box<dyn std::error::Error>> {
         let database_url =
             env::var("DATABASE_URL").unwrap_or_else(|_| "sqlite://governance.db".to_string());
 
-        let github_app_id = env::var("GITHUB_APP_ID")
-            .unwrap_or_else(|_| "123456".to_string())
-            .parse()?;
+        let github_app_id = required_github_app_id()?;
 
         let github_private_key_path = env::var("GITHUB_PRIVATE_KEY_PATH")
             .unwrap_or_else(|_| "/path/to/private-key.pem".to_string());
 
-        let github_webhook_secret = env::var("GITHUB_WEBHOOK_SECRET")
-            .unwrap_or_else(|_| "your_webhook_secret_here".to_string());
+        let github_webhook_secret = required_webhook_secret()?;
 
         let governance_repo =
             env::var("GOVERNANCE_REPO").unwrap_or_else(|_| "BTCDecoded/governance".to_string());
@@ -286,9 +321,9 @@ impl Default for AppConfig {
     fn default() -> Self {
         AppConfig {
             database_url: "sqlite://governance.db".to_string(),
-            github_app_id: 0,
+            github_app_id: 1,
             github_private_key_path: "/path/to/private-key.pem".to_string(),
-            github_webhook_secret: "your_webhook_secret_here".to_string(),
+            github_webhook_secret: String::new(),
             governance_repo: "BTCDecoded/governance".to_string(),
             server_host: "0.0.0.0".to_string(),
             server_port: 3000,
