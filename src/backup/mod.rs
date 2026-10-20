@@ -94,7 +94,9 @@ impl BackupManager {
             let use_attach_method = {
                 // Check by trying to get the database file - in-memory DBs return empty
                 let result: Result<Vec<(i32, String, String)>, _> =
-                    sqlx::query_as("PRAGMA database_list").fetch_all(pool).await;
+                    sqlx::query_as("PRAGMA database_list")
+                        .fetch_all(&pool)
+                        .await;
                 match result {
                     Ok(list) => {
                         // If main database file is empty or :memory:, use ATTACH method
@@ -109,7 +111,7 @@ impl BackupManager {
             if use_attach_method {
                 // For in-memory databases, use ATTACH DATABASE approach
                 // Create a new file-based database and copy data
-                return self.backup_in_memory_sqlite(pool, backup_path).await;
+                return self.backup_in_memory_sqlite(&pool, backup_path).await;
             }
 
             // Get absolute path (required for VACUUM INTO)
@@ -138,7 +140,7 @@ impl BackupManager {
 
             // Use sqlx to execute VACUUM INTO
             sqlx::query(&format!("VACUUM INTO '{escaped_path}'"))
-                .execute(pool)
+                .execute(&pool)
                 .await
                 .map_err(|e| {
                     GovernanceError::DatabaseError(format!(
@@ -365,7 +367,9 @@ impl BackupManager {
     /// Clean up old backups based on retention policy
     pub async fn cleanup_old_backups(&self) -> Result<usize, GovernanceError> {
         let cutoff_time = Utc::now()
-            .checked_sub_signed(chrono::Duration::days(self.config.retention_days as i64))
+            .checked_sub_signed(
+                chrono::Duration::try_days(self.config.retention_days as i64).expect("day count"),
+            )
             .ok_or_else(|| {
                 GovernanceError::ConfigError("Failed to calculate cutoff time".to_string())
             })?;

@@ -10,6 +10,7 @@ use crate::github::types::{CheckRun, WorkflowStatus};
 #[derive(Clone)]
 pub struct GitHubClient {
     pub(crate) client: Octocrab,
+    #[allow(dead_code)]
     app_id: u64,
     http_client: ReqwestClient,
     /// Circuit breaker for GitHub API calls
@@ -538,7 +539,7 @@ impl GitHubClient {
 
         // Get the PR to find the head SHA
         let pr = self.get_pull_request(owner, repo, pr_number).await?;
-        let head_sha = pr
+        let _head_sha = pr
             .get("head")
             .and_then(|h| h.get("sha"))
             .and_then(|s| s.as_str())
@@ -606,21 +607,21 @@ impl GitHubClient {
         );
 
         // Create repository_dispatch event
-        let payload = json!({
+        let _payload = json!({
             "event_type": event_type,
             "client_payload": client_payload,
         });
 
         // octocrab 0.38 API - repository dispatch may need direct HTTP call
         // Try using octocrab's method first, fallback to HTTP if needed
-        let url = format!("https://api.github.com/repos/{owner}/{repo}/dispatches");
+        let _url = format!("https://api.github.com/repos/{owner}/{repo}/dispatches");
 
         // octocrab 0.38: Repository dispatch not directly available via octocrab
         // Use HTTP client with authentication for now
         // In production, this should use installation tokens for app-based auth
-        let url = format!("https://api.github.com/repos/{owner}/{repo}/dispatches");
+        let _url = format!("https://api.github.com/repos/{owner}/{repo}/dispatches");
 
-        let payload = json!({
+        let _payload = json!({
             "event_type": event_type,
             "client_payload": client_payload,
         });
@@ -674,8 +675,8 @@ impl GitHubClient {
         &self,
         owner: &str,
         repo: &str,
-        workflow_file: Option<&str>,
-        head_sha: Option<&str>,
+        _workflow_file: Option<&str>,
+        _head_sha: Option<&str>,
         _limit: Option<u8>,
     ) -> Result<Vec<serde_json::Value>, GovernanceError> {
         info!("Listing workflow runs for {}/{}", owner, repo);
@@ -776,13 +777,13 @@ impl GitHubClient {
         let installations_vec: Vec<_> = installations.into_iter().collect();
 
         // First, try to find installation matching organization
-        let installation = installations_vec
+        let _installation = installations_vec
             .iter()
             .find(|inst| {
                 // octocrab 0.38 API - account structure may have changed
                 // Check account field if available, otherwise skip organization matching
                 // In octocrab 0.38, account is Author directly, not Option
-                let account = &inst.account;
+                let _account = &inst.account;
                 // Try to access login from Author - login might be Option<String> or String
                 // For now, skip organization matching if we can't access login
                 // This is a non-critical feature, can be enhanced later

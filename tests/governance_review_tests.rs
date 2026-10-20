@@ -6,52 +6,61 @@ use blvm_commons::governance_review::{
 };
 use chrono::{Duration, Utc};
 use sqlx::SqlitePool;
-use std::env;
+
+fn set_var(key: &str, value: &str) {
+    // SAFETY: this test sets process environment variables it reads back itself.
+    unsafe { std::env::set_var(key, value) }
+}
+
+fn remove_var(key: &str) {
+    // SAFETY: this test clears process environment variables it set.
+    unsafe { std::env::remove_var(key) }
+}
 
 #[tokio::test]
 async fn test_env_variables() {
     // Test get_database_url with default
-    env::remove_var("DATABASE_URL");
+    remove_var("DATABASE_URL");
     let url = get_database_url();
     assert_eq!(url, "sqlite://governance.db");
 
     // Test get_database_url with env var
-    env::set_var("DATABASE_URL", "sqlite://test.db");
+    set_var("DATABASE_URL", "sqlite://test.db");
     let url = get_database_url();
     assert_eq!(url, "sqlite://test.db");
-    env::remove_var("DATABASE_URL");
+    remove_var("DATABASE_URL");
 
     // Test get_github_token
-    env::remove_var("GITHUB_TOKEN");
-    env::remove_var("GITHUB_INSTALLATION_TOKEN");
+    remove_var("GITHUB_TOKEN");
+    remove_var("GITHUB_INSTALLATION_TOKEN");
     assert!(get_github_token().is_none());
 
-    env::set_var("GITHUB_TOKEN", "test_token");
+    set_var("GITHUB_TOKEN", "test_token");
     assert_eq!(get_github_token(), Some("test_token".to_string()));
-    env::remove_var("GITHUB_TOKEN");
+    remove_var("GITHUB_TOKEN");
 
-    env::set_var("GITHUB_INSTALLATION_TOKEN", "install_token");
+    set_var("GITHUB_INSTALLATION_TOKEN", "install_token");
     assert_eq!(get_github_token(), Some("install_token".to_string()));
-    env::remove_var("GITHUB_INSTALLATION_TOKEN");
+    remove_var("GITHUB_INSTALLATION_TOKEN");
 
     // Test get_governance_repo
-    env::remove_var("GOVERNANCE_REPO");
-    env::remove_var("GOVERNANCE_REPO_OWNER");
-    env::remove_var("GOVERNANCE_REPO_NAME");
+    remove_var("GOVERNANCE_REPO");
+    remove_var("GOVERNANCE_REPO_OWNER");
+    remove_var("GOVERNANCE_REPO_NAME");
     assert!(get_governance_repo().is_none());
 
-    env::set_var("GOVERNANCE_REPO", "owner/repo");
+    set_var("GOVERNANCE_REPO", "owner/repo");
     let repo = get_governance_repo();
     assert_eq!(repo, Some(("owner".to_string(), "repo".to_string())));
-    env::remove_var("GOVERNANCE_REPO");
+    remove_var("GOVERNANCE_REPO");
 
     // Test is_github_actions
-    env::remove_var("GITHUB_ACTIONS");
+    remove_var("GITHUB_ACTIONS");
     assert!(!is_github_actions());
 
-    env::set_var("GITHUB_ACTIONS", "true");
+    set_var("GITHUB_ACTIONS", "true");
     assert!(is_github_actions());
-    env::remove_var("GITHUB_ACTIONS");
+    remove_var("GITHUB_ACTIONS");
 }
 
 #[tokio::test]

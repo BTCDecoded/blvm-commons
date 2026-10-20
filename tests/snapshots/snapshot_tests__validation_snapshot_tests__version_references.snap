@@ -1,0 +1,8 @@
+---
+source: tests/snapshot_tests.rs
+assertion_line: 75
+expression: snapshot
+---
+type: Version, version: "v1.2.3", commit: None, hash: None
+type: Commit, version: "", commit: Some("abc123def456789"), hash: None
+type: ContentHash, version: "", commit: None, hash: Some("sha256:fedcba123456")

@@ -174,9 +174,14 @@ async fn test_webhook_invalid_payload() {
     });
     
     // Test webhook processing with invalid payload
-    let result = blvm_commons::webhooks::pull_request::handle_pull_request_event(&db, &invalid_payload).await;
-    // Should handle gracefully
-    assert!(result.is_ok() || result.is_err());
+    let result = blvm_commons::webhooks::pull_request::handle_pull_request_event(
+        &blvm_commons::config::AppConfig::default(),
+        &db,
+        &invalid_payload,
+    )
+    .await;
+    let body = result.expect("unknown payload is not a server error");
+    assert_eq!(body.0["status"], "unknown_repo");
 }
 
 #[tokio::test]
@@ -193,9 +198,14 @@ async fn test_webhook_malformed_json() {
     });
     
     // Test webhook processing with malformed payload
-    let result = blvm_commons::webhooks::pull_request::handle_pull_request_event(&db, &malformed_payload).await;
-    // Should handle gracefully
-    assert!(result.is_ok() || result.is_err());
+    let result = blvm_commons::webhooks::pull_request::handle_pull_request_event(
+        &blvm_commons::config::AppConfig::default(),
+        &db,
+        &malformed_payload,
+    )
+    .await;
+    let body = result.expect("malformed fields are not a server error");
+    assert_eq!(body.0["status"], "unknown_repo");
 }
 
 #[tokio::test]

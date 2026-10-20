@@ -257,6 +257,7 @@ impl GitHubFileOperations {
     }
 
     /// Compare file versions across repositories
+    #[allow(clippy::too_many_arguments)]
     pub async fn compare_file_versions(
         &self,
         source_owner: &str,

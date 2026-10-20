@@ -24,6 +24,7 @@ pub struct ForkExecutor {
     available_rulesets: HashMap<String, Ruleset>,
     adoption_tracker: AdoptionTracker,
     exporter: GovernanceExporter,
+    #[allow(dead_code)]
     versioning: RulesetVersioning,
     fork_thresholds: ForkThresholds,
     executor_secret_key: Option<SecretKey>,

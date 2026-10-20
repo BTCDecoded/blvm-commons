@@ -1,9 +1,15 @@
+// The server compiles its own module tree beside the library. Public items
+// that only the library re-exports are linted on the library crate.
+#![allow(dead_code, unused_imports)]
+#![allow(clippy::enum_variant_names, clippy::wrong_self_convention)]
+
 use axum::{
     Router,
     extract::State,
     response::Json,
     routing::{get, post},
 };
+use chrono::Datelike;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::time::Duration;
@@ -83,11 +89,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Start database health monitoring task with reconnection capability
     let database_for_health = database.clone();
-    let database_url_for_reconnect = config.database_url.clone();
     tokio::spawn(async move {
         let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(60)); // Check every 60 seconds
         let mut consecutive_failures = 0u32;
-        let mut current_db = database_for_health;
+        let current_db = database_for_health;
 
         loop {
             interval.tick().await;
@@ -135,11 +140,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             .unwrap_or(true);
 
                         if should_reconnect {
-                            // Attempt to reconnect using stored database URL
-                            match Database::new(&database_url_for_reconnect).await {
-                                Ok(new_db) => {
+                            // Replace the pool shared with the router, not a task-local copy.
+                            match current_db.reconnect().await {
+                                Ok(()) => {
                                     info!("Database reconnection successful");
-                                    current_db = new_db;
                                     consecutive_failures = 0;
                                 }
                                 Err(e) => {
@@ -206,9 +210,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         None
     };
-    #[cfg(not(feature = "opentimestamps"))]
-    let ots_client: Option<()> = None;
-
     #[cfg(feature = "opentimestamps")]
     let registry_anchorer = if let Some(client) = ots_client {
         Some(RegistryAnchorer::new(
@@ -220,12 +221,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         None
     };
-    #[cfg(not(feature = "opentimestamps"))]
-    let registry_anchorer: Option<()> = None;
-
     // Start background tasks
+    #[cfg(feature = "opentimestamps")]
     let config_clone = config.clone();
-    let database_clone = database.clone();
     let audit_logger_for_rotation = audit_logger.clone();
 
     // Nostr status publisher task
@@ -293,10 +291,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         if let Some(ref nostr_client) = nostr_client {
             // Collect all bot pubkeys for zap tracking
             let mut bot_pubkeys = Vec::new();
-            if let Some(zap_addr) = &config.nostr.zap_address {
+            if let Some(_zap_addr) = &config.nostr.zap_address {
                 // Legacy single bot - extract pubkey if available
                 // For now, we'll need the pubkey from the nsec
-                if let Ok(nsec) = std::fs::read_to_string(&config.nostr.server_nsec_path) {
+                if let Ok(_nsec) = std::fs::read_to_string(&config.nostr.server_nsec_path) {
                     // Parse nsec to get pubkey (simplified - in production use proper parsing)
                     // For now, we'll track the configured zap address
                     info!("Zap tracking configured for legacy zap address");
@@ -396,7 +394,7 @@ async fn status_endpoint(
         let tables_exist = sqlx::query_scalar::<_, i64>(
             "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('unified_contributions', 'participation_weights', 'zap_contributions')"
         )
-        .fetch_one(pool)
+        .fetch_one(&pool)
         .await
         .ok()
         .map(|count| count >= 3)
@@ -405,7 +403,7 @@ async fn status_endpoint(
         // Get contributor count
         let contributor_count: i64 =
             sqlx::query_scalar("SELECT COUNT(DISTINCT contributor_id) FROM unified_contributions")
-                .fetch_one(pool)
+                .fetch_one(&pool)
                 .await
                 .unwrap_or(0);
 

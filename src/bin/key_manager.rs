@@ -143,7 +143,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::List {
             key_type,
             status,
-            owner,
+            owner: _,
         } => {
             let key_type = key_type.as_deref().map(parse_key_type).transpose()?;
             let status = status.as_deref().map(parse_key_status).transpose()?;

@@ -70,20 +70,20 @@ impl AdoptionTracker {
 
     /// Get total network weight by type (for adoption percentage calculations)
     async fn get_network_totals(&self) -> Result<(f64, f64, f64), GovernanceError> {
-        let total: (f64,) = sqlx::query_as("SELECT COALESCE(SUM(weight), 0) FROM fork_decisions")
+        let total: (f64,) = sqlx::query_as("SELECT COALESCE(SUM(weight), 0.0) FROM fork_decisions")
             .fetch_one(&self.pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
         let hashpower: (f64,) = sqlx::query_as(
-            "SELECT COALESCE(SUM(weight), 0) FROM fork_decisions WHERE node_type = 'mining_pool'",
+            "SELECT COALESCE(SUM(weight), 0.0) FROM fork_decisions WHERE node_type = 'mining_pool'",
         )
         .fetch_one(&self.pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
         let economic: (f64,) = sqlx::query_as(
-            "SELECT COALESCE(SUM(weight), 0) FROM fork_decisions WHERE node_type != 'mining_pool'",
+            "SELECT COALESCE(SUM(weight), 0.0) FROM fork_decisions WHERE node_type != 'mining_pool'",
         )
         .fetch_one(&self.pool)
         .await
@@ -100,7 +100,7 @@ impl AdoptionTracker {
         &self,
         ruleset_id: &str,
     ) -> Result<AdoptionMetrics, GovernanceError> {
-        let (total_network_weight, total_network_hashpower, total_network_economic) =
+        let (_total_network_weight, total_network_hashpower, total_network_economic) =
             self.get_network_totals().await?;
 
         // Get adoption decisions for this ruleset

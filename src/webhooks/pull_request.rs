@@ -86,8 +86,8 @@ pub async fn handle_pull_request_event(
             if config.nostr.enabled {
                 // Calculate review period end date
                 let review_days = ThresholdValidator::get_combined_requirements(layer, tier).2;
-                let review_period_ends =
-                    chrono::Utc::now() + chrono::Duration::days(review_days as i64);
+                let review_period_ends = chrono::Utc::now()
+                    + chrono::Duration::try_days(review_days as i64).expect("day count");
 
                 // Publish review period notification
                 if let Err(e) = crate::nostr::helpers::publish_review_period_notification(

@@ -23,7 +23,7 @@ impl DiffParser {
     /// Parse unified diff format
     ///
     /// Unified diff format:
-    /// ```
+    /// ```text
     /// --- a/path/to/file.rs
     /// +++ b/path/to/file.rs
     /// @@ -start,count +start,count @@
@@ -51,13 +51,13 @@ impl DiffParser {
                 let clean_path = path.strip_prefix("a/").unwrap_or(path);
                 let clean_path = clean_path.strip_prefix("b/").unwrap_or(clean_path);
 
-                // If we have a current file, save it
-                if let Some(file) = current_file.take() {
-                    file_diffs.push(file);
-                }
-
-                // Start new file (only on --- line, +++ will follow)
+                // A new file starts at `---`. `+++` is the same file's destination path.
                 if line.starts_with("---") {
+                    if let Some(mut file) = current_file.take() {
+                        file.additions.append(&mut hunk_additions);
+                        file.deletions.append(&mut hunk_deletions);
+                        file_diffs.push(file);
+                    }
                     current_file = Some(FileDiff {
                         filename: clean_path.to_string(),
                         additions: Vec::new(),
@@ -85,7 +85,7 @@ impl DiffParser {
 
             // Process diff lines within a hunk
             if in_hunk {
-                if let Some(ref mut file) = current_file {
+                if let Some(ref mut _file) = current_file {
                     if line.starts_with("+") && !line.starts_with("+++") {
                         // Added line (remove the + prefix)
                         let content = line.strip_prefix("+").unwrap_or(line).to_string();

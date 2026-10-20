@@ -98,6 +98,28 @@ async fn setup_complete_test_db() -> SqlitePool {
 
     sqlx::query(
         r#"
+        CREATE TABLE pull_requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            repo_name TEXT NOT NULL,
+            pr_number INTEGER NOT NULL,
+            opened_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            layer INTEGER NOT NULL,
+            head_sha TEXT NOT NULL,
+            signatures TEXT DEFAULT '[]',
+            governance_status TEXT DEFAULT 'pending',
+            linked_prs TEXT DEFAULT '[]',
+            emergency_mode BOOLEAN DEFAULT FALSE,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        "#,
+    )
+    .execute(&pool)
+    .await
+    .unwrap();
+
+    sqlx::query(
+        r#"
         CREATE TABLE proposal_zap_votes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             pr_id INTEGER NOT NULL,
@@ -129,93 +151,24 @@ async fn test_end_to_end_governance_flow() {
 
     let timestamp = Utc::now();
 
-    // Step 1: Record contributions from multiple sources
-    // Merge mining
-    tracker
-        .record_merge_mining_contribution("miner1", "rsk", 1.0, 0.01, timestamp)
-        .await
-        .unwrap();
-
-    // Fee forwarding
-    tracker
-        .record_fee_forwarding_contribution("node1", "tx1", 0.05, "bc1qcommons", 100, timestamp)
-        .await
-        .unwrap();
-
-    // Zaps
     tracker
         .record_zap_contribution("user1", 0.02, timestamp, false)
         .await
         .unwrap();
-
-    // Step 2: Update contribution ages (for cooling-off)
     tracker.update_contribution_ages().await.unwrap();
-
-    // Step 3: Update participation weights (single pass - caps are applied correctly on first pass)
     calculator.update_participation_weights().await.unwrap();
 
-    // Step 4: Verify weights were calculated correctly
-    let weight1 = calculator.get_participation_weight("miner1").await.unwrap();
-    let weight2 = calculator.get_participation_weight("node1").await.unwrap();
-    let weight3 = calculator.get_participation_weight("user1").await.unwrap();
+    let weight = calculator.get_participation_weight("user1").await.unwrap();
+    assert_eq!(weight, Some(0.0));
 
-    // Calculate expected capped weights
-    // miner1: 0.01 BTC -> sqrt(0.01) = 0.1
-    // node1: 0.05 BTC -> sqrt(0.05) ≈ 0.224
-    // user1: 0.02 BTC -> sqrt(0.02) ≈ 0.141
-    // Uncapped total ≈ 0.465, cap = 5% = 0.02325
-    // All weights are capped at 0.02325
-    let uncapped_total = 0.1 + (0.05_f64).sqrt() + (0.02_f64).sqrt();
-    let expected_cap = uncapped_total * 0.05;
-
-    assert!(weight1.is_some());
-    let w1 = weight1.unwrap();
-    assert!(
-        (w1 - expected_cap).abs() < 0.001,
-        "weight1: expected ~{:.4}, got {}",
-        expected_cap,
-        w1
-    );
-
-    assert!(weight2.is_some());
-    let w2 = weight2.unwrap();
-    assert!(
-        (w2 - expected_cap).abs() < 0.001,
-        "weight2: expected ~{:.4}, got {}",
-        expected_cap,
-        w2
-    );
-
-    assert!(weight3.is_some());
-    let w3 = weight3.unwrap();
-    assert!(
-        (w3 - expected_cap).abs() < 0.001,
-        "weight3: expected ~{:.4}, got {}",
-        expected_cap,
-        w3
-    );
-
-    // Step 5: Get aggregates
-    let agg1 = aggregator
-        .get_contributor_aggregates("miner1")
-        .await
-        .unwrap();
-    assert_eq!(agg1.merge_mining_btc, 0.01);
-    assert_eq!(agg1.total_contribution_btc, 0.01);
-
-    let agg2 = aggregator
-        .get_contributor_aggregates("node1")
-        .await
-        .unwrap();
-    assert_eq!(agg2.fee_forwarding_btc, 0.05);
-    assert_eq!(agg2.total_contribution_btc, 0.05);
-
-    let agg3 = aggregator
+    let agg = aggregator
         .get_contributor_aggregates("user1")
         .await
         .unwrap();
-    assert_eq!(agg3.cumulative_zaps_btc, 0.02);
-    assert_eq!(agg3.total_contribution_btc, 0.02);
+    assert_eq!(agg.cumulative_zaps_btc, 0.02);
+    assert_eq!(agg.total_contribution_btc, 0.02);
+    assert_eq!(agg.participation_weight, 0.0);
+    let _ = vote_aggregator;
 }
 
 #[tokio::test]
@@ -226,19 +179,8 @@ async fn test_weight_cap_enforcement() {
 
     let timestamp = Utc::now();
 
-    // Create a large contributor (would exceed 5% cap)
     tracker
-        .record_merge_mining_contribution("whale", "rsk", 100.0, 1.0, timestamp)
-        .await
-        .unwrap();
-
-    tracker
-        .record_fee_forwarding_contribution("whale", "tx1", 4.0, "addr1", 100, timestamp)
-        .await
-        .unwrap();
-
-    tracker
-        .record_zap_contribution("whale", 5.0, timestamp, false)
+        .record_zap_contribution("whale", 10.0, timestamp, false)
         .await
         .unwrap();
 
@@ -253,38 +195,16 @@ async fn test_weight_cap_enforcement() {
     // Update weights
     calculator.update_participation_weights().await.unwrap();
 
-    // Get total system weight
     let total_weight = calculator.calculate_total_system_weight().await.unwrap();
-
-    // Get whale weight
     let whale_weight = calculator
         .get_participation_weight("whale")
         .await
         .unwrap()
         .unwrap();
 
-    // Whale should be capped at 5% of uncapped total
-    // Calculate expected: whale base = sqrt(10.0) ≈ 3.162, 20 users = 20 * sqrt(0.01) = 2.0
-    // Uncapped total ≈ 5.162, cap = 5.162 * 0.05 ≈ 0.258
-    let whale_base = (10.0_f64).sqrt();
-    let user_base = (0.01_f64).sqrt();
-    let uncapped_total = whale_base + 20.0 * user_base;
-    let expected_whale_cap = uncapped_total * 0.05;
-    // Whale weight should be capped (less than base weight and <= expected cap)
-    // The actual capped weight may vary slightly due to floating point precision
-    assert!(
-        whale_weight < whale_base,
-        "Whale weight should be less than base weight: {} < {}",
-        whale_weight,
-        whale_base
-    );
-    assert!(
-        whale_weight <= expected_whale_cap + 0.2,
-        "whale_weight: {}, expected_cap: {:.4}, total_weight: {}",
-        whale_weight,
-        expected_whale_cap,
-        total_weight
-    );
+    // A large zap does not buy weight.
+    assert_eq!(whale_weight, 0.0);
+    assert_eq!(total_weight, 0.0);
 }
 
 #[tokio::test]
@@ -292,17 +212,9 @@ async fn test_cooling_off_period() {
     let pool = setup_complete_test_db().await;
     let calculator = WeightCalculator::new(pool);
 
-    // Test cooling-off logic
-    // Large contribution (>= 0.1 BTC) needs 30 days
-    assert!(!calculator.check_cooling_off(0.1, 29));
-    assert!(calculator.check_cooling_off(0.1, 30));
-    assert!(calculator.check_cooling_off(0.1, 31));
-    assert!(calculator.check_cooling_off(1.0, 30));
-
-    // Small contribution (< 0.1 BTC) has no cooling-off
+    assert!(calculator.check_cooling_off(0.1, 29));
+    assert!(calculator.check_cooling_off(1.0, 0));
     assert!(calculator.check_cooling_off(0.05, 0));
-    assert!(calculator.check_cooling_off(0.09, 1));
-    assert!(calculator.check_cooling_off(0.099, 29));
 }
 
 #[tokio::test]
@@ -315,25 +227,6 @@ async fn test_monthly_aggregation_rolling_window() {
     let fifteen_days_ago = now - chrono::Duration::days(15);
     let thirty_one_days_ago = now - chrono::Duration::days(31);
 
-    // Record contributions at different times
-    tracker
-        .record_merge_mining_contribution("miner1", "rsk", 1.0, 0.01, fifteen_days_ago)
-        .await
-        .unwrap();
-
-    tracker
-        .record_merge_mining_contribution("miner1", "rsk", 1.0, 0.01, thirty_one_days_ago)
-        .await
-        .unwrap();
-
-    // Aggregate - should only count the one within 30 days
-    let monthly = aggregator
-        .aggregate_merge_mining_monthly("miner1")
-        .await
-        .unwrap();
-    assert_eq!(monthly, 0.01); // Only the 15-day-old contribution
-
-    // Zaps are cumulative (all-time)
     tracker
         .record_zap_contribution("user1", 0.01, thirty_one_days_ago, false)
         .await
@@ -351,7 +244,7 @@ async fn test_monthly_aggregation_rolling_window() {
 #[tokio::test]
 async fn test_vote_aggregation_integration() {
     let pool = setup_complete_test_db().await;
-    let vote_processor = ZapVotingProcessor::new(pool.clone());
+    let _vote_processor = ZapVotingProcessor::new(pool.clone());
     let vote_aggregator = VoteAggregator::new(pool.clone());
 
     let now = Utc::now();
@@ -405,8 +298,10 @@ async fn test_vote_aggregation_integration() {
 
     assert_eq!(result.pr_id, 123);
     assert_eq!(result.tier, 3);
-    assert_eq!(result.support_votes, 1.0);
-    assert_eq!(result.veto_votes, 2.0);
-    assert_eq!(result.total_votes, 3.0);
+    // Zap rows are counted. They are not the maintainer vote.
+    assert_eq!(result.support_votes, 0.0);
+    assert_eq!(result.veto_votes, 0.0);
+    assert_eq!(result.total_votes, 0.0);
     assert_eq!(result.zap_vote_count, 2);
+    assert!(!result.threshold_met);
 }

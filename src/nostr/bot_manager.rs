@@ -151,13 +151,14 @@ mod tests {
 
     #[test]
     fn test_resolve_nsec_from_env() {
-        std::env::set_var("TEST_NSEC_VAR", "test_nsec_value");
+        // SAFETY: this unit test is the only writer of TEST_NSEC_VAR.
+        unsafe { std::env::set_var("TEST_NSEC_VAR", "test_nsec_value") };
 
         let result = NostrBotManager::resolve_nsec("env:TEST_NSEC_VAR");
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), "test_nsec_value");
 
-        std::env::remove_var("TEST_NSEC_VAR");
+        unsafe { std::env::remove_var("TEST_NSEC_VAR") };
     }
 
     #[test]

@@ -9,6 +9,7 @@ pub struct DependencyGraph {
     /// Map of repository name to its dependencies
     dependencies: HashMap<String, Vec<String>>,
     /// Organization name (e.g., "BTCDecoded" - the GitHub organization)
+    #[allow(dead_code)]
     organization: String,
 }
 

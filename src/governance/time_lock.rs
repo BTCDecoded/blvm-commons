@@ -201,7 +201,8 @@ impl TimeLockManager {
         .bind(lock_start)
         .bind(lock_start)
         .fetch_one(
-            self.db
+            &self
+                .db
                 .get_sqlite_pool()
                 .ok_or_else(|| sqlx::Error::PoolClosed)?,
         )
@@ -226,7 +227,7 @@ impl TimeLockManager {
             "SELECT * FROM time_locked_changes WHERE change_id = $1",
         )
         .bind(change_id)
-        .fetch_optional(pool)
+        .fetch_optional(&pool)
         .await?;
 
         let change = match change {
@@ -266,7 +267,7 @@ impl TimeLockManager {
             "SELECT * FROM time_locked_changes WHERE change_id = $1",
         )
         .bind(change_id)
-        .fetch_optional(pool)
+        .fetch_optional(&pool)
         .await?;
 
         let change = match change {
@@ -299,7 +300,8 @@ impl TimeLockManager {
         )
         .bind(change_id)
         .fetch_optional(
-            self.db
+            &self
+                .db
                 .get_sqlite_pool()
                 .ok_or_else(|| sqlx::Error::PoolClosed)?,
         )
@@ -328,7 +330,7 @@ impl TimeLockManager {
             .bind(serde_json::to_string(&signals).unwrap())
             .bind(Utc::now())
             .bind(change_id)
-            .execute(self.db.pool().unwrap())
+            .execute(&self.db.pool().unwrap())
             .await?;
         } else {
             // PostgreSQL uses jsonb_set
@@ -349,7 +351,7 @@ impl TimeLockManager {
             .bind(Utc::now().to_rfc3339())
             .bind(Utc::now())
             .bind(change_id)
-            .execute(self.db.pool().unwrap())
+            .execute(&self.db.pool().unwrap())
             .await?;
         }
 
@@ -370,7 +372,7 @@ impl TimeLockManager {
             "SELECT * FROM time_locked_changes WHERE change_id = $1",
         )
         .bind(change_id)
-        .fetch_optional(pool)
+        .fetch_optional(&pool)
         .await?;
 
         let change = match change {
@@ -395,7 +397,7 @@ impl TimeLockManager {
         .bind(Utc::now())
         .bind(change_id)
         .execute(
-            self.db.get_sqlite_pool()
+            &self.db.get_sqlite_pool()
                 .ok_or_else(|| sqlx::Error::PoolClosed)?
         )
         .await?;
@@ -413,7 +415,7 @@ impl TimeLockManager {
         .bind(Utc::now())
         .bind(change_id)
         .execute(
-            self.db.get_sqlite_pool()
+            &self.db.get_sqlite_pool()
                 .ok_or_else(|| sqlx::Error::PoolClosed)?
         )
         .await?;
@@ -430,7 +432,7 @@ impl TimeLockManager {
         sqlx::query_as::<_, TimeLockedChange>(
             "SELECT * FROM time_locked_changes WHERE status = 'pending' ORDER BY lock_end ASC",
         )
-        .fetch_all(pool)
+        .fetch_all(&pool)
         .await
     }
 
@@ -443,7 +445,7 @@ impl TimeLockManager {
             "SELECT * FROM time_locked_changes WHERE change_id = $1",
         )
         .bind(change_id)
-        .fetch_optional(self.db.pool().unwrap())
+        .fetch_optional(&self.db.pool().unwrap())
         .await
     }
 }
@@ -468,7 +470,7 @@ pub async fn migrate_time_lock_tables(db: &Database) -> Result<(), sqlx::Error> 
         "#,
     )
     .execute(
-        db.get_sqlite_pool()
+        &db.get_sqlite_pool()
             .ok_or_else(|| sqlx::Error::PoolClosed)?,
     )
     .await?;
@@ -478,7 +480,7 @@ pub async fn migrate_time_lock_tables(db: &Database) -> Result<(), sqlx::Error> 
         "CREATE INDEX IF NOT EXISTS idx_time_locked_changes_status ON time_locked_changes(status)",
     )
     .execute(
-        db.get_sqlite_pool()
+        &db.get_sqlite_pool()
             .ok_or_else(|| sqlx::Error::PoolClosed)?,
     )
     .await?;
@@ -487,7 +489,7 @@ pub async fn migrate_time_lock_tables(db: &Database) -> Result<(), sqlx::Error> 
         "CREATE INDEX IF NOT EXISTS idx_time_locked_changes_lock_end ON time_locked_changes(lock_end)",
     )
     .execute(
-        db.get_sqlite_pool()
+        &db.get_sqlite_pool()
             .ok_or_else(|| sqlx::Error::PoolClosed)?
     )
     .await?;
@@ -837,7 +839,7 @@ mod tests {
         // Verify table exists by trying to query it
         let result: Result<Vec<(String, String)>, _> =
             sqlx::query_as("SELECT change_id, status FROM time_locked_changes LIMIT 1")
-                .fetch_all(db.pool().unwrap())
+                .fetch_all(&db.pool().unwrap())
                 .await;
 
         // Should not error (table exists), even if empty
