@@ -24,9 +24,9 @@
 
 ### Purpose
 
-Bitcoin Commons is a comprehensive Bitcoin implementation ecosystem that provides **cryptographic governance** for Bitcoin development. The system implements a constitutional governance model that makes Bitcoin governance **6x harder to capture** than Bitcoin Core's current model, with complete transparency through cryptographic audit trails and user-protective mechanisms.
+Bitcoin Commons is the governance tooling crate. It contains a 5-tier signature schedule. That schedule is not a measured capture multiplier, and merge enforcement is off.
 
-**Core Innovation:** Apply the same cryptographic enforcement to governance that Bitcoin applies to consensus - making power visible, capture expensive, and exit cheap.
+**Core innovation:** The design is public signatures and cheap exit. That enforcement is not on.
 
 ### Current Status
 

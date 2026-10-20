@@ -2,9 +2,9 @@
 
 ## Executive Summary
 
-A Rust-based GitHub App that enforces cryptographic governance across the BTCDecoded organization's five-layer repository hierarchy. This system makes Bitcoin governance **6x harder to capture** than Bitcoin Core's current model (requires 6-of-7 maintainers instead of 1-of-5), **completely transparent** through cryptographic audit trails, and **user-protective** through mandatory release signing and node-level verification.
+A Rust GitHub App client for the BTCDecoded repositories. The written schedule names signature counts, including 6-of-7 and 1-of-5. Those counts are not a measured capture multiplier. The app does not enforce merges.
 
-**Core innovation:** Apply the same cryptographic enforcement to governance that Bitcoin applies to consensus - making power visible, capture expensive, and exit cheap.
+**Core innovation:** The design is public signatures and cheap exit. That enforcement is not on.
 
 ## The Problem
 
@@ -21,7 +21,7 @@ A Rust-based GitHub App that enforces cryptographic governance across the BTCDec
 
 **Three-layer defense:**
 
-1. **Development Governance** - GitHub App enforces signature thresholds and review periods
+1. **Development Governance** - The written schedule names signature thresholds and review periods. The GitHub App does not block a merge
 2. **Distribution Governance** - Releases must have valid maintainer multisig
 3. **Deployment Governance** - Nodes verify signatures before installing updates
 
@@ -702,7 +702,7 @@ if_still_deadlocked:
 
 ### What This Doesn't Protect Against
 
-❌ **Coordinated 6-of-7 collusion** - Same as any governance (but 6x harder than Core)
+❌ **Coordinated 6-of-7 collusion** - The written schedule does not stop a supermajority of keyholders. That is not a measured multiple of Core.
 ❌ **Sophisticated multi-key compromise** - Extremely difficult and expensive
 ❌ **User bypassing verification** - User sovereignty = user's choice
 
@@ -808,7 +808,7 @@ glob = "0.3"
 | Aspect | Bitcoin Core | BTCDecoded |
 |--------|--------------|------------|
 | Merge authority | 1 of ~5 | 6-of-7 (Layer 1) |
-| Capture difficulty | Very easy | 6x harder |
+| Capture difficulty | Informal merge process | Not a measured multiple |
 | Transparency | Informal | Cryptographic |
 | Release signing | Individual PGP | Multisig threshold |
 | User protection | Trust | Verification |
@@ -939,7 +939,7 @@ glob = "0.3"
 
 ## Repositories Required
 
-1. **governance-app** (Rust) - enforcement engine
+1. **governance-app** (Rust) - GitHub App client
 2. **governance** (YAML config) - governance rules and maintainer keys
 3. **Each project repo** needs `.governance.yml` file
 
@@ -947,9 +947,9 @@ glob = "0.3"
 
 ## Conclusion
 
-This system applies Bitcoin's principles to Bitcoin's governance layer. Makes capture **6x harder**, governance **completely transparent**, users **cryptographically protected**.
+This system writes a signature schedule for Bitcoin's governance layer. The schedule is not a measured capture multiplier. Merge enforcement is off.
 
-Not perfect - no system prevents coordinated supermajority capture. But **massively better** than Bitcoin Core's informal governance.
+A supermajority of keyholders can still approve a change. The schedule does not by itself make that a counted multiple of Bitcoin Core's process.
 
 At $2T market cap, Bitcoin deserves governance infrastructure matching its technical sophistication.
 
