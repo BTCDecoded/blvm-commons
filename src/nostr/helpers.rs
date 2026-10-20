@@ -40,16 +40,22 @@ pub async fn publish_merge_action(
     };
 
     // Get layer and tier requirements
-    let (layer_sigs_req, layer_sigs_total) = ThresholdValidator::get_threshold_for_layer(layer);
-    let layer_review = ThresholdValidator::get_review_period_for_layer(layer, false);
+    let (layer_sigs_req, layer_sigs_total) = ThresholdValidator::get_threshold_for_layer(layer)
+        .map_err(|e| anyhow::anyhow!(e.to_string()))?;
+    let layer_review = ThresholdValidator::get_review_period_for_layer(layer, false)
+        .map_err(|e| anyhow::anyhow!(e.to_string()))?;
 
-    let (tier_sigs_req, tier_sigs_total) = ThresholdValidator::get_tier_threshold(tier);
-    let tier_review = ThresholdValidator::get_tier_review_period(tier);
+    let (tier_sigs_req, tier_sigs_total) =
+        ThresholdValidator::get_tier_threshold(tier).map_err(|e| anyhow::anyhow!(e.to_string()))?;
+    let tier_review = ThresholdValidator::get_tier_review_period(tier)
+        .map_err(|e| anyhow::anyhow!(e.to_string()))?;
 
     // Get combined requirements
     let (final_sigs_req, final_sigs_total, final_review_days) =
-        ThresholdValidator::get_combined_requirements(layer, tier);
-    let source = ThresholdValidator::get_requirement_source(layer, tier);
+        ThresholdValidator::get_combined_requirements(layer, tier)
+            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
+    let source = ThresholdValidator::get_requirement_source(layer, tier)
+        .map_err(|e| anyhow::anyhow!(e.to_string()))?;
 
     // Create requirement structs
     let layer_req = LayerRequirement {
@@ -182,7 +188,8 @@ pub async fn publish_review_period_notification(
 
     // Get combined requirements
     let (final_sigs_req, final_sigs_total, final_review_days) =
-        ThresholdValidator::get_combined_requirements(layer, tier);
+        ThresholdValidator::get_combined_requirements(layer, tier)
+            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
 
     // Create Nostr client
     let nsec = std::fs::read_to_string(&config.nostr.server_nsec_path)

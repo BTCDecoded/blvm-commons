@@ -59,6 +59,14 @@ pub async fn handle_pull_request_event(
     .await;
     info!("PR #{} classified as Tier {}", pr_number, tier);
 
+    if let Err(e) = ThresholdValidator::get_combined_requirements(layer, tier) {
+        warn!(
+            "Refusing PR #{} in {} at layer {} tier {}: {}",
+            pr_number, repo_name, layer, tier, e
+        );
+        return Err(axum::http::StatusCode::UNPROCESSABLE_ENTITY);
+    }
+
     // Store PR in database
     match database
         .create_pull_request(repo_name, pr_number as i32, head_sha, layer)
@@ -85,7 +93,10 @@ pub async fn handle_pull_request_event(
             // Publish review period notification to Nostr (if enabled)
             if config.nostr.enabled {
                 // Calculate review period end date
-                let review_days = ThresholdValidator::get_combined_requirements(layer, tier).2;
+                let review_days = match ThresholdValidator::get_combined_requirements(layer, tier) {
+                    Ok(reqs) => reqs.2,
+                    Err(_) => return Err(axum::http::StatusCode::UNPROCESSABLE_ENTITY),
+                };
                 let review_period_ends =
                     chrono::Utc::now() + chrono::Duration::days(review_days as i64);
 

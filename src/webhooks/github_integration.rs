@@ -172,8 +172,8 @@ impl GitHubIntegration {
 
             // Get combined requirements (Layer + Tier)
             let (sigs_req, sigs_total, review_days) =
-                ThresholdValidator::get_combined_requirements(layer, tier);
-            let _source = ThresholdValidator::get_requirement_source(layer, tier);
+                ThresholdValidator::get_combined_requirements(layer, tier)?;
+            let _source = ThresholdValidator::get_requirement_source(layer, tier)?;
 
             // Check review period
             let review_period_met = self.check_review_period(&pr, review_days).await?;
