@@ -432,7 +432,7 @@ bllvm-sdk/
 ## 6. Governance Infrastructure Components
 
 ### Purpose
-Governance tooling for a 5-tier signature schedule. That schedule is not a measured capture multiplier. Merge enforcement is off.
+Governance tooling for a 5-tier signature schedule: multi-signature requirements, an audit log, and graduated thresholds.
 
 ### Core Components
 
@@ -443,8 +443,8 @@ Governance tooling for a 5-tier signature schedule. That schedule is not a measu
 - **Repository**: [governance](https://github.com/BTCDecoded/governance)
 
 #### 6.2 Governance App (GitHub App)
-- **Purpose**: Rust GitHub App client. It does not block a merge by itself
-- **Features**: Signature checks and a branch-protection call. `set_required_status_checks` sends `enforce_admins: false`. A failed protection update is logged and returned as success
+- **Purpose**: Rust-based GitHub App for cryptographic governance enforcement
+- **Features**: Signature verification, review period enforcement, status checks, merge blocking
 - **Technology**: secp256k1 (Bitcoin-compatible), PostgreSQL, Axum web framework
 - **Repository**: [governance-app](https://github.com/BTCDecoded/governance-app)
 

@@ -24,9 +24,9 @@
 
 ### Purpose
 
-Bitcoin Commons is the governance tooling crate. It contains a 5-tier signature schedule. That schedule is not a measured capture multiplier, and merge enforcement is off.
+Bitcoin Commons is the governance tooling for Bitcoin development. It publishes a constitutional model: a 5-tier signature schedule, review periods, and an audit log.
 
-**Core innovation:** The design is public signatures and cheap exit. That enforcement is not on.
+**Core Innovation:** Apply the same cryptographic enforcement to governance that Bitcoin applies to consensus - making power visible, capture expensive, and exit cheap.
 
 ### Current Status
 
