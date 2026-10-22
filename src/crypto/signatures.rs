@@ -6,6 +6,12 @@ use blvm_sdk::governance::{
 use secp256k1::{PublicKey, Secp256k1, SecretKey, ecdsa::Signature};
 use sha2::{Digest, Sha256};
 
+/// Message signed by `sign-pr` and checked by the webhook verifier.
+/// Bound to the repository, the pull request number, and the head commit.
+pub fn governance_pr_message(repo: &str, pr_number: u64, head_sha: &str) -> String {
+    format!("PR #{pr_number} in {repo} at {head_sha}")
+}
+
 pub struct SignatureManager {
     secp: Secp256k1<secp256k1::All>,
 }

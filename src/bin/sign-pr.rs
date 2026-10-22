@@ -6,9 +6,9 @@
 use clap::{Parser, Subcommand};
 use std::fs;
 use std::path::Path;
-use std::str::FromStr;
 
-use blvm_commons::crypto::signatures::SignatureManager;
+use blvm_commons::crypto::signatures::{SignatureManager, governance_pr_message};
+use blvm_sdk::governance::GovernanceKeypair;
 
 #[derive(Parser)]
 #[command(name = "sign-pr")]
@@ -34,9 +34,9 @@ enum Commands {
         #[arg(short, long)]
         pr: u64,
 
-        /// Optional message to sign (defaults to "PR #X in Y")
-        #[arg(short, long)]
-        message: Option<String>,
+        /// Head commit the signature is bound to
+        #[arg(long)]
+        head: String,
     },
     /// Generate a new keypair
     Generate {
@@ -72,9 +72,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             key,
             repo,
             pr,
-            message,
+            head,
         } => {
-            sign_pr(&key, &repo, pr, message)?;
+            let _signature = sign_pr(&key, &repo, pr, &head)?;
         }
         Commands::Generate { output, username } => {
             generate_keypair(&output, &username)?;
@@ -95,25 +95,19 @@ fn sign_pr(
     key_path: &str,
     repo: &str,
     pr: u64,
-    message: Option<String>,
-) -> Result<(), Box<dyn std::error::Error>> {
+    head: &str,
+) -> Result<String, Box<dyn std::error::Error>> {
     println!("🔐 Signing PR #{pr} in {repo}");
 
-    // Load private key
     let private_key = fs::read_to_string(key_path)?;
+    let secret = hex::decode(private_key.trim())?;
+    let keypair = GovernanceKeypair::from_secret_key(&secret)?;
 
-    // Create message to sign
-    let message = message.unwrap_or_else(|| format!("PR #{pr} in {repo}"));
+    let message = governance_pr_message(repo, pr, head);
     println!("📝 Message to sign: {message}");
 
-    // Initialize signature manager
     let signature_manager = SignatureManager::new();
-
-    // Parse private key
-    let secret_key = secp256k1::SecretKey::from_str(private_key.trim())?;
-
-    // Sign the message
-    let signature = signature_manager.create_signature(&message, &secret_key)?;
+    let signature = signature_manager.create_governance_signature(&message, &keypair)?;
 
     println!("✅ Signature generated successfully!");
     println!();
@@ -126,67 +120,54 @@ fn sign_pr(
     println!("  Message: {message}");
     println!("  Signature: {signature}");
 
-    Ok(())
+    Ok(signature)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn sign_pr_output_verifies() {
+        let manager = SignatureManager::new();
+        let keypair = manager.generate_keypair().unwrap();
+        let dir = tempfile::tempdir().unwrap();
+        let key_path = dir.path().join("maintainer.hex");
+        std::fs::write(&key_path, hex::encode(keypair.secret_key)).unwrap();
+
+        let repo = "BTCDecoded/blvm-spec";
+        let head = "0123456789abcdef";
+        let signature = sign_pr(key_path.to_str().unwrap(), repo, 4, head).unwrap();
+        let public_key = hex::encode(keypair.public_key);
+        let message = governance_pr_message(repo, 4, head);
+        assert_eq!(signature.len(), 128);
+        assert!(
+            manager
+                .verify_governance_signature(&message, &signature, &public_key)
+                .unwrap()
+        );
+        let other = governance_pr_message(repo, 4, "ffffffffffffffff");
+        assert!(
+            !manager
+                .verify_governance_signature(&other, &signature, &public_key)
+                .unwrap()
+        );
+    }
 }
 
 fn generate_keypair(output_dir: &str, username: &str) -> Result<(), Box<dyn std::error::Error>> {
     println!("🔑 Generating keypair for {username}");
 
-    // Create output directory
     fs::create_dir_all(output_dir)?;
 
-    // Generate keypair using openssl
-    let private_key_path = Path::new(output_dir).join(format!("{username}_private.pem"));
-    let public_key_path = Path::new(output_dir).join(format!("{username}_public.pem"));
+    let private_key_path = Path::new(output_dir).join(format!("{username}_private.hex"));
+    let public_key_path = Path::new(output_dir).join(format!("{username}_public.hex"));
 
-    // Generate private key
-    let output = std::process::Command::new("openssl")
-        .args([
-            "genpkey",
-            "-algorithm",
-            "Ed25519",
-            "-out",
-            private_key_path.to_str().unwrap(),
-        ])
-        .output()?;
-
-    if !output.status.success() {
-        return Err("Failed to generate private key".into());
-    }
-
-    // Extract public key
-    let output = std::process::Command::new("openssl")
-        .args([
-            "pkey",
-            "-in",
-            private_key_path.to_str().unwrap(),
-            "-pubout",
-            "-out",
-            public_key_path.to_str().unwrap(),
-        ])
-        .output()?;
-
-    if !output.status.success() {
-        return Err("Failed to extract public key".into());
-    }
-
-    // Get public key in hex format
-    let output = std::process::Command::new("openssl")
-        .args([
-            "pkey",
-            "-in",
-            private_key_path.to_str().unwrap(),
-            "-pubout",
-            "-outform",
-            "DER",
-        ])
-        .output()?;
-
-    if !output.status.success() {
-        return Err("Failed to get public key in DER format".into());
-    }
-
-    let public_key_hex = hex::encode(&output.stdout);
+    let keypair = SignatureManager::new().generate_keypair()?;
+    let secret_hex = hex::encode(keypair.secret_key);
+    let public_key_hex = hex::encode(keypair.public_key);
+    fs::write(&private_key_path, &secret_hex)?;
+    fs::write(&public_key_path, &public_key_hex)?;
 
     println!("✅ Keypair generated successfully!");
     println!("📁 Private key: {}", private_key_path.display());
@@ -211,13 +192,13 @@ fn verify_signature(
 
     // Load public key
     let public_key = fs::read_to_string(public_key_path)?;
+    let public_key = public_key.trim();
 
     // Initialize signature manager
     let signature_manager = SignatureManager::new();
 
     // Verify signature
-    let is_valid =
-        signature_manager.verify_governance_signature(message, signature, &public_key)?;
+    let is_valid = signature_manager.verify_governance_signature(message, signature, public_key)?;
 
     if is_valid {
         println!("✅ Signature is VALID");
