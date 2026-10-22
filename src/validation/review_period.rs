@@ -12,12 +12,14 @@ impl ReviewPeriodValidator {
         let now = Utc::now();
         let elapsed = now - opened_at;
 
-        // Emergency mode reduces review period to 30 days
-        let required_duration = if emergency_mode {
-            Duration::try_days(30).unwrap_or_default()
-        } else {
-            Duration::try_days(required_days).unwrap_or_default()
-        };
+        // Emergency mode does not shorten the clock, and 0-day review is not implemented.
+        let _emergency_does_not_shorten = emergency_mode;
+        if required_days <= 0 {
+            return Err(GovernanceError::ReviewPeriodError(
+                "0-day review is not implemented".to_string(),
+            ));
+        }
+        let required_duration = Duration::try_days(required_days).unwrap_or_default();
 
         if elapsed >= required_duration {
             Ok(true)
@@ -37,11 +39,9 @@ impl ReviewPeriodValidator {
         required_days: i64,
         emergency_mode: bool,
     ) -> DateTime<Utc> {
-        let required_duration = if emergency_mode {
-            Duration::try_days(30).unwrap_or_default()
-        } else {
-            Duration::try_days(required_days).unwrap_or_default()
-        };
+        let _emergency_does_not_shorten = emergency_mode;
+        let days = required_days.max(1);
+        let required_duration = Duration::try_days(days).unwrap_or_default();
 
         opened_at + required_duration
     }
@@ -54,11 +54,9 @@ impl ReviewPeriodValidator {
         let now = Utc::now();
         let elapsed = now - opened_at;
 
-        let required_duration = if emergency_mode {
-            Duration::try_days(30).unwrap_or_default()
-        } else {
-            Duration::try_days(required_days).unwrap_or_default()
-        };
+        let _emergency_does_not_shorten = emergency_mode;
+        let days = required_days.max(1);
+        let required_duration = Duration::try_days(days).unwrap_or_default();
 
         let remaining = required_duration - elapsed;
         remaining.num_days().max(0)
