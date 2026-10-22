@@ -23,7 +23,7 @@ impl DiffParser {
     /// Parse unified diff format
     ///
     /// Unified diff format:
-    /// ```
+    /// ```text
     /// --- a/path/to/file.rs
     /// +++ b/path/to/file.rs
     /// @@ -start,count +start,count @@
@@ -32,79 +32,100 @@ impl DiffParser {
     ///  unchanged line
     /// ```
     pub fn parse_unified_diff(diff: &str) -> Result<Vec<FileDiff>, GovernanceError> {
+        let lines: Vec<&str> = diff.lines().collect();
         let mut file_diffs = Vec::new();
         let mut current_file: Option<FileDiff> = None;
         let mut in_hunk = false;
-        let mut hunk_additions = Vec::new();
-        let mut hunk_deletions = Vec::new();
 
-        // Regex to match file header lines
-        let file_header_re = Regex::new(r"^(?:---|\+\+\+) (.+)$").unwrap();
+        // GitHub returns git-format diffs, where every file starts with a
+        // `diff --git` line. In that format only `diff --git` ends a file, so
+        // hunk body lines that look like `---`/`+++` headers cannot split it.
+        let git_format = lines.iter().any(|l| l.starts_with("diff --git "));
+
         // Regex to match hunk header lines
         let hunk_header_re = Regex::new(r"^@@ .+ @@").unwrap();
 
-        for line in diff.lines() {
-            // Check for file header (--- or +++)
-            if let Some(caps) = file_header_re.captures(line) {
-                let path = caps.get(1).unwrap().as_str();
-                // Remove a/ or b/ prefix if present
-                let clean_path = path.strip_prefix("a/").unwrap_or(path);
-                let clean_path = clean_path.strip_prefix("b/").unwrap_or(clean_path);
+        fn clean_path(path: &str) -> Option<String> {
+            // Drop a trailing tab-separated timestamp (plain `diff -u` output)
+            let path = path.split('\t').next().unwrap_or(path).trim();
+            if path == "/dev/null" {
+                return None;
+            }
+            let path = path
+                .strip_prefix("a/")
+                .or_else(|| path.strip_prefix("b/"))
+                .unwrap_or(path);
+            Some(path.to_string())
+        }
 
-                // If we have a current file, save it
+        let mut i = 0;
+        while i < lines.len() {
+            let line = lines[i];
+            i += 1;
+
+            // Start of a new file: `diff --git a/x b/y`, or (plain unified
+            // diff) a `--- ` line immediately followed by `+++ `.
+            let is_git_header = line.starts_with("diff --git ");
+            let is_plain_header = !git_format
+                && line.starts_with("--- ")
+                && lines.get(i).is_some_and(|next| next.starts_with("+++ "));
+
+            if is_git_header || is_plain_header {
                 if let Some(file) = current_file.take() {
                     file_diffs.push(file);
                 }
-
-                // Start new file (only on --- line, +++ will follow)
-                if line.starts_with("---") {
-                    current_file = Some(FileDiff {
-                        filename: clean_path.to_string(),
-                        additions: Vec::new(),
-                        deletions: Vec::new(),
-                    });
-                    in_hunk = false;
-                    hunk_additions.clear();
-                    hunk_deletions.clear();
-                }
+                let filename = if is_git_header {
+                    // Provisional name from `diff --git a/x b/y`; refined by `+++`/`---`
+                    line.rsplit(" b/").next().unwrap_or("").to_string()
+                } else {
+                    clean_path(&line[4..]).unwrap_or_default()
+                };
+                current_file = Some(FileDiff {
+                    filename,
+                    additions: Vec::new(),
+                    deletions: Vec::new(),
+                });
+                in_hunk = false;
                 continue;
             }
 
-            // Check for hunk header
-            if hunk_header_re.is_match(line) {
-                // Save previous hunk's changes to current file
-                if let Some(ref mut file) = current_file {
-                    file.additions.append(&mut hunk_additions);
-                    file.deletions.append(&mut hunk_deletions);
+            // File header lines (before the first hunk of a file): finalize path
+            if !in_hunk && current_file.is_some() {
+                if let Some(path) = line.strip_prefix("+++ ") {
+                    if let (Some(file), Some(path)) = (current_file.as_mut(), clean_path(path)) {
+                        file.filename = path;
+                    }
+                    continue;
                 }
+                if let Some(path) = line.strip_prefix("--- ") {
+                    if let (Some(file), Some(path)) = (current_file.as_mut(), clean_path(path)) {
+                        // Overridden by `+++` unless that side is /dev/null (deleted file)
+                        file.filename = path;
+                    }
+                    continue;
+                }
+            }
+
+            // Hunk header
+            if hunk_header_re.is_match(line) && current_file.is_some() {
                 in_hunk = true;
-                hunk_additions.clear();
-                hunk_deletions.clear();
                 continue;
             }
 
-            // Process diff lines within a hunk
+            // Hunk body: collect until the next file header
             if in_hunk {
                 if let Some(ref mut file) = current_file {
-                    if line.starts_with("+") && !line.starts_with("+++") {
-                        // Added line (remove the + prefix)
-                        let content = line.strip_prefix("+").unwrap_or(line).to_string();
-                        hunk_additions.push(content);
-                    } else if line.starts_with("-") && !line.starts_with("---") {
-                        // Deleted line (remove the - prefix)
-                        let content = line.strip_prefix("-").unwrap_or(line).to_string();
-                        hunk_deletions.push(content);
+                    if let Some(content) = line.strip_prefix('+') {
+                        file.additions.push(content.to_string());
+                    } else if let Some(content) = line.strip_prefix('-') {
+                        file.deletions.push(content.to_string());
                     }
-                    // Lines starting with space are context (unchanged), ignore them
+                    // Context lines (' ') and "\ No newline at end of file" are ignored
                 }
             }
         }
 
-        // Save last file
-        if let Some(mut file) = current_file {
-            // Save any remaining hunk changes
-            file.additions.append(&mut hunk_additions);
-            file.deletions.append(&mut hunk_deletions);
+        if let Some(file) = current_file {
             file_diffs.push(file);
         }
 
@@ -432,5 +453,122 @@ mod tests {
         };
 
         assert!(DiffParser::is_import_only_changes(&diff));
+    }
+
+    #[test]
+    fn test_parse_multiple_files_collects_changes_per_file() {
+        let diff = r#"--- a/src/block.rs
++++ b/src/block.rs
+@@ -1,2 +1,3 @@
+ use crate::types::Network;
++use crate::bip_validation;
+ use std::collections::HashMap;
+--- a/src/transaction.rs
++++ b/src/transaction.rs
+@@ -1,2 +1,2 @@
+ use crate::types::Hash;
+-use crate::old_validation;
++use crate::validation;
+"#;
+
+        let file_diffs = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(file_diffs.len(), 2);
+        assert_eq!(file_diffs[0].filename, "src/block.rs");
+        assert_eq!(file_diffs[0].additions, vec!["use crate::bip_validation;"]);
+        assert!(file_diffs[0].deletions.is_empty());
+        assert_eq!(file_diffs[1].filename, "src/transaction.rs");
+        assert_eq!(file_diffs[1].additions, vec!["use crate::validation;"]);
+        assert_eq!(file_diffs[1].deletions, vec!["use crate::old_validation;"]);
+    }
+
+    /// Regression: a consensus-file diff that changes logic must not be
+    /// reported as import-only (cross_layer.rs import-only gate).
+    #[test]
+    fn test_consensus_diff_with_logic_change_is_not_import_only() {
+        let diff = r#"--- a/src/block.rs
++++ b/src/block.rs
+@@ -10,3 +10,4 @@
+ use crate::types::Network;
++use crate::bip_validation;
+ pub fn connect_block() {
+-    if height > 0 { return Err(Invalid); }
++    return Ok(());
+"#;
+
+        let file_diffs = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(file_diffs.len(), 1);
+        assert_eq!(file_diffs[0].filename, "src/block.rs");
+        assert!(!DiffParser::is_import_only_changes(&file_diffs[0]));
+        assert!(DiffParser::contains_consensus_logic_changes(&file_diffs[0]));
+    }
+
+    /// Same as above, in the `diff --git` format the GitHub API returns.
+    #[test]
+    fn test_git_format_consensus_diff_with_logic_change_is_not_import_only() {
+        let diff = r#"diff --git a/src/block.rs b/src/block.rs
+index 1111111..2222222 100644
+--- a/src/block.rs
++++ b/src/block.rs
+@@ -10,2 +10,2 @@ pub fn connect_block() {
+-    if height > 0 { return Err(Invalid); }
++    return Ok(());
+diff --git a/README.md b/README.md
+index 3333333..4444444 100644
+--- a/README.md
++++ b/README.md
+@@ -1 +1 @@
+-old
++new
+"#;
+
+        let file_diffs = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(file_diffs.len(), 2);
+        assert_eq!(file_diffs[0].filename, "src/block.rs");
+        assert_eq!(file_diffs[0].additions, vec!["    return Ok(());"]);
+        assert!(!DiffParser::is_import_only_changes(&file_diffs[0]));
+        assert_eq!(file_diffs[1].filename, "README.md");
+        assert_eq!(file_diffs[1].additions, vec!["new"]);
+    }
+
+    /// In git format, hunk body lines that merely look like `---`/`+++`
+    /// headers (e.g. removed "-- x" / added "++ y" inside a block comment)
+    /// must stay attached to the current file.
+    #[test]
+    fn test_git_format_header_lookalikes_stay_in_hunk() {
+        let diff = r#"diff --git a/src/block.rs b/src/block.rs
+index 1111111..2222222 100644
+--- a/src/block.rs
++++ b/src/block.rs
+@@ -1,2 +1,3 @@
+--- a/src/block.rs
++++ b/docs/notes.md
++pub fn bypass() {}
+"#;
+
+        let file_diffs = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(file_diffs.len(), 1);
+        assert_eq!(file_diffs[0].filename, "src/block.rs");
+        assert!(!DiffParser::is_import_only_changes(&file_diffs[0]));
+    }
+
+    #[test]
+    fn test_parse_new_and_deleted_files() {
+        let diff = r#"--- /dev/null
++++ b/src/new.rs
+@@ -0,0 +1 @@
++use crate::types::Hash;
+--- a/src/old.rs
++++ /dev/null
+@@ -1 +0,0 @@
+-pub fn removed() {}
+"#;
+
+        let file_diffs = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(file_diffs.len(), 2);
+        assert_eq!(file_diffs[0].filename, "src/new.rs");
+        assert_eq!(file_diffs[0].additions, vec!["use crate::types::Hash;"]);
+        assert_eq!(file_diffs[1].filename, "src/old.rs");
+        assert_eq!(file_diffs[1].deletions, vec!["pub fn removed() {}"]);
+        assert!(!DiffParser::is_import_only_changes(&file_diffs[1]));
     }
 }

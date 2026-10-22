@@ -124,21 +124,21 @@ impl GovernanceActionPublisher {
 
         // Create event tags
         let mut tags = vec![
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("d".into()),
                 vec!["governance-proposal".to_string()],
             ),
-            Tag::Generic(TagKind::Custom("pr".into()), vec![pr_id.to_string()]),
-            Tag::Generic(TagKind::Custom("tier".into()), vec![tier.to_string()]),
-            Tag::Generic(
+            Tag::custom(TagKind::Custom("pr".into()), vec![pr_id.to_string()]),
+            Tag::custom(TagKind::Custom("tier".into()), vec![tier.to_string()]),
+            Tag::custom(
                 TagKind::Custom("repository".into()),
                 vec![repository.to_string()],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("vote_type".into()),
                 vec!["support".to_string()],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("voting_window".into()),
                 vec![voting_start.to_rfc3339(), voting_end.to_rfc3339()],
             ),
@@ -146,21 +146,22 @@ impl GovernanceActionPublisher {
 
         // Add zap address for voting
         if let Some(zap) = &self.zap_address {
-            tags.push(Tag::Generic(
+            tags.push(Tag::custom(
                 TagKind::Custom("zap".into()),
                 vec![zap.clone()],
             ));
         }
 
         // Add governance config
-        tags.push(Tag::Generic(
+        tags.push(Tag::custom(
             TagKind::Custom("governance_config".into()),
             vec![self.governance_config.clone()],
         ));
 
         // Create event (kind 30078 for governance status)
-        let event = EventBuilder::new(Kind::Custom(30078), proposal_content.to_string(), tags)
-            .to_event(&self.client.keys)
+        let event = EventBuilder::new(Kind::Custom(30078), proposal_content.to_string())
+            .tags(tags)
+            .sign_with_keys(&self.client.keys)
             .map_err(|e| anyhow!("Failed to create proposal event: {}", e))?;
 
         // Publish to relays
@@ -193,36 +194,36 @@ impl GovernanceActionPublisher {
             .map_err(|e| anyhow!("Failed to serialize action event: {}", e))?;
 
         let mut tags = vec![
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("d".into()),
                 vec!["btc-commons-governance-action".to_string()],
             ),
-            Tag::Generic(TagKind::Custom("action".into()), vec![action.to_string()]),
-            Tag::Generic(
+            Tag::custom(TagKind::Custom("action".into()), vec![action.to_string()]),
+            Tag::custom(
                 TagKind::Custom("governance_tier".into()),
                 vec![governance_tier.to_string()],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("governance_layer".into()),
                 vec![governance_layer.to_string()],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("repository".into()),
                 vec![repository.to_string()],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("governance_config".into()),
                 vec![self.governance_config.clone()],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("final_signatures".into()),
                 vec![final_signatures.to_string()],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("final_review_days".into()),
                 vec![final_review_days.to_string()],
             ),
-            Tag::Generic(
+            Tag::custom(
                 TagKind::Custom("timestamp".into()),
                 vec![Utc::now().timestamp().to_string()],
             ),
@@ -230,14 +231,14 @@ impl GovernanceActionPublisher {
 
         // Add optional tags
         if let Some(hash) = commit_hash {
-            tags.push(Tag::Generic(
+            tags.push(Tag::custom(
                 TagKind::Custom("commit_hash".into()),
                 vec![hash.to_string()],
             ));
         }
 
         if let Some(pr) = pr_number {
-            tags.push(Tag::Generic(
+            tags.push(Tag::custom(
                 TagKind::Custom("pr_number".into()),
                 vec![pr.to_string()],
             ));
@@ -245,20 +246,21 @@ impl GovernanceActionPublisher {
 
         // Add zap address if configured
         if let Some(zap) = &self.zap_address {
-            tags.push(Tag::Generic(
+            tags.push(Tag::custom(
                 TagKind::Custom("zap".into()),
                 vec![zap.clone()],
             ));
         }
 
         // Add Bitcoin Commons tags
-        tags.push(Tag::Generic(
+        tags.push(Tag::custom(
             TagKind::Custom("t".into()),
             vec!["btc-commons".to_string(), "governance".to_string()],
         ));
 
-        let event = EventBuilder::new(Kind::Custom(30078), content, tags)
-            .to_event(&self.client.keys)
+        let event = EventBuilder::new(Kind::Custom(30078), content)
+            .tags(tags)
+            .sign_with_keys(&self.client.keys)
             .map_err(|e| anyhow!("Failed to create Nostr event: {}", e))?;
 
         Ok(event)
@@ -273,7 +275,7 @@ mod tests {
         // Create a mock client for testing
         // Note: This won't actually connect to relays
         let keys = nostr_sdk::prelude::Keys::generate();
-        let nsec = keys.secret_key().unwrap().display_secret().to_string();
+        let nsec = keys.secret_key().to_secret_hex();
         let client = crate::nostr::client::NostrClient::new(nsec, vec![])
             .await
             .unwrap();
@@ -291,7 +293,7 @@ mod tests {
     #[tokio::test]
     async fn test_governance_action_publisher_with_zap() {
         let keys = nostr_sdk::prelude::Keys::generate();
-        let nsec = keys.secret_key().unwrap().display_secret().to_string();
+        let nsec = keys.secret_key().to_secret_hex();
         let client = crate::nostr::client::NostrClient::new(nsec, vec![])
             .await
             .unwrap();

@@ -12,4 +12,5 @@ pub mod weight_calculator;
 
 pub use aggregator::ContributionAggregator;
 pub use contributions::ContributionTracker;
+pub use vote_aggregator::VoteAggregator;
 pub use weight_calculator::WeightCalculator;

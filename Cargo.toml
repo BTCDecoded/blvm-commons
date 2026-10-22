@@ -67,7 +67,7 @@ clap = { version = "4.4", features = ["derive"] }
 rand = "0.8"
 
 # Nostr protocol
-nostr-sdk = "0.27"
+nostr-sdk = "0.44"
 
 # OpenTimestamps (behind feature flag)
 opentimestamps = { version = "0.1", optional = true }
