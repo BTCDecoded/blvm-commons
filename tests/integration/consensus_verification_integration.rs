@@ -147,8 +147,7 @@ async fn test_consensus_verification_allowed_imports_only() {
         None,
     ).await;
     
-    // Should still fail because we're checking file paths, not diff content
-    // (Full diff analysis is Phase 2)
+    // allowed_imports_only never exempts consensus files: any change to one blocks
     assert!(result.is_err(), "File path check should still fail even with allowed_imports_only");
 }
 

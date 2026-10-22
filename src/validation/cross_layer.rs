@@ -2,7 +2,6 @@ use crate::error::GovernanceError;
 use crate::github::cross_layer_status::{CrossLayerStatusCheck, CrossLayerStatusChecker};
 use crate::github::file_operations::GitHubFileOperations;
 use crate::validation::content_hash::{ContentHashValidator, SyncReport, SyncStatus};
-use crate::validation::diff_parser::{DiffParser, FileDiff};
 use crate::validation::version_pinning::{
     VersionManifest, VersionPinningConfig, VersionPinningValidator,
 };
@@ -326,7 +325,14 @@ impl CrossLayerValidator {
         Ok(manifest)
     }
 
-    /// Verify no consensus modifications are made
+    /// Verify no consensus modifications are made.
+    ///
+    /// Any change to a file matching the consensus patterns blocks, including
+    /// a change made only of `use` lines, comments and blank lines. The
+    /// rule's `allowed_imports_only` flag is ignored for consensus files: a
+    /// private `use` can shadow a name brought in by a glob import or the
+    /// prelude (e.g. the globs in blvm-consensus `src/pow.rs`), so a
+    /// line-by-line check cannot prove such a change harmless.
     async fn verify_no_consensus_modifications(
         target_repo: &str,
         rule: &Value,
@@ -337,16 +343,15 @@ impl CrossLayerValidator {
             target_repo
         );
 
-        // Extract rule parameters
-        let allowed_imports_only = rule
+        if rule
             .get("allowed_imports_only")
             .and_then(|v| v.as_bool())
-            .unwrap_or(false);
-
-        info!(
-            "Checking consensus modifications - imports only: {}",
-            allowed_imports_only
-        );
+            .unwrap_or(false)
+        {
+            info!(
+                "allowed_imports_only is ignored for consensus files: import-only changes to them also block"
+            );
+        }
 
         // Consensus-critical file patterns for this repo
         let consensus_patterns = Self::consensus_patterns_for(target_repo);
@@ -377,37 +382,10 @@ impl CrossLayerValidator {
                     ))
                 })?;
 
+            // The file list includes rename sources, so renames into or out
+            // of a consensus path are caught by name too.
             let changed_files = Self::list_all_pr_files(&client, &owner, &repo, pr_number).await?;
-
-            if !allowed_imports_only {
-                // Standard file pattern check
-                return Self::check_consensus_patterns(&consensus_patterns, &changed_files);
-            }
-
-            // Import-only: inspect the full diff. If it cannot be fetched or
-            // parsed, fall back to the strict file-name check, which blocks
-            // any change to a consensus file.
-            let diff = match Self::get_pr_diff(&client, &owner, &repo, pr_number).await {
-                Ok(diff) => diff,
-                Err(e) => {
-                    warn!(
-                        "Failed to get PR diff: {}. Falling back to strict file pattern check.",
-                        e
-                    );
-                    return Self::check_consensus_patterns(&consensus_patterns, &changed_files);
-                }
-            };
-            let file_diffs = match DiffParser::parse_unified_diff(&diff) {
-                Ok(file_diffs) => file_diffs,
-                Err(e) => {
-                    warn!(
-                        "Failed to parse diff: {}. Falling back to strict file pattern check.",
-                        e
-                    );
-                    return Self::check_consensus_patterns(&consensus_patterns, &changed_files);
-                }
-            };
-            return Self::check_import_only(&consensus_patterns, &changed_files, &file_diffs);
+            return Self::check_consensus_patterns(&consensus_patterns, &changed_files);
         }
 
         // No PR: the rule may list the files to check explicitly
@@ -424,45 +402,6 @@ impl CrossLayerValidator {
         Err(GovernanceError::ValidationError(format!(
             "Blocked: no_consensus_modifications for {target_repo} needs a pr_number (with a GitHub token) or check_files; refusing to pass unverified"
         )))
-    }
-
-    /// Import-only check over a parsed PR diff.
-    ///
-    /// Every consensus file the PR touches (by the file list, which includes
-    /// rename sources) must appear in the diff, so a truncated or partial diff
-    /// cannot hide one. Each in-scope file diff must pass
-    /// [`Self::violates_import_only`].
-    fn check_import_only(
-        consensus_patterns: &[&str],
-        changed_files: &[String],
-        file_diffs: &[FileDiff],
-    ) -> Result<(), GovernanceError> {
-        for changed in changed_files {
-            if Self::matches_consensus_pattern(changed, consensus_patterns)
-                && !file_diffs.iter().any(|d| {
-                    d.filename == *changed || d.old_filename.as_deref() == Some(changed.as_str())
-                })
-            {
-                return Err(GovernanceError::ValidationError(format!(
-                    "Blocked: consensus file {changed} is in the PR file list but missing from the PR diff; cannot verify it is import-only"
-                )));
-            }
-        }
-        for file_diff in file_diffs {
-            if Self::violates_import_only(file_diff, consensus_patterns) {
-                return Err(GovernanceError::ValidationError(format!(
-                    "Consensus file {}{} contains non-import changes (renames, copies and binary files count as non-import). Only import statements are allowed when allowed_imports_only is true.",
-                    file_diff.filename,
-                    file_diff
-                        .old_filename
-                        .as_deref()
-                        .map(|o| format!(" (from {o})"))
-                        .unwrap_or_default()
-                )));
-            }
-        }
-        info!("Import-only validation passed for all consensus files");
-        Ok(())
     }
 
     /// Every file path a PR touches, across all pages of the files API.
@@ -527,40 +466,6 @@ impl CrossLayerValidator {
         }
     }
 
-    /// Get the PR diff through the authenticated client, so private repos
-    /// and rate limits behave like the other API calls.
-    async fn get_pr_diff(
-        client: &octocrab::Octocrab,
-        owner: &str,
-        repo: &str,
-        pr_number: u64,
-    ) -> Result<String, GovernanceError> {
-        client
-            .pulls(owner, repo)
-            .get_diff(pr_number)
-            .await
-            .map_err(|e| GovernanceError::GitHubError(format!("Failed to fetch diff: {e}")))
-    }
-
-    /// Import-only gate for one parsed file diff.
-    ///
-    /// A file is in scope when either its new name or its source name (rename
-    /// or copy) matches a consensus pattern. In scope, renames/copies and
-    /// binary files are rejected outright (no line content to inspect), and
-    /// anything else must be import-only.
-    pub(crate) fn violates_import_only(file_diff: &FileDiff, consensus_patterns: &[&str]) -> bool {
-        let old_matches = file_diff
-            .old_filename
-            .as_deref()
-            .is_some_and(|p| Self::matches_consensus_pattern(p, consensus_patterns));
-        let in_scope =
-            old_matches || Self::matches_consensus_pattern(&file_diff.filename, consensus_patterns);
-        in_scope
-            && (file_diff.old_filename.is_some()
-                || file_diff.binary
-                || !DiffParser::is_import_only_changes(file_diff))
-    }
-
     /// Consensus patterns for `target_repo` (`owner/name`): the shared
     /// [`CONSENSUS_PATTERNS`], plus the whole root `src/` tree when the repo
     /// is a consensus crate such as `blvm-consensus`.
@@ -607,8 +512,8 @@ impl CrossLayerValidator {
     ) -> Result<(), GovernanceError> {
         let mut consensus_files_changed = Vec::new();
 
-        // Same matcher as the import-only path, so directory patterns such
-        // as `src/consensus/` and nested paths are caught here too.
+        // Directory patterns such as `src/consensus/` and nested paths are
+        // caught here too (see `matches_consensus_pattern`).
         for file in changed_files {
             if Self::matches_consensus_pattern(file, consensus_patterns) {
                 consensus_files_changed.push(file.clone());
@@ -812,6 +717,7 @@ impl CrossLayerValidator {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::validation::diff_parser::{DiffParser, FileDiff};
 
     const PATTERNS: &[&str] = &[
         "src/block.rs",
@@ -827,6 +733,20 @@ mod tests {
         let mut f = DiffParser::parse_unified_diff(diff).unwrap();
         assert_eq!(f.len(), 1);
         f.remove(0)
+    }
+
+    /// The PR file list GitHub would report for `f` (rename source first).
+    fn pr_files(f: &FileDiff) -> Vec<String> {
+        f.old_filename
+            .iter()
+            .chain(std::iter::once(&f.filename))
+            .cloned()
+            .collect()
+    }
+
+    /// Whether the PR-path check blocks a PR consisting of `f`.
+    fn blocks(f: &FileDiff, patterns: &[&str]) -> bool {
+        CrossLayerValidator::check_consensus_patterns(patterns, &pr_files(f)).is_err()
     }
 
     #[test]
@@ -847,7 +767,7 @@ rename to src/blk.rs\n\
             &f.filename,
             PATTERNS
         ));
-        assert!(CrossLayerValidator::violates_import_only(&f, PATTERNS));
+        assert!(blocks(&f, PATTERNS));
     }
 
     #[test]
@@ -858,7 +778,7 @@ similarity index 100%\n\
 rename from src/block.rs\n\
 rename to src/blk.rs\n",
         );
-        assert!(CrossLayerValidator::violates_import_only(&f, PATTERNS));
+        assert!(blocks(&f, PATTERNS));
     }
 
     #[test]
@@ -869,7 +789,7 @@ similarity index 100%\n\
 rename from src/util.rs\n\
 rename to src/consensus/util.rs\n",
         );
-        assert!(CrossLayerValidator::violates_import_only(&f, PATTERNS));
+        assert!(blocks(&f, PATTERNS));
     }
 
     #[test]
@@ -879,11 +799,13 @@ rename to src/consensus/util.rs\n",
 index 1111111..2222222 100644\n\
 Binary files a/src/consensus/t.bin and b/src/consensus/t.bin differ\n",
         );
-        assert!(CrossLayerValidator::violates_import_only(&f, PATTERNS));
+        assert!(blocks(&f, PATTERNS));
     }
 
+    /// Import-only edits to consensus files block too: a private `use` can
+    /// shadow a glob or prelude name, so it is not provably harmless.
     #[test]
-    fn import_only_change_in_consensus_file_passes() {
+    fn import_only_change_in_consensus_file_blocks() {
         let f = parse_one(
             "diff --git a/src/block.rs b/src/block.rs\n\
 --- a/src/block.rs\n\
@@ -891,7 +813,27 @@ Binary files a/src/consensus/t.bin and b/src/consensus/t.bin differ\n",
 @@ -1,1 +1,2 @@\n\
 +use crate::bip_validation;\n",
         );
-        assert!(!CrossLayerValidator::violates_import_only(&f, PATTERNS));
+        assert!(DiffParser::is_import_only_changes(&f));
+        assert!(blocks(&f, PATTERNS));
+    }
+
+    /// blvm-consensus `src/pow.rs` pulls names in through globs, so one added
+    /// private `use` can swap a constant. It must block even though every
+    /// changed line is an import.
+    #[test]
+    fn pow_rs_import_only_change_in_blvm_consensus_blocks() {
+        let f = parse_one(
+            "diff --git a/src/pow.rs b/src/pow.rs\n\
+--- a/src/pow.rs\n\
++++ b/src/pow.rs\n\
+@@ -3,0 +4,1 @@\n\
++use crate::constants::MAX_TARGET;\n",
+        );
+        assert!(DiffParser::is_import_only_changes(&f));
+        let patterns = CrossLayerValidator::consensus_patterns_for("BTCDecoded/blvm-consensus");
+        let err =
+            CrossLayerValidator::check_consensus_patterns(&patterns, &pr_files(&f)).unwrap_err();
+        assert!(err.to_string().contains("src/pow.rs"), "{err}");
     }
 
     #[test]
@@ -902,12 +844,12 @@ similarity index 100%\n\
 rename from docs/a.md\n\
 rename to docs/b.md\n",
         );
-        assert!(!CrossLayerValidator::violates_import_only(&f, PATTERNS));
+        assert!(!blocks(&f, PATTERNS));
         let f = parse_one(
             "diff --git a/docs/x.png b/docs/x.png\n\
 Binary files a/docs/x.png and b/docs/x.png differ\n",
         );
-        assert!(!CrossLayerValidator::violates_import_only(&f, PATTERNS));
+        assert!(!blocks(&f, PATTERNS));
     }
 
     fn rule(v: serde_json::Value) -> Value {
@@ -1071,46 +1013,19 @@ Binary files a/docs/x.png and b/docs/x.png differ\n",
     }
 
     #[test]
-    fn consensus_file_missing_from_diff_blocks() {
-        let changed = vec!["src/pow.rs".to_string(), "docs/a.md".to_string()];
-        let diffs = DiffParser::parse_unified_diff(
-            "diff --git a/docs/a.md b/docs/a.md\n--- a/docs/a.md\n+++ b/docs/a.md\n@@ -1 +1 @@\n-a\n+b\n",
-        )
-        .unwrap();
-        let err = CrossLayerValidator::check_import_only(PATTERNS, &changed, &diffs).unwrap_err();
-        assert!(
-            err.to_string().contains("missing from the PR diff"),
-            "{err}"
-        );
-    }
-
-    #[test]
-    fn check_import_only_accepts_imports_and_rejects_renames() {
-        let import_diff = DiffParser::parse_unified_diff(
+    fn import_only_diff_and_rename_both_block() {
+        let import_diff = parse_one(
             "diff --git a/src/pow.rs b/src/pow.rs\n--- a/src/pow.rs\n+++ b/src/pow.rs\n@@ -1 +1,2 @@\n+use crate::x;\n",
-        )
-        .unwrap();
-        assert!(
-            CrossLayerValidator::check_import_only(
-                PATTERNS,
-                &["src/pow.rs".to_string()],
-                &import_diff
-            )
-            .is_ok()
         );
+        assert!(blocks(&import_diff, PATTERNS));
 
-        // File list has the rename source; the diff covers it via old_filename
-        let rename = DiffParser::parse_unified_diff(
+        // File list has the rename source, so the old consensus name blocks
+        let rename = parse_one(
             "diff --git a/src/block.rs b/src/blk.rs\nsimilarity index 100%\nrename from src/block.rs\nrename to src/blk.rs\n",
-        )
-        .unwrap();
-        let err = CrossLayerValidator::check_import_only(
-            PATTERNS,
-            &["src/block.rs".to_string(), "src/blk.rs".to_string()],
-            &rename,
-        )
-        .unwrap_err();
-        assert!(err.to_string().contains("from src/block.rs"), "{err}");
+        );
+        let err = CrossLayerValidator::check_consensus_patterns(PATTERNS, &pr_files(&rename))
+            .unwrap_err();
+        assert!(err.to_string().contains("src/block.rs"), "{err}");
     }
 
     /// Every `src/**/*.rs` file in blvm-consensus (51 files,
