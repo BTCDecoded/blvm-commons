@@ -23,6 +23,7 @@ impl GitHubClient {
             GovernanceError::ConfigError(format!("Failed to read private key: {e}"))
         })?;
 
+        crate::github::ensure_rustls_provider();
         let client = Octocrab::builder()
             .app(
                 app_id.into(),
@@ -70,6 +71,7 @@ impl GitHubClient {
             ));
         }
 
+        crate::github::ensure_rustls_provider();
         let client = Octocrab::builder()
             .personal_token(token)
             .build()

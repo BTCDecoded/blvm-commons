@@ -283,6 +283,7 @@ impl CrossLayerValidator {
             if let Some(token) = github_token {
                 let (owner, repo) = Self::parse_repo_name(target_repo)?;
 
+                crate::github::ensure_rustls_provider();
                 let client = match octocrab::OctocrabBuilder::new()
                     .personal_token(token.to_string())
                     .build()

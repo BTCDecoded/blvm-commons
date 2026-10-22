@@ -220,7 +220,18 @@ jobs:
           # Resolution: keep docs/SECURITY_SUPPRESSIONS.md in sync with this list; re-run `cargo audit`
           # without ignores after dependency bumps and shrink this block as the lockfile clears.
           # Suppress documented vulnerabilities (see docs/SECURITY_SUPPRESSIONS.md for process and table)
+          # Time-boxed: hickory-proto 0.25.2 (RUSTSEC-2026-0118, -0119) and quinn-proto 0.11.15
+          # (RUSTSEC-2026-0338..0342) come in via blvm-node's iroh 0.95 and cannot be bumped from here
+          # (iroh pins hickory 0.25; crypto_box's chacha20 rc blocks quinn-proto >=0.11.16). They wait
+          # on the iroh 1.x upgrade in blvm-node; drop these five lines when that lands.
           cargo audit \
+            --ignore RUSTSEC-2026-0118 \
+            --ignore RUSTSEC-2026-0119 \
+            --ignore RUSTSEC-2026-0338 \
+            --ignore RUSTSEC-2026-0339 \
+            --ignore RUSTSEC-2026-0340 \
+            --ignore RUSTSEC-2026-0341 \
+            --ignore RUSTSEC-2026-0342 \
             --ignore RUSTSEC-2022-0011 \
             --ignore RUSTSEC-2022-0004 \
             --ignore RUSTSEC-2022-0013 \

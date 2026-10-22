@@ -18,7 +18,9 @@ tower = "0.4"
 tower-http = { version = "0.5", features = ["trace"] }
 
 # GitHub API
-octocrab = "0.38"
+octocrab = "0.41"  # 0.41 moves to hyper-rustls 0.27 / rustls 0.23 (RUSTSEC-2026-0346, -0349; rustls-webpki 0.102 advisories)
+# octocrab builds its TLS config from the rustls process default provider; see github::ensure_rustls_provider
+rustls = { version = "0.23.46", default-features = false, features = ["ring"] }
 jsonwebtoken = "9.2"
 
 # Database
