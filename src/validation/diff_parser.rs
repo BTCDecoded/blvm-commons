@@ -215,14 +215,18 @@ impl DiffParser {
     /// A line counts only when it is entirely one of:
     /// - blank,
     /// - a `//` line comment (including `///` and `//!` doc comments),
-    /// - a single `use ...;` or `extern crate ...;` item, optionally `pub` /
-    ///   `pub(...)` and optionally preceded by one `#[...]` attribute, with
-    ///   nothing after the `;` except a `//` comment.
+    /// - a single private `use path::item;` or `use path::{a, b};` item,
+    ///   optionally preceded by `#[cfg(...)]` attributes, with nothing after
+    ///   the `;` except a `//` comment.
     ///
     /// Block comments (`/*`, `*/`, `*` continuation lines), `mod` items,
     /// standalone attributes, multi-line `use` lists and any trailing code
     /// are rejected, so `mod evil { pub fn ..`, `use x; pub fn ..` and
-    /// `/* */ return Ok(());` do not pass.
+    /// `/* */ return Ok(());` do not pass. So are forms that can change
+    /// which code runs or what the crate exports: any attribute other than
+    /// `#[cfg(...)]` (an attribute macro can expand to anything),
+    /// `extern crate`, `pub`/`pub(...)` re-exports, `as` renames and glob
+    /// (`*`) imports, which can shadow a name consensus code calls.
     fn is_import_or_comment_line(line: &str) -> bool {
         let trimmed = line.trim();
 
@@ -246,16 +250,22 @@ impl DiffParser {
             Some(i) => trimmed[..i].trim_end(),
             None => trimmed,
         };
-        let code = match Self::strip_leading_attribute(code) {
-            Some(rest) => rest,
-            None => return false,
-        };
+        let mut code = code;
+        while code.starts_with("#[") {
+            code = match Self::strip_leading_attribute(code) {
+                Some(rest) => rest,
+                None => return false,
+            };
+        }
         Self::import_item_re().is_match(code)
+            && !code
+                .split(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
+                .any(|word| word == "as")
     }
 
-    /// Strip one leading `#[...]` attribute (bracket-balanced). Returns the
-    /// line unchanged when there is no attribute, and `None` for an
-    /// unbalanced attribute or one with nothing after it.
+    /// Strip one leading `#[cfg(...)]` attribute (bracket-balanced). Returns
+    /// the line unchanged when there is no attribute, and `None` for any
+    /// other attribute, an unbalanced one, or one with nothing after it.
     fn strip_leading_attribute(code: &str) -> Option<&str> {
         let Some(rest) = code.strip_prefix("#[") else {
             return Some(code);
@@ -267,8 +277,12 @@ impl DiffParser {
                 ']' => {
                     depth -= 1;
                     if depth == 0 {
+                        let is_cfg = rest[..i]
+                            .trim_start()
+                            .strip_prefix("cfg")
+                            .is_some_and(|args| args.trim_start().starts_with('('));
                         let after = rest[i + 1..].trim_start();
-                        return (!after.is_empty()).then_some(after);
+                        return (is_cfg && !after.is_empty()).then_some(after);
                     }
                 }
                 _ => {}
@@ -277,15 +291,11 @@ impl DiffParser {
         None
     }
 
-    /// `use path::{a, b as c, *};` or `extern crate x as y;`, whole line.
+    /// Private `use path::item;` or `use path::{a, b};`, whole line. `as`
+    /// renames are rejected separately.
     fn import_item_re() -> &'static Regex {
         static RE: std::sync::OnceLock<Regex> = std::sync::OnceLock::new();
-        RE.get_or_init(|| {
-            Regex::new(
-                r"^(?:pub(?:\s*\([A-Za-z_:\s]+\))?\s+)?(?:use\s+[A-Za-z0-9_:{}, *\s]+|extern\s+crate\s+[A-Za-z0-9_]+(?:\s+as\s+[A-Za-z0-9_]+)?)\s*;$",
-            )
-            .expect("import regex")
-        })
+        RE.get_or_init(|| Regex::new(r"^use\s+[A-Za-z0-9_:{},\s]+;$").expect("import regex"))
     }
 
     /// Extract import statements from diff
@@ -861,17 +871,76 @@ new mode 100755\n";
     fn test_real_imports_are_import_only() {
         assert!(import_only(&[
             "use crate::bip_validation;",
-            "pub use crate::types::{Hash, Network as Net};",
-            "pub(crate) use super::*;",
+            "use crate::types::{Hash, Network};",
+            "use crate::{self, a::{b, c}};",
             "use ::std::collections::HashMap;",
-            "extern crate alloc;",
-            "extern crate core as c;",
             "#[cfg(feature = \"std\")] use std::vec::Vec;",
+            "#[cfg(test)] use crate::test_util;",
+            "#[cfg(test)] #[cfg(feature = \"std\")] use std::vec::Vec;",
             "use crate::x; // trailing comment",
             "/// doc comment",
             "//! module doc",
             "// note",
             "    ",
         ]));
+    }
+
+    /// An attribute macro can expand to any code, so only `#[cfg(..)]` may
+    /// precede an import.
+    #[test]
+    fn test_non_cfg_attribute_is_not_import_only() {
+        assert!(!import_only(&["#[evil_attr] use crate::a;"]));
+        assert!(!import_only(&["#[evil_attr(x)] use crate::a;"]));
+        assert!(!import_only(&["#[cfg(test)] #[evil_attr] use crate::a;"]));
+        assert!(!import_only(&["#[cfgx(test)] use crate::a;"]));
+    }
+
+    #[test]
+    fn test_cfg_attr_is_not_import_only() {
+        assert!(!import_only(&[
+            "#[cfg_attr(test, evil_attr)] use crate::a;"
+        ]));
+    }
+
+    #[test]
+    fn test_macro_use_is_not_import_only() {
+        assert!(!import_only(&["#[macro_use] use crate::a;"]));
+        assert!(!import_only(&["#[macro_use] extern crate evil;"]));
+    }
+
+    #[test]
+    fn test_extern_crate_is_not_import_only() {
+        assert!(!import_only(&["extern crate alloc;"]));
+        assert!(!import_only(&["extern crate core as c;"]));
+        assert!(!import_only(&["pub extern crate alloc;"]));
+        assert!(!import_only(&["#[cfg(test)] extern crate std;"]));
+    }
+
+    /// Re-exports change the crate's public API.
+    #[test]
+    fn test_pub_use_is_not_import_only() {
+        assert!(!import_only(&["pub use crate::a;"]));
+        assert!(!import_only(&["pub(crate) use crate::a;"]));
+        assert!(!import_only(&["pub(super) use crate::{a, b};"]));
+        assert!(!import_only(&["pub(in crate::x) use crate::a;"]));
+        assert!(!import_only(&["#[cfg(test)] pub use crate::a;"]));
+    }
+
+    /// A rename can shadow the name a consensus function calls.
+    #[test]
+    fn test_as_rename_is_not_import_only() {
+        assert!(!import_only(&["use other::check as check_tx;"]));
+        assert!(!import_only(&["use crate::{a, b as c};"]));
+        assert!(!import_only(&["use crate::{a::{b as c}};"]));
+        assert!(!import_only(&["use crate::x as _;"]));
+    }
+
+    /// A glob can bring in a name that shadows one consensus code calls.
+    #[test]
+    fn test_glob_import_is_not_import_only() {
+        assert!(!import_only(&["use super::*;"]));
+        assert!(!import_only(&["use crate::{a, *};"]));
+        assert!(!import_only(&["use crate::{a::{*}};"]));
+        assert!(!import_only(&["use crate::a::{ * };"]));
     }
 }
