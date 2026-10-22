@@ -23,9 +23,10 @@ temp_store = "memory"
 foreign_keys = true
 
 [github]
-app_id = 12345
+# App id and webhook secret are not stored in this file.
+# Set GITHUB_APP_ID and GITHUB_WEBHOOK_SECRET in the environment.
+# Placeholder values are refused at boot.
 private_key_path = "/opt/blvm-commons/keys/app-private-key.pem"
-webhook_secret = "your-webhook-secret-here"
 base_url = "https://api.github.com"
 
 [backup]
