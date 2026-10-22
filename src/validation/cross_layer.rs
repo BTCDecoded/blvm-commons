@@ -13,46 +13,124 @@ use tracing::{info, warn};
 
 pub struct CrossLayerValidator;
 
+/// The fields every cross-layer rule must carry.
+struct RuleFields<'a> {
+    source_repo: &'a str,
+    source_pattern: &'a str,
+    target_repo: &'a str,
+    validation_type: &'a str,
+}
+
 /// Page size for the PR files API (GitHub's maximum).
 const PR_FILES_PER_PAGE: u32 = 100;
 /// GitHub's files API lists at most 3000 files per PR.
 const PR_FILES_MAX: usize = 3000;
 
+/// Consensus-critical paths matched anywhere in a file path, in any repo
+/// (see [`CrossLayerValidator::matches_consensus_pattern`]).
+const CONSENSUS_PATTERNS: &[&str] = &[
+    "src/block.rs",
+    "src/transaction.rs",
+    "src/script.rs",
+    "src/economic.rs",
+    "src/pow.rs",
+    "src/validation/",
+    "src/consensus/",
+    // The consensus crate's sources in a workspace or vendored checkout
+    "blvm-consensus/src/",
+];
+
+/// Repos (by name, any owner) whose whole `src/` tree is consensus code.
+const CONSENSUS_CRATE_REPOS: &[&str] = &["blvm-consensus"];
+
+/// Anchored pattern (`^` = the path must start with the rest) for the root
+/// `src/` of a consensus crate. Anchored so it does not match a nested
+/// `src/` elsewhere in the repo, and only added for [`CONSENSUS_CRATE_REPOS`].
+const CONSENSUS_CRATE_SRC: &str = "^src/";
+
 impl CrossLayerValidator {
+    /// Run every cross-layer rule that applies to `repo_name` and
+    /// `changed_files`.
+    ///
+    /// All rules are checked for shape first; a malformed rule is an error,
+    /// not a skip, so a typo in the rule set cannot switch a check off.
+    /// Every applicable rule is then run (a passing rule never masks a later
+    /// one) and the call fails if any of them fails.
     pub async fn validate_cross_layer_dependencies(
         repo_name: &str,
         changed_files: &[String],
         cross_layer_rules: &[Value],
         github_token: Option<&str>,
     ) -> Result<(), GovernanceError> {
-        for rule in cross_layer_rules {
-            if let Some(source_repo) = rule.get("source_repo").and_then(|v| v.as_str()) {
-                if source_repo == repo_name {
-                    if let Some(source_pattern) =
-                        rule.get("source_pattern").and_then(|v| v.as_str())
-                    {
-                        if Self::matches_pattern(changed_files, source_pattern) {
-                            if let Some(target_repo) =
-                                rule.get("target_repo").and_then(|v| v.as_str())
-                            {
-                                if let Some(validation_type) =
-                                    rule.get("validation_type").and_then(|v| v.as_str())
-                                {
-                                    return Self::validate_dependency(
-                                        target_repo,
-                                        validation_type,
-                                        rule,
-                                        github_token,
-                                    )
-                                    .await;
-                                }
-                            }
-                        }
-                    }
-                }
+        let mut parsed = Vec::with_capacity(cross_layer_rules.len());
+        let mut malformed = Vec::new();
+        for (index, rule) in cross_layer_rules.iter().enumerate() {
+            match Self::parse_rule(rule) {
+                Ok(fields) => parsed.push((rule, fields)),
+                Err(reason) => malformed.push(format!("rule {index}: {reason}")),
             }
         }
-        Ok(())
+        if !malformed.is_empty() {
+            return Err(GovernanceError::ValidationError(format!(
+                "Blocked: malformed cross-layer rule(s): {}",
+                malformed.join("; ")
+            )));
+        }
+
+        let mut failures = Vec::new();
+        for (rule, fields) in parsed {
+            if fields.source_repo != repo_name
+                || !Self::matches_pattern(changed_files, fields.source_pattern)
+            {
+                continue;
+            }
+            if let Err(e) = Self::validate_dependency(
+                fields.target_repo,
+                fields.validation_type,
+                rule,
+                github_token,
+            )
+            .await
+            {
+                failures.push(e);
+            }
+        }
+
+        match failures.len() {
+            0 => Ok(()),
+            // One failure: keep its original error type
+            1 => Err(failures.remove(0)),
+            n => Err(GovernanceError::ValidationError(format!(
+                "{n} cross-layer rules failed: {}",
+                failures
+                    .iter()
+                    .map(|e| e.to_string())
+                    .collect::<Vec<_>>()
+                    .join("; ")
+            ))),
+        }
+    }
+
+    /// Required string fields of a cross-layer rule. Missing, non-string or
+    /// empty fields, or a rule that is not an object, are malformed.
+    fn parse_rule(rule: &Value) -> Result<RuleFields<'_>, String> {
+        if !rule.is_object() {
+            return Err("not a JSON object".to_string());
+        }
+        let field = |name: &str| -> Result<&str, String> {
+            match rule.get(name) {
+                Some(Value::String(s)) if !s.trim().is_empty() => Ok(s.as_str()),
+                Some(Value::String(_)) => Err(format!("`{name}` is empty")),
+                Some(other) => Err(format!("`{name}` is not a string ({other})")),
+                None => Err(format!("missing `{name}`")),
+            }
+        };
+        Ok(RuleFields {
+            source_repo: field("source_repo")?,
+            source_pattern: field("source_pattern")?,
+            target_repo: field("target_repo")?,
+            validation_type: field("validation_type")?,
+        })
     }
 
     fn matches_pattern(files: &[String], pattern: &str) -> bool {
@@ -270,16 +348,8 @@ impl CrossLayerValidator {
             allowed_imports_only
         );
 
-        // Consensus-critical file patterns
-        let consensus_patterns = vec![
-            "src/block.rs",
-            "src/transaction.rs",
-            "src/script.rs",
-            "src/economic.rs",
-            "src/pow.rs",
-            "src/validation/",
-            "src/consensus/",
-        ];
+        // Consensus-critical file patterns for this repo
+        let consensus_patterns = Self::consensus_patterns_for(target_repo);
 
         // Fail closed: every path below either proves the PR is acceptable or
         // returns an error. GitHub failures, a missing token and a missing PR
@@ -491,9 +561,34 @@ impl CrossLayerValidator {
                 || !DiffParser::is_import_only_changes(file_diff))
     }
 
-    /// Check if filename matches any consensus pattern
+    /// Consensus patterns for `target_repo` (`owner/name`): the shared
+    /// [`CONSENSUS_PATTERNS`], plus the whole root `src/` tree when the repo
+    /// is a consensus crate such as `blvm-consensus`.
+    fn consensus_patterns_for(target_repo: &str) -> Vec<&'static str> {
+        let mut patterns = CONSENSUS_PATTERNS.to_vec();
+        let name = target_repo.rsplit('/').next().unwrap_or(target_repo);
+        if CONSENSUS_CRATE_REPOS
+            .iter()
+            .any(|r| r.eq_ignore_ascii_case(name.trim()))
+        {
+            patterns.push(CONSENSUS_CRATE_SRC);
+        }
+        patterns
+    }
+
+    /// Check if filename matches any consensus pattern.
+    ///
+    /// A pattern starting with `^` matches only as a prefix of the path.
+    /// Any other pattern matches anywhere in the path, so a directory
+    /// pattern such as `src/validation/` also catches nested crates.
     fn matches_consensus_pattern(filename: &str, patterns: &[&str]) -> bool {
         for pattern in patterns {
+            if let Some(prefix) = pattern.strip_prefix('^') {
+                if filename.starts_with(prefix) {
+                    return true;
+                }
+                continue;
+            }
             if filename.contains(pattern) || filename == *pattern {
                 return true;
             }
@@ -1016,5 +1111,289 @@ Binary files a/docs/x.png and b/docs/x.png differ\n",
         )
         .unwrap_err();
         assert!(err.to_string().contains("from src/block.rs"), "{err}");
+    }
+
+    /// Every `src/**/*.rs` file in blvm-consensus (51 files,
+    /// `git ls-files src` at blvm-consensus 7619042).
+    const BLVM_CONSENSUS_SRC_FILES: &[&str] = &[
+        "src/activation.rs",
+        "src/bip113.rs",
+        "src/bip119.rs",
+        "src/bip348.rs",
+        "src/bip_validation.rs",
+        "src/block/apply.rs",
+        "src/block/connect.rs",
+        "src/block/header.rs",
+        "src/block/mod.rs",
+        "src/block/script_cache.rs",
+        "src/checkqueue.rs",
+        "src/config.rs",
+        "src/ecdsa_batch.rs",
+        "src/ecdsa_timers.rs",
+        "src/ecdsa_wave.rs",
+        "src/economic.rs",
+        "src/lib.rs",
+        "src/locktime.rs",
+        "src/mempool.rs",
+        "src/mining.rs",
+        "src/optimizations.rs",
+        "src/orange_paper_property_helpers.rs",
+        "src/pow.rs",
+        "src/profile_log.rs",
+        "src/reorganization.rs",
+        "src/script/arithmetic.rs",
+        "src/script/context.rs",
+        "src/script/control_flow.rs",
+        "src/script/crypto_ops.rs",
+        "src/script/flags.rs",
+        "src/script/mod.rs",
+        "src/script/signature.rs",
+        "src/script/stack.rs",
+        "src/script/templates.rs",
+        "src/script_exec_cache.rs",
+        "src/script_profile.rs",
+        "src/secp256k1_backend/blvm_impl.rs",
+        "src/secp256k1_backend/mod.rs",
+        "src/secp256k1_backend/secp256k1_impl.rs",
+        "src/segwit.rs",
+        "src/sequence_locks.rs",
+        "src/signet.rs",
+        "src/sigop.rs",
+        "src/spec_witnesses.rs",
+        "src/taproot.rs",
+        "src/test_utils.rs",
+        "src/transaction.rs",
+        "src/transaction_hash.rs",
+        "src/utxo_overlay.rs",
+        "src/version_bits.rs",
+        "src/witness.rs",
+    ];
+
+    #[test]
+    fn every_blvm_consensus_source_file_is_consensus() {
+        assert_eq!(BLVM_CONSENSUS_SRC_FILES.len(), 51);
+        for repo in ["BTCDecoded/blvm-consensus", "someone/BLVM-Consensus"] {
+            let patterns = CrossLayerValidator::consensus_patterns_for(repo);
+            for f in BLVM_CONSENSUS_SRC_FILES {
+                assert!(
+                    CrossLayerValidator::matches_consensus_pattern(f, &patterns),
+                    "{repo}: {f} not flagged"
+                );
+            }
+        }
+        // The same files inside a workspace checkout, from any repo
+        let shared = CrossLayerValidator::consensus_patterns_for("BTCDecoded/blvm-commons");
+        for f in BLVM_CONSENSUS_SRC_FILES {
+            let nested = format!("blvm-consensus/{f}");
+            assert!(
+                CrossLayerValidator::matches_consensus_pattern(&nested, &shared),
+                "{nested} not flagged"
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn blvm_consensus_check_files_blocks_new_layout() {
+        for f in [
+            "src/block/connect.rs",
+            "src/script/signature.rs",
+            "src/segwit.rs",
+            "src/taproot.rs",
+            "src/lib.rs",
+        ] {
+            let r = rule(serde_json::json!({ "check_files": [f] }));
+            let err = CrossLayerValidator::verify_no_consensus_modifications(
+                "BTCDecoded/blvm-consensus",
+                &r,
+                None,
+            )
+            .await
+            .unwrap_err();
+            assert!(err.to_string().contains(f), "{f}: {err}");
+        }
+    }
+
+    #[test]
+    fn non_consensus_paths_are_not_flagged() {
+        let consensus = CrossLayerValidator::consensus_patterns_for("BTCDecoded/blvm-consensus");
+        for f in [
+            "README.md",
+            "docs/VERIFICATION.md",
+            "benches/block_validation.rs",
+            "fuzz/fuzz_targets/block_validation.rs",
+            "Cargo.toml",
+            "fuzz/src/lib.rs", // nested src/, not the crate root
+        ] {
+            assert!(
+                !CrossLayerValidator::matches_consensus_pattern(f, &consensus),
+                "blvm-consensus: {f} flagged"
+            );
+        }
+        // Other crates keep the shared patterns only: their own lib, config,
+        // segwit or taproot files are not consensus by name
+        for repo in [
+            "BTCDecoded/blvm-node",
+            "BTCDecoded/blvm-protocol",
+            "BTCDecoded/blvm-commons",
+        ] {
+            let patterns = CrossLayerValidator::consensus_patterns_for(repo);
+            assert!(!patterns.contains(&CONSENSUS_CRATE_SRC), "{repo}");
+            for f in [
+                "src/lib.rs",
+                "src/config.rs",
+                "src/segwit.rs",
+                "src/block/mod.rs",
+                "docs/README.md",
+                "README.md",
+            ] {
+                assert!(
+                    !CrossLayerValidator::matches_consensus_pattern(f, &patterns),
+                    "{repo}: {f} flagged"
+                );
+            }
+        }
+    }
+
+    fn rules_for(rules: &[serde_json::Value]) -> Vec<Value> {
+        rules.to_vec()
+    }
+
+    /// A passing rule must not stop later rules from running.
+    #[tokio::test]
+    async fn passing_rule_does_not_mask_later_consensus_rule() {
+        let rules = rules_for(&[
+            serde_json::json!({
+                "source_repo": "BTCDecoded/blvm-protocol",
+                "source_pattern": "src/**",
+                "target_repo": "BTCDecoded/blvm-node",
+                "validation_type": "no_consensus_modifications",
+                "check_files": ["docs/README.md"],
+            }),
+            serde_json::json!({
+                "source_repo": "BTCDecoded/blvm-protocol",
+                "source_pattern": "src/**",
+                "target_repo": "BTCDecoded/blvm-consensus",
+                "validation_type": "no_consensus_modifications",
+                "check_files": ["src/pow.rs"],
+            }),
+        ]);
+        let changed = vec!["src/network.rs".to_string()];
+        let err = CrossLayerValidator::validate_cross_layer_dependencies(
+            "BTCDecoded/blvm-protocol",
+            &changed,
+            &rules,
+            None,
+        )
+        .await
+        .unwrap_err();
+        assert!(err.to_string().contains("src/pow.rs"), "{err}");
+
+        // The passing rule alone still passes
+        assert!(
+            CrossLayerValidator::validate_cross_layer_dependencies(
+                "BTCDecoded/blvm-protocol",
+                &changed,
+                &rules[..1],
+                None,
+            )
+            .await
+            .is_ok()
+        );
+    }
+
+    #[tokio::test]
+    async fn every_failing_rule_is_reported() {
+        let rules = rules_for(&[
+            serde_json::json!({
+                "source_repo": "o/a",
+                "source_pattern": "src/**",
+                "target_repo": "o/b",
+                "validation_type": "no_consensus_modifications",
+                "check_files": ["src/pow.rs"],
+            }),
+            serde_json::json!({
+                "source_repo": "o/a",
+                "source_pattern": "src/**",
+                "target_repo": "o/c",
+                "validation_type": "no_consensus_modifications",
+                "check_files": ["src/consensus/x.rs"],
+            }),
+        ]);
+        let err = CrossLayerValidator::validate_cross_layer_dependencies(
+            "o/a",
+            &["src/x.rs".to_string()],
+            &rules,
+            None,
+        )
+        .await
+        .unwrap_err();
+        let msg = err.to_string();
+        assert!(msg.contains("2 cross-layer rules failed"), "{msg}");
+        assert!(
+            msg.contains("src/pow.rs") && msg.contains("src/consensus/x.rs"),
+            "{msg}"
+        );
+    }
+
+    /// Rules that used to be skipped silently are now errors, even when
+    /// they would not apply to this PR.
+    #[tokio::test]
+    async fn malformed_rule_is_an_error() {
+        let good = serde_json::json!({
+            "source_repo": "o/a",
+            "source_pattern": "src/**",
+            "target_repo": "o/b",
+            "validation_type": "no_consensus_modifications",
+            "check_files": ["docs/README.md"],
+        });
+        let mut cases = vec![
+            ("not a JSON object", serde_json::json!("source_repo: o/a")),
+            ("not a JSON object", serde_json::json!(null)),
+        ];
+        for field in [
+            "source_repo",
+            "source_pattern",
+            "target_repo",
+            "validation_type",
+        ] {
+            let mut missing = good.clone();
+            missing.as_object_mut().unwrap().remove(field);
+            cases.push(("missing", missing));
+            let mut wrong_type = good.clone();
+            wrong_type[field] = serde_json::json!(7);
+            cases.push(("not a string", wrong_type));
+            let mut empty = good.clone();
+            empty[field] = serde_json::json!(" ");
+            cases.push(("is empty", empty));
+        }
+        for (expect, bad) in cases {
+            // A good rule first, the malformed one after it
+            let rules = rules_for(&[good.clone(), bad.clone()]);
+            let err = CrossLayerValidator::validate_cross_layer_dependencies(
+                "o/a",
+                &["src/x.rs".to_string()],
+                &rules,
+                None,
+            )
+            .await
+            .unwrap_err();
+            let msg = err.to_string();
+            assert!(msg.contains("malformed cross-layer rule"), "{bad}: {msg}");
+            assert!(
+                msg.contains("rule 1") && msg.contains(expect),
+                "{bad}: {msg}"
+            );
+        }
+        // A well-formed rule set still passes
+        assert!(
+            CrossLayerValidator::validate_cross_layer_dependencies(
+                "o/a",
+                &["src/x.rs".to_string()],
+                &[good],
+                None,
+            )
+            .await
+            .is_ok()
+        );
     }
 }

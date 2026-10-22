@@ -933,6 +933,7 @@ new mode 100755\n";
         assert!(!import_only(&["use crate::{a, b as c};"]));
         assert!(!import_only(&["use crate::{a::{b as c}};"]));
         assert!(!import_only(&["use crate::x as _;"]));
+        assert!(!import_only(&["use a::b\tas\tc;"]));
     }
 
     /// A glob can bring in a name that shadows one consensus code calls.
