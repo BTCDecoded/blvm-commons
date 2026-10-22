@@ -338,6 +338,33 @@ impl CrossLayerValidator {
         rule: &Value,
         github_token: Option<&str>,
     ) -> Result<(), GovernanceError> {
+        Self::verify_no_consensus_modifications_with(
+            target_repo,
+            rule,
+            github_token,
+            async |client: &octocrab::Octocrab, owner: &str, repo: &str, pr_number: u64| {
+                Self::list_all_pr_files(client, owner, repo, pr_number).await
+            },
+        )
+        .await
+    }
+
+    /// [`Self::verify_no_consensus_modifications`] with the PR file listing
+    /// injected, so tests can drive the `pr_number` path without GitHub.
+    async fn verify_no_consensus_modifications_with<L>(
+        target_repo: &str,
+        rule: &Value,
+        github_token: Option<&str>,
+        list_pr_files: L,
+    ) -> Result<(), GovernanceError>
+    where
+        L: AsyncFnOnce(
+            &octocrab::Octocrab,
+            &str,
+            &str,
+            u64,
+        ) -> Result<Vec<String>, GovernanceError>,
+    {
         info!(
             "Verifying no consensus modifications for target repo: {}",
             target_repo
@@ -384,7 +411,7 @@ impl CrossLayerValidator {
 
             // The file list includes rename sources, so renames into or out
             // of a consensus path are caught by name too.
-            let changed_files = Self::list_all_pr_files(&client, &owner, &repo, pr_number).await?;
+            let changed_files = list_pr_files(&client, &owner, &repo, pr_number).await?;
             return Self::check_consensus_patterns(&consensus_patterns, &changed_files);
         }
 
@@ -1010,6 +1037,120 @@ Binary files a/docs/x.png and b/docs/x.png differ\n",
         .await
         .unwrap_err();
         assert!(err.to_string().contains("boom"), "{err}");
+    }
+
+    /// Run the `pr_number` path of the consensus check for PR #42 of
+    /// `target_repo`, with `list` standing in for GitHub's PR files API.
+    /// `allowed_imports_only` is set, so an import-only exemption on this
+    /// path would make a consensus file pass.
+    async fn check_pr<L>(target_repo: &str, list: L) -> Result<(), GovernanceError>
+    where
+        L: AsyncFnOnce(
+            &octocrab::Octocrab,
+            &str,
+            &str,
+            u64,
+        ) -> Result<Vec<String>, GovernanceError>,
+    {
+        let r = rule(serde_json::json!({
+            "validation_type": "no_consensus_modifications",
+            "pr_number": 42,
+            "allowed_imports_only": true,
+        }));
+        CrossLayerValidator::verify_no_consensus_modifications_with(
+            target_repo,
+            &r,
+            Some("token"),
+            list,
+        )
+        .await
+    }
+
+    /// A PR touching blvm-consensus `src/pow.rs` blocks on the PR-number path
+    /// even with `allowed_imports_only`, whatever the change is.
+    #[tokio::test]
+    async fn pr_path_blocks_pow_rs_in_blvm_consensus() {
+        let mut asked = None;
+        let err = check_pr(
+            "BTCDecoded/blvm-consensus",
+            async |_: &octocrab::Octocrab, owner: &str, repo: &str, pr: u64| {
+                asked = Some((owner.to_string(), repo.to_string(), pr));
+                Ok(vec!["src/pow.rs".to_string()])
+            },
+        )
+        .await
+        .unwrap_err();
+        assert!(err.to_string().contains("src/pow.rs"), "{err}");
+        assert_eq!(
+            asked,
+            Some(("BTCDecoded".into(), "blvm-consensus".into(), 42))
+        );
+    }
+
+    /// A rename out of a consensus path blocks through the rename source,
+    /// listed from the files API's `previous_filename`.
+    #[tokio::test]
+    async fn pr_path_blocks_rename_from_consensus_file() {
+        let err = check_pr(
+            "BTCDecoded/blvm-consensus",
+            async |_: &octocrab::Octocrab, _: &str, _: &str, _: u64| {
+                CrossLayerValidator::collect_file_pages(|_| async {
+                    Ok(vec![(
+                        "docs/pow.rs".to_string(),
+                        Some("src/pow.rs".to_string()),
+                    )])
+                })
+                .await
+            },
+        )
+        .await
+        .unwrap_err();
+        assert!(err.to_string().contains("src/pow.rs"), "{err}");
+    }
+
+    #[tokio::test]
+    async fn pr_path_passes_non_consensus_files() {
+        check_pr(
+            "BTCDecoded/blvm-consensus",
+            async |_: &octocrab::Octocrab, _: &str, _: &str, _: u64| {
+                Ok(vec![
+                    "docs/README.md".to_string(),
+                    "tests/pow.rs".to_string(),
+                    ".github/workflows/ci.yml".to_string(),
+                ])
+            },
+        )
+        .await
+        .unwrap();
+    }
+
+    /// A failed file listing, including one that hits GitHub's 3000-file
+    /// cap, blocks instead of passing.
+    #[tokio::test]
+    async fn pr_path_fails_closed_on_listing_error_and_file_cap() {
+        let err = check_pr(
+            "BTCDecoded/blvm-consensus",
+            async |_: &octocrab::Octocrab, _: &str, _: &str, _: u64| {
+                Err(GovernanceError::GitHubError("boom".into()))
+            },
+        )
+        .await
+        .unwrap_err();
+        assert!(err.to_string().contains("boom"), "{err}");
+
+        let err = check_pr(
+            "BTCDecoded/blvm-consensus",
+            async |_: &octocrab::Octocrab, _: &str, _: &str, _: u64| {
+                CrossLayerValidator::collect_file_pages(|page| async move {
+                    assert!(page <= 30, "kept paging past the cap");
+                    Ok(page_of(100, "docs"))
+                })
+                .await
+            },
+        )
+        .await
+        .unwrap_err();
+        assert!(err.to_string().contains("maximum"), "{err}");
     }
 
     #[test]
