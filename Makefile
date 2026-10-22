@@ -22,7 +22,7 @@ update-snapshots:
 
 # Run parameterized tests
 test-parameterized:
-	cargo test --test parameterized || true
+	cargo test --test parameterized
 
 # Generate test coverage report
 test-coverage:

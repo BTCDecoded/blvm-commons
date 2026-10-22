@@ -100,6 +100,9 @@ enum Commands {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Install the rustls crypto provider before any TLS client is built
+    blvm_commons::github::ensure_rustls_provider();
+
     let cli = Cli::parse();
 
     // Initialize database
@@ -143,7 +146,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::List {
             key_type,
             status,
-            owner,
+            owner: _,
         } => {
             let key_type = key_type.as_deref().map(parse_key_type).transpose()?;
             let status = status.as_deref().map(parse_key_status).transpose()?;

@@ -1,5 +1,6 @@
 ---
 source: tests/snapshot_tests.rs
+assertion_line: 75
 expression: snapshot
 ---
 type: Version, version: "v1.2.3", commit: None, hash: None

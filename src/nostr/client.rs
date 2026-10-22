@@ -58,8 +58,8 @@ impl NostrClient {
         // Get list of connected relays
         let relays = (*self.client).relays().await;
 
-        for (relay_url, relay) in &relays {
-            match relay.send_event(&event).await {
+        for relay_url in relays.keys() {
+            match self.client.send_event(&event).await {
                 Ok(_) => {
                     debug!("Published event to relay: {}", relay_url);
                     successful_relays += 1;
@@ -125,7 +125,7 @@ impl NostrClient {
         use nostr_sdk::prelude::*;
 
         // Parse recipient pubkey
-        let recipient_key = PublicKey::from_hex(recipient_pubkey)
+        let recipient_key = PublicKey::parse(recipient_pubkey)
             .map_err(|e| anyhow!("Invalid recipient pubkey: {}", e))?;
 
         // Create filter for zap receipts (kind 9735) to this pubkey
@@ -142,16 +142,12 @@ impl NostrClient {
         // Spawn task to handle incoming zap events
         tokio::spawn(async move {
             // Subscribe to the filter (subscribe only takes filters, not subscription_id)
-            if let Err(e) = client_handle.subscribe(filter, None).await {
-                warn!("Failed to subscribe to zap events: {}", e);
-            }
+            let _ = client_handle.subscribe(filter, None).await;
 
-            // Listen for events using fetch_events
             loop {
-                // Create filter again for querying
                 let query_filter = Filter::new().kind(Kind::ZapReceipt).pubkey(recipient_key);
 
-                match (*client_handle)
+                match client_handle
                     .fetch_events(query_filter, Duration::from_secs(10))
                     .await
                 {
@@ -160,7 +156,7 @@ impl NostrClient {
                             if event.kind == Kind::ZapReceipt {
                                 // Parse zap event
                                 if let Ok(zap) = parse_zap_event(&event) {
-                                    if let Err(_) = tx.send(zap).await {
+                                    if tx.send(zap).await.is_err() {
                                         // Receiver dropped, stop processing
                                         return;
                                     }
@@ -296,7 +292,7 @@ mod tests {
     async fn test_client_creation() {
         // Generate test keys
         let keys = Keys::generate();
-        let nsec = keys.secret_key().to_secret_hex();
+        let nsec = keys.secret_key().to_bech32().expect("nsec");
 
         // This will fail in test environment without real relays
         // but we can test the key parsing

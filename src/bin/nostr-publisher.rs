@@ -35,6 +35,9 @@ struct Args {
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    // Relay connections (wss://) need a rustls provider in a fresh process
+    blvm_commons::github::ensure_rustls_provider();
+
     // Initialize tracing
     tracing_subscriber::fmt::init();
 
@@ -104,30 +107,19 @@ async fn main() -> Result<()> {
         .sign_with_keys(&keys)
         .map_err(|e| anyhow::anyhow!("Failed to create Nostr event: {}", e))?;
 
-    // Publish event
-    let mut published = 0;
-    let relays_list = client.relays().await;
+    let output = client
+        .send_event(&event)
+        .await
+        .map_err(|e| anyhow::anyhow!("Failed to publish event: {}", e))?;
 
-    for (relay_url, relay) in &relays_list {
-        match relay.send_event(&event).await {
-            Ok(_) => {
-                tracing::info!("Published to relay: {}", relay_url);
-                published += 1;
-            }
-            Err(e) => {
-                tracing::warn!("Failed to publish to relay {}: {}", relay_url, e);
-            }
-        }
-    }
-
-    if published == 0 {
+    if output.success.is_empty() {
         return Err(anyhow::anyhow!("Failed to publish to any relay"));
     }
 
     tracing::info!(
-        "✅ Successfully published to {}/{} relays",
-        published,
-        relays_list.len()
+        "Successfully published to {}/{} relays",
+        output.success.len(),
+        output.success.len() + output.failed.len()
     );
     tracing::info!("Event ID: {}", event.id);
     tracing::info!("Bot: @BTCCommons_{}", args.bot);
