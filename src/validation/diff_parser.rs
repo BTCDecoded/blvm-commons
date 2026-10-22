@@ -210,7 +210,19 @@ impl DiffParser {
         true
     }
 
-    /// Check if a line is an import statement or comment
+    /// Check if a line is an import statement or comment.
+    ///
+    /// A line counts only when it is entirely one of:
+    /// - blank,
+    /// - a `//` line comment (including `///` and `//!` doc comments),
+    /// - a single `use ...;` or `extern crate ...;` item, optionally `pub` /
+    ///   `pub(...)` and optionally preceded by one `#[...]` attribute, with
+    ///   nothing after the `;` except a `//` comment.
+    ///
+    /// Block comments (`/*`, `*/`, `*` continuation lines), `mod` items,
+    /// standalone attributes, multi-line `use` lists and any trailing code
+    /// are rejected, so `mod evil { pub fn ..`, `use x; pub fn ..` and
+    /// `/* */ return Ok(());` do not pass.
     fn is_import_or_comment_line(line: &str) -> bool {
         let trimmed = line.trim();
 
@@ -219,30 +231,61 @@ impl DiffParser {
             return true;
         }
 
-        // Comments (single-line and multi-line)
-        if trimmed.starts_with("//") || trimmed.starts_with("/*") || trimmed.starts_with("*") {
+        // Block comment markers can hide or reveal code; never accept them
+        if trimmed.contains("/*") || trimmed.contains("*/") {
+            return false;
+        }
+
+        // Line comments
+        if trimmed.starts_with("//") {
             return true;
         }
 
-        // Import statements (use declarations)
-        // Match: use ... ;
-        // Match: pub use ... ;
-        // Match: #[...] use ... ;
-        if trimmed.starts_with("use ") || trimmed.starts_with("pub use ") {
-            return true;
-        }
+        // Drop a trailing `//` comment, then require a single import item
+        let code = match trimmed.find("//") {
+            Some(i) => trimmed[..i].trim_end(),
+            None => trimmed,
+        };
+        let code = match Self::strip_leading_attribute(code) {
+            Some(rest) => rest,
+            None => return false,
+        };
+        Self::import_item_re().is_match(code)
+    }
 
-        // Attribute macros before use statements (e.g., #[cfg(...)] use ...)
-        if trimmed.starts_with("#[") && trimmed.contains("use ") {
-            return true;
+    /// Strip one leading `#[...]` attribute (bracket-balanced). Returns the
+    /// line unchanged when there is no attribute, and `None` for an
+    /// unbalanced attribute or one with nothing after it.
+    fn strip_leading_attribute(code: &str) -> Option<&str> {
+        let Some(rest) = code.strip_prefix("#[") else {
+            return Some(code);
+        };
+        let mut depth = 1usize;
+        for (i, c) in rest.char_indices() {
+            match c {
+                '[' => depth += 1,
+                ']' => {
+                    depth -= 1;
+                    if depth == 0 {
+                        let after = rest[i + 1..].trim_start();
+                        return (!after.is_empty()).then_some(after);
+                    }
+                }
+                _ => {}
+            }
         }
+        None
+    }
 
-        // Module declarations (pub mod ...) - sometimes needed for imports
-        if trimmed.starts_with("pub mod ") || trimmed.starts_with("mod ") {
-            return true;
-        }
-
-        false
+    /// `use path::{a, b as c, *};` or `extern crate x as y;`, whole line.
+    fn import_item_re() -> &'static Regex {
+        static RE: std::sync::OnceLock<Regex> = std::sync::OnceLock::new();
+        RE.get_or_init(|| {
+            Regex::new(
+                r"^(?:pub(?:\s*\([A-Za-z_:\s]+\))?\s+)?(?:use\s+[A-Za-z0-9_:{}, *\s]+|extern\s+crate\s+[A-Za-z0-9_]+(?:\s+as\s+[A-Za-z0-9_]+)?)\s*;$",
+            )
+            .expect("import regex")
+        })
     }
 
     /// Extract import statements from diff
@@ -753,5 +796,66 @@ new mode 100755\n";
         assert_eq!(f[0].filename, "src/script.rs");
         assert_eq!(f[0].old_filename, None);
         assert!(!f[0].binary);
+    }
+
+    fn import_only(lines: &[&str]) -> bool {
+        DiffParser::is_import_only_changes(&FileDiff {
+            filename: "src/block.rs".to_string(),
+            additions: lines.iter().map(|l| l.to_string()).collect(),
+            ..Default::default()
+        })
+    }
+
+    #[test]
+    fn test_inline_mod_with_code_is_not_import_only() {
+        assert!(!import_only(&[
+            "mod evil { pub fn bypass() -> bool { true } }"
+        ]));
+        assert!(!import_only(&["pub mod evil {"]));
+        // A `mod x;` declaration pulls in a whole new file; not an import
+        assert!(!import_only(&["mod evil;"]));
+    }
+
+    #[test]
+    fn test_use_followed_by_code_on_one_line_is_not_import_only() {
+        assert!(!import_only(&["use x; pub fn bypass() {}"]));
+        assert!(!import_only(&["use crate::a; return Ok(());"]));
+        assert!(!import_only(&["use crate::{a, b}; fn f() {}"]));
+        assert!(!import_only(&["use crate::a"])); // no `;`
+    }
+
+    #[test]
+    fn test_block_comment_tricks_are_not_import_only() {
+        assert!(!import_only(&["/* */ return Ok(());"]));
+        assert!(!import_only(&["/* use crate::a; */ return Ok(());"]));
+        assert!(!import_only(&["use crate::a; /* */ fn f() {}"]));
+        assert!(!import_only(&["*/ return Ok(());"]));
+        assert!(!import_only(&[" * hidden in a block comment"]));
+        assert!(!import_only(&["/*"]));
+    }
+
+    #[test]
+    fn test_standalone_attribute_is_not_import_only() {
+        assert!(!import_only(&["#[cfg(any())]"]));
+        assert!(!import_only(&["#[cfg(feature = \"x\")] fn f() {}"]));
+        assert!(!import_only(&["#[cfg(test)] use x; fn f() {}"]));
+    }
+
+    #[test]
+    fn test_real_imports_are_import_only() {
+        assert!(import_only(&[
+            "use crate::bip_validation;",
+            "pub use crate::types::{Hash, Network as Net};",
+            "pub(crate) use super::*;",
+            "use ::std::collections::HashMap;",
+            "extern crate alloc;",
+            "extern crate core as c;",
+            "#[cfg(feature = \"std\")] use std::vec::Vec;",
+            "use crate::x; // trailing comment",
+            "/// doc comment",
+            "//! module doc",
+            "// note",
+            "    ",
+        ]));
     }
 }

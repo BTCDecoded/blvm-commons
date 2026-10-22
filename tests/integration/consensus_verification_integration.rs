@@ -110,7 +110,7 @@ async fn test_consensus_verification_with_file_patterns() {
 async fn test_consensus_verification_backward_compatibility() {
     let validator = CrossLayerValidator;
     
-    // Test that validation passes when no file info is provided (backward compatibility)
+    // The gate fails closed: with no PR number and no check_files there is nothing to verify
     let rule = json!({
         "target_repo": "BTCDecoded/blvm-consensus",
         "validation_type": "no_consensus_modifications",
@@ -124,8 +124,8 @@ async fn test_consensus_verification_backward_compatibility() {
         None,
     ).await;
     
-    // Should pass (backward compatibility - no file info means we can't check)
-    assert!(result.is_ok(), "Should pass when no file info provided (backward compatibility)");
+    // Should block (fail closed - no file info means we can't check)
+    assert!(result.is_err(), "Should block when no file info provided (fail closed)");
 }
 
 #[tokio::test]

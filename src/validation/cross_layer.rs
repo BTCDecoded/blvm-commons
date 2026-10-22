@@ -13,6 +13,11 @@ use tracing::{info, warn};
 
 pub struct CrossLayerValidator;
 
+/// Page size for the PR files API (GitHub's maximum).
+const PR_FILES_PER_PAGE: u32 = 100;
+/// GitHub's files API lists at most 3000 files per PR.
+const PR_FILES_MAX: usize = 3000;
+
 impl CrossLayerValidator {
     pub async fn validate_cross_layer_dependencies(
         repo_name: &str,
@@ -276,111 +281,66 @@ impl CrossLayerValidator {
             "src/consensus/",
         ];
 
-        // Get changed files from target repo if PR info is available
-        // For now, we check if the rule specifies a PR number or use file patterns
-        if let Some(pr_number) = rule.get("pr_number").and_then(|v| v.as_i64()) {
-            // Use GitHub API to get PR files
-            if let Some(token) = github_token {
-                let (owner, repo) = Self::parse_repo_name(target_repo)?;
+        // Fail closed: every path below either proves the PR is acceptable or
+        // returns an error. GitHub failures, a missing token and a missing PR
+        // number all block instead of passing.
+        if let Some(pr_value) = rule.get("pr_number") {
+            let pr_number = pr_value.as_u64().ok_or_else(|| {
+                GovernanceError::ValidationError(format!(
+                    "Blocked: no_consensus_modifications rule has an invalid pr_number ({pr_value}); cannot verify consensus files"
+                ))
+            })?;
+            let token = github_token.ok_or_else(|| {
+                GovernanceError::ValidationError(format!(
+                    "Blocked: no_consensus_modifications for {target_repo} PR #{pr_number} needs a GitHub token to read the PR; refusing to pass unverified"
+                ))
+            })?;
+            let (owner, repo) = Self::parse_repo_name(target_repo)?;
 
-                crate::github::ensure_rustls_provider();
-                let client = match octocrab::OctocrabBuilder::new()
-                    .personal_token(token.to_string())
-                    .build()
-                {
-                    Ok(client) => client,
-                    Err(e) => {
-                        warn!(
-                            "Failed to create GitHub client: {}. Falling back to file pattern check.",
-                            e
-                        );
-                        return Self::check_consensus_patterns(&consensus_patterns, &[]);
-                    }
-                };
+            crate::github::ensure_rustls_provider();
+            let client = octocrab::OctocrabBuilder::new()
+                .personal_token(token.to_string())
+                .build()
+                .map_err(|e| {
+                    GovernanceError::GitHubError(format!(
+                        "Blocked: failed to create GitHub client for {target_repo} PR #{pr_number}: {e}"
+                    ))
+                })?;
 
-                let files = match client
-                    .pulls(&owner, &repo)
-                    .list_files(pr_number as u64)
-                    .await
-                {
-                    Ok(files) => files,
-                    Err(e) => {
-                        warn!(
-                            "Failed to get PR files: {}. Falling back to file pattern check.",
-                            e
-                        );
-                        return Self::check_consensus_patterns(&consensus_patterns, &[]);
-                    }
-                };
+            let changed_files = Self::list_all_pr_files(&client, &owner, &repo, pr_number).await?;
 
-                let changed_files: Vec<String> =
-                    files.items.iter().map(|f| f.filename.clone()).collect();
+            if !allowed_imports_only {
+                // Standard file pattern check
+                return Self::check_consensus_patterns(&consensus_patterns, &changed_files);
+            }
 
-                // If allowed_imports_only, perform full diff analysis
-                if allowed_imports_only {
-                    // Get the full diff from GitHub API
-                    match Self::get_pr_diff(&client, &owner, &repo, pr_number as u64).await {
-                        Ok(Some(diff)) => {
-                            // Parse the diff
-                            match DiffParser::parse_unified_diff(&diff) {
-                                Ok(file_diffs) => {
-                                    // Check each consensus file for import-only changes
-                                    for file_diff in &file_diffs {
-                                        if Self::violates_import_only(
-                                            file_diff,
-                                            &consensus_patterns,
-                                        ) {
-                                            return Err(GovernanceError::ValidationError(format!(
-                                                "Consensus file {}{} contains non-import changes (renames, copies and binary files count as non-import). Only import statements are allowed when allowed_imports_only is true.",
-                                                file_diff.filename,
-                                                file_diff
-                                                    .old_filename
-                                                    .as_deref()
-                                                    .map(|o| format!(" (from {o})"))
-                                                    .unwrap_or_default()
-                                            )));
-                                        }
-                                    }
-                                    info!("Import-only validation passed for all consensus files");
-                                }
-                                Err(e) => {
-                                    warn!(
-                                        "Failed to parse diff: {}. Falling back to file pattern check.",
-                                        e
-                                    );
-                                    return Self::check_consensus_patterns(
-                                        &consensus_patterns,
-                                        &changed_files,
-                                    );
-                                }
-                            }
-                        }
-                        Ok(None) => {
-                            warn!("No diff available for PR. Falling back to file pattern check.");
-                            return Self::check_consensus_patterns(
-                                &consensus_patterns,
-                                &changed_files,
-                            );
-                        }
-                        Err(e) => {
-                            warn!(
-                                "Failed to get PR diff: {}. Falling back to file pattern check.",
-                                e
-                            );
-                            return Self::check_consensus_patterns(
-                                &consensus_patterns,
-                                &changed_files,
-                            );
-                        }
-                    }
-                } else {
-                    // Standard file pattern check
+            // Import-only: inspect the full diff. If it cannot be fetched or
+            // parsed, fall back to the strict file-name check, which blocks
+            // any change to a consensus file.
+            let diff = match Self::get_pr_diff(&client, &owner, &repo, pr_number).await {
+                Ok(diff) => diff,
+                Err(e) => {
+                    warn!(
+                        "Failed to get PR diff: {}. Falling back to strict file pattern check.",
+                        e
+                    );
                     return Self::check_consensus_patterns(&consensus_patterns, &changed_files);
                 }
-            }
+            };
+            let file_diffs = match DiffParser::parse_unified_diff(&diff) {
+                Ok(file_diffs) => file_diffs,
+                Err(e) => {
+                    warn!(
+                        "Failed to parse diff: {}. Falling back to strict file pattern check.",
+                        e
+                    );
+                    return Self::check_consensus_patterns(&consensus_patterns, &changed_files);
+                }
+            };
+            return Self::check_import_only(&consensus_patterns, &changed_files, &file_diffs);
         }
 
-        // If no PR info, check if rule specifies file patterns to check
+        // No PR: the rule may list the files to check explicitly
         if let Some(file_patterns) = rule.get("check_files").and_then(|v| v.as_array()) {
             let files: Vec<String> = file_patterns
                 .iter()
@@ -390,47 +350,126 @@ impl CrossLayerValidator {
             return Self::check_consensus_patterns(&consensus_patterns, &files);
         }
 
-        // If allowed_imports_only but no PR info, we can't do diff analysis
-        if allowed_imports_only {
-            warn!(
-                "Import-only validation requires PR diff, but no PR number provided. File path check passed."
-            );
-        }
+        // Nothing to verify against: block instead of passing
+        Err(GovernanceError::ValidationError(format!(
+            "Blocked: no_consensus_modifications for {target_repo} needs a pr_number (with a GitHub token) or check_files; refusing to pass unverified"
+        )))
+    }
 
-        // Default: pass (backward compatibility)
+    /// Import-only check over a parsed PR diff.
+    ///
+    /// Every consensus file the PR touches (by the file list, which includes
+    /// rename sources) must appear in the diff, so a truncated or partial diff
+    /// cannot hide one. Each in-scope file diff must pass
+    /// [`Self::violates_import_only`].
+    fn check_import_only(
+        consensus_patterns: &[&str],
+        changed_files: &[String],
+        file_diffs: &[FileDiff],
+    ) -> Result<(), GovernanceError> {
+        for changed in changed_files {
+            if Self::matches_consensus_pattern(changed, consensus_patterns)
+                && !file_diffs.iter().any(|d| {
+                    d.filename == *changed || d.old_filename.as_deref() == Some(changed.as_str())
+                })
+            {
+                return Err(GovernanceError::ValidationError(format!(
+                    "Blocked: consensus file {changed} is in the PR file list but missing from the PR diff; cannot verify it is import-only"
+                )));
+            }
+        }
+        for file_diff in file_diffs {
+            if Self::violates_import_only(file_diff, consensus_patterns) {
+                return Err(GovernanceError::ValidationError(format!(
+                    "Consensus file {}{} contains non-import changes (renames, copies and binary files count as non-import). Only import statements are allowed when allowed_imports_only is true.",
+                    file_diff.filename,
+                    file_diff
+                        .old_filename
+                        .as_deref()
+                        .map(|o| format!(" (from {o})"))
+                        .unwrap_or_default()
+                )));
+            }
+        }
+        info!("Import-only validation passed for all consensus files");
         Ok(())
     }
 
-    /// Get PR diff from GitHub API
-    async fn get_pr_diff(
-        _client: &octocrab::Octocrab,
+    /// Every file path a PR touches, across all pages of the files API.
+    /// Rename sources (`previous_filename`) are included.
+    async fn list_all_pr_files(
+        client: &octocrab::Octocrab,
         owner: &str,
         repo: &str,
         pr_number: u64,
-    ) -> Result<Option<String>, GovernanceError> {
-        // Get PR diff using GitHub API
-        // Construct diff URL manually (octocrab 0.38)
-        let diff_url =
-            format!("https://api.github.com/repos/{owner}/{repo}/pulls/{pr_number}.diff");
+    ) -> Result<Vec<String>, GovernanceError> {
+        let route = format!("/repos/{owner}/{repo}/pulls/{pr_number}/files");
+        Self::collect_file_pages(|page| {
+            let route = route.clone();
+            async move {
+                let entries: Vec<octocrab::models::repos::DiffEntry> = client
+                    .get(&route, Some(&[("per_page", PR_FILES_PER_PAGE), ("page", page)]))
+                    .await
+                    .map_err(|e| {
+                        GovernanceError::GitHubError(format!(
+                            "Blocked: failed to list files for {owner}/{repo} PR #{pr_number} (page {page}): {e}"
+                        ))
+                    })?;
+                Ok(entries
+                    .into_iter()
+                    .map(|e| (e.filename, e.previous_filename))
+                    .collect())
+            }
+        })
+        .await
+    }
 
-        // Fetch diff content using reqwest (already in dependencies)
-        let response = reqwest::Client::new()
-            .get(&diff_url)
-            .header("Accept", "application/vnd.github.v3.diff")
-            .send()
-            .await
-            .map_err(|e| GovernanceError::GitHubError(format!("Failed to fetch diff: {e}")))?;
-
-        if response.status().is_success() {
-            let diff = response
-                .text()
-                .await
-                .map_err(|e| GovernanceError::GitHubError(format!("Failed to read diff: {e}")))?;
-            Ok(Some(diff))
-        } else {
-            warn!("Failed to fetch diff: HTTP {}", response.status());
-            Ok(None)
+    /// Page through `fetch(page)` (1-based) until a short or empty page.
+    /// Fails closed when GitHub's 3000-file cap is reached, since files past
+    /// the cap are never listed.
+    async fn collect_file_pages<F, Fut>(mut fetch: F) -> Result<Vec<String>, GovernanceError>
+    where
+        F: FnMut(u32) -> Fut,
+        Fut: std::future::Future<Output = Result<Vec<(String, Option<String>)>, GovernanceError>>,
+    {
+        let mut names = Vec::new();
+        let mut listed = 0usize;
+        let mut page = 1u32;
+        loop {
+            let entries = fetch(page).await?;
+            let count = entries.len();
+            listed += count;
+            for (filename, previous) in entries {
+                if let Some(previous) = previous {
+                    names.push(previous);
+                }
+                names.push(filename);
+            }
+            if count < PR_FILES_PER_PAGE as usize {
+                return Ok(names);
+            }
+            if listed >= PR_FILES_MAX {
+                return Err(GovernanceError::ValidationError(format!(
+                    "Blocked: PR lists {listed} files, GitHub's maximum for the files API; files past it cannot be checked"
+                )));
+            }
+            page += 1;
         }
+    }
+
+    /// Get the PR diff through the authenticated client, so private repos
+    /// and rate limits behave like the other API calls.
+    async fn get_pr_diff(
+        client: &octocrab::Octocrab,
+        owner: &str,
+        repo: &str,
+        pr_number: u64,
+    ) -> Result<String, GovernanceError> {
+        client
+            .pulls(owner, repo)
+            .get_diff(pr_number)
+            .await
+            .map_err(|e| GovernanceError::GitHubError(format!("Failed to fetch diff: {e}")))
     }
 
     /// Import-only gate for one parsed file diff.
@@ -775,5 +814,183 @@ rename to docs/b.md\n",
 Binary files a/docs/x.png and b/docs/x.png differ\n",
         );
         assert!(!CrossLayerValidator::violates_import_only(&f, PATTERNS));
+    }
+
+    fn rule(v: serde_json::Value) -> Value {
+        v
+    }
+
+    #[tokio::test]
+    async fn pr_number_without_token_blocks() {
+        let r = rule(serde_json::json!({
+            "validation_type": "no_consensus_modifications",
+            "pr_number": 42,
+            "check_files": ["docs/README.md"],
+        }));
+        let err = CrossLayerValidator::verify_no_consensus_modifications(
+            "BTCDecoded/blvm-consensus",
+            &r,
+            None,
+        )
+        .await
+        .unwrap_err();
+        assert!(err.to_string().contains("needs a GitHub token"), "{err}");
+    }
+
+    #[tokio::test]
+    async fn invalid_pr_number_blocks() {
+        for bad in [serde_json::json!(-1), serde_json::json!("42")] {
+            let r = rule(serde_json::json!({ "pr_number": bad }));
+            let err = CrossLayerValidator::verify_no_consensus_modifications(
+                "BTCDecoded/blvm-consensus",
+                &r,
+                Some("token"),
+            )
+            .await
+            .unwrap_err();
+            assert!(err.to_string().contains("invalid pr_number"), "{err}");
+        }
+    }
+
+    #[tokio::test]
+    async fn no_pr_number_and_no_check_files_blocks() {
+        for imports_only in [false, true] {
+            let r = rule(serde_json::json!({ "allowed_imports_only": imports_only }));
+            let err = CrossLayerValidator::verify_no_consensus_modifications(
+                "BTCDecoded/blvm-consensus",
+                &r,
+                Some("token"),
+            )
+            .await
+            .unwrap_err();
+            assert!(err.to_string().contains("Blocked"), "{err}");
+        }
+    }
+
+    #[tokio::test]
+    async fn check_files_still_decides_without_pr() {
+        let ok = rule(serde_json::json!({ "check_files": ["docs/README.md"] }));
+        assert!(
+            CrossLayerValidator::verify_no_consensus_modifications("o/r", &ok, None)
+                .await
+                .is_ok()
+        );
+        let bad = rule(serde_json::json!({ "check_files": ["src/pow.rs"] }));
+        assert!(
+            CrossLayerValidator::verify_no_consensus_modifications("o/r", &bad, None)
+                .await
+                .is_err()
+        );
+    }
+
+    fn page_of(n: usize, prefix: &str) -> Vec<(String, Option<String>)> {
+        (0..n).map(|i| (format!("{prefix}/{i}.rs"), None)).collect()
+    }
+
+    #[tokio::test]
+    async fn file_pages_are_collected_until_short_page() {
+        let mut asked = Vec::new();
+        let names = CrossLayerValidator::collect_file_pages(|page| {
+            asked.push(page);
+            async move {
+                Ok(match page {
+                    1 => page_of(100, "a"),
+                    2 => {
+                        let mut p = page_of(99, "b");
+                        p.push(("src/blk.rs".into(), Some("src/block.rs".into())));
+                        p
+                    }
+                    3 => page_of(5, "c"),
+                    _ => panic!("fetched past the last page"),
+                })
+            }
+        })
+        .await
+        .unwrap();
+        assert_eq!(asked, vec![1, 2, 3]);
+        assert_eq!(names.len(), 206); // 205 files + one rename source
+        assert!(names.contains(&"src/block.rs".to_string()));
+        assert!(names.contains(&"c/4.rs".to_string()));
+        // A consensus file on page 2 is now seen by the name check
+        assert!(CrossLayerValidator::check_consensus_patterns(PATTERNS, &names).is_err());
+    }
+
+    #[tokio::test]
+    async fn empty_first_page_and_exact_multiple_stop() {
+        let names = CrossLayerValidator::collect_file_pages(|_| async { Ok(vec![]) })
+            .await
+            .unwrap();
+        assert!(names.is_empty());
+        let names = CrossLayerValidator::collect_file_pages(|page| async move {
+            Ok(if page == 1 { page_of(100, "a") } else { vec![] })
+        })
+        .await
+        .unwrap();
+        assert_eq!(names.len(), 100);
+    }
+
+    #[tokio::test]
+    async fn file_pages_fail_closed_at_github_cap_and_on_error() {
+        let err = CrossLayerValidator::collect_file_pages(|page| async move {
+            assert!(page <= 30, "kept paging past the cap");
+            Ok(page_of(100, "x"))
+        })
+        .await
+        .unwrap_err();
+        assert!(err.to_string().contains("maximum"), "{err}");
+
+        let err = CrossLayerValidator::collect_file_pages(|page| async move {
+            if page == 2 {
+                Err(GovernanceError::GitHubError("boom".into()))
+            } else {
+                Ok(page_of(100, "x"))
+            }
+        })
+        .await
+        .unwrap_err();
+        assert!(err.to_string().contains("boom"), "{err}");
+    }
+
+    #[test]
+    fn consensus_file_missing_from_diff_blocks() {
+        let changed = vec!["src/pow.rs".to_string(), "docs/a.md".to_string()];
+        let diffs = DiffParser::parse_unified_diff(
+            "diff --git a/docs/a.md b/docs/a.md\n--- a/docs/a.md\n+++ b/docs/a.md\n@@ -1 +1 @@\n-a\n+b\n",
+        )
+        .unwrap();
+        let err = CrossLayerValidator::check_import_only(PATTERNS, &changed, &diffs).unwrap_err();
+        assert!(
+            err.to_string().contains("missing from the PR diff"),
+            "{err}"
+        );
+    }
+
+    #[test]
+    fn check_import_only_accepts_imports_and_rejects_renames() {
+        let import_diff = DiffParser::parse_unified_diff(
+            "diff --git a/src/pow.rs b/src/pow.rs\n--- a/src/pow.rs\n+++ b/src/pow.rs\n@@ -1 +1,2 @@\n+use crate::x;\n",
+        )
+        .unwrap();
+        assert!(
+            CrossLayerValidator::check_import_only(
+                PATTERNS,
+                &["src/pow.rs".to_string()],
+                &import_diff
+            )
+            .is_ok()
+        );
+
+        // File list has the rename source; the diff covers it via old_filename
+        let rename = DiffParser::parse_unified_diff(
+            "diff --git a/src/block.rs b/src/blk.rs\nsimilarity index 100%\nrename from src/block.rs\nrename to src/blk.rs\n",
+        )
+        .unwrap();
+        let err = CrossLayerValidator::check_import_only(
+            PATTERNS,
+            &["src/block.rs".to_string(), "src/blk.rs".to_string()],
+            &rename,
+        )
+        .unwrap_err();
+        assert!(err.to_string().contains("from src/block.rs"), "{err}");
     }
 }

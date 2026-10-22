@@ -100,6 +100,9 @@ enum Commands {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Install the rustls crypto provider before any TLS client is built
+    blvm_commons::github::ensure_rustls_provider();
+
     let cli = Cli::parse();
 
     // Initialize database

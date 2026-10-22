@@ -10,6 +10,9 @@ pub mod webhooks;
 /// compiled in, and this dependency graph enables both ring and aws-lc-rs.
 /// octocrab builds its TLS config from the process default, so call this
 /// before every `Octocrab::builder()`. Installing twice is a no-op.
-pub(crate) fn ensure_rustls_provider() {
+///
+/// Binaries call this first thing in `main` so any TLS user (octocrab,
+/// reqwest, nostr-sdk relays, sqlx) finds a provider in a fresh process.
+pub fn ensure_rustls_provider() {
     let _ = rustls::crypto::ring::default_provider().install_default();
 }

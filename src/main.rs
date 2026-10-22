@@ -48,6 +48,9 @@ use ots::{OtsClient, RegistryAnchorer};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Install the rustls crypto provider before anything opens a TLS connection
+    github::ensure_rustls_provider();
+
     // Initialize tracing
     tracing_subscriber::registry()
         .with(

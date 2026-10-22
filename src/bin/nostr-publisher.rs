@@ -35,6 +35,9 @@ struct Args {
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    // Relay connections (wss://) need a rustls provider in a fresh process
+    blvm_commons::github::ensure_rustls_provider();
+
     // Initialize tracing
     tracing_subscriber::fmt::init();
 
