@@ -381,6 +381,26 @@ async fn handle_tier_override(
         }
     };
 
+    if let Some(current) = database
+        .get_tier_override(repo_name, pr_number as i32)
+        .await
+        .map_err(|e| {
+            warn!("Failed to read current tier override: {}", e);
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR
+        })?
+    {
+        if override_tier < current.override_tier {
+            warn!(
+                "Maintainer {} cannot lower PR #{} from tier {} to {}",
+                commenter, pr_number, current.override_tier, override_tier
+            );
+            return Ok(axum::response::Json(serde_json::json!({
+                "status": "tier_lower_rejected",
+                "error": "one maintainer cannot lower a tier"
+            })));
+        }
+    }
+
     // Check if user is a maintainer
     let maintainer = match database.get_maintainer_by_username(commenter).await {
         Ok(Some(m)) => m,
