@@ -512,12 +512,11 @@ impl CrossLayerValidator {
     ) -> Result<(), GovernanceError> {
         let mut consensus_files_changed = Vec::new();
 
+        // Same matcher as the import-only path, so directory patterns such
+        // as `src/consensus/` and nested paths are caught here too.
         for file in changed_files {
-            for pattern in consensus_patterns {
-                if Self::matches_pattern(&[file.clone()], pattern) {
-                    consensus_files_changed.push(file.clone());
-                    break;
-                }
+            if Self::matches_consensus_pattern(file, consensus_patterns) {
+                consensus_files_changed.push(file.clone());
             }
         }
 
@@ -881,6 +880,31 @@ Binary files a/docs/x.png and b/docs/x.png differ\n",
                 .await
                 .is_err()
         );
+    }
+
+    /// The strict name check must catch directory patterns and nested
+    /// paths, not just exact file names.
+    #[tokio::test]
+    async fn check_files_blocks_consensus_dirs_and_nested_paths() {
+        for f in [
+            "src/consensus/x.rs",
+            "src/validation/tx.rs",
+            "crates/c/src/block.rs",
+        ] {
+            let r = rule(serde_json::json!({ "check_files": [f] }));
+            let err = CrossLayerValidator::verify_no_consensus_modifications("o/r", &r, None)
+                .await
+                .unwrap_err();
+            assert!(err.to_string().contains(f), "{f}: {err}");
+        }
+        let names: Vec<String> = ["docs/a.md", "src/consensus/x.rs", "src/validation/tx.rs"]
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
+        let err = CrossLayerValidator::check_consensus_patterns(PATTERNS, &names).unwrap_err();
+        let msg = err.to_string();
+        assert!(msg.contains("src/consensus/x.rs") && msg.contains("src/validation/tx.rs"));
+        assert!(!msg.contains("docs/a.md"), "{msg}");
     }
 
     fn page_of(n: usize, prefix: &str) -> Vec<(String, Option<String>)> {

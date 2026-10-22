@@ -834,6 +834,22 @@ new mode 100755\n";
         assert!(!import_only(&["/*"]));
     }
 
+    /// A line comment that closes a block comment can end a `/*` opened
+    /// on an earlier line and expose the code after it.
+    #[test]
+    fn test_line_comment_with_block_marker_is_not_import_only() {
+        assert!(!import_only(&["// */"]));
+        assert!(!import_only(&["/// /* doc"]));
+        assert!(!import_only(&["use crate::a; // */"]));
+    }
+
+    #[test]
+    fn test_unbalanced_attribute_is_not_import_only() {
+        assert!(!import_only(&["#[use crate::a;"]));
+        assert!(!import_only(&["#[cfg(test) use crate::a;"]));
+        assert!(!import_only(&["#[cfg(any()]] use crate::a;"]));
+    }
+
     #[test]
     fn test_standalone_attribute_is_not_import_only() {
         assert!(!import_only(&["#[cfg(any())]"]));
