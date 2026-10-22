@@ -9,11 +9,16 @@ use std::collections::HashSet;
 use tracing::debug;
 
 /// Represents a file diff with additions and deletions
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct FileDiff {
     pub filename: String,
     pub additions: Vec<String>,
     pub deletions: Vec<String>,
+    /// Source path when it differs from `filename` (rename/copy), from
+    /// `rename from`/`copy from` or a `---` line that is not /dev/null.
+    pub old_filename: Option<String>,
+    /// `Binary files ... differ` / `GIT binary patch`: no lines to inspect.
+    pub binary: bool,
 }
 
 /// Diff parser for analyzing code changes
@@ -71,14 +76,30 @@ impl DiffParser {
                 };
                 current_file = Some(FileDiff {
                     filename: filename.to_string(),
-                    additions: Vec::new(),
-                    deletions: Vec::new(),
+                    ..Default::default()
                 });
                 in_hunk = false;
                 hunk_additions.clear();
                 hunk_deletions.clear();
                 if git_format {
                     continue;
+                }
+            }
+
+            // Extended headers (git format), only before a file's first hunk
+            if !in_hunk {
+                if let Some(ref mut file) = current_file {
+                    if let Some(src) = line
+                        .strip_prefix("rename from ")
+                        .or_else(|| line.strip_prefix("copy from "))
+                    {
+                        file.old_filename = Some(src.to_string());
+                        continue;
+                    }
+                    if line.starts_with("Binary files ") || line == "GIT binary patch" {
+                        file.binary = true;
+                        continue;
+                    }
                 }
             }
 
@@ -93,6 +114,9 @@ impl DiffParser {
                     // `+++` (destination) overrides `---`; /dev/null is a new or deleted file
                     if let Some(ref mut file) = current_file {
                         if path != "/dev/null" {
+                            if line.starts_with("---") {
+                                file.old_filename = Some(clean_path.to_string());
+                            }
                             file.filename = clean_path.to_string();
                         }
                     }
@@ -138,6 +162,11 @@ impl DiffParser {
             file_diffs.push(file);
         }
 
+        for f in &mut file_diffs {
+            if f.old_filename.as_deref() == Some(f.filename.as_str()) {
+                f.old_filename = None;
+            }
+        }
         debug!("Parsed {} file diffs", file_diffs.len());
         Ok(file_diffs)
     }
@@ -317,6 +346,7 @@ mod tests {
             filename: "src/block.rs".to_string(),
             additions: vec!["use crate::bip_validation;".to_string()],
             deletions: vec![],
+            ..Default::default()
         };
 
         assert!(DiffParser::is_import_only_changes(&diff));
@@ -328,6 +358,7 @@ mod tests {
             filename: "src/block.rs".to_string(),
             additions: vec!["pub fn connect_block() {".to_string()],
             deletions: vec![],
+            ..Default::default()
         };
 
         assert!(!DiffParser::is_import_only_changes(&diff));
@@ -339,6 +370,7 @@ mod tests {
             filename: "src/block.rs".to_string(),
             additions: vec!["    pub fn validate_block() {".to_string()],
             deletions: vec![],
+            ..Default::default()
         };
 
         assert!(DiffParser::contains_consensus_logic_changes(&diff));
@@ -393,6 +425,7 @@ mod tests {
                 "use crate::bip_validation;".to_string(),
             ],
             deletions: vec![],
+            ..Default::default()
         };
 
         assert!(DiffParser::is_import_only_changes(&diff));
@@ -408,6 +441,7 @@ mod tests {
                 "    ".to_string(), // Whitespace
             ],
             deletions: vec![],
+            ..Default::default()
         };
 
         assert!(DiffParser::is_import_only_changes(&diff));
@@ -422,6 +456,7 @@ mod tests {
                 "pub fn new_function() {".to_string(), // This should fail
             ],
             deletions: vec![],
+            ..Default::default()
         };
 
         assert!(!DiffParser::is_import_only_changes(&diff));
@@ -437,6 +472,7 @@ mod tests {
                 "pub fn connect_block() {".to_string(), // Not an import
             ],
             deletions: vec!["use crate::old_module;".to_string()],
+            ..Default::default()
         };
 
         let imports = DiffParser::extract_imports(&diff);
@@ -459,6 +495,7 @@ mod tests {
             filename: "src/block.rs".to_string(),
             additions: vec![],
             deletions: vec!["use crate::old_module;".to_string()],
+            ..Default::default()
         };
 
         assert!(DiffParser::is_import_only_changes(&diff));
@@ -579,5 +616,142 @@ index 1111111..2222222 100644
         assert_eq!(file_diffs[1].filename, "src/old.rs");
         assert_eq!(file_diffs[1].deletions, vec!["pub fn removed() {}"]);
         assert!(!DiffParser::is_import_only_changes(&file_diffs[1]));
+    }
+
+    /// A rename (`git diff -M`) that also changes logic keeps the source
+    /// path, so a consensus file cannot be moved out of the gate's patterns.
+    #[test]
+    fn test_rename_with_logic_change_keeps_old_filename() {
+        let diff = "diff --git a/src/block.rs b/src/blk.rs\n\
+similarity index 80%\n\
+rename from src/block.rs\n\
+rename to src/blk.rs\n\
+index 1111111..2222222 100644\n\
+--- a/src/block.rs\n\
++++ b/src/blk.rs\n\
+@@ -10,2 +10,2 @@\n\
+-    if height > 0 { return Err(Invalid); }\n\
++    return Ok(());\n";
+        let f = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(f.len(), 1);
+        assert_eq!(f[0].filename, "src/blk.rs");
+        assert_eq!(f[0].old_filename.as_deref(), Some("src/block.rs"));
+        assert!(!f[0].binary);
+        assert_eq!(f[0].additions, vec!["    return Ok(());"]);
+        assert!(!DiffParser::is_import_only_changes(&f[0]));
+    }
+
+    /// A 100% rename has no `---`/`+++` lines and no hunks; the source path
+    /// must still come from `rename from`.
+    #[test]
+    fn test_pure_rename_without_hunks_keeps_old_filename() {
+        let diff = "diff --git a/src/block.rs b/src/blk.rs\n\
+similarity index 100%\n\
+rename from src/block.rs\n\
+rename to src/blk.rs\n";
+        let f = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(f.len(), 1);
+        assert_eq!(f[0].filename, "src/blk.rs");
+        assert_eq!(f[0].old_filename.as_deref(), Some("src/block.rs"));
+        assert!(f[0].additions.is_empty() && f[0].deletions.is_empty());
+    }
+
+    #[test]
+    fn test_copy_from_sets_old_filename() {
+        let diff = "diff --git a/src/pow.rs b/src/pow2.rs\n\
+similarity index 100%\n\
+copy from src/pow.rs\n\
+copy to src/pow2.rs\n";
+        let f = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(f[0].old_filename.as_deref(), Some("src/pow.rs"));
+    }
+
+    /// Plain unified diff: a `---` path that differs from `+++` is a rename.
+    #[test]
+    fn test_plain_diff_differing_minus_path_is_old_filename() {
+        let diff = "--- a/src/block.rs\n+++ b/src/blk.rs\n@@ -1 +1 @@\n-a\n+b\n";
+        let f = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(f[0].filename, "src/blk.rs");
+        assert_eq!(f[0].old_filename.as_deref(), Some("src/block.rs"));
+    }
+
+    /// Same path on both sides, new files and deleted files are not renames.
+    #[test]
+    fn test_same_path_new_and_deleted_files_have_no_old_filename() {
+        let same = "--- a/src/block.rs\n+++ b/src/block.rs\n@@ -1 +1 @@\n-a\n+b\n";
+        assert_eq!(
+            DiffParser::parse_unified_diff(same).unwrap()[0].old_filename,
+            None
+        );
+        let new_and_deleted = "--- /dev/null\n+++ b/src/new.rs\n@@ -0,0 +1 @@\n+x\n\
+--- a/src/old.rs\n+++ /dev/null\n@@ -1 +0,0 @@\n-x\n";
+        let f = DiffParser::parse_unified_diff(new_and_deleted).unwrap();
+        assert_eq!(f[0].old_filename, None);
+        assert_eq!(f[1].filename, "src/old.rs");
+        assert_eq!(f[1].old_filename, None);
+    }
+
+    #[test]
+    fn test_binary_file_in_consensus_path_is_flagged() {
+        let diff = "diff --git a/src/consensus/table.bin b/src/consensus/table.bin\n\
+index 1111111..2222222 100644\n\
+Binary files a/src/consensus/table.bin and b/src/consensus/table.bin differ\n";
+        let f = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(f.len(), 1);
+        assert_eq!(f[0].filename, "src/consensus/table.bin");
+        assert!(f[0].binary);
+        // No lines to inspect, so the import-only check alone would pass it
+        assert!(DiffParser::is_import_only_changes(&f[0]));
+
+        let patch = "diff --git a/src/consensus/t.bin b/src/consensus/t.bin\n\
+index 1111111..2222222 100644\n\
+GIT binary patch\n\
+literal 4\n\
+LcmZQzWMT#Y01f~L\n";
+        assert!(DiffParser::parse_unified_diff(patch).unwrap()[0].binary);
+    }
+
+    /// `---`/`+++` lookalikes inside a hunk are body lines: they must not
+    /// rename the file, set old_filename, or be dropped.
+    #[test]
+    fn test_header_lookalike_body_lines_are_kept() {
+        let diff = "diff --git a/src/block.rs b/src/block.rs\n\
+index 1111111..2222222 100644\n\
+--- a/src/block.rs\n\
++++ b/src/block.rs\n\
+@@ -1,2 +1,2 @@\n\
+--- a/x\n\
++++ b/y\n";
+        let f = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(f.len(), 1);
+        assert_eq!(f[0].filename, "src/block.rs");
+        assert_eq!(f[0].old_filename, None);
+        assert_eq!(f[0].deletions, vec!["-- a/x"]);
+        assert_eq!(f[0].additions, vec!["++ b/y"]);
+    }
+
+    /// A tab-separated timestamp after a header path is not part of the name.
+    #[test]
+    fn test_tab_timestamp_stripped_from_header_paths() {
+        let diff = "--- a/src/block.rs\t2026-10-22 08:00:00.000000000 -0400\n\
++++ b/src/block.rs\t2026-10-22 09:00:00.000000000 -0400\n\
+@@ -1 +1 @@\n-a\n+b\n";
+        let f = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(f[0].filename, "src/block.rs");
+        assert_eq!(f[0].old_filename, None);
+    }
+
+    /// With no `---`/`+++` lines (mode change, empty file), the name comes
+    /// from the `b/` side of the `diff --git` line.
+    #[test]
+    fn test_filename_from_diff_git_line() {
+        let diff = "diff --git a/src/script.rs b/src/script.rs\n\
+old mode 100644\n\
+new mode 100755\n";
+        let f = DiffParser::parse_unified_diff(diff).unwrap();
+        assert_eq!(f.len(), 1);
+        assert_eq!(f[0].filename, "src/script.rs");
+        assert_eq!(f[0].old_filename, None);
+        assert!(!f[0].binary);
     }
 }

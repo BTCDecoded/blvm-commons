@@ -222,8 +222,9 @@ jobs:
           # Suppress documented vulnerabilities (see docs/SECURITY_SUPPRESSIONS.md for process and table)
           # Time-boxed: hickory-proto 0.25.2 (RUSTSEC-2026-0118, -0119) and quinn-proto 0.11.15
           # (RUSTSEC-2026-0338..0342) come in via blvm-node's iroh 0.95 and cannot be bumped from here
-          # (iroh pins hickory 0.25; crypto_box's chacha20 rc blocks quinn-proto >=0.11.16). They wait
-          # on the iroh 1.x upgrade in blvm-node; drop these five lines when that lands.
+          # (iroh pins hickory 0.25; crypto_box's chacha20 rc blocks quinn-proto >=0.11.16). They are
+          # allowed until 2026-12-31 or the blvm-node iroh 1.x upgrade, whichever comes first; drop
+          # these seven lines then.
           cargo audit \
             --ignore RUSTSEC-2026-0118 \
             --ignore RUSTSEC-2026-0119 \
