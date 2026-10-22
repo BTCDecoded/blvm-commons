@@ -349,3 +349,24 @@ impl AdoptionTracker {
         .await
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::database::Database;
+
+    /// Regression: SUM over an empty table is NULL, and COALESCE(.., 0) then
+    /// yields an INTEGER that sqlx refuses to decode as f64 (hence 0.0).
+    #[tokio::test]
+    async fn test_network_totals_empty_db() {
+        let db = Database::new_in_memory().await.unwrap();
+        let pool = db.pool().expect("Database should have SQLite pool");
+        let tracker = AdoptionTracker::new(pool);
+
+        let (total, hashpower, economic) = tracker.get_network_totals().await.unwrap();
+        assert_eq!((total, hashpower, economic), (0.0, 0.0, 0.0));
+
+        let stats = tracker.get_adoption_statistics().await.unwrap();
+        assert!(stats.rulesets.is_empty());
+    }
+}
