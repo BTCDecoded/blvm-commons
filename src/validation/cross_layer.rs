@@ -2,9 +2,6 @@ use crate::error::GovernanceError;
 use crate::github::cross_layer_status::{CrossLayerStatusCheck, CrossLayerStatusChecker};
 use crate::github::file_operations::GitHubFileOperations;
 use crate::validation::content_hash::{ContentHashValidator, SyncReport, SyncStatus};
-use crate::validation::version_pinning::{
-    VersionManifest, VersionPinningConfig, VersionPinningValidator,
-};
 use octocrab;
 use serde_json::Value;
 use std::collections::HashMap;
@@ -47,6 +44,27 @@ const CONSENSUS_CRATE_REPOS: &[&str] = &["blvm-consensus"];
 /// `src/` elsewhere in the repo, and only added for [`CONSENSUS_CRATE_REPOS`].
 const CONSENSUS_CRATE_SRC: &str = "^src/";
 
+/// Anchored root paths of a consensus crate that change what gets built:
+/// the manifest and lockfile, the pinned toolchain, cargo config (which can
+/// set rustflags, cfgs or source replacement) and a build script. Only
+/// added for [`CONSENSUS_CRATE_REPOS`]; nested copies (e.g. `fuzz/`) are not
+/// matched.
+const CONSENSUS_CRATE_BUILD: &[&str] = &[
+    "^Cargo.toml",
+    "^Cargo.lock",
+    "^rust-toolchain.toml",
+    "^rust-toolchain",
+    "^.cargo/",
+    "^build.rs",
+];
+
+/// Rule `validation_type`s that are implemented and may run.
+const VALIDATION_TYPES: &[&str] = &["corresponding_file_exists", "no_consensus_modifications"];
+
+/// Rule `validation_type`s that are known but not implemented. A rule using
+/// one is rejected as malformed rather than run or skipped.
+const UNIMPLEMENTED_VALIDATION_TYPES: &[&str] = &["references_latest_version"];
+
 impl CrossLayerValidator {
     /// Run every cross-layer rule that applies to `repo_name` and
     /// `changed_files`.
@@ -78,7 +96,8 @@ impl CrossLayerValidator {
 
         let mut failures = Vec::new();
         for (rule, fields) in parsed {
-            if fields.source_repo != repo_name
+            // GitHub repo names are case-insensitive
+            if !fields.source_repo.eq_ignore_ascii_case(repo_name)
                 || !Self::matches_pattern(changed_files, fields.source_pattern)
             {
                 continue;
@@ -111,7 +130,10 @@ impl CrossLayerValidator {
     }
 
     /// Required string fields of a cross-layer rule. Missing, non-string or
-    /// empty fields, or a rule that is not an object, are malformed.
+    /// empty fields, or a rule that is not an object, are malformed. So are
+    /// repos not in plain `owner/name` form, an unknown or unimplemented
+    /// `validation_type`, and a `check_files` that is not a list of
+    /// non-empty strings.
     fn parse_rule(rule: &Value) -> Result<RuleFields<'_>, String> {
         if !rule.is_object() {
             return Err("not a JSON object".to_string());
@@ -124,12 +146,83 @@ impl CrossLayerValidator {
                 None => Err(format!("missing `{name}`")),
             }
         };
-        Ok(RuleFields {
+        let fields = RuleFields {
             source_repo: field("source_repo")?,
             source_pattern: field("source_pattern")?,
             target_repo: field("target_repo")?,
             validation_type: field("validation_type")?,
-        })
+        };
+        Self::check_repo_slug("source_repo", fields.source_repo)?;
+        Self::check_repo_slug("target_repo", fields.target_repo)?;
+        Self::check_validation_type(fields.validation_type)?;
+        Self::check_files_of(rule)?;
+        Ok(fields)
+    }
+
+    /// `value` must be a plain `owner/name`: exactly one `/`, both parts
+    /// non-empty and made of `[A-Za-z0-9._-]`, no trailing `/` and no `.git`
+    /// suffix. Anything else could miss a case-insensitive name match (and
+    /// with it the consensus crate's anchored patterns), so it is malformed.
+    fn check_repo_slug(field: &str, value: &str) -> Result<(), String> {
+        let bad = |why: &str| Err(format!("`{field}` must be `owner/name` ({why}): {value:?}"));
+        if value.ends_with('/') {
+            return bad("trailing `/`");
+        }
+        if value.to_ascii_lowercase().ends_with(".git") {
+            return bad("`.git` suffix");
+        }
+        let mut parts = value.split('/');
+        let (owner, name) = match (parts.next(), parts.next(), parts.next()) {
+            (Some(owner), Some(name), None) => (owner, name),
+            _ => return bad("expected exactly one `/`"),
+        };
+        if owner.is_empty() || name.is_empty() {
+            return bad("empty owner or name");
+        }
+        let valid = |s: &str| {
+            s.chars()
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, '-' | '_' | '.'))
+        };
+        if !valid(owner) || !valid(name) || name == "." || name == ".." {
+            return bad("invalid character");
+        }
+        Ok(())
+    }
+
+    /// Only implemented validation types may run; anything else is malformed.
+    fn check_validation_type(validation_type: &str) -> Result<(), String> {
+        if VALIDATION_TYPES.contains(&validation_type) {
+            Ok(())
+        } else if UNIMPLEMENTED_VALIDATION_TYPES.contains(&validation_type) {
+            Err(Self::not_implemented(validation_type))
+        } else {
+            Err(format!("unknown validation_type `{validation_type}`"))
+        }
+    }
+
+    fn not_implemented(validation_type: &str) -> String {
+        format!("Blocked: validation_type `{validation_type}` is not implemented")
+    }
+
+    /// The rule's optional `check_files` list. Present but not an array, or
+    /// with any entry that is not a non-empty string, is malformed: dropping
+    /// such an entry would silently shrink the set of files checked.
+    fn check_files_of(rule: &Value) -> Result<Option<Vec<String>>, String> {
+        let items = match rule.get("check_files") {
+            None => return Ok(None),
+            Some(Value::Array(items)) => items,
+            Some(other) => return Err(format!("`check_files` is not an array ({other})")),
+        };
+        items
+            .iter()
+            .enumerate()
+            .map(|(i, v)| match v {
+                Value::String(s) if !s.trim().is_empty() => Ok(s.clone()),
+                Value::String(_) => Err(format!("`check_files[{i}]` is empty")),
+                other => Err(format!("`check_files[{i}]` is not a string ({other})")),
+            })
+            .collect::<Result<Vec<_>, _>>()
+            .map(Some)
     }
 
     fn matches_pattern(files: &[String], pattern: &str) -> bool {
@@ -158,7 +251,10 @@ impl CrossLayerValidator {
             "corresponding_file_exists" => {
                 Self::verify_file_correspondence(target_repo, rule, github_token).await
             }
-            "references_latest_version" => Self::verify_version_references(target_repo, rule),
+            // Rejected by `parse_rule`; also refused here so it can never pass
+            "references_latest_version" => Err(GovernanceError::ValidationError(
+                Self::not_implemented(validation_type),
+            )),
             "no_consensus_modifications" => {
                 Self::verify_no_consensus_modifications(target_repo, rule, github_token).await
             }
@@ -243,88 +339,6 @@ impl CrossLayerValidator {
         Ok((parts[0].to_string(), parts[1].to_string()))
     }
 
-    /// Verify version references are up to date
-    fn verify_version_references(target_repo: &str, rule: &Value) -> Result<(), GovernanceError> {
-        info!(
-            "Verifying version references for target repo: {}",
-            target_repo
-        );
-
-        // Extract rule parameters
-        let required_reference_format = rule
-            .get("required_reference_format")
-            .and_then(|v| v.as_str())
-            .unwrap_or("blvm-spec@v{VERSION}");
-
-        info!(
-            "Checking version reference format: {}",
-            required_reference_format
-        );
-
-        // Create version pinning validator
-        let config = VersionPinningConfig {
-            required_reference_format: required_reference_format.to_string(),
-            minimum_signatures: 6,
-            allow_outdated_versions: false,
-            max_version_age_days: 30,
-            enforce_latest_version: true,
-        };
-
-        let mut validator = VersionPinningValidator::new(config);
-
-        // Load version manifest (in a real implementation, this would be loaded from file)
-        let manifest = Self::load_version_manifest()?;
-        validator.load_version_manifest(manifest)?;
-
-        // In a real implementation, this would:
-        // 1. Fetch files from the target repo
-        // 2. Parse version references from each file
-        // 3. Validate each reference against the manifest
-        // 4. Check format compliance
-        // 5. Verify signatures and timestamps
-
-        info!(
-            "Version reference verification completed for {}",
-            target_repo
-        );
-        Ok(())
-    }
-
-    /// Load version manifest from configuration
-    fn load_version_manifest() -> Result<VersionManifest, GovernanceError> {
-        // In a real implementation, this would load from the YAML file
-        // For now, we'll create a mock manifest
-
-        use crate::validation::version_pinning::{VersionManifestEntry, VersionSignature};
-        use chrono::Utc;
-
-        let manifest = VersionManifest {
-            repository: "blvm-spec".to_string(),
-            created_at: Utc::now(),
-            versions: vec![VersionManifestEntry {
-                version: "v1.0.0".to_string(),
-                commit_sha: "a1b2c3d4e5f6789012345678901234567890abcd".to_string(),
-                content_hash:
-                    "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
-                        .to_string(),
-                created_at: Utc::now() - chrono::Duration::try_days(1).expect("day count"),
-                signatures: vec![VersionSignature {
-                    maintainer_id: "maintainer1".to_string(),
-                    signature: "test_signature_1".to_string(),
-                    public_key: "test_public_key_1".to_string(),
-                    signed_at: Utc::now() - chrono::Duration::try_days(1).expect("day count"),
-                }],
-                ots_timestamp: Some("bitcoin:test_timestamp".to_string()),
-                is_stable: true,
-                is_latest: true,
-            }],
-            latest_version: "v1.0.0".to_string(),
-            manifest_hash: "sha256:test_manifest_hash".to_string(),
-        };
-
-        Ok(manifest)
-    }
-
     /// Verify no consensus modifications are made.
     ///
     /// Any change to a file matching the consensus patterns blocks, including
@@ -383,6 +397,13 @@ impl CrossLayerValidator {
         // Consensus-critical file patterns for this repo
         let consensus_patterns = Self::consensus_patterns_for(target_repo);
 
+        // A malformed `check_files` blocks even when `pr_number` is used
+        let check_files = Self::check_files_of(rule).map_err(|reason| {
+            GovernanceError::ValidationError(format!(
+                "Blocked: malformed no_consensus_modifications rule for {target_repo}: {reason}"
+            ))
+        })?;
+
         // Fail closed: every path below either proves the PR is acceptable or
         // returns an error. GitHub failures, a missing token and a missing PR
         // number all block instead of passing.
@@ -416,12 +437,7 @@ impl CrossLayerValidator {
         }
 
         // No PR: the rule may list the files to check explicitly
-        if let Some(file_patterns) = rule.get("check_files").and_then(|v| v.as_array()) {
-            let files: Vec<String> = file_patterns
-                .iter()
-                .filter_map(|v| v.as_str().map(|s| s.to_string()))
-                .collect();
-
+        if let Some(files) = check_files {
             return Self::check_consensus_patterns(&consensus_patterns, &files);
         }
 
@@ -493,9 +509,10 @@ impl CrossLayerValidator {
         }
     }
 
-    /// Consensus patterns for `target_repo` (`owner/name`): the shared
-    /// [`CONSENSUS_PATTERNS`], plus the whole root `src/` tree when the repo
-    /// is a consensus crate such as `blvm-consensus`.
+    /// Consensus patterns for `target_repo` (`owner/name`, compared without
+    /// case): the shared [`CONSENSUS_PATTERNS`], plus the whole root `src/`
+    /// tree and the root build inputs ([`CONSENSUS_CRATE_BUILD`]) when the
+    /// repo is a consensus crate such as `blvm-consensus`.
     fn consensus_patterns_for(target_repo: &str) -> Vec<&'static str> {
         let mut patterns = CONSENSUS_PATTERNS.to_vec();
         let name = target_repo.rsplit('/').next().unwrap_or(target_repo);
@@ -504,6 +521,7 @@ impl CrossLayerValidator {
             .any(|r| r.eq_ignore_ascii_case(name.trim()))
         {
             patterns.push(CONSENSUS_CRATE_SRC);
+            patterns.extend_from_slice(CONSENSUS_CRATE_BUILD);
         }
         patterns
     }
@@ -1277,8 +1295,9 @@ Binary files a/docs/x.png and b/docs/x.png differ\n",
             "docs/VERIFICATION.md",
             "benches/block_validation.rs",
             "fuzz/fuzz_targets/block_validation.rs",
-            "Cargo.toml",
             "fuzz/src/lib.rs", // nested src/, not the crate root
+            "fuzz/Cargo.toml", // nested build files are not anchored
+            "fuzz/.cargo/config.toml",
         ] {
             assert!(
                 !CrossLayerValidator::matches_consensus_pattern(f, &consensus),
@@ -1294,6 +1313,9 @@ Binary files a/docs/x.png and b/docs/x.png differ\n",
         ] {
             let patterns = CrossLayerValidator::consensus_patterns_for(repo);
             assert!(!patterns.contains(&CONSENSUS_CRATE_SRC), "{repo}");
+            for p in CONSENSUS_CRATE_BUILD {
+                assert!(!patterns.contains(p), "{repo}: {p}");
+            }
             for f in [
                 "src/lib.rs",
                 "src/config.rs",
@@ -1451,5 +1473,306 @@ Binary files a/docs/x.png and b/docs/x.png differ\n",
             .await
             .is_ok()
         );
+    }
+
+    /// Root build inputs of blvm-consensus, tracked or not.
+    const BUILD_FILES: &[&str] = &[
+        "Cargo.toml",
+        "Cargo.lock",
+        "rust-toolchain.toml",
+        "rust-toolchain",
+        ".cargo/config.toml",
+        ".cargo/audit.toml",
+        "build.rs",
+    ];
+
+    /// Build-affecting root files of blvm-consensus block, by check_files
+    /// and on the PR-number path; the same paths in other repos do not.
+    #[tokio::test]
+    async fn blvm_consensus_build_files_block() {
+        for f in BUILD_FILES {
+            for repo in ["BTCDecoded/blvm-consensus", "btcdecoded/BLVM-Consensus"] {
+                let r = rule(serde_json::json!({ "check_files": [f] }));
+                let err = CrossLayerValidator::verify_no_consensus_modifications(repo, &r, None)
+                    .await
+                    .unwrap_err();
+                assert!(err.to_string().contains(f), "{repo}: {f}: {err}");
+            }
+            let err = check_pr(
+                "BTCDecoded/blvm-consensus",
+                async |_: &octocrab::Octocrab, _: &str, _: &str, _: u64| Ok(vec![f.to_string()]),
+            )
+            .await
+            .unwrap_err();
+            assert!(err.to_string().contains(f), "PR path: {f}: {err}");
+
+            for repo in [
+                "BTCDecoded/blvm-node",
+                "BTCDecoded/blvm-protocol",
+                "BTCDecoded/blvm-commons",
+            ] {
+                let r = rule(serde_json::json!({ "check_files": [f] }));
+                CrossLayerValidator::verify_no_consensus_modifications(repo, &r, None)
+                    .await
+                    .unwrap_or_else(|e| panic!("{repo}: {f} blocked: {e}"));
+            }
+        }
+    }
+
+    fn good_rule() -> serde_json::Value {
+        serde_json::json!({
+            "source_repo": "o/a",
+            "source_pattern": "src/**",
+            "target_repo": "o/b",
+            "validation_type": "no_consensus_modifications",
+            "check_files": ["docs/README.md"],
+        })
+    }
+
+    /// Run `good_rule()` then `bad` for a PR to `o/a`; return the error text.
+    async fn malformed_error(bad: serde_json::Value) -> String {
+        let rules = rules_for(&[good_rule(), bad.clone()]);
+        let err = CrossLayerValidator::validate_cross_layer_dependencies(
+            "o/a",
+            &["src/x.rs".to_string()],
+            &rules,
+            None,
+        )
+        .await
+        .err()
+        .unwrap_or_else(|| panic!("{bad} passed"));
+        let msg = err.to_string();
+        assert!(
+            msg.contains("Blocked: malformed cross-layer rule") && msg.contains("rule 1"),
+            "{bad}: {msg}"
+        );
+        msg
+    }
+
+    /// source_repo and target_repo must be plain `owner/name`.
+    #[tokio::test]
+    async fn repo_not_owner_slash_name_is_malformed() {
+        for field in ["source_repo", "target_repo"] {
+            for (value, why) in [
+                ("blvm-consensus", "exactly one `/`"),
+                ("o/r/x", "exactly one `/`"),
+                ("o//r", "exactly one `/`"),
+                ("/r", "empty owner or name"),
+                ("o/", "trailing `/`"),
+                ("o/r/", "trailing `/`"),
+                ("o/r.git", "`.git` suffix"),
+                ("o/r.GIT", "`.git` suffix"),
+                (" o/r", "invalid character"),
+                ("o/r ", "invalid character"),
+                ("o/r x", "invalid character"),
+                ("o/..", "invalid character"),
+            ] {
+                let mut bad = good_rule();
+                bad[field] = serde_json::json!(value);
+                let msg = malformed_error(bad).await;
+                assert!(msg.contains(field) && msg.contains(why), "{value}: {msg}");
+            }
+        }
+    }
+
+    /// A trailing `/` or `.git` on blvm-consensus used to drop the `^src/`
+    /// anchor, so `src/lib.rs` passed. Now the rule itself blocks.
+    #[tokio::test]
+    async fn suffixed_consensus_target_repo_blocks() {
+        for target in [
+            "BTCDecoded/blvm-consensus/",
+            "BTCDecoded/blvm-consensus.git",
+        ] {
+            let r = serde_json::json!({
+                "source_repo": "BTCDecoded/blvm-protocol",
+                "source_pattern": "src/**",
+                "target_repo": target,
+                "validation_type": "no_consensus_modifications",
+                "check_files": ["src/lib.rs"],
+            });
+            let err = CrossLayerValidator::validate_cross_layer_dependencies(
+                "BTCDecoded/blvm-protocol",
+                &["src/x.rs".to_string()],
+                &[r],
+                None,
+            )
+            .await
+            .unwrap_err();
+            assert!(err.to_string().contains("target_repo"), "{target}: {err}");
+        }
+    }
+
+    /// The PR's repo matches `source_repo` regardless of case, so a rule
+    /// cannot be switched off by capitalisation.
+    #[tokio::test]
+    async fn source_repo_matches_case_insensitively() {
+        let r = serde_json::json!({
+            "source_repo": "btcdecoded/BLVM-Protocol",
+            "source_pattern": "src/**",
+            "target_repo": "BTCDECODED/BLVM-CONSENSUS",
+            "validation_type": "no_consensus_modifications",
+            "check_files": ["src/lib.rs", "Cargo.toml"],
+        });
+        let err = CrossLayerValidator::validate_cross_layer_dependencies(
+            "BTCDecoded/blvm-protocol",
+            &["src/network.rs".to_string()],
+            &[r.clone()],
+            None,
+        )
+        .await
+        .unwrap_err();
+        let msg = err.to_string();
+        assert!(
+            msg.contains("src/lib.rs") && msg.contains("Cargo.toml"),
+            "{msg}"
+        );
+        // A different repo still does not trigger the rule
+        CrossLayerValidator::validate_cross_layer_dependencies(
+            "BTCDecoded/blvm-node",
+            &["src/network.rs".to_string()],
+            &[r],
+            None,
+        )
+        .await
+        .unwrap();
+    }
+
+    /// `references_latest_version` is rejected as not implemented, even
+    /// when the rule would not apply to this PR, and refused if reached.
+    #[tokio::test]
+    async fn references_latest_version_is_not_implemented() {
+        let mut bad = good_rule();
+        bad["validation_type"] = serde_json::json!("references_latest_version");
+        bad["source_repo"] = serde_json::json!("o/other");
+        let msg = malformed_error(bad).await;
+        assert!(
+            msg.contains("Blocked: validation_type `references_latest_version` is not implemented"),
+            "{msg}"
+        );
+
+        let err = CrossLayerValidator::validate_dependency(
+            "o/b",
+            "references_latest_version",
+            &good_rule(),
+            None,
+        )
+        .await
+        .unwrap_err();
+        assert!(err.to_string().contains("not implemented"), "{err}");
+    }
+
+    #[tokio::test]
+    async fn unknown_validation_type_is_malformed() {
+        for vt in [
+            "no_consensus_modification",
+            "No_Consensus_Modifications",
+            "x",
+        ] {
+            let mut bad = good_rule();
+            bad["validation_type"] = serde_json::json!(vt);
+            bad["source_repo"] = serde_json::json!("o/other");
+            let msg = malformed_error(bad).await;
+            assert!(msg.contains("unknown validation_type"), "{vt}: {msg}");
+        }
+    }
+
+    /// Non-string or empty `check_files` entries used to be dropped, which
+    /// could leave nothing to check and pass. They are malformed now.
+    #[tokio::test]
+    async fn non_string_check_files_entry_is_malformed() {
+        for (files, why) in [
+            (serde_json::json!([7]), "`check_files[0]` is not a string"),
+            (
+                serde_json::json!(["docs/a.md", null]),
+                "`check_files[1]` is not a string",
+            ),
+            (
+                serde_json::json!([{"path": "src/pow.rs"}]),
+                "is not a string",
+            ),
+            (
+                serde_json::json!(["docs/a.md", ""]),
+                "`check_files[1]` is empty",
+            ),
+            (serde_json::json!(["  "]), "`check_files[0]` is empty"),
+            (
+                serde_json::json!("src/pow.rs"),
+                "`check_files` is not an array",
+            ),
+        ] {
+            // Directly on the consensus check
+            let r = rule(serde_json::json!({ "check_files": files.clone() }));
+            let err = CrossLayerValidator::verify_no_consensus_modifications("o/r", &r, None)
+                .await
+                .err()
+                .unwrap_or_else(|| panic!("{files} passed"));
+            let msg = err.to_string();
+            assert!(
+                msg.contains("Blocked") && msg.contains(why),
+                "{files}: {msg}"
+            );
+
+            // And as rule shape, even when the rule does not apply
+            let mut bad = good_rule();
+            bad["check_files"] = files.clone();
+            bad["source_repo"] = serde_json::json!("o/other");
+            let msg = malformed_error(bad).await;
+            assert!(msg.contains(why), "{files}: {msg}");
+        }
+    }
+
+    /// The real HTTP adapter against a mock GitHub: a renamed file comes
+    /// back with `previous_filename`, and both names are returned.
+    #[tokio::test]
+    async fn list_all_pr_files_returns_rename_source_over_http() {
+        use wiremock::matchers::{method, path, query_param};
+        use wiremock::{Mock, MockServer, ResponseTemplate};
+
+        let server = MockServer::start().await;
+        let entry = |filename: &str, previous: Option<&str>, status: &str| {
+            let mut e = serde_json::json!({
+                "sha": "0000000000000000000000000000000000000000",
+                "filename": filename,
+                "status": status,
+                "additions": 0,
+                "deletions": 0,
+                "changes": 0,
+                "blob_url": null,
+                "raw_url": null,
+                "contents_url": format!("{}/contents/{filename}", server.uri()),
+            });
+            if let Some(p) = previous {
+                e["previous_filename"] = serde_json::json!(p);
+            }
+            e
+        };
+        Mock::given(method("GET"))
+            .and(path("/repos/BTCDecoded/blvm-consensus/pulls/42/files"))
+            .and(query_param("page", "1"))
+            .and(query_param("per_page", "100"))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!([
+                entry("docs/pow.rs", Some("src/pow.rs"), "renamed"),
+                entry("README.md", None, "modified"),
+            ])))
+            .expect(1)
+            .mount(&server)
+            .await;
+
+        crate::github::ensure_rustls_provider();
+        let client = octocrab::OctocrabBuilder::new()
+            .base_uri(server.uri())
+            .unwrap()
+            .personal_token("test-token".to_string())
+            .build()
+            .unwrap();
+        let names =
+            CrossLayerValidator::list_all_pr_files(&client, "BTCDecoded", "blvm-consensus", 42)
+                .await
+                .unwrap();
+        assert_eq!(names, vec!["src/pow.rs", "docs/pow.rs", "README.md"]);
+
+        let patterns = CrossLayerValidator::consensus_patterns_for("BTCDecoded/blvm-consensus");
+        let err = CrossLayerValidator::check_consensus_patterns(&patterns, &names).unwrap_err();
+        assert!(err.to_string().contains("src/pow.rs"), "{err}");
     }
 }
