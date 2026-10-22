@@ -29,6 +29,7 @@ sqlx = { version = "0.8.1", features = ["postgres", "sqlite", "runtime-tokio-rus
 secp256k1 = { version = "0.28", features = ["rand"] }
 bitcoin = "0.31"
 sha2 = "0.10"
+hmac = "0.12"
 hex = "0.4"
 
 # Governance crypto primitives

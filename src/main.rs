@@ -53,8 +53,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     info!("Starting Bitcoin Commons (blvm-commons)");
 
-    // Load configuration
+    // Load configuration. Do not open the database or bind a port until the
+    // webhook secret is a real value. The default placeholder would otherwise
+    // authenticate anyone who can read this source tree.
     let config = AppConfig::load()?;
+    config::require_webhook_secret(&config.github_webhook_secret)?;
     info!("Configuration loaded");
 
     // Initialize database
