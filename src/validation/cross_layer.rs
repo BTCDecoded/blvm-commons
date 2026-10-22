@@ -436,8 +436,9 @@ impl CrossLayerValidator {
             return Self::check_consensus_patterns(&consensus_patterns, &changed_files);
         }
 
-        // No PR: the rule may list the files to check explicitly
-        if let Some(files) = check_files {
+        // No PR: the rule may list the files to check explicitly. An empty
+        // list checks nothing, so it falls through to the block below.
+        if let Some(files) = check_files.filter(|f| !f.is_empty()) {
             return Self::check_consensus_patterns(&consensus_patterns, &files);
         }
 
@@ -946,6 +947,19 @@ Binary files a/docs/x.png and b/docs/x.png differ\n",
             .unwrap_err();
             assert!(err.to_string().contains("Blocked"), "{err}");
         }
+    }
+
+    #[tokio::test]
+    async fn empty_check_files_without_pr_blocks() {
+        let r = rule(serde_json::json!({ "check_files": [] }));
+        let err = CrossLayerValidator::verify_no_consensus_modifications(
+            "BTCDecoded/blvm-consensus",
+            &r,
+            Some("token"),
+        )
+        .await
+        .unwrap_err();
+        assert!(err.to_string().contains("needs a pr_number"), "{err}");
     }
 
     #[tokio::test]
