@@ -27,7 +27,6 @@ sqlx = { version = "0.8.1", features = ["postgres", "sqlite", "runtime-tokio-rus
 
 # Cryptography (Bitcoin-compatible)
 secp256k1 = { version = "0.28", features = ["rand"] }
-bitcoin = "0.31"
 sha2 = "0.10"
 hex = "0.4"
 
