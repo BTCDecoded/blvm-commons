@@ -186,7 +186,7 @@ See [DESIGN.md](DESIGN.md) for detailed architecture documentation.
 ### Development Tools
 
 - **Testing**: Cargo test, property-based testing (proptest)
-- **Spec-lock verification**: **blvm-spec-lock** (`cargo spec-lock verify`; optional Z3 for full contract checks in CI)
+- **Spec-lock verification**: **blvm-spec-lock**. Z3 checks the Rust on `#[spec_locked]` functions. Lean checks the Orange Paper model in `blvm-spec/lean/` and does not check the Rust.
 - **Code Quality**: rustfmt, clippy
 - **Coverage**: tarpaulin (test coverage measurement)
 
@@ -264,7 +264,7 @@ For consensus changes, the following verification stack applies (exact gates fol
 
 1. **blvm-spec-lock** (required for annotated surfaces)
    - `#[spec_locked("…")]` links implementation to Orange Paper section IDs
-   - `cargo spec-lock verify` runs in CI; optional Z3-backed contract checks when enabled
+   - Z3 checks the Rust. Lean checks the Orange Paper model and does not check the Rust. The consensus verify job is Z3. Lean is the spec-lock lean-evidence workflow.
 
 2. **Property-Based Testing** (required)
    - Randomized testing with `proptest`

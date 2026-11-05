@@ -189,7 +189,7 @@ This guide provides comprehensive high-availability patterns, monitoring strateg
 ```systemd
 # /etc/systemd/system/blvm-node.service
 [Unit]
-Description=Bitcoin Commons Node
+Description=BLVM node
 After=network.target
 
 [Service]

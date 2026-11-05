@@ -192,7 +192,7 @@ cd ~/blvm-nodes/archival
 
 ### Create config.toml
 
-**Schema:** This must match **`NodeConfig`** in `blvm-node` (no `[network]` / `[rpc] enabled` shorthand). See [blvm-docs](https://docs.thebitcoincommons.org/) / `configuration.md`. RPC bind is **`blvm --rpc-addr`**, not `[rpc].listen_address`.
+**Schema:** This must match **`NodeConfig`** in `blvm-node` (no `[network]` / `[rpc] enabled` shorthand). See [blvm-docs](https://docs.btcdecoded.org/blvm/) / `configuration.md`. RPC bind is **`blvm --rpc-addr`**, not `[rpc].listen_address`.
 
 ```toml
 listen_addr = "0.0.0.0:8333"
