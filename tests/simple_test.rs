@@ -171,27 +171,27 @@ async fn test_threshold_validation() -> Result<(), Box<dyn std::error::Error>> {
     use blvm_commons::validation::threshold::ThresholdValidator;
 
     // Test tier-specific thresholds
-    let (required, total) = ThresholdValidator::get_tier_threshold(1);
+    let (required, total) = ThresholdValidator::get_tier_threshold(1)?;
     assert_eq!(required, 3);
     assert_eq!(total, 5);
     println!("✅ Tier 1 threshold: {}/{}", required, total);
 
-    let (required, total) = ThresholdValidator::get_tier_threshold(2);
+    let (required, total) = ThresholdValidator::get_tier_threshold(2)?;
     assert_eq!(required, 4);
     assert_eq!(total, 5);
     println!("✅ Tier 2 threshold: {}/{}", required, total);
 
-    let (required, total) = ThresholdValidator::get_tier_threshold(3);
+    let (required, total) = ThresholdValidator::get_tier_threshold(3)?;
     assert_eq!(required, 5);
     assert_eq!(total, 5);
     println!("✅ Tier 3 threshold: {}/{}", required, total);
 
     // Test review periods
-    let review_period = ThresholdValidator::get_tier_review_period(1);
+    let review_period = ThresholdValidator::get_tier_review_period(1)?;
     assert_eq!(review_period, 7);
     println!("✅ Tier 1 review period: {} days", review_period);
 
-    let review_period = ThresholdValidator::get_tier_review_period(3);
+    let review_period = ThresholdValidator::get_tier_review_period(3)?;
     assert_eq!(review_period, 90);
     println!("✅ Tier 3 review period: {} days", review_period);
 

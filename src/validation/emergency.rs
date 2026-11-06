@@ -225,12 +225,44 @@ impl ActiveEmergency {
     }
 }
 
+/// A keyholder in the registered emergency authority set.
+/// Activation does not treat keys inside the request as this set.
+#[derive(Debug, Clone)]
+pub struct RegisteredKeyholder {
+    pub name: String,
+    pub public_key_hex: String,
+}
+
+pub fn activation_signing_message(
+    activation: &EmergencyActivation,
+    sig: &KeyholderSignature,
+) -> Result<Vec<u8>, GovernanceAppError> {
+    serde_json::to_vec(&serde_json::json!({
+        "tier": activation.tier.to_i32(),
+        "activated_by": activation.activated_by,
+        "reason": activation.reason,
+        "evidence": activation.evidence,
+        "keyholder": sig.keyholder,
+        "timestamp": sig.timestamp.to_rfc3339(),
+    }))
+    .map_err(|e| {
+        GovernanceAppError::InvalidSignature(format!("Failed to serialize activation message: {e}"))
+    })
+}
+
+fn normalize_key_hex(value: &str) -> String {
+    value.trim().trim_start_matches("0x").to_ascii_lowercase()
+}
+
 /// Emergency tier validator
 pub struct EmergencyValidator;
 
 impl EmergencyValidator {
     /// Validate emergency activation request
-    pub fn validate_activation(activation: &EmergencyActivation) -> Result<(), GovernanceAppError> {
+    pub fn validate_activation(
+        activation: &EmergencyActivation,
+        registered: &[RegisteredKeyholder],
+    ) -> Result<(), GovernanceAppError> {
         // Check minimum evidence length
         if activation.evidence.len() < 100 {
             return Err(GovernanceAppError::InsufficientEvidence(
@@ -238,21 +270,31 @@ impl EmergencyValidator {
             ));
         }
 
-        // Check signature count meets activation threshold
         let (required, total) = activation.tier.activation_threshold();
-        if activation.signatures.len() < required as usize {
+        let mut accepted = std::collections::HashSet::new();
+        for sig in &activation.signatures {
+            let key = normalize_key_hex(&sig.public_key);
+            let holder = registered.iter().find(|holder| {
+                normalize_key_hex(&holder.public_key_hex) == key && holder.name == sig.keyholder
+            });
+            let Some(_holder) = holder else {
+                return Err(GovernanceAppError::InvalidSignature(format!(
+                    "public key for {} is not in the registered emergency authority set",
+                    sig.keyholder
+                )));
+            };
+            Self::validate_keyholder_signature(sig, activation)?;
+            accepted.insert(key);
+        }
+
+        if accepted.len() < required as usize {
             return Err(GovernanceAppError::InsufficientSignatures(
                 InsufficientSignaturesArgs {
                     required: required as usize,
-                    found: activation.signatures.len(),
+                    found: accepted.len(),
                     threshold: format!("{required}-of-{total}"),
                 },
             ));
-        }
-
-        // Validate individual signatures
-        for sig in &activation.signatures {
-            Self::validate_keyholder_signature(sig, activation)?;
         }
 
         Ok(())
@@ -303,20 +345,7 @@ impl EmergencyValidator {
                 GovernanceAppError::InvalidSignature(format!("Invalid signature format: {e}"))
             })?;
 
-        // Create message to verify: serialize activation data
-        let message = serde_json::to_vec(&serde_json::json!({
-            "tier": activation.tier.to_i32(),
-            "activated_by": activation.activated_by,
-            "reason": activation.reason,
-            "evidence": activation.evidence,
-            "keyholder": sig.keyholder,
-            "timestamp": sig.timestamp.to_rfc3339(),
-        }))
-        .map_err(|e| {
-            GovernanceAppError::InvalidSignature(format!(
-                "Failed to serialize activation message: {e}"
-            ))
-        })?;
+        let message = activation_signing_message(activation, sig)?;
 
         // Verify signature using blvm-sdk
         let verified = blvm_sdk::governance::verify_signature(&signature, &message, &public_key)
@@ -338,6 +367,7 @@ impl EmergencyValidator {
     pub fn validate_extension(
         emergency: &ActiveEmergency,
         signatures: &[KeyholderSignature],
+        registered: &[RegisteredKeyholder],
     ) -> Result<(), GovernanceAppError> {
         // Check if tier allows extensions
         if !emergency.tier.allows_extensions() {
@@ -361,13 +391,31 @@ impl EmergencyValidator {
             return Err(GovernanceAppError::EmergencyExpired(emergency.id));
         }
 
-        // Check signature count meets extension threshold
         let (required, total) = emergency.tier.extension_threshold();
-        if signatures.len() < required as usize {
+        let mut accepted = std::collections::HashSet::new();
+        for sig in signatures {
+            let key = normalize_key_hex(&sig.public_key);
+            let registered_name = registered.iter().find_map(|holder| {
+                (normalize_key_hex(&holder.public_key_hex) == key).then(|| holder.name.as_str())
+            });
+            if registered_name != Some(sig.keyholder.as_str()) {
+                return Err(GovernanceAppError::InvalidSignature(format!(
+                    "public key for {} is not in the registered emergency authority set",
+                    sig.keyholder
+                )));
+            }
+            if sig.signature.trim().is_empty() {
+                return Err(GovernanceAppError::InvalidSignature(
+                    "Empty signature".to_string(),
+                ));
+            }
+            accepted.insert(key);
+        }
+        if accepted.len() < required as usize {
             return Err(GovernanceAppError::InsufficientSignatures(
                 InsufficientSignaturesArgs {
                     required: required as usize,
-                    found: signatures.len(),
+                    found: accepted.len(),
                     threshold: format!("{required}-of-{total}"),
                 },
             ));
@@ -664,7 +712,7 @@ mod tests {
             signatures: vec![],
         };
 
-        let result = EmergencyValidator::validate_activation(&activation);
+        let result = EmergencyValidator::validate_activation(&activation, &[]);
         assert!(result.is_err());
         match result.unwrap_err() {
             GovernanceAppError::ValidationError(msg) => {
@@ -684,7 +732,7 @@ mod tests {
             signatures: vec![],        // Need 5-of-7, have 0
         };
 
-        let result = EmergencyValidator::validate_activation(&activation);
+        let result = EmergencyValidator::validate_activation(&activation, &[]);
         assert!(result.is_err());
         match result.unwrap_err() {
             GovernanceAppError::ValidationError(msg) => {
@@ -707,7 +755,7 @@ mod tests {
             extension_count: 0,
         };
 
-        let result = EmergencyValidator::validate_extension(&emergency, &[]);
+        let result = EmergencyValidator::validate_extension(&emergency, &[], &[]);
         assert!(result.is_err());
         match result.unwrap_err() {
             GovernanceAppError::ValidationError(msg) => {
@@ -730,7 +778,7 @@ mod tests {
             extension_count: 1, // Already at max
         };
 
-        let result = EmergencyValidator::validate_extension(&emergency, &[]);
+        let result = EmergencyValidator::validate_extension(&emergency, &[], &[]);
         assert!(result.is_err());
         match result.unwrap_err() {
             GovernanceAppError::ValidationError(msg) => {
@@ -753,7 +801,7 @@ mod tests {
             extension_count: 0,
         };
 
-        let result = EmergencyValidator::validate_extension(&emergency, &[]);
+        let result = EmergencyValidator::validate_extension(&emergency, &[], &[]);
         assert!(result.is_err());
         match result.unwrap_err() {
             GovernanceAppError::ValidationError(msg) => {
@@ -777,7 +825,7 @@ mod tests {
         };
 
         // Need 6-of-7 signatures for extension, have 0
-        let result = EmergencyValidator::validate_extension(&emergency, &[]);
+        let result = EmergencyValidator::validate_extension(&emergency, &[], &[]);
         assert!(result.is_err());
         match result.unwrap_err() {
             GovernanceAppError::ValidationError(msg) => {
