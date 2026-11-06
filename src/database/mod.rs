@@ -179,6 +179,10 @@ impl Database {
             VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?)
             ON CONFLICT (repo_name, pr_number) DO UPDATE SET
                 head_sha = EXCLUDED.head_sha,
+                signatures = CASE
+                    WHEN pull_requests.head_sha = EXCLUDED.head_sha THEN pull_requests.signatures
+                    ELSE '[]'
+                END,
                 updated_at = CURRENT_TIMESTAMP
             "#,
         )

@@ -94,9 +94,28 @@ pub async fn handle_comment_event(
                 }
             };
 
-            // Verify signature using blvm-sdk
+            // Verify signature using blvm-sdk compact secp256k1.
+            // The message is bound to the stored head, so a signature over an
+            // older commit does not survive a rewritten branch.
             let signature_manager = SignatureManager::new();
-            let message = format!("PR #{pr_number} in {repo_name}");
+            let stored = match database.get_pull_request(repo_name, pr_number as i32).await {
+                Ok(Some(pr)) => pr,
+                Ok(None) => {
+                    warn!("No stored pull request for {}#{}", repo_name, pr_number);
+                    return Ok(axum::response::Json(
+                        serde_json::json!({"status": "no_pull_request"}),
+                    ));
+                }
+                Err(e) => {
+                    warn!("Failed to load pull request: {}", e);
+                    return Err(axum::http::StatusCode::INTERNAL_SERVER_ERROR);
+                }
+            };
+            let message = crate::crypto::signatures::governance_pr_message(
+                repo_name,
+                pr_number,
+                &stored.head_sha,
+            );
 
             match signature_manager.verify_governance_signature(
                 &message,
