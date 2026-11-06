@@ -798,13 +798,11 @@ mod tests {
     }
 
     // Helper function to create a test checker.
-    // Uses test_fixtures RSA key when available; falls back to from_token("test") for CI (no API calls in unit tests).
+    // Generates an ephemeral RSA key; falls back to from_token("test") if that fails.
     fn create_test_checker() -> Option<CrossLayerStatusChecker> {
         let github_client = {
             let temp_dir = tempfile::tempdir().ok()?;
-            let key_path = temp_dir.path().join("test_key.pem");
-            let valid_key = include_str!("../../test_fixtures/test_rsa_key.pem");
-            std::fs::write(&key_path, valid_key).ok()?;
+            let key_path = crate::github::client::write_ephemeral_rsa_pem(temp_dir.path());
             GitHubClient::new(123456, key_path.to_str()?)
                 .ok()
                 .or_else(|| GitHubClient::from_token("test").ok())?
@@ -1451,15 +1449,13 @@ mod tests {
         assert_eq!(sync_status, SyncStatus::SyncFailure);
     }
 
-    /// Integration test: uses test_fixtures/test_rsa_key.pem. Makes real GitHub API calls.
+    /// Integration test: generates an ephemeral RSA key. Makes real GitHub API calls.
     /// Skipped when key parsing fails (e.g. CI without fixture). Run with --ignored for full test.
     #[tokio::test]
     #[ignore = "Makes real GitHub API calls; run with cargo test -- --ignored"]
     async fn test_cross_layer_status_generation() {
         let temp_dir = tempfile::tempdir().unwrap();
-        let key_path = temp_dir.path().join("test_key.pem");
-        let valid_key = include_str!("../../test_fixtures/test_rsa_key.pem");
-        std::fs::write(&key_path, valid_key).unwrap();
+        let key_path = crate::github::client::write_ephemeral_rsa_pem(temp_dir.path());
 
         let github_client = match GitHubClient::new(123456, key_path.to_str().unwrap()) {
             Ok(client) => client,

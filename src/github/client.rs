@@ -900,3 +900,19 @@ impl GitHubClient {
         Ok(())
     }
 }
+
+/// Writes a freshly generated PKCS#8 RSA key. Tests must not embed a private key.
+#[cfg(test)]
+pub(crate) fn write_ephemeral_rsa_pem(dir: &std::path::Path) -> std::path::PathBuf {
+    use rsa::RsaPrivateKey;
+    use rsa::pkcs8::EncodePrivateKey;
+
+    let mut rng = rand::rngs::OsRng;
+    let key = RsaPrivateKey::new(&mut rng, 2048).expect("generate test RSA key");
+    let pem = key
+        .to_pkcs8_pem(rsa::pkcs8::LineEnding::LF)
+        .expect("encode test RSA key");
+    let path = dir.join("test_key.pem");
+    std::fs::write(&path, pem.as_bytes()).expect("write test RSA key");
+    path
+}
