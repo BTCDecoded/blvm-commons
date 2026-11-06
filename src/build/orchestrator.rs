@@ -347,7 +347,7 @@ impl BuildOrchestrator {
         );
 
         // Upload artifacts to the release
-        let release_id = release.id;
+        let _release_id = release.id;
         let mut uploaded_count = 0;
         let mut failed_count = 0;
 

@@ -36,6 +36,7 @@ impl GovernanceActionPublisher {
     }
 
     /// Publish a governance action event (merge, release, etc.)
+    #[allow(clippy::too_many_arguments)]
     pub async fn publish_action(
         &self,
         action: &str, // "merge" | "release" | "budget" | "keyholder_change"
@@ -177,6 +178,7 @@ impl GovernanceActionPublisher {
     }
 
     /// Create Nostr event from governance action
+    #[allow(clippy::too_many_arguments)]
     fn create_nostr_event(
         &self,
         action: &str,
@@ -275,7 +277,7 @@ mod tests {
         // Create a mock client for testing
         // Note: This won't actually connect to relays
         let keys = nostr_sdk::prelude::Keys::generate();
-        let nsec = keys.secret_key().to_secret_hex();
+        let nsec = keys.secret_key().to_bech32().expect("nsec");
         let client = crate::nostr::client::NostrClient::new(nsec, vec![])
             .await
             .unwrap();
@@ -293,7 +295,7 @@ mod tests {
     #[tokio::test]
     async fn test_governance_action_publisher_with_zap() {
         let keys = nostr_sdk::prelude::Keys::generate();
-        let nsec = keys.secret_key().to_secret_hex();
+        let nsec = keys.secret_key().to_bech32().expect("nsec");
         let client = crate::nostr::client::NostrClient::new(nsec, vec![])
             .await
             .unwrap();

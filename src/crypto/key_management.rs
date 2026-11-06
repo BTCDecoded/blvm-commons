@@ -162,6 +162,7 @@ pub struct KeyManagementConfig {
 pub struct KeyManager {
     pool: SqlitePool,
     signature_manager: SignatureManager,
+    #[allow(dead_code)]
     config: KeyManagementConfig,
     key_cache: Arc<RwLock<HashMap<String, KeyMetadata>>>,
 }

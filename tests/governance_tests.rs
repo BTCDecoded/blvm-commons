@@ -153,15 +153,22 @@ async fn test_contribution_tracker_zap() {
 }
 
 #[tokio::test]
+async fn test_weight_calculator_quadratic() {
+    let pool = setup_test_db().await;
+    let calculator = WeightCalculator::new(pool.clone());
+
+    // Maintainer-only governance: contribution size is not voting weight.
+    assert_eq!(calculator.calculate_participation_weight(), 0.0);
+}
+
+#[tokio::test]
 async fn test_weight_calculator_cap() {
     let pool = setup_test_db().await;
     let calculator = WeightCalculator::new(pool.clone());
 
-    // Since dabfdbf governance is maintainer-only and apply_weight_cap is a
-    // reporting stub: the weight is returned unchanged (no 5% cap).
-    let total_system_weight = 100.0;
-    assert_eq!(calculator.apply_weight_cap(10.0, total_system_weight), 10.0);
-    assert_eq!(calculator.apply_weight_cap(2.0, total_system_weight), 2.0);
+    // The cap is not a second voting rule. The reported weight is unchanged.
+    assert_eq!(calculator.apply_weight_cap(10.0, 100.0), 10.0);
+    assert_eq!(calculator.apply_weight_cap(2.0, 100.0), 2.0);
 }
 
 #[tokio::test]
@@ -169,19 +176,61 @@ async fn test_weight_calculator_cooling_off() {
     let pool = setup_test_db().await;
     let calculator = WeightCalculator::new(pool.clone());
 
-    // Since dabfdbf governance is maintainer-only and check_cooling_off is a
-    // reporting stub: no cooling-off period for any contribution.
+    // Cooling-off is not a vote gate. Eligibility stays open.
     assert!(calculator.check_cooling_off(0.1, 29));
-    assert!(calculator.check_cooling_off(0.1, 30));
-    assert!(calculator.check_cooling_off(0.1, 31));
     assert!(calculator.check_cooling_off(0.05, 0));
-    assert!(calculator.check_cooling_off(0.09, 1));
+}
+
+#[tokio::test]
+async fn test_weight_calculator_update_weights() {
+    let pool = setup_test_db().await;
+    let tracker = ContributionTracker::new(pool.clone());
+    let calculator = WeightCalculator::new(pool.clone());
+
+    let timestamp = Utc::now();
+
+    tracker
+        .record_zap_contribution("contributor1", 0.05, timestamp, false)
+        .await
+        .unwrap();
+
+    tracker.update_contribution_ages().await.unwrap();
+    calculator.update_participation_weights().await.unwrap();
+
+    let weight = calculator
+        .get_participation_weight("contributor1")
+        .await
+        .unwrap();
+    assert_eq!(weight, Some(0.0));
+}
+
+#[tokio::test]
+async fn test_aggregator_monthly_aggregation() {
+    let pool = setup_test_db().await;
+    let tracker = ContributionTracker::new(pool.clone());
+    let aggregator = ContributionAggregator::new(pool.clone());
+
+    let now = Utc::now();
+    let thirty_one_days_ago = now - chrono::Duration::days(31);
+
+    tracker
+        .record_zap_contribution("user1", 0.01, now - chrono::Duration::days(15), false)
+        .await
+        .unwrap();
+    tracker
+        .record_zap_contribution("user1", 0.02, thirty_one_days_ago, false)
+        .await
+        .unwrap();
+
+    // Zaps stay cumulative. There is no 30-day merge-mining window.
+    let total = aggregator.aggregate_zaps_cumulative("user1").await.unwrap();
+    assert_eq!(total, 0.03);
 }
 
 #[tokio::test]
 async fn test_zap_voting_processor() {
     let pool = setup_test_db().await;
-    let processor = ZapVotingProcessor::new(pool.clone());
+    let _processor = ZapVotingProcessor::new(pool.clone());
 
     // This test would require actual zap events, so we'll test the vote type parsing
     use blvm_commons::nostr::VoteType;
@@ -206,4 +255,30 @@ async fn test_vote_aggregator_thresholds() {
 
     // Invalid tier
     assert!(aggregator.get_threshold_for_tier(6).is_err());
+}
+
+#[tokio::test]
+async fn test_integration_full_flow() {
+    let pool = setup_test_db().await;
+    let tracker = ContributionTracker::new(pool.clone());
+    let aggregator = ContributionAggregator::new(pool.clone());
+    let calculator = WeightCalculator::new(pool.clone());
+
+    let timestamp = Utc::now();
+
+    tracker
+        .record_zap_contribution("contributor1", 0.05, timestamp, false)
+        .await
+        .unwrap();
+    tracker.update_contribution_ages().await.unwrap();
+    calculator.update_participation_weights().await.unwrap();
+
+    let aggregates = aggregator
+        .get_contributor_aggregates("contributor1")
+        .await
+        .unwrap();
+
+    assert_eq!(aggregates.cumulative_zaps_btc, 0.05);
+    assert_eq!(aggregates.total_contribution_btc, 0.05);
+    assert_eq!(aggregates.participation_weight, 0.0);
 }

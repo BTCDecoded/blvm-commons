@@ -55,6 +55,7 @@ pub struct GitHubFileOperations {
 impl GitHubFileOperations {
     /// Create a new GitHub file operations client
     pub fn new(token: String) -> Result<Self, GovernanceError> {
+        crate::github::ensure_rustls_provider();
         let client = Octocrab::builder()
             .personal_token(token)
             .build()
@@ -257,6 +258,7 @@ impl GitHubFileOperations {
     }
 
     /// Compare file versions across repositories
+    #[allow(clippy::too_many_arguments)]
     pub async fn compare_file_versions(
         &self,
         source_owner: &str,

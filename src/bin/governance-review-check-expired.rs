@@ -13,6 +13,9 @@ use tracing::{error, info};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Install the rustls crypto provider before any TLS client is built
+    blvm_commons::github::ensure_rustls_provider();
+
     tracing_subscriber::fmt::init();
 
     let args: Vec<String> = std::env::args().collect();

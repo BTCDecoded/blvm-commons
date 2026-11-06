@@ -34,6 +34,7 @@ pub enum ChallengeTarget {
 }
 
 impl ChallengeTarget {
+    #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &str) -> Result<Self, GovernanceError> {
         match s.to_lowercase().as_str() {
             "pull_request" | "pr" => Ok(ChallengeTarget::PullRequest),
@@ -46,6 +47,7 @@ impl ChallengeTarget {
         }
     }
 
+    #[allow(clippy::inherent_to_string)]
     pub fn to_string(&self) -> String {
         match self {
             ChallengeTarget::PullRequest => "pull_request".to_string(),
@@ -65,6 +67,7 @@ pub enum ChallengeStatus {
 }
 
 impl ChallengeStatus {
+    #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &str) -> Self {
         match s.to_lowercase().as_str() {
             "pending" => ChallengeStatus::Pending,
@@ -75,6 +78,7 @@ impl ChallengeStatus {
         }
     }
 
+    #[allow(clippy::inherent_to_string)]
     pub fn to_string(&self) -> String {
         match self {
             ChallengeStatus::Pending => "pending".to_string(),
@@ -267,7 +271,7 @@ impl ChallengeManager {
 
     /// Get pending challenges that need response (30-day deadline)
     pub async fn get_pending_challenges(&self) -> Result<Vec<Challenge>, GovernanceError> {
-        let thirty_days_ago = Utc::now() - chrono::Duration::days(30);
+        let thirty_days_ago = Utc::now() - chrono::Duration::try_days(30).expect("day count");
         let cutoff_str = thirty_days_ago.to_rfc3339();
         let rows = sqlx::query!(
             r#"

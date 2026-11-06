@@ -36,6 +36,7 @@ impl RulesetVersion {
         }
     }
 
+    #[allow(clippy::inherent_to_string)]
     pub fn to_string(&self) -> String {
         let mut version = format!("{}.{}.{}", self.major, self.minor, self.patch);
 

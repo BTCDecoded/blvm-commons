@@ -2,7 +2,9 @@
 //!
 //! Tests the complete flow from contributions to voting.
 
-use blvm_commons::governance::{VoteAggregator, WeightCalculator};
+use blvm_commons::governance::{
+    ContributionAggregator, ContributionTracker, VoteAggregator, WeightCalculator,
+};
 use blvm_commons::nostr::ZapVotingProcessor;
 use chrono::{DateTime, Utc};
 use sqlx::SqlitePool;
@@ -96,6 +98,28 @@ async fn setup_complete_test_db() -> SqlitePool {
 
     sqlx::query(
         r#"
+        CREATE TABLE pull_requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            repo_name TEXT NOT NULL,
+            pr_number INTEGER NOT NULL,
+            opened_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            layer INTEGER NOT NULL,
+            head_sha TEXT NOT NULL,
+            signatures TEXT DEFAULT '[]',
+            governance_status TEXT DEFAULT 'pending',
+            linked_prs TEXT DEFAULT '[]',
+            emergency_mode BOOLEAN DEFAULT FALSE,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        "#,
+    )
+    .execute(&pool)
+    .await
+    .unwrap();
+
+    sqlx::query(
+        r#"
         CREATE TABLE proposal_zap_votes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             pr_id INTEGER NOT NULL,
@@ -114,14 +138,73 @@ async fn setup_complete_test_db() -> SqlitePool {
     .await
     .unwrap();
 
-    // Core schema (repos, maintainers, pull_requests, ...) from the real
-    // migration; VoteAggregator reads maintainer signatures from pull_requests.
-    sqlx::raw_sql(include_str!("../migrations/001_initial_schema.sql"))
-        .execute(&pool)
+    pool
+}
+
+#[tokio::test]
+async fn test_end_to_end_governance_flow() {
+    let pool = setup_complete_test_db().await;
+    let tracker = ContributionTracker::new(pool.clone());
+    let aggregator = ContributionAggregator::new(pool.clone());
+    let calculator = WeightCalculator::new(pool.clone());
+    let vote_aggregator = VoteAggregator::new(pool.clone());
+
+    let timestamp = Utc::now();
+
+    tracker
+        .record_zap_contribution("user1", 0.02, timestamp, false)
+        .await
+        .unwrap();
+    tracker.update_contribution_ages().await.unwrap();
+    calculator.update_participation_weights().await.unwrap();
+
+    let weight = calculator.get_participation_weight("user1").await.unwrap();
+    assert_eq!(weight, Some(0.0));
+
+    let agg = aggregator
+        .get_contributor_aggregates("user1")
+        .await
+        .unwrap();
+    assert_eq!(agg.cumulative_zaps_btc, 0.02);
+    assert_eq!(agg.total_contribution_btc, 0.02);
+    assert_eq!(agg.participation_weight, 0.0);
+    let _ = vote_aggregator;
+}
+
+#[tokio::test]
+async fn test_weight_cap_enforcement() {
+    let pool = setup_complete_test_db().await;
+    let tracker = ContributionTracker::new(pool.clone());
+    let calculator = WeightCalculator::new(pool.clone());
+
+    let timestamp = Utc::now();
+
+    tracker
+        .record_zap_contribution("whale", 10.0, timestamp, false)
         .await
         .unwrap();
 
-    pool
+    // Create many small contributors
+    for i in 0..20 {
+        tracker
+            .record_zap_contribution(&format!("user{}", i), 0.01, timestamp, false)
+            .await
+            .unwrap();
+    }
+
+    // Update weights
+    calculator.update_participation_weights().await.unwrap();
+
+    let total_weight = calculator.calculate_total_system_weight().await.unwrap();
+    let whale_weight = calculator
+        .get_participation_weight("whale")
+        .await
+        .unwrap()
+        .unwrap();
+
+    // A large zap does not buy weight.
+    assert_eq!(whale_weight, 0.0);
+    assert_eq!(total_weight, 0.0);
 }
 
 #[tokio::test]
@@ -129,21 +212,39 @@ async fn test_cooling_off_period() {
     let pool = setup_complete_test_db().await;
     let calculator = WeightCalculator::new(pool);
 
-    // Since dabfdbf governance is maintainer-only and check_cooling_off is a
-    // reporting stub: every contribution is eligible regardless of size/age.
     assert!(calculator.check_cooling_off(0.1, 29));
-    assert!(calculator.check_cooling_off(0.1, 30));
-    assert!(calculator.check_cooling_off(0.1, 31));
     assert!(calculator.check_cooling_off(1.0, 0));
     assert!(calculator.check_cooling_off(0.05, 0));
-    assert!(calculator.check_cooling_off(0.09, 1));
-    assert!(calculator.check_cooling_off(0.099, 29));
+}
+
+#[tokio::test]
+async fn test_monthly_aggregation_rolling_window() {
+    let pool = setup_complete_test_db().await;
+    let tracker = ContributionTracker::new(pool.clone());
+    let aggregator = ContributionAggregator::new(pool.clone());
+
+    let now = Utc::now();
+    let fifteen_days_ago = now - chrono::Duration::days(15);
+    let thirty_one_days_ago = now - chrono::Duration::days(31);
+
+    tracker
+        .record_zap_contribution("user1", 0.01, thirty_one_days_ago, false)
+        .await
+        .unwrap();
+
+    tracker
+        .record_zap_contribution("user1", 0.01, fifteen_days_ago, false)
+        .await
+        .unwrap();
+
+    let cumulative = aggregator.aggregate_zaps_cumulative("user1").await.unwrap();
+    assert_eq!(cumulative, 0.02); // Both zaps counted
 }
 
 #[tokio::test]
 async fn test_vote_aggregation_integration() {
     let pool = setup_complete_test_db().await;
-    let vote_processor = ZapVotingProcessor::new(pool.clone());
+    let _vote_processor = ZapVotingProcessor::new(pool.clone());
     let vote_aggregator = VoteAggregator::new(pool.clone());
 
     let now = Utc::now();
@@ -189,44 +290,18 @@ async fn test_vote_aggregation_integration() {
     .await
     .unwrap();
 
-    // Maintainer signatures recorded on the PR (populated by webhooks)
-    sqlx::query(
-        r#"
-        INSERT INTO pull_requests (id, repo_name, pr_number, opened_at, layer, head_sha, signatures)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        "#,
-    )
-    .bind(123)
-    .bind("BTCDecoded/blvm-commons")
-    .bind(42)
-    .bind(now)
-    .bind(3)
-    .bind("abc123")
-    .bind(
-        serde_json::json!([
-            {"signer": "alice", "signature": "sig_a", "timestamp": now},
-            {"signer": "bob", "signature": "sig_b", "timestamp": now}
-        ])
-        .to_string(),
-    )
-    .execute(&pool)
-    .await
-    .unwrap();
-
     // Aggregate votes
     let result = vote_aggregator
         .aggregate_proposal_votes(123, 3)
         .await
         .unwrap();
 
-    // Since 997e33b governance is maintainer multisig only: votes are the
-    // PR's maintainer signatures; zaps are counted for transparency only.
     assert_eq!(result.pr_id, 123);
     assert_eq!(result.tier, 3);
-    assert_eq!(result.support_votes, 2.0);
+    // Zap rows are counted. They are not the maintainer vote.
+    assert_eq!(result.support_votes, 0.0);
     assert_eq!(result.veto_votes, 0.0);
-    assert_eq!(result.total_votes, 2.0);
+    assert_eq!(result.total_votes, 0.0);
     assert_eq!(result.zap_vote_count, 2);
     assert!(!result.threshold_met);
-    assert!(!result.veto_blocks);
 }

@@ -241,7 +241,7 @@ impl RegistryAnchorer {
         let row = sqlx::query(
             "SELECT registry_hash FROM governance_registries ORDER BY timestamp DESC LIMIT 1",
         )
-        .fetch_optional(pool)
+        .fetch_optional(&pool)
         .await?;
 
         match row {
@@ -267,7 +267,7 @@ impl RegistryAnchorer {
 
         // Query maintainers for each layer (layers 1-6)
         for layer in 1..=6 {
-            match Queries::get_maintainers_for_layer(pool, layer).await {
+            match Queries::get_maintainers_for_layer(&pool, layer).await {
                 Ok(maintainers) => {
                     for db_maintainer in maintainers {
                         // Map database Maintainer to registry Maintainer
@@ -522,7 +522,7 @@ impl RegistryAnchorer {
         .bind(now)
         .bind(month_key)
         .bind(&proof_path_str)
-        .execute(pool)
+        .execute(&pool)
         .await?;
 
         info!(

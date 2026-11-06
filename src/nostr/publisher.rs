@@ -327,7 +327,7 @@ mod tests {
 
         // Generate valid Nostr keys for testing
         let keys = Keys::generate();
-        let nsec = keys.secret_key().to_secret_hex();
+        let nsec = keys.secret_key().to_bech32().expect("nsec");
 
         let publisher = StatusPublisher {
             client: NostrClient::new(nsec, vec![]).await.unwrap(),
@@ -350,7 +350,7 @@ mod tests {
     async fn test_next_ots_anchor_calculation() {
         // Generate valid Nostr keys for testing
         let keys = Keys::generate();
-        let nsec = keys.secret_key().to_secret_hex();
+        let nsec = keys.secret_key().to_bech32().expect("nsec");
 
         let publisher = StatusPublisher {
             client: NostrClient::new(nsec, vec![]).await.unwrap(),

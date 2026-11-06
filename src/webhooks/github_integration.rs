@@ -331,6 +331,7 @@ impl GitHubIntegration {
     }
 
     /// Post combined status check
+    #[allow(clippy::too_many_arguments)]
     async fn post_combined_status(
         &self,
         owner: &str,

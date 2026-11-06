@@ -5,10 +5,12 @@ pub mod schema;
 use crate::error::GovernanceError;
 use sqlx::{Row, SqlitePool, sqlite::SqliteConnectOptions, sqlite::SqlitePoolOptions};
 use std::str::FromStr;
+use std::sync::{Arc, RwLock};
 
 #[derive(Clone)]
 pub struct DatabaseBackend {
-    pool: SqlitePool,
+    /// Shared with every `Database` clone, including the router state.
+    pool: Arc<RwLock<SqlitePool>>,
 }
 
 #[derive(Clone)]
@@ -32,7 +34,9 @@ impl Database {
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
             Ok(Self {
-                backend: DatabaseBackend { pool },
+                backend: DatabaseBackend {
+                    pool: Arc::new(RwLock::new(pool)),
+                },
                 database_url: database_url.to_string(),
             })
         } else {
@@ -51,7 +55,9 @@ impl Database {
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
         let db = Self {
-            backend: DatabaseBackend { pool },
+            backend: DatabaseBackend {
+                pool: Arc::new(RwLock::new(pool)),
+            },
             database_url: "sqlite::memory:".to_string(),
         };
         db.run_migrations().await?;
@@ -80,7 +86,9 @@ impl Database {
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
             let db = Database {
-                backend: DatabaseBackend { pool },
+                backend: DatabaseBackend {
+                    pool: Arc::new(RwLock::new(pool)),
+                },
                 database_url: database_url.to_string(),
             };
             db.run_migrations().await?;
@@ -93,8 +101,8 @@ impl Database {
     }
 
     pub async fn run_migrations(&self) -> Result<(), GovernanceError> {
-        let pool = &self.backend.pool;
-        let result = sqlx::migrate!("./migrations").run(pool).await;
+        let pool = self.read_pool().clone();
+        let result = sqlx::migrate!("./migrations").run(&pool).await;
 
         match result {
             Ok(_) => {
@@ -102,7 +110,7 @@ impl Database {
                 let tables_check = sqlx::query_scalar::<_, i64>(
                             "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('pull_requests', 'tier_overrides', 'build_runs')"
                         )
-                        .fetch_one(pool)
+                        .fetch_one(&pool)
                         .await;
 
                 if let Ok(count) = tables_check {
@@ -130,26 +138,37 @@ impl Database {
         }
     }
 
-    pub fn get_sqlite_pool(&self) -> Option<&SqlitePool> {
-        Some(&self.backend.pool)
+    fn read_pool(&self) -> std::sync::RwLockReadGuard<'_, SqlitePool> {
+        self.backend.pool.read().expect("database pool lock")
+    }
+
+    pub fn get_sqlite_pool(&self) -> Option<SqlitePool> {
+        Some(self.read_pool().clone())
     }
 
     pub fn is_sqlite(&self) -> bool {
         true
     }
 
-    /// Reconnect to database using stored database URL
-    /// Useful when connection pool is closed or unhealthy
-    /// Returns a new Database instance with fresh connection pool
-    pub async fn reconnect(&self) -> Result<Self, GovernanceError> {
-        Self::new(&self.database_url).await
+    /// Replace the pool shared by every clone of this `Database`.
+    pub async fn reconnect(&self) -> Result<(), GovernanceError> {
+        let pool = SqlitePool::connect(&self.database_url)
+            .await
+            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+        let old = {
+            let mut guard = self.backend.pool.write().expect("database pool lock");
+            std::mem::replace(&mut *guard, pool)
+        };
+        old.close().await;
+        Ok(())
     }
 
     /// Check database connection health
     /// Returns true if connection is healthy, false otherwise
     pub async fn check_health(&self) -> Result<bool, GovernanceError> {
+        let pool = self.read_pool().clone();
         sqlx::query("SELECT 1")
-            .execute(&self.backend.pool)
+            .execute(&pool)
             .await
             .map(|_| true)
             .map_err(|e| GovernanceError::DatabaseError(format!("Health check failed: {e}")))
@@ -157,7 +176,7 @@ impl Database {
 
     /// Get database connection pool statistics
     pub async fn get_pool_stats(&self) -> Result<PoolStats, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         Ok(PoolStats {
             size: pool.size(),
             idle: pool.num_idle(),
@@ -172,12 +191,16 @@ impl Database {
         head_sha: &str,
         layer: i32,
     ) -> Result<(), GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         sqlx::query(
             r#"
             INSERT INTO pull_requests (repo_name, pr_number, opened_at, layer, head_sha)
             VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?)
             ON CONFLICT (repo_name, pr_number) DO UPDATE SET
+                signatures = CASE
+                    WHEN pull_requests.head_sha != EXCLUDED.head_sha THEN '[]'
+                    ELSE pull_requests.signatures
+                END,
                 head_sha = EXCLUDED.head_sha,
                 updated_at = CURRENT_TIMESTAMP
             "#,
@@ -186,7 +209,7 @@ impl Database {
         .bind(pr_number)
         .bind(layer)
         .bind(head_sha)
-        .execute(pool)
+        .execute(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(())
@@ -199,7 +222,7 @@ impl Database {
         reviewer: &str,
         state: &str,
     ) -> Result<(), GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         sqlx::query!(
             r#"
             INSERT INTO reviews (repo_name, pr_number, reviewer, state, submitted_at, updated_at)
@@ -213,7 +236,7 @@ impl Database {
             reviewer,
             state
         )
-        .execute(pool)
+        .execute(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(())
@@ -226,7 +249,7 @@ impl Database {
         pr_number: i32,
         maintainer: &str,
     ) -> Result<bool, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let exists: i64 = sqlx::query_scalar!(
             r#"
             SELECT COUNT(*) as count
@@ -238,7 +261,7 @@ impl Database {
             pr_number,
             maintainer
         )
-        .fetch_one(pool)
+        .fetch_one(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(exists > 0)
@@ -253,7 +276,7 @@ impl Database {
         state: &str,
         review_comment: Option<&str>,
     ) -> Result<(), GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         sqlx::query!(
             r#"
             INSERT INTO reviews (repo_name, pr_number, reviewer, state, review_comment, submitted_at, updated_at)
@@ -269,7 +292,7 @@ impl Database {
             state,
             review_comment
         )
-        .execute(pool)
+        .execute(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(())
@@ -295,14 +318,14 @@ impl Database {
             reasoning: reasoning.map(|s| s.to_string()),
         };
 
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         // Get current signatures
         let signatures_json: Option<String> = sqlx::query_scalar(
             "SELECT signatures FROM pull_requests WHERE repo_name = ? AND pr_number = ?",
         )
         .bind(repo_name)
         .bind(pr_number)
-        .fetch_optional(pool)
+        .fetch_optional(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
@@ -331,7 +354,7 @@ impl Database {
                 .bind(&updated_json)
                 .bind(repo_name)
                 .bind(pr_number)
-                .execute(pool)
+                .execute(&pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(())
@@ -345,7 +368,7 @@ impl Database {
         maintainer: Option<&str>,
         details: &serde_json::Value,
     ) -> Result<(), GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         sqlx::query(
             r#"
             INSERT INTO governance_events (event_type, repo_name, pr_number, maintainer, details)
@@ -359,7 +382,7 @@ impl Database {
         .bind(serde_json::to_string(details).map_err(|e| {
             GovernanceError::DatabaseError(format!("Failed to serialize event details: {e}"))
         })?)
-        .execute(pool)
+        .execute(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(())
@@ -370,9 +393,9 @@ impl Database {
         repo_name: &str,
         pr_number: i32,
     ) -> Result<Option<crate::database::models::PullRequest>, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         use crate::database::queries::Queries;
-        Queries::get_pull_request(pool, repo_name, pr_number)
+        Queries::get_pull_request(&pool, repo_name, pr_number)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))
     }
@@ -381,7 +404,7 @@ impl Database {
         &self,
         limit: i64,
     ) -> Result<Vec<crate::database::models::GovernanceEvent>, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let rows = sqlx::query(
             r#"
                     SELECT 
@@ -398,7 +421,7 @@ impl Database {
                     "#,
         )
         .bind(limit)
-        .fetch_all(pool)
+        .fetch_all(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
@@ -447,7 +470,7 @@ impl Database {
     pub async fn get_last_merged_pr(
         &self,
     ) -> Result<Option<(Option<i32>, Option<chrono::DateTime<chrono::Utc>>)>, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let row = sqlx::query(
             r#"
                     SELECT pr_number, timestamp
@@ -457,7 +480,7 @@ impl Database {
                     LIMIT 1
                     "#,
         )
-        .fetch_optional(pool)
+        .fetch_optional(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
@@ -476,7 +499,7 @@ impl Database {
 
     /// Count merges today
     pub async fn count_merges_today(&self) -> Result<u64, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let count: i64 = sqlx::query_scalar(
             r#"
             SELECT COUNT(*)
@@ -485,7 +508,7 @@ impl Database {
             AND date(timestamp) = date('now')
             "#,
         )
-        .fetch_one(pool)
+        .fetch_one(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(count as u64)
@@ -500,7 +523,7 @@ impl Database {
         justification: &str,
         overridden_by: &str,
     ) -> Result<(), GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         // SQLite doesn't support ON CONFLICT with named columns in older versions
         // Use REPLACE INTO instead (works with UNIQUE constraint)
         sqlx::query(
@@ -514,7 +537,7 @@ impl Database {
                 .bind(override_tier as i32)
                 .bind(justification)
                 .bind(overridden_by)
-                .execute(pool)
+                .execute(&pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(())
@@ -527,7 +550,7 @@ impl Database {
         pr_number: i32,
     ) -> Result<Option<crate::database::models::TierOverride>, GovernanceError> {
         use sqlx::Row;
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let row = sqlx::query(
                     r#"
                     SELECT id, repo_name, pr_number, override_tier, justification, overridden_by, created_at
@@ -537,7 +560,7 @@ impl Database {
                 )
                 .bind(repo_name)
                 .bind(pr_number)
-                .fetch_optional(pool)
+                .fetch_optional(&pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
@@ -575,12 +598,12 @@ impl Database {
         &self,
         username: &str,
     ) -> Result<Option<crate::database::models::Maintainer>, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let maintainer = sqlx::query_as::<_, crate::database::models::Maintainer>(
             "SELECT id, github_username, public_key, layer, active, last_updated FROM maintainers WHERE github_username = ? AND active = true"
         )
         .bind(username)
-        .fetch_optional(pool)
+        .fetch_optional(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(maintainer)
@@ -590,9 +613,9 @@ impl Database {
         &self,
         layer: i32,
     ) -> Result<Vec<crate::database::models::Maintainer>, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         use crate::database::queries::Queries;
-        Queries::get_maintainers_for_layer(pool, layer)
+        Queries::get_maintainers_for_layer(&pool, layer)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))
     }
@@ -600,41 +623,41 @@ impl Database {
     pub async fn get_emergency_keyholders(
         &self,
     ) -> Result<Vec<crate::database::models::EmergencyKeyholder>, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         use crate::database::queries::Queries;
-        Queries::get_emergency_keyholders(pool)
+        Queries::get_emergency_keyholders(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))
     }
 
     /// Get the database pool for testing purposes (SQLite only)
-    pub fn pool(&self) -> Option<&SqlitePool> {
+    pub fn pool(&self) -> Option<SqlitePool> {
         self.get_sqlite_pool()
     }
 
     /// Perform database health check
     pub async fn health_check(&self) -> Result<DatabaseHealth, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let connection_count = pool.size();
         let idle_connections = pool.num_idle() as u32;
         let active_connections = connection_count - idle_connections;
 
         let integrity_result = sqlx::query_scalar::<_, String>("PRAGMA integrity_check")
-            .fetch_one(pool)
+            .fetch_one(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
         let journal_mode = sqlx::query_scalar::<_, String>("PRAGMA journal_mode")
-            .fetch_one(pool)
+            .fetch_one(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
         let page_count = sqlx::query_scalar::<_, i64>("PRAGMA page_count")
-            .fetch_one(pool)
+            .fetch_one(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         let page_size = sqlx::query_scalar::<_, i64>("PRAGMA page_size")
-            .fetch_one(pool)
+            .fetch_one(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         let db_size = page_count * page_size;
@@ -652,19 +675,19 @@ impl Database {
 
     /// Get performance statistics
     pub async fn get_performance_stats(&self) -> Result<PerformanceStats, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let cache_size = sqlx::query_scalar::<_, i64>("PRAGMA cache_size")
-            .fetch_one(pool)
+            .fetch_one(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
         let wal_checkpoint_threshold = sqlx::query_scalar::<_, i64>("PRAGMA wal_autocheckpoint")
-            .fetch_one(pool)
+            .fetch_one(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
         let compile_options = sqlx::query_scalar::<_, String>("PRAGMA compile_options")
-            .fetch_all(pool)
+            .fetch_all(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
@@ -677,13 +700,13 @@ impl Database {
 
     /// Optimize database performance
     pub async fn optimize_database(&self) -> Result<(), GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         sqlx::query("VACUUM")
-            .execute(pool)
+            .execute(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         sqlx::query("ANALYZE")
-            .execute(pool)
+            .execute(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(())
@@ -691,9 +714,9 @@ impl Database {
 
     /// Checkpoint WAL file to main database (SQLite only)
     pub async fn checkpoint_wal(&self) -> Result<(), GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         sqlx::query("PRAGMA wal_checkpoint(TRUNCATE)")
-            .execute(pool)
+            .execute(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(())
@@ -707,7 +730,7 @@ impl Database {
         workflow_run_id: Option<u64>,
         status: &str,
     ) -> Result<i64, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let build_id = sqlx::query_scalar::<_, i64>(
                     r#"
                     INSERT INTO build_runs (release_version, repo_name, workflow_run_id, status, started_at, updated_at)
@@ -723,7 +746,7 @@ impl Database {
                 .bind(repo_name)
                 .bind(workflow_run_id.map(|id| id as i64))
                 .bind(status)
-                .fetch_one(pool)
+                .fetch_one(&pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         Ok(build_id)
@@ -737,14 +760,14 @@ impl Database {
         new_status: &str,
         error_message: Option<&str>,
     ) -> Result<(), GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         // Get current status
         let current_status: Option<String> = sqlx::query_scalar(
             "SELECT status FROM build_runs WHERE release_version = ? AND repo_name = ?",
         )
         .bind(release_version)
         .bind(repo_name)
-        .fetch_optional(pool)
+        .fetch_optional(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
@@ -773,7 +796,7 @@ impl Database {
                     .bind(error_message)
                     .bind(release_version)
                     .bind(repo_name)
-                    .execute(pool)
+                    .execute(&pool)
                     .await
                     .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         } else {
@@ -788,7 +811,7 @@ impl Database {
             .bind(error_message)
             .bind(release_version)
             .bind(repo_name)
-            .execute(pool)
+            .execute(&pool)
             .await
             .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
         }
@@ -801,7 +824,7 @@ impl Database {
                 )
                 .bind(release_version)
                 .bind(repo_name)
-                .fetch_one(pool)
+                .fetch_one(&pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
@@ -815,7 +838,7 @@ impl Database {
                         .bind(&from_status)
                         .bind(new_status)
                         .bind(error_message)
-                        .execute(pool)
+                        .execute(&pool)
                         .await
                         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
             }
@@ -828,11 +851,11 @@ impl Database {
         &self,
         release_version: &str,
     ) -> Result<Vec<(String, String)>, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let rows =
             sqlx::query("SELECT repo_name, status FROM build_runs WHERE release_version = ?")
                 .bind(release_version)
-                .fetch_all(pool)
+                .fetch_all(&pool)
                 .await
                 .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
@@ -847,12 +870,12 @@ impl Database {
         &self,
         release_version: &str,
     ) -> Result<Vec<(String, Option<u64>, String)>, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let rows = sqlx::query(
             "SELECT repo_name, workflow_run_id, status FROM build_runs WHERE release_version = ?",
         )
         .bind(release_version)
-        .fetch_all(pool)
+        .fetch_all(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
@@ -873,7 +896,7 @@ impl Database {
         &self,
         release_version: &str,
     ) -> Result<bool, GovernanceError> {
-        let pool = &self.backend.pool;
+        let pool = self.read_pool().clone();
         let incomplete_count: i64 = sqlx::query_scalar(
             r#"
             SELECT COUNT(*) FROM build_runs 
@@ -882,7 +905,7 @@ impl Database {
             "#,
         )
         .bind(release_version)
-        .fetch_one(pool)
+        .fetch_one(&pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
@@ -960,6 +983,62 @@ mod tests {
 
         let pr = db.get_pull_request("test/repo", 1).await.unwrap().unwrap();
         assert_eq!(pr.head_sha, "def456", "Head SHA should be updated");
+    }
+
+    #[tokio::test]
+    async fn rewritten_head_drops_signatures_and_keeps_opened_at() {
+        let db = Database::new_in_memory().await.unwrap();
+        db.create_pull_request("test/repo", 7, "head-a", 1)
+            .await
+            .unwrap();
+        db.add_signature("test/repo", 7, "alice", "sig", None)
+            .await
+            .unwrap();
+        let before = db.get_pull_request("test/repo", 7).await.unwrap().unwrap();
+        assert_eq!(before.signatures.len(), 1);
+
+        db.create_pull_request("test/repo", 7, "head-b", 1)
+            .await
+            .unwrap();
+        let rewritten = db.get_pull_request("test/repo", 7).await.unwrap().unwrap();
+        assert_eq!(rewritten.opened_at, before.opened_at);
+        assert!(rewritten.signatures.is_empty());
+
+        db.add_signature("test/repo", 7, "bob", "sig-b", None)
+            .await
+            .unwrap();
+        db.create_pull_request("test/repo", 7, "head-b", 1)
+            .await
+            .unwrap();
+        let same_head = db.get_pull_request("test/repo", 7).await.unwrap().unwrap();
+        assert_eq!(same_head.signatures.len(), 1);
+        assert_eq!(same_head.opened_at, before.opened_at);
+    }
+
+    #[tokio::test]
+    async fn reconnect_replaces_the_pool_a_clone_uses() {
+        let dir = tempfile::tempdir().unwrap();
+        let url = format!("sqlite://{}?mode=rwc", dir.path().join("gov.db").display());
+        let db = Database::new_production(&url).await.unwrap();
+        let router = db.clone();
+
+        router.get_sqlite_pool().expect("pool").close().await;
+        let closed = router
+            .create_pull_request("test/repo", 1, "head-a", 1)
+            .await;
+        assert!(closed.is_err(), "a closed pool must fail before reconnect");
+
+        db.reconnect().await.unwrap();
+        router
+            .create_pull_request("test/repo", 1, "head-a", 1)
+            .await
+            .expect("clone uses the replacement pool");
+        let pr = router
+            .get_pull_request("test/repo", 1)
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(pr.head_sha, "head-a");
     }
 
     #[tokio::test]
