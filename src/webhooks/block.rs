@@ -30,9 +30,16 @@ pub struct BlockNotificationResponse {
 /// Handle block notification webhook.
 /// Block notifications are acknowledged but not processed (fee forwarding was removed).
 pub async fn handle_block_notification(
-    State((_config, _database)): State<(AppConfig, Database)>,
+    State((config, _database)): State<(AppConfig, Database)>,
     Json(_payload): Json<BlockNotification>,
 ) -> Json<BlockNotificationResponse> {
+    if !config.merge_checks_wired {
+        return Json(BlockNotificationResponse {
+            success: false,
+            message: "block ingest is disabled until merge checks are wired".to_string(),
+            contributions_found: 0,
+        });
+    }
     Json(BlockNotificationResponse {
         success: true,
         message: "Block notification acknowledged".to_string(),

@@ -43,9 +43,15 @@ pub struct ListNodesResponse {
 
 /// Register a new node
 pub async fn register_node(
-    State((_, database)): State<(crate::config::AppConfig, Database)>,
+    State((config, database)): State<(crate::config::AppConfig, Database)>,
     Json(request): Json<RegisterNodeRequest>,
 ) -> Json<RegisterNodeResponse> {
+    if !config.merge_checks_wired {
+        return Json(RegisterNodeResponse {
+            success: false,
+            message: "node registration is disabled until merge checks are wired".to_string(),
+        });
+    }
     let pool = match database.get_sqlite_pool() {
         Some(pool) => pool,
         None => {
