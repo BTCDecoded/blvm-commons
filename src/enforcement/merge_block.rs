@@ -23,14 +23,10 @@ impl MergeBlocker {
         signatures_met: bool,
         emergency_mode: bool,
     ) -> Result<bool, GovernanceError> {
-        // In emergency mode, only signature threshold matters
-        if emergency_mode {
-            Ok(!signatures_met)
-        } else {
-            // Normal mode: check maintainer signature requirements
-            let basic_requirements_met = review_period_met && signatures_met;
-            Ok(!basic_requirements_met)
-        }
+        // Emergency mode does not waive the review clock.
+        let _emergency_does_not_shorten = emergency_mode;
+        let basic_requirements_met = review_period_met && signatures_met;
+        Ok(!basic_requirements_met)
     }
 
     /// Get detailed reason for merge blocking
@@ -39,13 +35,16 @@ impl MergeBlocker {
         signatures_met: bool,
         emergency_mode: bool,
     ) -> String {
+        if emergency_mode && !review_period_met {
+            return "Emergency mode does not waive the review period".to_string();
+        }
+        if emergency_mode && !signatures_met {
+            return "Emergency mode: Signature threshold not met".to_string();
+        }
         if emergency_mode {
-            if !signatures_met {
-                "Emergency mode: Signature threshold not met".to_string()
-            } else {
-                "Emergency mode: All requirements met".to_string()
-            }
-        } else {
+            return "Emergency mode: All requirements met".to_string();
+        }
+        {
             let mut reasons = Vec::new();
 
             if !review_period_met {
@@ -160,8 +159,8 @@ mod tests {
         .unwrap();
 
         assert!(
-            !result,
-            "Should not block in emergency mode when signatures met"
+            result,
+            "Emergency mode still blocks when the review period is not met"
         );
     }
 
