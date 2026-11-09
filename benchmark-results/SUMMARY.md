@@ -40,7 +40,7 @@ Based on typical Bitcoin Core performance:
 **BTCDecoded results (60.6 ns simple, 222.75 ns complex) are:**
 - ✅ **Competitive** with Core's estimated range
 - ✅ **At the low end** of Core's estimated range (faster)
-- ✅ **Potentially 3-8x faster** when production features are enabled
+- The 60.6 ns figure is a direct call. It is not a 3–8x speedup over a Core RPC timing.
 
 ## Why These Numbers Matter
 

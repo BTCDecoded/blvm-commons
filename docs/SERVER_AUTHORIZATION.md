@@ -1,5 +1,7 @@
 # Server Authorization
 
+`blvm-commons` has no `server` subcommand. Command blocks on this page that call `blvm-commons server add`, `server verify`, `server remove`, or `server compromise` are not runnable.
+
 ## Overview
 
 The BTCDecoded governance system implements a server authorization registry that explicitly authorizes which servers can run critical Bitcoin jobs and operations. This provides an additional layer of security by ensuring only trusted, verified servers can perform governance operations.

@@ -1,5 +1,7 @@
 # Verification Guide
 
+`blvm-commons` has no `server` subcommand. Examples that call `blvm-commons server verify` are not runnable.
+
 ## Overview
 
 This guide explains how to verify the integrity and authenticity of the Bitcoin Commons governance system, including Nostr events, OpenTimestamps proofs, audit logs, and server authorization.

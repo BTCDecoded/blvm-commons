@@ -57,7 +57,7 @@ To use merge mining:
 
 - **One-time activation fee**: Required to activate the module
 - **Hardcoded revenue share**: Module developer receives a fixed percentage (e.g., 5%) of merge mining rewards
-- **Revenue collection**: Automatically collected by the module
+- **Revenue collection**: Not collected while IPC integration is pending. This process does not hold or sign the reward. An address string is not a key.
 
 ---
 

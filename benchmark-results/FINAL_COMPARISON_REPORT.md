@@ -5,7 +5,7 @@
 
 ## Executive Summary
 
-BTCDecoded demonstrates **significantly faster performance** than Bitcoin Core in transaction validation and hash operations, with results showing **3-8x speedup** in key operations.
+The times below are a regtest function call on one side and an RPC range on the other. They are not a node speedup.
 
 ## Detailed Results
 
@@ -18,7 +18,7 @@ BTCDecoded demonstrates **significantly faster performance** than Bitcoin Core i
 **Bitcoin Core:**
 - Transaction Validation: ~0.5-2.0 ms (varies by operation complexity)
 
-**Result**: BTCDecoded is **significantly faster** (estimated 3-8x for simple transactions)
+**Result**: 60.6 ns is a direct call. The Core figure is an RPC range of about 0.5–2.0 ms. That ratio is not a 3–8x node speedup.
 
 ### Hash Operations
 
@@ -38,7 +38,7 @@ BTCDecoded demonstrates **significantly faster performance** than Bitcoin Core i
 
 **BTCDecoded:**
 - Block Validation: Not yet fully benchmarked
-- Expected: 2-4x speedup on multi-core (parallel processing)
+- Not measured in this file. A node comparison needs an IBD, template, or propagation run.
 
 ## Performance Analysis
 
@@ -58,13 +58,7 @@ BTCDecoded demonstrates **significantly faster performance** than Bitcoin Core i
 
 ## Conclusion
 
-BTCDecoded's performance is **phenomenal** - showing 3-8x speedup in transaction validation and hash operations. This is achieved with:
-
-- **No production optimizations enabled** (could be even faster)
-- **Clean, mathematical implementation** (direct from Orange Paper)
-- **Modern Rust compiler** (stable 1.91.0)
-
-With production features enabled (parallel processing, caching), BTCDecoded could be even faster, potentially **5-10x faster** than Bitcoin Core for parallelizable operations.
+Do not read the nanosecond call as a node speedup over the millisecond RPC range. IBD, template construction, and block propagation are the costs that would have to be timed before this page states a speedup.
 
 ## Next Steps
 

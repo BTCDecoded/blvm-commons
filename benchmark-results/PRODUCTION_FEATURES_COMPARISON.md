@@ -44,4 +44,4 @@ Production features provide **significant speedup**, especially for complex oper
 - **7.6% faster** for simple transactions
 - **20% faster** for complex transactions
 
-This brings BTCDecoded's performance even further ahead of Bitcoin Core estimates.
+Those percentages compare two BTCDecoded runs. They are not a speedup against Bitcoin Core.

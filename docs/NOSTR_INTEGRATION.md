@@ -1,5 +1,7 @@
 # Nostr Integration
 
+`blvm-commons` has no `server` subcommand. The `blvm-commons server add` example below is not runnable.
+
 ## Overview
 
 The BTCDecoded governance system uses Nostr (Notes and Other Stuff Transmitted by Relays) for real-time transparency and communication. This provides a decentralized, censorship-resistant way to publish governance events and status updates.

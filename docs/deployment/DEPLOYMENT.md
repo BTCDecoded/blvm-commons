@@ -1,5 +1,7 @@
 # Bitcoin Commons Deployment Guide
 
+`blvm-commons` has no `server` subcommand. Examples that call `blvm-commons server add` or `server verify` are not runnable. Start from `config/app.toml`. There is no `migrate` subcommand.
+
 ## Overview
 
 This guide covers production deployment of the Bitcoin Commons governance system (blvm-commons), including environment configuration, database setup, GitHub App installation, and monitoring.
