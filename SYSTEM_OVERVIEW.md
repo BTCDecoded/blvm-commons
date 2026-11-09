@@ -264,7 +264,7 @@ For consensus changes, the following verification stack applies (exact gates fol
 
 1. **blvm-spec-lock** (required for annotated surfaces)
    - `#[spec_locked("…")]` links implementation to Orange Paper section IDs
-   - `cargo spec-lock verify` runs in CI; optional Z3-backed contract checks when enabled
+   - `cargo spec-lock verify` runs Z3 on the Rust in CI. Lean checks the Orange Paper model in the spec-lock `lean-evidence` workflow and does not check the Rust
 
 2. **Property-Based Testing** (required)
    - Randomized testing with `proptest`
