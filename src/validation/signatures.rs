@@ -2,6 +2,7 @@ use crate::error::GovernanceError;
 use crate::validation::nested_multisig::{NestedMultisigVerifier, Team};
 use secp256k1::{PublicKey, Secp256k1, ecdsa::Signature};
 use sha2::{Digest, Sha256};
+use std::collections::HashSet;
 use std::str::FromStr;
 
 pub struct SignatureValidator {
@@ -64,10 +65,13 @@ impl SignatureValidator {
                 if let Some(ref nested_verifier) = self.nested_multisig_verifier {
                     // Verify signatures first, then use nested multisig
                     let mut verified_sigs = Vec::new();
+                    let mut seen_signers = HashSet::new();
                     for (signer, signature) in signatures {
                         if let Some(public_key) = maintainer_keys.get(signer) {
                             let message = format!("governance-signature:{signer}");
-                            if self.verify_signature(&message, signature, public_key)? {
+                            if self.verify_signature(&message, signature, public_key)?
+                                && seen_signers.insert(signer.clone())
+                            {
                                 verified_sigs.push((signer.clone(), signature.clone()));
                             }
                         }
@@ -84,13 +88,16 @@ impl SignatureValidator {
         // Fall back to simple multisig for Tier 1-2 or if nested multisig not available
         let (required, _total) = required_threshold;
         let mut valid_signatures = 0;
+        let mut seen_signers = HashSet::new();
 
         for (signer, signature) in signatures {
             if let Some(public_key) = maintainer_keys.get(signer) {
                 // Create message for signature verification
                 let message = format!("governance-signature:{signer}");
 
-                if self.verify_signature(&message, signature, public_key)? {
+                if self.verify_signature(&message, signature, public_key)?
+                    && seen_signers.insert(signer.clone())
+                {
                     valid_signatures += 1;
                 }
             }
