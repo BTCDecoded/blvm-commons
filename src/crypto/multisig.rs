@@ -1,6 +1,6 @@
 use crate::crypto::signatures::SignatureManager;
 use crate::error::GovernanceError;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 pub struct MultisigManager {
     signature_manager: SignatureManager,
@@ -23,6 +23,7 @@ impl MultisigManager {
         let (required, total) = required_threshold;
         let mut valid_signatures = 0;
         let mut verified_signers = Vec::new();
+        let mut seen_signers = HashSet::new();
 
         for (signer, signature) in signatures {
             if let Some(public_key_str) = public_keys.get(signer) {
@@ -48,6 +49,7 @@ impl MultisigManager {
                 if self
                     .signature_manager
                     .verify_signature(message, &sig, &public_key)?
+                    && seen_signers.insert(signer.clone())
                 {
                     valid_signatures += 1;
                     verified_signers.push(signer.clone());
@@ -75,6 +77,7 @@ impl MultisigManager {
         public_keys: &HashMap<String, String>,
     ) -> Result<Vec<String>, GovernanceError> {
         let mut verified_signers = Vec::new();
+        let mut seen_signers = HashSet::new();
 
         for (signer, signature) in signatures {
             if let Some(public_key_str) = public_keys.get(signer) {
@@ -97,6 +100,7 @@ impl MultisigManager {
                 if self
                     .signature_manager
                     .verify_signature(message, &sig, &public_key)?
+                    && seen_signers.insert(signer.clone())
                 {
                     verified_signers.push(signer.clone());
                 }
@@ -183,6 +187,16 @@ mod tests {
         assert!(
             result.is_err(),
             "Should fail 2-of-3 threshold with only 1 signature"
+        );
+
+        let repeated = vec![
+            ("alice".to_string(), sig1.to_string()),
+            ("alice".to_string(), sig1.to_string()),
+        ];
+        let repeated = manager.verify_multisig(message, &repeated, &public_keys, (2, 3));
+        assert!(
+            repeated.is_err(),
+            "one signer repeated must not meet a 2-of-3 threshold"
         );
     }
 
