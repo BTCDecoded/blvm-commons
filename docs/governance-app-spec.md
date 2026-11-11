@@ -690,12 +690,14 @@ if_still_deadlocked:
   - or: build as optional module instead
 ```
 
+Phase 1 is current. Enforcement is off. The App in this spec is one host for a quorum of governance nodes. The quorum is Designed. A non-conforming action, including one by a human administrator, is reversed when two of three nodes in a written set agree. Anyone may run a node. Only the written set binds. Changing the set is a Tier 5 governance-rule change. Mechanical checks decide conformance. AI output is evidence. Today `src/github/client.rs` sends `enforce_admins` false, and a failed branch-protection update does not fail the caller. That is Built status, not the design. A layer 5 threshold of 2-of-3 maintainers is not this node quorum.
+
 ## Security Model
 
 ### What This Protects Against
 
 ✅ **Single maintainer compromise** - Need 6-of-7 or 4-of-5
-✅ **GitHub admin bypass** - Cannot create validly-signed release without keys
+✅ **Release line, Designed** - Operators accept a release only when the required maintainer signatures attest to a reproducible build. That attestation is not in the release workflow today. A hash comparison for two variants is Built and is started by hand.
 ✅ **Release server compromise** - Signatures won't match, node verification fails
 ✅ **Social pressure on individual** - Distributed keyholders, visible attempts
 ✅ **Informal power dynamics** - All actions cryptographically signed
@@ -708,11 +710,11 @@ if_still_deadlocked:
 
 ### Defense In Depth
 
-**Layer 1:** GitHub governance (signature requirements, review periods)
+**Layer 1:** The governance-node quorum on whatever host runs the check. A GitHub App is one host. It is not the whole mechanism.
 **Layer 2:** Release signing (multisig required)
 **Layer 3:** Node verification (hard-coded pubkeys)
 
-**Even if Layer 1 fails, Layers 2-3 protect users.**
+If the host company overrides the organization, the signed release is the line operators can check without that host. That attestation is Designed.
 
 ## Ostrom's Principles - Compliance
 
@@ -819,7 +821,7 @@ glob = "0.3"
 
 ### Technical
 - ✅ PRs blocked until requirements met
-- ✅ No bypass (even GitHub admins blocked at release level)
+- The design reverses a non-conforming host action when two of three nodes agree. That reversal is Designed and is not Running. A human administrator is not a bypass of a check that is on, because the check is not on.
 - ✅ Cross-repo dependencies enforced
 - ✅ Emergency mode works, expires automatically
 - ✅ Audit trail immutable

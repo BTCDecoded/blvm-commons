@@ -1,5 +1,7 @@
 # Bitcoin Commons System Design Document
 
+Phase 1 is current. Enforcement is off. Keys in use today are test keys. The Governance App described below is one host for a quorum of governance nodes. That quorum is Designed. It is not Running. A layer 5 requirement of 2-of-3 maintainers is a maintainer signature set. It is not the 2-of-3 node quorum.
+
 ## Overview
 
 Bitcoin Commons is a comprehensive Bitcoin implementation ecosystem consisting of five tiers that build upon the Orange Paper's mathematical specifications. The system provides direct mathematical implementation of consensus rules, protocol abstraction, a minimal reference implementation, and a developer-friendly SDK. This directory is managed by the BTCDecoded GitHub organization.
@@ -443,8 +445,8 @@ Governance tooling for a 5-tier signature schedule: multi-signature requirements
 - **Repository**: [governance](https://github.com/BTCDecoded/governance)
 
 #### 6.2 Governance App (GitHub App)
-- **Purpose**: Rust-based GitHub App for cryptographic governance enforcement
-- **Features**: Signature verification, review period enforcement, status checks, merge blocking
+- **Purpose**: One host for the governance-node quorum. The App is not the whole enforcement mechanism. Merge blocking by this client is Designed and is not Running. `set_required_status_checks` sends `enforce_admins` false today.
+- **Features**: Signature checks, review-period checks, and status checks. Built pieces post a check. They do not reverse a non-conforming action.
 - **Technology**: secp256k1 (Bitcoin-compatible), PostgreSQL, Axum web framework
 - **Repository**: [governance-app](https://github.com/BTCDecoded/governance-app)
 

@@ -2,6 +2,8 @@
 
 `blvm-commons` has no `server` subcommand. Command blocks on this page that call `blvm-commons server add`, `server verify`, `server remove`, or `server compromise` are not runnable.
 
+This registry is Designed. It is not the governance-node quorum. The `compromise_server` value of 2-of-3 emergency keyholders is server revocation. It is not the 2-of-3 node quorum that decides whether a repository action conforms.
+
 ## Overview
 
 The BTCDecoded governance system implements a server authorization registry that explicitly authorizes which servers can run critical Bitcoin jobs and operations. This provides an additional layer of security by ensuring only trusted, verified servers can perform governance operations.

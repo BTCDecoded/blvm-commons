@@ -2,7 +2,7 @@
 
 **Version:** 1.0  
 **Last Updated:** 2025-01-XX  
-**Status:** Phase 1 (Infrastructure Complete, Not Yet Activated)
+**Status:** Phase 1. Infrastructure is built. Enforcement is off. Keys are test keys. The Governance App is one host for a Designed quorum of governance nodes. That quorum is not Running. A layer 5 figure of 2-of-3 maintainers is a maintainer signature set, not the node quorum.
 
 > **Note**: For the most up-to-date verified system status, see [SYSTEM_STATUS.md](./SYSTEM_STATUS.md). This document provides architecture overview; SYSTEM_STATUS.md provides verified implementation details.
 
