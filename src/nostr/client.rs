@@ -162,7 +162,7 @@ impl NostrClient {
                             if event.kind == Kind::ZapReceipt {
                                 // Parse zap event
                                 if let Ok(zap) = parse_zap_event(&event) {
-                                    if let Err(_) = tx.send(zap).await {
+                                    if (tx.send(zap).await).is_err() {
                                         // Receiver dropped, stop processing
                                         return;
                                     }

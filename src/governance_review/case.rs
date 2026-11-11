@@ -21,6 +21,7 @@ impl GovernanceReviewCaseManager {
     /// Create a new governance review case
     ///
     /// Policy: Only on-platform activity considered
+    #[allow(clippy::too_many_arguments)]
     pub async fn create_case(
         &self,
         subject_maintainer_id: i32,
@@ -38,8 +39,9 @@ impl GovernanceReviewCaseManager {
 
         // Calculate deadlines (policy: 30 days response, 180 days resolution)
         let now = Utc::now();
-        let response_deadline = now + Duration::days(policy::RESPONSE_DEADLINE_DAYS);
-        let resolution_deadline = now + Duration::days(policy::RESOLUTION_DEADLINE_DAYS);
+        let response_deadline = now + Duration::try_days(policy::RESPONSE_DEADLINE_DAYS).unwrap();
+        let resolution_deadline =
+            now + Duration::try_days(policy::RESOLUTION_DEADLINE_DAYS).unwrap();
 
         let evidence_json =
             serde_json::to_string(&evidence).map_err(|e| sqlx::Error::Decode(Box::new(e)))?;

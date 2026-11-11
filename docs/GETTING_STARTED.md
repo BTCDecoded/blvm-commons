@@ -29,18 +29,9 @@ cargo build
 
 ### 3. Set Up Configuration
 
-```bash
-cp config/app.toml.example config/app.toml
-# Edit config/app.toml with your settings
-```
+Edit `config/app.toml`. There is no `config/app.toml.example`. There is no `migrate` subcommand.
 
-### 4. Run Database Migrations
-
-```bash
-cargo run --bin blvm-commons -- migrate
-```
-
-### 5. Start the Application
+### 4. Start the Application
 
 ```bash
 cargo run --bin blvm-commons

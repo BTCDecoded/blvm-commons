@@ -100,7 +100,7 @@ When `stem_phase_relay` returns `None`, the transaction enters **fluff phase** a
 - From the adversary's perspective at `N_h`, any of these `h + 1` nodes could have originated `tx`.
 - Therefore, `k ≥ h + 1`.
 
-**Corollary**: With `max_stem_hops = 2`, we guarantee `k ≥ 3` (3-anonymity).
+**Corollary**: `k ≥ 3` only when the stem reaches two hops. A transaction that fluffs on the first draw never has that stem.
 
 ### Theorem 3: Timeout Guarantee
 
@@ -153,8 +153,8 @@ Recommended values for production:
 - `stem_timeout = 10` seconds
 
 These provide:
-- Minimum k-anonymity: `k ≥ 3`
-- Expected stem length: `1/p_fluff = 10` hops (in expectation, but capped at 2)
+- `k ≥ 3` only for a stem that reaches two hops
+- The uncapped figure `1/p_fluff = 10` is not the expected length once the stem is capped at 2
 - Maximum stem duration: 10 seconds
 
 ## References

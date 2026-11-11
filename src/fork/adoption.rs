@@ -100,7 +100,7 @@ impl AdoptionTracker {
         &self,
         ruleset_id: &str,
     ) -> Result<AdoptionMetrics, GovernanceError> {
-        let (total_network_weight, total_network_hashpower, total_network_economic) =
+        let (_total_network_weight, total_network_hashpower, total_network_economic) =
             self.get_network_totals().await?;
 
         // Get adoption decisions for this ruleset

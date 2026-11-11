@@ -36,6 +36,7 @@ impl GovernanceActionPublisher {
     }
 
     /// Publish a governance action event (merge, release, etc.)
+    #[allow(clippy::too_many_arguments)]
     pub async fn publish_action(
         &self,
         action: &str, // "merge" | "release" | "budget" | "keyholder_change"
@@ -176,6 +177,7 @@ impl GovernanceActionPublisher {
     }
 
     /// Create Nostr event from governance action
+    #[allow(clippy::too_many_arguments)]
     fn create_nostr_event(
         &self,
         action: &str,

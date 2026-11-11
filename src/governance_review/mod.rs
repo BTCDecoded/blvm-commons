@@ -20,4 +20,13 @@ pub mod response;
 pub mod sanctions;
 pub mod time_limits;
 
+pub use appeals::AppealManager;
 pub use case::GovernanceReviewCaseManager;
+pub use deadline_notifications::DeadlineNotificationManager;
+#[allow(unused_imports)] // re-exported for bins and integration tests
+pub use env::{get_database_url, get_github_token, get_governance_repo, is_github_actions};
+pub use github_integration::GovernanceReviewGitHubIntegration;
+pub use mediation::MediationManager;
+pub use removal::RemovalManager;
+pub use sanctions::SanctionManager;
+pub use time_limits::TimeLimitManager;

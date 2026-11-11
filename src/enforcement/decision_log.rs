@@ -146,6 +146,7 @@ impl DecisionLogger {
     }
 
     /// Create a new enforcement decision
+    #[allow(clippy::too_many_arguments)]
     pub fn create_decision(
         &self,
         pr_number: i32,

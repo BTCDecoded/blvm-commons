@@ -35,9 +35,9 @@ impl AppealManager {
         // Policy: 60-day appeal deadline, but must not exceed case resolution deadline
         let max_appeal_deadline = case
             .resolution_deadline
-            .unwrap_or(Utc::now() + Duration::days(policy::APPEAL_DEADLINE_DAYS));
+            .unwrap_or(Utc::now() + Duration::try_days(policy::APPEAL_DEADLINE_DAYS).unwrap());
         let appeal_deadline = std::cmp::min(
-            Utc::now() + Duration::days(policy::APPEAL_DEADLINE_DAYS),
+            Utc::now() + Duration::try_days(policy::APPEAL_DEADLINE_DAYS).unwrap(),
             max_appeal_deadline,
         );
 

@@ -5,7 +5,7 @@
 //! then counts inter-team approvals (6-of-7 teams).
 
 use crate::error::GovernanceError;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 /// Team structure for nested multisig
 #[derive(Debug, Clone)]
@@ -49,10 +49,14 @@ impl NestedMultisigVerifier {
 
         // Group signatures by team
         let mut team_signatures: HashMap<String, Vec<(String, String)>> = HashMap::new();
+        let mut seen_maintainers: HashSet<(String, String)> = HashSet::new();
 
         for (github, signature) in signatures {
-            // Find which team this maintainer belongs to
+            // Find which team this maintainer belongs to. Each maintainer counts once.
             if let Some(team_id) = self.find_maintainer_team(github) {
+                if !seen_maintainers.insert((team_id.clone(), github.clone())) {
+                    continue;
+                }
                 team_signatures
                     .entry(team_id)
                     .or_default()
@@ -137,4 +141,28 @@ pub struct TeamApprovalStatus {
     pub maintainers_signed: usize,
     pub maintainers_required: usize,
     pub approved: bool,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_repeated_maintainer_counts_once() {
+        let verifier = NestedMultisigVerifier::new(vec![Team {
+            id: "core".into(),
+            name: "core".into(),
+            maintainers: vec![TeamMaintainer {
+                github: "alice".into(),
+                public_key: "pk".into(),
+            }],
+        }]);
+        let signatures = vec![
+            ("alice".into(), "sig".into()),
+            ("alice".into(), "sig".into()),
+        ];
+        let result = verifier.verify_nested_multisig(&signatures, 9).unwrap();
+        assert_eq!(result.team_details[0].maintainers_signed, 1);
+        assert!(result.inter_team_approved);
+    }
 }

@@ -92,7 +92,8 @@ impl TimeLimitManager {
         };
 
         // Validate: extension_until must not exceed original_deadline + MAX_EXTENSION_DAYS
-        let max_extension = original_deadline + Duration::days(policy::MAX_EXTENSION_DAYS);
+        let max_extension =
+            original_deadline + Duration::try_days(policy::MAX_EXTENSION_DAYS).unwrap();
         if extension_until > max_extension {
             return Err(sqlx::Error::RowNotFound); // Or custom error type
         }

@@ -314,6 +314,7 @@ impl StatusPublisher {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chrono::Timelike;
     use nostr_sdk::prelude::Keys;
     use tempfile::tempdir;
 

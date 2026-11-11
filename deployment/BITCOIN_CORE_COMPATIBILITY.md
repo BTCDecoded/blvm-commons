@@ -150,19 +150,19 @@ Currently, the installer may not expose dedicated **`--rpc-port`** / P2P flags. 
 sudo netstat -tlnp | grep 8332  # RPC
 sudo netstat -tlnp | grep 8333  # P2P
 
-# Check BLLVM
-sudo netstat -tlnp | grep 8334  # RPC (if changed)
-sudo netstat -tlnp | grep 8335  # P2P (if changed)
+# Check BLVM on the alternate ports in this example
+sudo netstat -tlnp | grep 8335  # RPC
+sudo netstat -tlnp | grep 8334  # P2P
 ```
 
-**Test RPC on both:**
+**Test RPC on both.** With no RPC password, each process writes `{datadir}/.cookie` as `__cookie__:<hex>`.
 
 ```bash
-# Bitcoin Core (default)
-curl -u btc:PASSWORD http://localhost:8332 -d '{"method":"getblockchaininfo","params":[]}'
+# Bitcoin Core (default datadir)
+curl --user "__cookie__:$(cut -d: -f2 ~/.bitcoin/.cookie)" http://127.0.0.1:8332 -d '{"method":"getblockchaininfo","params":[]}'
 
-# BLLVM (custom port)
-curl -u btc:PASSWORD http://localhost:8335 -d '{"method":"getblockchaininfo","params":[]}'
+# BLVM (this example's alternate RPC port). Set BLVM_DATADIR to that node's data directory.
+curl --user "__cookie__:$(cut -d: -f2 "$BLVM_DATADIR/.cookie")" http://127.0.0.1:8335 -d '{"method":"getblockchaininfo","params":[]}'
 ```
 
 ---

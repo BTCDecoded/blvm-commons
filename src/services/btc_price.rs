@@ -43,7 +43,8 @@ impl BtcPriceService {
         });
 
         // Trim old prices beyond window
-        let cutoff = Utc::now() - chrono::Duration::days(self.ma_window_days as i64 + 7); // Keep 7 extra days
+        let cutoff =
+            Utc::now() - chrono::TimeDelta::try_days(self.ma_window_days as i64 + 7).unwrap(); // Keep 7 extra days
         while let Some(front) = self.prices.front() {
             if front.timestamp < cutoff {
                 self.prices.pop_front();
@@ -60,7 +61,7 @@ impl BtcPriceService {
 
     /// Get current moving average price
     pub fn get_moving_average(&self) -> f64 {
-        let cutoff = Utc::now() - chrono::Duration::days(self.ma_window_days as i64);
+        let cutoff = Utc::now() - chrono::TimeDelta::try_days(self.ma_window_days as i64).unwrap();
 
         let recent_prices: Vec<f64> = self
             .prices
@@ -108,7 +109,7 @@ impl BtcPriceService {
 
     /// Get number of price points in window
     pub fn price_point_count(&self) -> usize {
-        let cutoff = Utc::now() - chrono::Duration::days(self.ma_window_days as i64);
+        let cutoff = Utc::now() - chrono::TimeDelta::try_days(self.ma_window_days as i64).unwrap();
         self.prices.iter().filter(|p| p.timestamp >= cutoff).count()
     }
 }
@@ -128,10 +129,10 @@ mod tests {
         let mut service = BtcPriceService::new(30);
 
         // Add prices over 30 days
-        let base_time = Utc::now() - chrono::Duration::days(30);
+        let base_time = Utc::now() - chrono::TimeDelta::try_days(30).unwrap();
         for i in 0..30 {
             let price = 50000.0 + (i as f64 * 100.0); // Increasing prices
-            let timestamp = base_time + chrono::Duration::days(i);
+            let timestamp = base_time + chrono::TimeDelta::try_days(i).unwrap();
             service.add_price(price, timestamp);
         }
 
@@ -146,7 +147,10 @@ mod tests {
 
         // Add some prices
         for i in 0..10 {
-            service.add_price(50000.0, Utc::now() - chrono::Duration::days(i));
+            service.add_price(
+                50000.0,
+                Utc::now() - chrono::TimeDelta::try_days(i).unwrap(),
+            );
         }
 
         // $50,000 should convert to 1.0 BTC

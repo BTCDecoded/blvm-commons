@@ -19,7 +19,7 @@ BIP152 introduces Compact Blocks to reduce bandwidth during block propagation by
 
 #### `cmpctblock`
 - Contains: Header, nonce, short IDs (6 bytes each)
-- Short IDs are derived from: `SipHash-2-4(k0, k1, tx_hash)`
+- Short IDs are SipHash-2-4 of the wtxid, or the txid when the transaction has no witness. `k0` and `k1` are the first two little-endian 64-bit integers of `SHA256(80-byte header || nonce)`.
 
 #### `getblocktxn`
 - Request missing transactions from a compact block
@@ -33,12 +33,12 @@ BIP152 introduces Compact Blocks to reduce bandwidth during block propagation by
 
 **Calculation**:
 ```
-short_id = SipHash-2-4(k0, k1, tx_hash) truncated to 48 bits
+short_id = SipHash-2-4(k0, k1, wtxid) truncated to 48 bits
 ```
 
 Where:
-- `k0`, `k1`: 64-bit values from block header
-- `tx_hash`: Full transaction hash
+- `k0`, `k1`: the first two little-endian 64-bit integers of `SHA256(80-byte header || nonce)`
+- `wtxid`: the witness transaction id, or the txid when there is no witness
 
 ### 3. Block Reconstruction
 
@@ -49,19 +49,9 @@ Where:
 5. Reconstruct full block
 6. Validate block
 
-## Implementation Plan
+## Implementation
 
-### Files to Create
-
-1. **`blvm-node/src/network/compact_blocks.rs`**
-   - `CompactBlock` structure
-   - `ShortTxId` calculation
-   - Block reconstruction logic
-   - SipHash implementation
-
-2. **`blvm-node/src/network/protocol.rs`** (update)
-   - Add `CmpctBlock`, `GetBlockTxn`, `BlockTxn` message types
-   - Update `sendcmpct` handling
+`blvm-node/src/network/compact_blocks.rs` is in the tree. `calculate_short_tx_id` uses the formula above.
 
 ### Dependencies
 
@@ -106,26 +96,6 @@ Both features are optional and work independently:
 - ✅ Compact blocks work with TCP, Quinn, or Iroh
 - ✅ Iroh works with or without compact blocks
 - ✅ Optimal: Iroh + Compact Blocks for mobile/NAT scenarios
-
-### Usage
-
-```rust
-use reference_node::network::compact_blocks::{
-    should_prefer_compact_blocks,
-    recommended_compact_block_version,
-    is_quic_transport,
-};
-use reference_node::network::transport::TransportType;
-
-// Check if compact blocks should be preferred for Iroh
-let prefer = should_prefer_compact_blocks(TransportType::Iroh); // true
-
-// Get recommended version for Iroh
-let version = recommended_compact_block_version(TransportType::Iroh); // 2
-
-// Check if using QUIC transport
-let is_quic = is_quic_transport(TransportType::Iroh); // true
-```
 
 ## Testing
 

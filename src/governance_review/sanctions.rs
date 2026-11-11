@@ -104,7 +104,8 @@ impl SanctionManager {
         }
 
         // Policy: 90-day improvement period
-        let improvement_deadline = Utc::now() + Duration::days(policy::IMPROVEMENT_PERIOD_DAYS);
+        let improvement_deadline =
+            Utc::now() + Duration::try_days(policy::IMPROVEMENT_PERIOD_DAYS).unwrap();
 
         // Create warning
         let approval_count = approvals.len() as i32;

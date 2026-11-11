@@ -34,12 +34,12 @@ impl GovernanceReviewGitHubIntegration {
         subject_username: &str,
         reporter_username: &str,
     ) -> Result<u64, GovernanceError> {
-        let title = format!(
+        let _title = format!(
             "Governance Review: {} ({})",
             case.case_number, subject_username
         );
 
-        let body = format!(
+        let _body = format!(
             r#"# Governance Review Case: {}
 
 **Case Number:** {}
@@ -123,7 +123,7 @@ This case is subject to the [Governance Review Policy](https://github.com/{}/{}/
             maintainer_username.to_lowercase()
         );
 
-        let content = format!(
+        let _content = format!(
             r#"# Governance Review Warning: {}
 
 **Date:** {}
@@ -177,12 +177,12 @@ This case is subject to the [Governance Review Policy](https://github.com/{}/{}/
     pub async fn link_case_to_pr(
         &self,
         case_number: &str,
-        repo_owner: &str,
-        repo_name: &str,
+        _repo_owner: &str,
+        _repo_name: &str,
         pr_number: u64,
     ) -> Result<(), GovernanceError> {
         // Add comment to PR linking the case
-        let comment = format!(
+        let _comment = format!(
             r#"This PR is related to governance review case: **{}**
 
 See: https://github.com/{}/{}/issues?q=is:issue+{}"#,
@@ -206,7 +206,7 @@ See: https://github.com/{}/{}/issues?q=is:issue+{}"#,
         case: &GovernanceReviewCase,
     ) -> Result<(), GovernanceError> {
         // Add comment to issue with status update
-        let comment = format!(
+        let _comment = format!(
             r#"## Status Update
 
 **New Status:** {}

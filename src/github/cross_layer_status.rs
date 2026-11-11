@@ -89,7 +89,7 @@ pub struct EquivalenceProofStatus {
 pub struct CrossLayerStatusChecker {
     github_client: GitHubClient,
     content_hash_validator: ContentHashValidator,
-    version_pinning_validator: VersionPinningValidator,
+    _version_pinning_validator: VersionPinningValidator,
     equivalence_proof_validator: EquivalenceProofValidator,
 }
 
@@ -98,7 +98,7 @@ impl CrossLayerStatusChecker {
         let mut validator = Self {
             github_client,
             content_hash_validator: ContentHashValidator::new(),
-            version_pinning_validator: VersionPinningValidator::default(),
+            _version_pinning_validator: VersionPinningValidator::default(),
             equivalence_proof_validator: EquivalenceProofValidator::new(),
         };
 
@@ -184,8 +184,8 @@ impl CrossLayerStatusChecker {
     /// Check content hash synchronization
     async fn check_content_hash_sync(
         &mut self,
-        owner: &str,
-        repo: &str,
+        _owner: &str,
+        _repo: &str,
         changed_files: &[String],
     ) -> Result<ContentHashStatus, GovernanceError> {
         info!(
@@ -249,8 +249,8 @@ impl CrossLayerStatusChecker {
     /// Check version pinning compliance
     async fn check_version_pinning(
         &mut self,
-        owner: &str,
-        repo: &str,
+        _owner: &str,
+        _repo: &str,
         changed_files: &[String],
     ) -> Result<VersionPinningStatus, GovernanceError> {
         info!("Checking version pinning for {} files", changed_files.len());
@@ -571,12 +571,6 @@ impl CrossLayerStatusChecker {
         None
     }
 
-    /// Check if repository requires verification
-    fn requires_verification(&self, repo: &str) -> Result<bool, GovernanceError> {
-        crate::validation::verification_check::requires_verification(repo)
-            .map_err(|e| GovernanceError::ValidationError(e.to_string()))
-    }
-
     /// Determine overall status from individual checks
     fn determine_overall_status(
         &self,
@@ -702,11 +696,6 @@ impl CrossLayerStatusChecker {
         // Simulate version verification
         reference.version.starts_with("v1.")
     }
-
-    fn simulate_equivalence_test(&self, file: &str) -> bool {
-        // Simulate equivalence test
-        !file.contains("script-execution") // Simulate that script-execution test fails
-    }
 }
 
 #[cfg(test)]
@@ -812,7 +801,7 @@ mod tests {
         Some(CrossLayerStatusChecker {
             github_client,
             content_hash_validator: ContentHashValidator::new(),
-            version_pinning_validator: VersionPinningValidator::default(),
+            _version_pinning_validator: VersionPinningValidator::default(),
             equivalence_proof_validator: EquivalenceProofValidator::new(),
         })
     }

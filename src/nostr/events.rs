@@ -37,6 +37,7 @@ pub struct ServerHealth {
 
 impl GovernanceStatus {
     /// Create a new governance status event
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         server_id: String,
         binary_hash: String,

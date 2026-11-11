@@ -112,7 +112,7 @@ impl MetricsReporter {
             date.with_month(date.month() + 1).unwrap()
         };
         let next_month = next_month_date.and_hms_opt(0, 0, 0).unwrap().and_utc();
-        let period_end = next_month - Duration::seconds(1);
+        let period_end = next_month - Duration::try_seconds(1).unwrap();
 
         // Query merge distribution
         let merge_distribution = self

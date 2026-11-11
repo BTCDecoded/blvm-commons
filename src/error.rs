@@ -112,6 +112,7 @@ impl GovernanceError {
 }
 
 // Helper functions that match emergency.rs error constructors
+#[allow(non_snake_case)]
 impl GovernanceError {
     pub fn InvalidEmergencyTier(tier: i32) -> Self {
         Self::invalid_emergency_tier(tier)

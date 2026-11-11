@@ -46,36 +46,9 @@ BIP330 (Erlay) reduces transaction relay bandwidth by ~40% using set reconciliat
 - Enables efficient transaction set synchronization
 - Bandwidth scales with set difference, not set size
 
-## Implementation Plan
+## Implementation
 
-### Files to Create
-
-1. **`blvm-node/src/network/erlay.rs`**
-   - Set reconciliation logic
-   - Sketch computation and decoding
-   - Transaction set management
-
-2. **Integration**:
-   - Add to `NetworkManager`
-   - Update mempool synchronization
-   - Protocol message handling
-
-### Dependencies
-
-- **minisketch-rs** (Rust bindings for minisketch C library)
-  - Or: Pure Rust implementation if available
-  - Or: FFI bindings to libminisketch
-
-**Note**: minisketch is primarily C. Options:
-1. Use existing Rust bindings (if available)
-2. Create FFI bindings
-3. Pure Rust port (if needed)
-
-### Integration Points
-
-- **Mempool**: Track transaction sets for reconciliation
-- **Network**: Add Erlay messages to protocol
-- **Bandwidth**: Monitor bandwidth savings
+`blvm-node/src/network/erlay.rs` is in the tree. Set reconciliation uses minisketch only when the `erlay` feature is enabled. Short ids are a salted SipHash over the wtxid even without that feature. A peer that ignores `sendtxrcncl` still needs ordinary transaction relay.
 
 ## Benefits
 

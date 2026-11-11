@@ -178,7 +178,8 @@ impl ForkDetector {
     ) -> Result<Option<ForkDetectionEvent>, GovernanceError> {
         // Check if grace period has expired for any pending forks
         if let Some(last_detection) = self.last_detection {
-            let grace_period = Duration::days(self.fork_thresholds.grace_period_days as i64);
+            let grace_period =
+                Duration::try_days(self.fork_thresholds.grace_period_days as i64).unwrap();
             let time_since_detection = Utc::now() - last_detection;
 
             if time_since_detection > grace_period {

@@ -150,11 +150,9 @@ GROUP BY vote_type;
 
 ## Best Practices
 
-1. **Start Small**: Build participation weight over time
-2. **Be Consistent**: Regular contributions build weight
-3. **Understand Proposals**: Read before voting
-4. **Use Messages**: Include "support" or "veto" in zap messages
-5. **Monitor Your Weight**: Check periodically to understand your influence
+1. A zap does not grant a vote. Only maintainers vote.
+2. Weight columns on this page are a reporting query, not a ballot.
+3. **Use Messages**: Include "support" or "veto" in zap messages when you want that string in the report.
 
 ## Troubleshooting
 

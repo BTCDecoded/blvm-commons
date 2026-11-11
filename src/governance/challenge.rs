@@ -9,6 +9,7 @@ use crate::error::GovernanceError;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::SqlitePool;
+use std::fmt;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Challenge {
@@ -34,6 +35,7 @@ pub enum ChallengeTarget {
 }
 
 impl ChallengeTarget {
+    #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &str) -> Result<Self, GovernanceError> {
         match s.to_lowercase().as_str() {
             "pull_request" | "pr" => Ok(ChallengeTarget::PullRequest),
@@ -45,14 +47,16 @@ impl ChallengeTarget {
             ))),
         }
     }
+}
 
-    pub fn to_string(&self) -> String {
-        match self {
-            ChallengeTarget::PullRequest => "pull_request".to_string(),
-            ChallengeTarget::GovernanceDecision => "governance_decision".to_string(),
-            ChallengeTarget::MaintainerAction => "maintainer_action".to_string(),
-            ChallengeTarget::InsufficientReview => "insufficient_review".to_string(),
-        }
+impl fmt::Display for ChallengeTarget {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(match self {
+            ChallengeTarget::PullRequest => "pull_request",
+            ChallengeTarget::GovernanceDecision => "governance_decision",
+            ChallengeTarget::MaintainerAction => "maintainer_action",
+            ChallengeTarget::InsufficientReview => "insufficient_review",
+        })
     }
 }
 
@@ -65,6 +69,7 @@ pub enum ChallengeStatus {
 }
 
 impl ChallengeStatus {
+    #[allow(clippy::should_implement_trait)]
     pub fn from_str(s: &str) -> Self {
         match s.to_lowercase().as_str() {
             "pending" => ChallengeStatus::Pending,
@@ -74,14 +79,16 @@ impl ChallengeStatus {
             _ => ChallengeStatus::Pending,
         }
     }
+}
 
-    pub fn to_string(&self) -> String {
-        match self {
-            ChallengeStatus::Pending => "pending".to_string(),
-            ChallengeStatus::UnderReview => "under_review".to_string(),
-            ChallengeStatus::Resolved => "resolved".to_string(),
-            ChallengeStatus::Rejected => "rejected".to_string(),
-        }
+impl fmt::Display for ChallengeStatus {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(match self {
+            ChallengeStatus::Pending => "pending",
+            ChallengeStatus::UnderReview => "under_review",
+            ChallengeStatus::Resolved => "resolved",
+            ChallengeStatus::Rejected => "rejected",
+        })
     }
 }
 
@@ -105,12 +112,7 @@ impl ChallengeManager {
     ) -> Result<String, GovernanceError> {
         // Verify signature
         // Message format: "challenge:{target_type}:{target_id}:{reason}"
-        let message = format!(
-            "challenge:{}:{}:{}",
-            target_type.to_string(),
-            target_id,
-            reason
-        );
+        let message = format!("challenge:{target_type}:{target_id}:{reason}",);
 
         // Get challenger's public key (if they're a maintainer)
         // Note: Challenges can be from anyone, but we verify signature if maintainer
@@ -267,7 +269,7 @@ impl ChallengeManager {
 
     /// Get pending challenges that need response (30-day deadline)
     pub async fn get_pending_challenges(&self) -> Result<Vec<Challenge>, GovernanceError> {
-        let thirty_days_ago = Utc::now() - chrono::Duration::days(30);
+        let thirty_days_ago = Utc::now() - chrono::TimeDelta::try_days(30).unwrap();
         let cutoff_str = thirty_days_ago.to_rfc3339();
         let rows = sqlx::query!(
             r#"
