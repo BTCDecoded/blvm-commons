@@ -96,6 +96,57 @@ pub struct MultisigConfig {
     pub total_maintainers: usize,
 }
 
+fn calendar_table() -> Vec<AuthorizedServer> {
+    let added = DateTime::parse_from_rfc3339("2016-09-15T00:00:00Z")
+        .expect("calendar date")
+        .with_timezone(&Utc);
+    vec![
+        calendar_server(
+            "alice",
+            "https://alice.btc.calendar.opentimestamps.org",
+            added,
+        ),
+        calendar_server("bob", "https://bob.btc.calendar.opentimestamps.org", added),
+    ]
+}
+
+fn calendar_server(name: &str, url: &str, added_at: DateTime<Utc>) -> AuthorizedServer {
+    AuthorizedServer {
+        server_id: name.to_string(),
+        operator: OperatorInfo {
+            name: name.to_string(),
+            jurisdiction: "public".to_string(),
+            contact: Some(url.to_string()),
+        },
+        keys: ServerKeys {
+            nostr_npub: String::new(),
+            ssh_fingerprint: String::new(),
+        },
+        infrastructure: InfrastructureInfo {
+            vpn_ip: None,
+            github_runner: false,
+            ots_enabled: true,
+        },
+        status: "active".to_string(),
+        added_at,
+    }
+}
+
+pub(crate) fn servers_from_table(table: Vec<AuthorizedServer>) -> Result<Vec<AuthorizedServer>> {
+    if table.is_empty() {
+        return Err(anyhow!("authorized calendar table is empty"));
+    }
+    Ok(table)
+}
+
+/// Look up one calendar this build accepts. An unknown name is an error.
+pub fn lookup_authorized_calendar(name: &str) -> Result<AuthorizedServer> {
+    servers_from_table(calendar_table())?
+        .into_iter()
+        .find(|server| server.server_id == name)
+        .ok_or_else(|| anyhow!("unknown calendar: {name}"))
+}
+
 impl RegistryAnchorer {
     /// Create new registry anchorer
     pub fn new(
@@ -245,13 +296,10 @@ impl RegistryAnchorer {
         Ok(all_maintainers)
     }
 
-    /// Get authorized servers from database
+    /// Get authorized servers from the calendar table this build accepts.
     async fn get_authorized_servers(&self) -> Result<Vec<AuthorizedServer>> {
-        // Note: There is no authorized_servers table in the current schema
-        // This would need to be added in a future migration if server registration is needed
-        // For now, return empty vector
-        warn!("Authorized servers table not implemented - returning empty list");
-        Ok(vec![])
+        let _ = self;
+        servers_from_table(calendar_table())
     }
 
     /// Get audit log summaries
@@ -554,5 +602,18 @@ mod tests {
 
         assert_eq!(registry.version, "2025-01");
         assert_eq!(registry.multisig_config.required_signatures, 3);
+    }
+
+    #[test]
+    fn known_calendar_is_returned_and_an_unknown_name_is_an_error() {
+        let alice = lookup_authorized_calendar("alice").unwrap();
+        assert_eq!(
+            alice.operator.contact.as_deref(),
+            Some("https://alice.btc.calendar.opentimestamps.org")
+        );
+        let bob = lookup_authorized_calendar("bob").unwrap();
+        assert_eq!(bob.server_id, "bob");
+        assert!(lookup_authorized_calendar("carol").is_err());
+        assert!(servers_from_table(Vec::new()).is_err());
     }
 }

@@ -432,7 +432,7 @@ bllvm-sdk/
 ## 6. Governance Infrastructure Components
 
 ### Purpose
-Cryptographic governance system that makes Bitcoin governance 6x harder to capture through multi-signature requirements, transparent audit trails, and graduated thresholds across the 5-tier architecture.
+Governance tooling for a 5-tier signature schedule: multi-signature requirements, an audit log, and graduated thresholds.
 
 ### Core Components
 

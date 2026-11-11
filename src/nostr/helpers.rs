@@ -214,35 +214,35 @@ pub async fn publish_review_period_notification(
     );
 
     let tags = vec![
-        nostr_sdk::prelude::Tag::Generic(
+        nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("d".into()),
             vec![format!("btc-commons-review-{}", pr_number)],
         ),
-        nostr_sdk::prelude::Tag::Generic(
+        nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("t".into()),
             vec!["governance-review".to_string()],
         ),
-        nostr_sdk::prelude::Tag::Generic(
+        nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("governance_tier".into()),
             vec![tier.to_string()],
         ),
-        nostr_sdk::prelude::Tag::Generic(
+        nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("governance_layer".into()),
             vec![layer.to_string()],
         ),
-        nostr_sdk::prelude::Tag::Generic(
+        nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("repository".into()),
             vec![repository.to_string()],
         ),
-        nostr_sdk::prelude::Tag::Generic(
+        nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("governance_config".into()),
             vec![config.nostr.governance_config.clone()],
         ),
-        nostr_sdk::prelude::Tag::Generic(
+        nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("review_ends".into()),
             vec![review_period_ends.timestamp().to_string()],
         ),
-        nostr_sdk::prelude::Tag::Generic(
+        nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("pr".into()),
             vec![format!(
                 "https://github.com/BTCDecoded/{}/pull/{}",
@@ -251,13 +251,11 @@ pub async fn publish_review_period_notification(
         ),
     ];
 
-    let event = nostr_sdk::prelude::EventBuilder::new(
-        nostr_sdk::prelude::Kind::LongFormTextNote,
-        content,
-        tags,
-    )
-    .to_event(keys)
-    .map_err(|e| anyhow::anyhow!("Failed to create Nostr event: {}", e))?;
+    let event =
+        nostr_sdk::prelude::EventBuilder::new(nostr_sdk::prelude::Kind::LongFormTextNote, content)
+            .tags(tags)
+            .sign_with_keys(keys)
+            .map_err(|e| anyhow::anyhow!("Failed to create Nostr event: {}", e))?;
 
     client.publish_event(event).await?;
 
@@ -280,25 +278,25 @@ pub fn create_keyholder_announcement_event(
         .map_err(|e| anyhow::anyhow!("Failed to serialize keyholder announcement: {}", e))?;
 
     let mut tags = vec![
-        nostr_sdk::prelude::Tag::Generic(
+        nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("governance_config".into()),
             vec![config.nostr.governance_config.clone()],
         ),
-        nostr_sdk::prelude::Tag::Generic(
+        nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("keyholder_type".into()),
             vec![keyholder.keyholder_type.clone()],
         ),
     ];
 
     if let Some(layer) = keyholder.layer {
-        tags.push(nostr_sdk::prelude::Tag::Generic(
+        tags.push(nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("layer".into()),
             vec![layer.to_string()],
         ));
     }
 
     if let Some(zap) = &keyholder.zap_address {
-        tags.push(nostr_sdk::prelude::Tag::Generic(
+        tags.push(nostr_sdk::prelude::Tag::custom(
             nostr_sdk::prelude::TagKind::Custom("zap".into()),
             vec![zap.clone()],
         ));
@@ -309,10 +307,10 @@ pub fn create_keyholder_announcement_event(
     // The keyholder would sign it with their own keys
     let keys = nostr_sdk::prelude::Keys::generate(); // Placeholder - actual keys come from keyholder
 
-    let event =
-        nostr_sdk::prelude::EventBuilder::new(nostr_sdk::prelude::Kind::Metadata, content, tags)
-            .to_event(&keys)
-            .map_err(|e| anyhow::anyhow!("Failed to create Nostr event: {}", e))?;
+    let event = nostr_sdk::prelude::EventBuilder::new(nostr_sdk::prelude::Kind::Metadata, content)
+        .tags(tags)
+        .sign_with_keys(&keys)
+        .map_err(|e| anyhow::anyhow!("Failed to create Nostr event: {}", e))?;
 
     Ok(event)
 }

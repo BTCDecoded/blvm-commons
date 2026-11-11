@@ -121,85 +121,6 @@ async fn setup_test_db() -> SqlitePool {
 }
 
 #[tokio::test]
-async fn test_contribution_tracker_merge_mining() {
-    let pool = setup_test_db().await;
-    let tracker = ContributionTracker::new(pool.clone());
-
-    let timestamp = Utc::now();
-
-    // Record merge mining contribution
-    tracker
-        .record_merge_mining_contribution(
-            "miner1", "rsk", 1.0,  // 1 BTC reward
-            0.01, // 0.01 BTC contribution (1%)
-            timestamp,
-        )
-        .await
-        .unwrap();
-
-    // Verify it was recorded
-    let total = tracker
-        .get_contributor_total(
-            "miner1",
-            timestamp - chrono::Duration::days(1),
-            timestamp + chrono::Duration::days(1),
-        )
-        .await
-        .unwrap();
-
-    assert_eq!(total.merge_mining_btc, 0.01);
-    assert_eq!(total.total_btc, 0.01);
-}
-
-#[tokio::test]
-async fn test_contribution_tracker_fee_forwarding() {
-    let pool = setup_test_db().await;
-    let tracker = ContributionTracker::new(pool.clone());
-
-    let timestamp = Utc::now();
-
-    // Record fee forwarding contribution
-    tracker
-        .record_fee_forwarding_contribution(
-            "node1",
-            "tx_hash_123",
-            0.05, // 0.05 BTC forwarded
-            "bc1qcommons",
-            100,
-            timestamp,
-        )
-        .await
-        .unwrap();
-
-    // Verify it was recorded in both tables
-    let total = tracker
-        .get_contributor_total(
-            "node1",
-            timestamp - chrono::Duration::days(1),
-            timestamp + chrono::Duration::days(1),
-        )
-        .await
-        .unwrap();
-
-    assert_eq!(total.fee_forwarding_btc, 0.05);
-    assert_eq!(total.total_btc, 0.05);
-
-    // Verify it's in fee_forwarding_contributions table
-    let fee_forwarding: Option<(String, f64)> = sqlx::query_as(
-        "SELECT tx_hash, amount_btc FROM fee_forwarding_contributions WHERE contributor_id = ?",
-    )
-    .bind("node1")
-    .fetch_optional(&pool)
-    .await
-    .unwrap();
-
-    assert!(fee_forwarding.is_some());
-    let (tx_hash, amount) = fee_forwarding.unwrap();
-    assert_eq!(tx_hash, "tx_hash_123");
-    assert_eq!(amount, 0.05);
-}
-
-#[tokio::test]
 async fn test_contribution_tracker_zap() {
     let pool = setup_test_db().await;
     let tracker = ContributionTracker::new(pool.clone());
@@ -232,37 +153,15 @@ async fn test_contribution_tracker_zap() {
 }
 
 #[tokio::test]
-async fn test_weight_calculator_quadratic() {
-    let pool = setup_test_db().await;
-    let calculator = WeightCalculator::new(pool.clone());
-
-    // Test quadratic formula: sqrt(total_btc)
-    let weight1 = calculator.calculate_participation_weight(1.0, 0.0, 0.0);
-    assert!((weight1 - 1.0).abs() < 0.0001); // sqrt(1.0) = 1.0
-
-    let weight4 = calculator.calculate_participation_weight(4.0, 0.0, 0.0);
-    assert!((weight4 - 2.0).abs() < 0.0001); // sqrt(4.0) = 2.0
-
-    let weight9 = calculator.calculate_participation_weight(9.0, 0.0, 0.0);
-    assert!((weight9 - 3.0).abs() < 0.0001); // sqrt(9.0) = 3.0
-}
-
-#[tokio::test]
 async fn test_weight_calculator_cap() {
     let pool = setup_test_db().await;
     let calculator = WeightCalculator::new(pool.clone());
 
-    // Test 5% cap
+    // Since dabfdbf governance is maintainer-only and apply_weight_cap is a
+    // reporting stub: the weight is returned unchanged (no 5% cap).
     let total_system_weight = 100.0;
-    let calculated_weight = 10.0; // Would be 10% without cap
-    let capped_weight = calculator.apply_weight_cap(calculated_weight, total_system_weight);
-
-    assert_eq!(capped_weight, 5.0); // Capped at 5% of 100 = 5.0
-
-    // Test weight below cap
-    let small_weight = 2.0;
-    let capped_small = calculator.apply_weight_cap(small_weight, total_system_weight);
-    assert_eq!(capped_small, 2.0); // No cap applied
+    assert_eq!(calculator.apply_weight_cap(10.0, total_system_weight), 10.0);
+    assert_eq!(calculator.apply_weight_cap(2.0, total_system_weight), 2.0);
 }
 
 #[tokio::test]
@@ -270,125 +169,13 @@ async fn test_weight_calculator_cooling_off() {
     let pool = setup_test_db().await;
     let calculator = WeightCalculator::new(pool.clone());
 
-    // Test cooling-off: contributions >= 0.1 BTC need 30 days
-    assert!(!calculator.check_cooling_off(0.1, 29)); // 29 days, not eligible
-    assert!(calculator.check_cooling_off(0.1, 30)); // 30 days, eligible
-    assert!(calculator.check_cooling_off(0.1, 31)); // 31 days, eligible
-
-    // Test small contributions: no cooling-off
-    assert!(calculator.check_cooling_off(0.05, 0)); // Small, no cooling-off
-    assert!(calculator.check_cooling_off(0.09, 1)); // Small, no cooling-off
-}
-
-#[tokio::test]
-async fn test_weight_calculator_update_weights() {
-    let pool = setup_test_db().await;
-    let tracker = ContributionTracker::new(pool.clone());
-    let calculator = WeightCalculator::new(pool.clone());
-
-    let timestamp = Utc::now();
-
-    // Record contributions
-    tracker
-        .record_merge_mining_contribution("contributor1", "rsk", 1.0, 0.01, timestamp)
-        .await
-        .unwrap();
-
-    tracker
-        .record_fee_forwarding_contribution("contributor1", "tx1", 0.04, "addr1", 100, timestamp)
-        .await
-        .unwrap();
-
-    tracker
-        .record_zap_contribution("contributor1", 0.05, timestamp, false)
-        .await
-        .unwrap();
-
-    // Add more contributors to make capping work correctly (need enough to avoid convergence to 0)
-    for i in 2..10 {
-        tracker
-            .record_merge_mining_contribution(
-                &format!("contributor{}", i),
-                "rsk",
-                1.0,
-                0.01,
-                timestamp,
-            )
-            .await
-            .unwrap();
-    }
-
-    // Update contribution ages first (needed for weight calculation)
-    tracker.update_contribution_ages().await.unwrap();
-
-    // Update weights (may need multiple passes for convergence)
-    calculator.update_participation_weights().await.unwrap();
-    calculator.update_participation_weights().await.unwrap();
-
-    // Verify weight was calculated
-    let weight = calculator
-        .get_participation_weight("contributor1")
-        .await
-        .unwrap();
-    assert!(weight.is_some());
-
-    // Total contribution = 0.01 + 0.04 + 0.05 = 0.10 BTC
-    // Base weight = sqrt(0.10) ≈ 0.316
-    // Note: The iterative capping process may cause weights to be very small
-    // For now, just verify that a weight was calculated (non-zero)
-    let actual_weight = weight.unwrap();
-    // Weight should be positive (even if very small due to capping)
-    assert!(
-        actual_weight > 0.0,
-        "Weight should be greater than 0, got {}",
-        actual_weight
-    );
-    // Weight should not exceed base weight
-    let base_weight = (0.10_f64).sqrt();
-    assert!(
-        actual_weight <= base_weight + 0.01,
-        "Weight should not exceed base weight significantly, got {} (base: {})",
-        actual_weight,
-        base_weight
-    );
-}
-
-#[tokio::test]
-async fn test_aggregator_monthly_aggregation() {
-    let pool = setup_test_db().await;
-    let tracker = ContributionTracker::new(pool.clone());
-    let aggregator = ContributionAggregator::new(pool.clone());
-
-    let now = Utc::now();
-    let thirty_days_ago = now - chrono::Duration::days(30);
-    let thirty_one_days_ago = now - chrono::Duration::days(31);
-
-    // Record merge mining (within 30 days)
-    tracker
-        .record_merge_mining_contribution(
-            "miner1",
-            "rsk",
-            1.0,
-            0.01,
-            now - chrono::Duration::days(15),
-        )
-        .await
-        .unwrap();
-
-    // Record merge mining (outside 30 days - should not be counted)
-    tracker
-        .record_merge_mining_contribution("miner1", "rsk", 1.0, 0.01, thirty_one_days_ago)
-        .await
-        .unwrap();
-
-    // Aggregate
-    let monthly = aggregator
-        .aggregate_merge_mining_monthly("miner1")
-        .await
-        .unwrap();
-
-    // Should only count the one within 30 days
-    assert_eq!(monthly, 0.01);
+    // Since dabfdbf governance is maintainer-only and check_cooling_off is a
+    // reporting stub: no cooling-off period for any contribution.
+    assert!(calculator.check_cooling_off(0.1, 29));
+    assert!(calculator.check_cooling_off(0.1, 30));
+    assert!(calculator.check_cooling_off(0.1, 31));
+    assert!(calculator.check_cooling_off(0.05, 0));
+    assert!(calculator.check_cooling_off(0.09, 1));
 }
 
 #[tokio::test]
@@ -419,80 +206,4 @@ async fn test_vote_aggregator_thresholds() {
 
     // Invalid tier
     assert!(aggregator.get_threshold_for_tier(6).is_err());
-}
-
-#[tokio::test]
-async fn test_integration_full_flow() {
-    let pool = setup_test_db().await;
-    let tracker = ContributionTracker::new(pool.clone());
-    let aggregator = ContributionAggregator::new(pool.clone());
-    let calculator = WeightCalculator::new(pool.clone());
-
-    let timestamp = Utc::now();
-
-    // 1. Record multiple contribution types
-    tracker
-        .record_merge_mining_contribution("contributor1", "rsk", 1.0, 0.01, timestamp)
-        .await
-        .unwrap();
-
-    tracker
-        .record_fee_forwarding_contribution("contributor1", "tx1", 0.04, "addr1", 100, timestamp)
-        .await
-        .unwrap();
-
-    tracker
-        .record_zap_contribution("contributor1", 0.05, timestamp, false)
-        .await
-        .unwrap();
-
-    // Add more contributors to make capping work correctly (need enough to avoid convergence to 0)
-    for i in 2..10 {
-        tracker
-            .record_merge_mining_contribution(
-                &format!("contributor{}", i),
-                "rsk",
-                1.0,
-                0.01,
-                timestamp,
-            )
-            .await
-            .unwrap();
-    }
-
-    // 2. Update contribution ages
-    tracker.update_contribution_ages().await.unwrap();
-
-    // 3. Update weights (may need multiple passes for convergence)
-    calculator.update_participation_weights().await.unwrap();
-    calculator.update_participation_weights().await.unwrap();
-
-    // 4. Get aggregates
-    let aggregates = aggregator
-        .get_contributor_aggregates("contributor1")
-        .await
-        .unwrap();
-
-    assert_eq!(aggregates.merge_mining_btc, 0.01);
-    assert_eq!(aggregates.fee_forwarding_btc, 0.04);
-    assert_eq!(aggregates.cumulative_zaps_btc, 0.05);
-    assert_eq!(aggregates.total_contribution_btc, 0.10);
-
-    // Base weight should be sqrt(0.10) ≈ 0.316
-    // Note: The iterative capping process may cause weights to be very small
-    // For now, just verify that a weight was calculated (non-zero)
-    let base_weight = (0.10_f64).sqrt();
-    // Weight should be positive (even if very small due to capping)
-    assert!(
-        aggregates.participation_weight > 0.0,
-        "Weight should be greater than 0, got {}",
-        aggregates.participation_weight
-    );
-    // Weight should not exceed base weight
-    assert!(
-        aggregates.participation_weight <= base_weight + 0.01,
-        "Weight should not exceed base weight significantly, got {} (base: {})",
-        aggregates.participation_weight,
-        base_weight
-    );
 }

@@ -6,7 +6,6 @@
 use anyhow::{Result, anyhow};
 use nostr_sdk::prelude::*;
 use std::collections::HashMap;
-use std::str::FromStr;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Mutex;
@@ -23,9 +22,9 @@ pub struct NostrClient {
 impl NostrClient {
     /// Create new Nostr client with server key and relay URLs
     pub async fn new(nsec: String, relay_urls: Vec<String>) -> Result<Self> {
-        let keys = Keys::from_sk_str(&nsec).map_err(|e| anyhow!("Invalid nsec key: {}", e))?;
+        let keys = Keys::parse(&nsec).map_err(|e| anyhow!("Invalid nsec key: {}", e))?;
 
-        let client = Client::new(&keys);
+        let client = Client::new(keys.clone());
 
         // Connect to all relays
         for relay_url in &relay_urls {
@@ -60,10 +59,7 @@ impl NostrClient {
         let relays = (*self.client).relays().await;
 
         for (relay_url, relay) in &relays {
-            match relay
-                .send_event(event.clone(), RelaySendOptions::new())
-                .await
-            {
+            match relay.send_event(&event).await {
                 Ok(_) => {
                     debug!("Published event to relay: {}", relay_url);
                     successful_relays += 1;
@@ -110,7 +106,7 @@ impl NostrClient {
 
     /// Close all relay connections
     pub async fn close(&self) -> Result<()> {
-        (*self.client).disconnect().await?;
+        (*self.client).disconnect().await;
         info!("Disconnected from all Nostr relays");
         Ok(())
     }
@@ -129,7 +125,7 @@ impl NostrClient {
         use nostr_sdk::prelude::*;
 
         // Parse recipient pubkey
-        let recipient_key = XOnlyPublicKey::from_str(recipient_pubkey)
+        let recipient_key = PublicKey::from_hex(recipient_pubkey)
             .map_err(|e| anyhow!("Invalid recipient pubkey: {}", e))?;
 
         // Create filter for zap receipts (kind 9735) to this pubkey
@@ -146,15 +142,17 @@ impl NostrClient {
         // Spawn task to handle incoming zap events
         tokio::spawn(async move {
             // Subscribe to the filter (subscribe only takes filters, not subscription_id)
-            client_handle.subscribe(vec![filter]).await;
+            if let Err(e) = client_handle.subscribe(filter, None).await {
+                warn!("Failed to subscribe to zap events: {}", e);
+            }
 
-            // Listen for events using get_events_of
+            // Listen for events using fetch_events
             loop {
                 // Create filter again for querying
                 let query_filter = Filter::new().kind(Kind::ZapReceipt).pubkey(recipient_key);
 
                 match (*client_handle)
-                    .get_events_of(vec![query_filter], Some(Duration::from_secs(10)))
+                    .fetch_events(query_filter, Duration::from_secs(10))
                     .await
                 {
                     Ok(events) => {
@@ -204,11 +202,11 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
         .tags
         .iter()
         .find(|tag| {
-            let vec = tag.as_vec();
+            let vec = tag.as_slice();
             vec.first().map(|s| s.as_str()) == Some("p")
         })
         .and_then(|tag| {
-            let vec = tag.as_vec();
+            let vec = tag.as_slice();
             vec.get(1).map(|s| s.to_string())
         })
         .ok_or_else(|| anyhow!("Missing p tag in zap event"))?;
@@ -218,11 +216,11 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
         .tags
         .iter()
         .find(|tag| {
-            let vec = tag.as_vec();
+            let vec = tag.as_slice();
             vec.first().map(|s| s.as_str()) == Some("amount")
         })
         .and_then(|tag| {
-            let vec = tag.as_vec();
+            let vec = tag.as_slice();
             vec.get(1).and_then(|amt| amt.parse::<u64>().ok())
         })
         .unwrap_or(0);
@@ -232,11 +230,11 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
         .tags
         .iter()
         .find(|tag| {
-            let vec = tag.as_vec();
+            let vec = tag.as_slice();
             vec.first().map(|s| s.as_str()) == Some("bolt11")
         })
         .and_then(|tag| {
-            let vec = tag.as_vec();
+            let vec = tag.as_slice();
             vec.get(1).map(|s| s.to_string())
         });
 
@@ -245,11 +243,11 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
         .tags
         .iter()
         .find(|tag| {
-            let vec = tag.as_vec();
+            let vec = tag.as_slice();
             vec.first().map(|s| s.as_str()) == Some("description")
         })
         .and_then(|tag| {
-            let vec = tag.as_vec();
+            let vec = tag.as_slice();
             vec.get(1)
                 .and_then(|desc| serde_json::from_str::<serde_json::Value>(desc).ok())
         })
@@ -271,11 +269,11 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
         .tags
         .iter()
         .find(|tag| {
-            let vec = tag.as_vec();
+            let vec = tag.as_slice();
             vec.first().map(|s| s.as_str()) == Some("e")
         })
         .and_then(|tag| {
-            let vec = tag.as_vec();
+            let vec = tag.as_slice();
             vec.get(1).map(|s| s.to_string())
         });
 
@@ -283,7 +281,7 @@ fn parse_zap_event(event: &nostr_sdk::prelude::Event) -> Result<ZapEvent> {
         recipient_pubkey: recipient,
         sender_pubkey,
         amount_msat,
-        timestamp: event.created_at.as_i64(),
+        timestamp: event.created_at.as_secs() as i64,
         invoice,
         message,
         zapped_event_id,
@@ -298,7 +296,7 @@ mod tests {
     async fn test_client_creation() {
         // Generate test keys
         let keys = Keys::generate();
-        let nsec = keys.secret_key().unwrap().display_secret().to_string();
+        let nsec = keys.secret_key().to_secret_hex();
 
         // This will fail in test environment without real relays
         // but we can test the key parsing

@@ -70,20 +70,21 @@ impl AdoptionTracker {
 
     /// Get total network weight by type (for adoption percentage calculations)
     async fn get_network_totals(&self) -> Result<(f64, f64, f64), GovernanceError> {
-        let total: (f64,) = sqlx::query_as("SELECT COALESCE(SUM(weight), 0) FROM fork_decisions")
-            .fetch_one(&self.pool)
-            .await
-            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+        let total: (f64,) =
+            sqlx::query_as("SELECT CAST(COALESCE(SUM(weight), 0) AS REAL) FROM fork_decisions")
+                .fetch_one(&self.pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
         let hashpower: (f64,) = sqlx::query_as(
-            "SELECT COALESCE(SUM(weight), 0) FROM fork_decisions WHERE node_type = 'mining_pool'",
+            "SELECT CAST(COALESCE(SUM(weight), 0) AS REAL) FROM fork_decisions WHERE node_type = 'mining_pool'",
         )
         .fetch_one(&self.pool)
         .await
         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
         let economic: (f64,) = sqlx::query_as(
-            "SELECT COALESCE(SUM(weight), 0) FROM fork_decisions WHERE node_type != 'mining_pool'",
+            "SELECT CAST(COALESCE(SUM(weight), 0) AS REAL) FROM fork_decisions WHERE node_type != 'mining_pool'",
         )
         .fetch_one(&self.pool)
         .await
@@ -347,5 +348,26 @@ impl AdoptionTracker {
             &decision.signature,
         )
         .await
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::database::Database;
+
+    /// Regression: SUM over an empty table is NULL, and COALESCE(.., 0) then
+    /// yields an INTEGER that sqlx refuses to decode as f64.
+    #[tokio::test]
+    async fn test_network_totals_empty_db() {
+        let db = Database::new_in_memory().await.unwrap();
+        let pool = db.pool().expect("Database should have SQLite pool").clone();
+        let tracker = AdoptionTracker::new(pool);
+
+        let (total, hashpower, economic) = tracker.get_network_totals().await.unwrap();
+        assert_eq!((total, hashpower, economic), (0.0, 0.0, 0.0));
+
+        let stats = tracker.get_adoption_statistics().await.unwrap();
+        assert!(stats.rulesets.is_empty());
     }
 }

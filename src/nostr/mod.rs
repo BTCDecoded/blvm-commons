@@ -1,7 +1,7 @@
 //! Nostr Integration Module
 //!
-//! This module provides real-time transparency for governance operations
-//! by publishing status updates to the Nostr protocol.
+//! Status updates can be sent to Nostr relays. The default interval is 3600 seconds.
+//! That timer is not a live feed of every governance action.
 
 pub mod bot_manager;
 pub mod client;
