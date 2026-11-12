@@ -102,6 +102,24 @@ fn default_network() -> String {
     "mainnet".to_string()
 }
 
+/// Secrets that must never authenticate a boot or a webhook.
+pub const PLACEHOLDER_WEBHOOK_SECRETS: &[&str] =
+    &["your_webhook_secret_here", "your-webhook-secret-here"];
+
+/// Refuse to boot when the GitHub webhook secret is missing or still a placeholder.
+pub fn require_webhook_secret(secret: &str) -> Result<(), &'static str> {
+    let trimmed = secret.trim();
+    if trimmed.is_empty()
+        || PLACEHOLDER_WEBHOOK_SECRETS
+            .iter()
+            .any(|placeholder| *placeholder == trimmed)
+    {
+        Err("GITHUB_WEBHOOK_SECRET is missing or still a placeholder; refusing to boot")
+    } else {
+        Ok(())
+    }
+}
+
 impl Default for GovernanceConfig {
     fn default() -> Self {
         Self {
