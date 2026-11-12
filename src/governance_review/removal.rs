@@ -9,6 +9,17 @@ use crate::governance_review::models::policy;
 use chrono::Utc;
 use sqlx::{Row, SqlitePool};
 
+/// Count of distinct approval ids that are in the registered authority set.
+pub fn registered_approval_count(approvals: &[i32], registered: &[i32]) -> usize {
+    let allowed: std::collections::HashSet<i32> = registered.iter().copied().collect();
+    approvals
+        .iter()
+        .copied()
+        .filter(|id| allowed.contains(id))
+        .collect::<std::collections::HashSet<_>>()
+        .len()
+}
+
 pub struct RemovalManager {
     pool: SqlitePool,
 }
@@ -113,8 +124,12 @@ impl RemovalManager {
         emergency_keyholder_approvals: Vec<i32>, // Emergency keyholder IDs who approved
         reason: &str,
     ) -> Result<(), sqlx::Error> {
-        // Policy: Must have at least 4 emergency keyholder approvals
-        if emergency_keyholder_approvals.len() < 4 {
+        // Authority is the emergency_keyholders table, not the caller's list.
+        let registered: Vec<i32> =
+            sqlx::query_scalar("SELECT id FROM emergency_keyholders WHERE active = 1")
+                .fetch_all(&self.pool)
+                .await?;
+        if registered_approval_count(&emergency_keyholder_approvals, &registered) < 4 {
             return Err(sqlx::Error::RowNotFound);
         }
 
