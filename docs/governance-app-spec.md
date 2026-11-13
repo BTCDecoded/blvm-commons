@@ -21,7 +21,7 @@ A Rust GitHub App for the BTCDecoded repositories. The published schedule names 
 
 **Three-layer defense:**
 
-1. **Development Governance** - GitHub App enforces signature thresholds and review periods
+1. **Development Governance** - The GitHub App is designed to check signature thresholds and review periods. It is not installed. Enforcement is off.
 2. **Distribution Governance** - Releases must have valid maintainer multisig
 3. **Deployment Governance** - Nodes verify signatures before installing updates
 
@@ -815,23 +815,23 @@ glob = "0.3"
 | Release signing | Individual PGP | Multisig threshold |
 | User protection | Trust | Verification |
 
-**Objectively more secure.**
+The table is the written schedule. It is not a measured comparison, and enforcement is off.
 
 ## Success Criteria
 
 ### Technical
-- ✅ PRs blocked until requirements met
+- Pull requests blocked until the written requirements are met: Designed. The check is not on.
 - The design reverses a non-conforming host action when two of three nodes agree. That reversal is Designed and is not Running. A human administrator is not a bypass of a check that is on, because the check is not on.
-- ✅ Cross-repo dependencies enforced
-- ✅ Emergency mode works, expires automatically
-- ✅ Audit trail immutable
+- Cross-repository dependency checks: Designed. They are not enforced.
+- Emergency mode: the written tiers exist. That path is not running.
+- An immutable audit trail: Designed. It is not the public record today.
 
 ### Organizational
-- ✅ Transparent governance
-- ✅ Clear signing process
-- ✅ No invisible actions
-- ✅ Auditable decisions
-- ✅ Fork-ready
+- The rules are published. Enforcement is off.
+- The signing process is written. Signatures are not collected.
+- A change can still land without that process.
+- A decision is auditable when it is in git. A separate governance audit trail is Designed.
+- The rules can be forked.
 
 ## What Cursor AI Needs to Build
 
