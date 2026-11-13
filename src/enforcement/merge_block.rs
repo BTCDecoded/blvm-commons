@@ -73,19 +73,8 @@ impl MergeBlocker {
         should_block: bool,
         reason: &str,
     ) -> Result<(), GovernanceError> {
-        let state = if should_block { "failure" } else { "success" };
-        let description = if should_block {
-            format!("❌ Merge blocked: {reason}")
-        } else {
-            "✅ Governance requirements met - merge allowed".to_string()
-        };
-
-        // Add dry-run prefix if in dry-run mode
-        let final_description = if self.decision_logger.dry_run_mode {
-            format!("[DRY-RUN] {description}")
-        } else {
-            description
-        };
+        let (state, final_description) =
+            Self::status_check(should_block, reason, self.decision_logger.dry_run_mode);
 
         if let Some(client) = &self.github_client {
             client
@@ -107,6 +96,28 @@ impl MergeBlocker {
         }
 
         Ok(())
+    }
+
+    /// State and description posted to GitHub.
+    /// A dry run is always success. The description still says whether the
+    /// written rule would have blocked. Enforcement posts failure only when
+    /// dry-run is off and the decision is to block.
+    pub fn status_check(should_block: bool, reason: &str, dry_run: bool) -> (&'static str, String) {
+        if dry_run {
+            let description = if should_block {
+                format!("[DRY-RUN] would block: {reason}")
+            } else {
+                format!("[DRY-RUN] would allow: {reason}")
+            };
+            ("success", description)
+        } else if should_block {
+            ("failure", format!("❌ Merge blocked: {reason}"))
+        } else {
+            (
+                "success",
+                "✅ Governance requirements met - merge allowed".to_string(),
+            )
+        }
     }
 }
 
@@ -219,6 +230,24 @@ mod tests {
     fn test_get_block_reason_emergency_signatures_not_met() {
         let reason = MergeBlocker::get_block_reason(true, false, true);
         assert_eq!(reason, "Emergency mode: Signature threshold not met");
+    }
+
+    #[test]
+    fn test_dry_run_block_posts_success_with_reason() {
+        let (state, description) =
+            MergeBlocker::status_check(true, "Signature threshold requirement not met", true);
+        assert_eq!(state, "success");
+        assert!(description.starts_with("[DRY-RUN]"));
+        assert!(description.contains("Signature threshold requirement not met"));
+    }
+
+    #[test]
+    fn test_enforcing_block_posts_failure() {
+        let (state, description) =
+            MergeBlocker::status_check(true, "Signature threshold requirement not met", false);
+        assert_eq!(state, "failure");
+        assert!(!description.contains("[DRY-RUN]"));
+        assert!(description.contains("Signature threshold requirement not met"));
     }
 
     #[test]
