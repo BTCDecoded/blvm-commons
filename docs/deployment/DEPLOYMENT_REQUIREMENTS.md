@@ -54,7 +54,7 @@ SERVER_ID=governance-01       # Default: governance-01
 
 # Governance (OPTIONAL)
 GOVERNANCE_REPO=BTCDecoded/governance  # Default: BTCDecoded/governance
-DRY_RUN_MODE=false            # Default: false
+DRY_RUN_MODE=true             # Default: true. Set false only when enforcement is on.
 LOG_ENFORCEMENT_DECISIONS=true # Default: true
 ENFORCEMENT_LOG_PATH=/var/log/blvm-commons/enforcement.log  # Optional
 

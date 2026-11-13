@@ -69,7 +69,12 @@ impl GitHubIntegration {
             "governance/signatures".to_string(),
             "governance/analysis".to_string(),
         ];
-        if let Err(e) = self
+        if self.decision_logger.dry_run_mode {
+            info!(
+                "Dry-run: not setting required status checks for {}/{}",
+                owner, repo
+            );
+        } else if let Err(e) = self
             .github_client
             .set_required_status_checks(owner.as_str(), repo.as_str(), base_ref, &contexts)
             .await

@@ -68,7 +68,7 @@ The testnet uses the following key environment variables:
 DATABASE_URL=sqlite:blvm-commons-testnet.db
 
 # Governance
-DRY_RUN_MODE=false
+DRY_RUN_MODE=true
 LOG_ENFORCEMENT_DECISIONS=true
 
 # GitHub (test values)

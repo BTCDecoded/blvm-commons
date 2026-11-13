@@ -12,7 +12,7 @@ services:
     environment:
       - RUST_LOG=info
       - DATABASE_URL=sqlite:blvm-commons-testnet.db
-      - DRY_RUN_MODE=false
+      - DRY_RUN_MODE=true
       - LOG_ENFORCEMENT_DECISIONS=true
       - ENFORCEMENT_LOG_PATH=/app/logs/enforcement-decisions.jsonl
       - GITHUB_APP_ID=123456

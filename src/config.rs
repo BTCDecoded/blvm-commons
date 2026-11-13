@@ -138,10 +138,11 @@ impl AppConfig {
             .unwrap_or_else(|_| "3000".to_string())
             .parse()?;
 
+        // Missing or unreadable means observe-only. Enforcement is an explicit false.
         let dry_run_mode = env::var("DRY_RUN_MODE")
-            .unwrap_or_else(|_| "false".to_string())
+            .unwrap_or_else(|_| "true".to_string())
             .parse()
-            .unwrap_or(false);
+            .unwrap_or(true);
 
         let log_enforcement_decisions = env::var("LOG_ENFORCEMENT_DECISIONS")
             .unwrap_or_else(|_| "true".to_string())
@@ -292,7 +293,7 @@ impl Default for AppConfig {
             governance_repo: "BTCDecoded/governance".to_string(),
             server_host: "0.0.0.0".to_string(),
             server_port: 3000,
-            dry_run_mode: false,
+            dry_run_mode: true,
             log_enforcement_decisions: true,
             enforcement_log_path: None,
             server_id: "governance-01".to_string(),

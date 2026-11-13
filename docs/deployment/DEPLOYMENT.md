@@ -46,7 +46,7 @@ SERVER_PORT=8080
 SERVER_ID=governance-01
 
 # Governance Configuration
-DRY_RUN_MODE=false
+DRY_RUN_MODE=true
 LOG_ENFORCEMENT_DECISIONS=true
 ENFORCEMENT_LOG_PATH=/var/log/governance/enforcement.log
 
@@ -82,7 +82,7 @@ github_webhook_secret = "env:GITHUB_WEBHOOK_SECRET"
 governance_repo = "BTCDecoded/governance"
 server_host = "0.0.0.0"
 server_port = 8080
-dry_run_mode = false
+dry_run_mode = true
 log_enforcement_decisions = true
 enforcement_log_path = "/var/log/governance/enforcement.log"
 server_id = "governance-01"
