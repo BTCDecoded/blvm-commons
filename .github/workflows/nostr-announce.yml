@@ -32,7 +32,7 @@ permissions:
 jobs:
   publish:
     name: Publish to Nostr (${{ inputs.bot }})
-    runs-on: [self-hosted, Linux, X64, builds]
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     
     steps:
