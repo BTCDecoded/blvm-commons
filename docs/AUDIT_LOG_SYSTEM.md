@@ -2,15 +2,15 @@
 
 ## Overview
 
-The BTCDecoded governance system implements a cryptographic audit logging system that creates a tamper-evident record of all governance operations. This provides complete transparency and accountability for all governance actions.
+The design is a cryptographic audit log: a tamper-evident record of governance operations. That log is Designed. It is not the public record today. Enforcement is off, and the keys are test keys.
 
 ## Purpose
 
-The audit log system serves as a **transparency and accountability mechanism** by:
-- Recording all governance operations in tamper-evident format
-- Creating immutable hash chain of all actions
-- Enabling verification of governance integrity
-- Providing complete audit trail for compliance
+Once the log is running, it is meant to:
+- Record governance operations in a tamper-evident format
+- Create a hash chain of those actions
+- Let a later reader check the chain
+- Leave a record. It is not a claim that every decision is already public.
 
 ## Architecture
 
