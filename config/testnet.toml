@@ -16,7 +16,7 @@ url = "sqlite:governance-app-testnet.db"
 max_connections = 10
 timeout_seconds = 30
 
-# Phase 2A: Enable enforcement mode (disable dry-run)
+# Dry-run by default; the app reads DRY_RUN_MODE from the environment (enforce only when DRY_RUN_MODE=false)
 [governance]
 dry_run_mode = true
 log_enforcement_decisions = true
