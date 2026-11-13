@@ -37,17 +37,14 @@ Bitcoin Commons is the governance tooling for Bitcoin development. It publishes 
 - 🔧 **Test Keys Only**: No real cryptographic enforcement
 - 📋 **Development Phase**: System is in rapid AI-assisted development
 
-**Timeline:**
-- **Phase 2 Activation**: 3-6 months (governance enforcement begins)
-- **Phase 3 Full Operation**: 12+ months (mature, stable system)
-- **Current Phase**: Infrastructure building and testing
+**Timeline:** Activation begins as BLVM moves from alpha to beta, on no fixed timeline. Phase 1 is current. Infrastructure is built, and governance rules are not enforced. Phase 2 begins with community validation and adoption, not on a calendar date. Phase 3 is later operation after that, with no fixed date.
 
 ### Key Features
 
 - **Constitutional Governance**: 5-tier governance model with graduated thresholds
-- **Cryptographic Enforcement**: Multi-signature requirements for all changes
+- **Cryptographic Enforcement**: The written schedule is a multi-signature requirement. That check is Designed and is not on. The keys are test keys.
 - **Spec-lock & tests**: **blvm-spec-lock** on `#[spec_locked]` Orange Paper contracts, plus comprehensive automated tests (see **blvm-consensus** CI and README)
-- **Transparent Audit Trails**: Immutable logs of all governance decisions
+- **Transparent Audit Trails**: An immutable log of governance decisions is Designed. It is not the public record today.
 - **Governance Fork Capability**: Users can fork governance rulesets
 
 ---
@@ -219,7 +216,7 @@ Bitcoin Commons implements a multi-layered security model:
 
 1. **Exact Dependency Pinning**: All consensus-critical and cryptographic dependencies use exact versions
 2. **Spec-lock + tests**: **blvm-spec-lock** verification and the test gates defined in **blvm-consensus** CI are required for consensus-impacting changes
-3. **Cryptographic Enforcement**: Multi-signature requirements for all governance actions
+3. **Cryptographic Enforcement**: The written schedule requires multiple signatures for a governance action. That check is not on.
 4. **Security Boundaries**: Clear separation of concerns per repository
 5. **Responsible Disclosure**: Coordinated vulnerability disclosure process
 
