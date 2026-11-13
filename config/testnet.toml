@@ -18,7 +18,7 @@ timeout_seconds = 30
 
 # Phase 2A: Enable enforcement mode (disable dry-run)
 [governance]
-dry_run_mode = false
+dry_run_mode = true
 log_enforcement_decisions = true
 enforcement_log_path = "logs/enforcement-decisions.jsonl"
 
