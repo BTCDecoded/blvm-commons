@@ -22,10 +22,10 @@ A Rust GitHub App for the BTCDecoded repositories. The published schedule names 
 **Three-layer defense:**
 
 1. **Development Governance** - The GitHub App is designed to check signature thresholds and review periods. It is not installed. Enforcement is off.
-2. **Distribution Governance** - Releases must have valid maintainer multisig
-3. **Deployment Governance** - Nodes verify signatures before installing updates
+2. **Distribution Governance** - A release is accepted when the required maintainer signatures attest to a reproducible build. That attestation is Designed. It is not in the release workflow today.
+3. **Deployment Governance** - The design is that a node checks those signatures before it installs an update. Nodes do not do that check today.
 
-**Even if GitHub governance is bypassed, unsigned releases won't reach users.**
+An unsigned merge does not become a signed release. Operators are not limited to the repository host.
 
 ## Repository Hierarchy
 
