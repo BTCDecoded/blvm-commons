@@ -156,14 +156,23 @@ async fn test_push_to_feature_branch() {
 
 #[tokio::test]
 async fn test_webhook_hmac_verification() {
-    // Test HMAC signature verification
-    let webhook_secret = "test_secret";
-    let payload = r#"{"action":"opened","repository":{"full_name":"BTCDecoded/blvm-consensus"}}"#;
-    let signature = "sha256=test_signature";
-    
-    // This would test HMAC verification in a real implementation
-    // For now, we'll just test that the signature format is correct
-    assert!(signature.starts_with("sha256="));
+    let payload = br#"{"action":"opened","repository":{"full_name":"BTCDecoded/blvm-consensus"}}"#;
+    let signature = "sha256=9395ac94cddbed479a25ce37c1db6914029a05df4d59617144d0f721e9efcacb";
+    assert!(blvm_commons::webhooks::github::github_webhook_signature_ok(
+        "test_secret",
+        payload,
+        Some(signature)
+    ));
+    assert!(!blvm_commons::webhooks::github::github_webhook_signature_ok(
+        "test_secret",
+        payload,
+        Some("sha256=test_signature")
+    ));
+    assert!(!blvm_commons::webhooks::github::github_webhook_signature_ok(
+        "your_webhook_secret_here",
+        payload,
+        Some(signature)
+    ));
 }
 
 #[tokio::test]
