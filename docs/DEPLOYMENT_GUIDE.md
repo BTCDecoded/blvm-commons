@@ -206,7 +206,7 @@ data_dir = "/app/data"
 database_backend = "auto"
 
 [storage.pruning]
-mode = { type = "disabled" }
+mode = "disabled"
 
 [rpc_auth]
 required = true
@@ -288,7 +288,8 @@ data_dir = "/app/data"
 database_backend = "auto"
 
 [storage.pruning]
-mode = { type = "normal", keep_from_height = 0, min_recent_blocks = 288 }
+mode = "normal"
+keep_blocks = 288
 
 [rpc_auth]
 required = true
