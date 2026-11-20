@@ -50,10 +50,11 @@ impl CrossLayerValidator {
         Ok(())
     }
 
-    fn matches_pattern(files: &[String], pattern: &str) -> bool {
+    fn matches_pattern(files: &[impl AsRef<str>], pattern: &str) -> bool {
         // Simple glob pattern matching
         // In a real implementation, this would use a proper glob library
         files.iter().any(|file| {
+            let file = file.as_ref();
             if pattern.contains("**") {
                 let prefix = pattern.split("**").next().unwrap_or("");
                 file.starts_with(prefix)
@@ -456,7 +457,7 @@ impl CrossLayerValidator {
 
         for file in changed_files {
             for pattern in consensus_patterns {
-                if Self::matches_pattern(&[file.clone()], pattern) {
+                if Self::matches_pattern(std::slice::from_ref(file), pattern) {
                     consensus_files_changed.push(file.clone());
                     break;
                 }
