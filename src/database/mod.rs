@@ -491,6 +491,37 @@ impl Database {
         Ok(count as u64)
     }
 
+    pub async fn insert_maintainer(
+        &self,
+        github_username: &str,
+        public_key: &str,
+        layer: i32,
+    ) -> Result<(), GovernanceError> {
+        let pool = &self.backend.pool;
+        sqlx::query(
+            r#"
+            INSERT INTO maintainers (github_username, public_key, layer, active, last_updated)
+            VALUES (?, ?, ?, true, CURRENT_TIMESTAMP)
+            "#,
+        )
+        .bind(github_username)
+        .bind(public_key)
+        .bind(layer)
+        .execute(pool)
+        .await
+        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+        Ok(())
+    }
+
+    pub async fn count_build_runs(&self) -> Result<i64, GovernanceError> {
+        let pool = &self.backend.pool;
+        let count: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM build_runs")
+            .fetch_one(pool)
+            .await
+            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+        Ok(count)
+    }
+
     /// Add or update a tier override for a PR
     pub async fn set_tier_override(
         &self,

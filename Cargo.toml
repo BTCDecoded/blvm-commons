@@ -130,6 +130,7 @@ name = "governance-report"
 path = "src/bin/governance-report.rs"
 
 [dev-dependencies]
+axum = "0.7"
 tokio-test = "0.4"
 mockito = "1.2"
 wiremock = "0.6"

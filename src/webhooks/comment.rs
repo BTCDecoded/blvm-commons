@@ -9,6 +9,7 @@ use crate::governance_review::models::policy;
 pub async fn handle_comment_event(
     database: &Database,
     payload: &Value,
+    merge_checks_wired: bool,
 ) -> Result<axum::response::Json<serde_json::Value>, axum::http::StatusCode> {
     let repo_name = payload
         .get("repository")
@@ -40,8 +41,14 @@ pub async fn handle_comment_event(
         commenter, pr_number, repo_name
     );
 
-    // Check for tier override command
+    // Check for tier override command. One comment must not rewrite a tier
+    // until merge checks are wired.
     if body.starts_with("/governance-tier-override") {
+        if !merge_checks_wired {
+            return Ok(axum::response::Json(
+                serde_json::json!({"status": "enforcement_disabled"}),
+            ));
+        }
         return handle_tier_override(database, repo_name, pr_number, commenter, body).await;
     }
 
@@ -50,8 +57,13 @@ pub async fn handle_comment_event(
         return handle_governance_review_case(database, commenter, body).await;
     }
 
-    // Check for governance signature commands
+    // Signature intake is off until merge checks are wired.
     if body.starts_with("/governance-sign") {
+        if !merge_checks_wired {
+            return Ok(axum::response::Json(
+                serde_json::json!({"status": "enforcement_disabled"}),
+            ));
+        }
         let remainder = body.strip_prefix("/governance-sign").unwrap_or("").trim();
 
         // Parse signature and optional reasoning
