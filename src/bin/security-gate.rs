@@ -180,17 +180,15 @@ async fn check_status(detailed: bool) -> Result<()> {
     }
 
     // Next actions
-    if let Some(next_actions) = status.get("next_actions") {
-        if let Some(immediate) = next_actions.get("immediate") {
-            if let Some(actions) = immediate.as_sequence() {
-                if !actions.is_empty() {
-                    println!();
-                    println!("🎯 Immediate Actions Required:");
-                    for action in actions {
-                        println!("  - {}", action.as_str().unwrap_or("Unknown"));
-                    }
-                }
-            }
+    if let Some(next_actions) = status.get("next_actions")
+        && let Some(immediate) = next_actions.get("immediate")
+        && let Some(actions) = immediate.as_sequence()
+        && !actions.is_empty()
+    {
+        println!();
+        println!("🎯 Immediate Actions Required:");
+        for action in actions {
+            println!("  - {}", action.as_str().unwrap_or("Unknown"));
         }
     }
 
@@ -358,15 +356,14 @@ async fn verify_production_readiness(format: &str) -> Result<()> {
                 println!("❌ Production Ready: NO");
                 println!("⚠️  {blocking_controls} controls blocking production deployment");
 
-                if let Some(blocking) = status.get("audit_readiness") {
-                    if let Some(blockers) = blocking.get("audit_blockers") {
-                        if let Some(blocker_list) = blockers.as_sequence() {
-                            println!();
-                            println!("🔒 Blocking Controls:");
-                            for blocker in blocker_list {
-                                println!("  - {}", blocker.as_str().unwrap_or("Unknown"));
-                            }
-                        }
+                if let Some(blocking) = status.get("audit_readiness")
+                    && let Some(blockers) = blocking.get("audit_blockers")
+                    && let Some(blocker_list) = blockers.as_sequence()
+                {
+                    println!();
+                    println!("🔒 Blocking Controls:");
+                    for blocker in blocker_list {
+                        println!("  - {}", blocker.as_str().unwrap_or("Unknown"));
                     }
                 }
             }
@@ -482,16 +479,15 @@ async fn generate_report(output: Option<String>) -> Result<()> {
     if let Some(next_actions) = status.get("next_actions") {
         report.push_str("\n## Next Actions Required\n\n");
 
-        if let Some(immediate) = next_actions.get("immediate") {
-            if let Some(actions) = immediate.as_sequence() {
-                if !actions.is_empty() {
-                    report.push_str("### Immediate\n");
-                    for action in actions {
-                        report.push_str(&format!("- {}\n", action.as_str().unwrap_or("Unknown")));
-                    }
-                    report.push('\n');
-                }
+        if let Some(immediate) = next_actions.get("immediate")
+            && let Some(actions) = immediate.as_sequence()
+            && !actions.is_empty()
+        {
+            report.push_str("### Immediate\n");
+            for action in actions {
+                report.push_str(&format!("- {}\n", action.as_str().unwrap_or("Unknown")));
             }
+            report.push('\n');
         }
     }
 

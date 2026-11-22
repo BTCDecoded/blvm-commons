@@ -60,29 +60,27 @@ impl SignatureValidator {
         tier: Option<u32>,                  // Optional tier for nested multisig
     ) -> Result<bool, GovernanceError> {
         // For Tier 3+, use nested multisig if available
-        if let Some(tier_val) = tier {
-            if tier_val >= 3 {
-                if let Some(ref nested_verifier) = self.nested_multisig_verifier {
-                    // Verify signatures first, then use nested multisig
-                    let mut verified_sigs = Vec::new();
-                    let mut seen_signers = HashSet::new();
-                    for (signer, signature) in signatures {
-                        if let Some(public_key) = maintainer_keys.get(signer) {
-                            let message = format!("governance-signature:{signer}");
-                            if self.verify_signature(&message, signature, public_key)?
-                                && seen_signers.insert(signer.clone())
-                            {
-                                verified_sigs.push((signer.clone(), signature.clone()));
-                            }
-                        }
+        if let Some(tier_val) = tier
+            && tier_val >= 3
+            && let Some(ref nested_verifier) = self.nested_multisig_verifier
+        {
+            // Verify signatures first, then use nested multisig
+            let mut verified_sigs = Vec::new();
+            let mut seen_signers = HashSet::new();
+            for (signer, signature) in signatures {
+                if let Some(public_key) = maintainer_keys.get(signer) {
+                    let message = format!("governance-signature:{signer}");
+                    if self.verify_signature(&message, signature, public_key)?
+                        && seen_signers.insert(signer.clone())
+                    {
+                        verified_sigs.push((signer.clone(), signature.clone()));
                     }
-
-                    // Use nested multisig verification
-                    let result =
-                        nested_verifier.verify_nested_multisig(&verified_sigs, tier_val)?;
-                    return Ok(result.inter_team_approved);
                 }
             }
+
+            // Use nested multisig verification
+            let result = nested_verifier.verify_nested_multisig(&verified_sigs, tier_val)?;
+            return Ok(result.inter_team_approved);
         }
 
         // Fall back to simple multisig for Tier 1-2 or if nested multisig not available

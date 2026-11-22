@@ -2,7 +2,7 @@
 name = "blvm-commons"
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.85"
+rust-version = "1.91"
 authors = ["BTCDecoded Contributors"]
 license = "MIT"
 description = "Bitcoin Commons governance enforcement - GitHub App for cryptographic governance across Bitcoin Commons repositories"
@@ -18,7 +18,7 @@ tower = "0.4"
 tower-http = { version = "0.5", features = ["trace"] }
 
 # GitHub API
-octocrab = "0.38"
+octocrab = "0.44"
 jsonwebtoken = "9.2"
 
 # Database

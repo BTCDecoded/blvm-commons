@@ -20,5 +20,6 @@ Suppressions are **temporary**: they apply to **transitive** crates (e.g. option
 | RUSTSEC-2020-0071 | Transitive; verify on bump |
 | RUSTSEC-2024-0421 | Transitive; verify on bump |
 | RUSTSEC-2023-0071 | Transitive; verify on bump |
+| RUSTSEC-2026-0459 | `sqlx` 0.8.6 requires `libsqlite3-sys` ^0.30.1 (SQLite CVE-2026-119375). `sqlx` 0.9 needs rustc 1.94; this crate's toolchain is 1.91. The `sqlite` feature does not enable `bundled`, so the process links the system libsqlite3. Drop this ignore when the toolchain can take `sqlx` 0.9 and `libsqlite3-sys` >=0.39. |
 
 Refresh this table whenever the workflow ignore list changes.

@@ -86,21 +86,21 @@ impl BuildOrchestrator {
             for repo in group {
                 let deps = self.dependency_graph.get_dependencies(repo);
                 for dep in &deps {
-                    if !completed_repos.contains(dep) {
-                        if let Some(dep_run_id) = triggered_builds.get(dep) {
-                            info!(
-                                "Waiting for dependency {} to complete before building {}",
-                                dep, repo
-                            );
-                            let status = self.monitor.monitor_build(dep, *dep_run_id).await?;
+                    if !completed_repos.contains(dep)
+                        && let Some(dep_run_id) = triggered_builds.get(dep)
+                    {
+                        info!(
+                            "Waiting for dependency {} to complete before building {}",
+                            dep, repo
+                        );
+                        let status = self.monitor.monitor_build(dep, *dep_run_id).await?;
 
-                            if status != BuildStatus::Success {
-                                return Err(GovernanceError::BuildError(format!(
-                                    "Dependency {dep} failed with status: {status:?}"
-                                )));
-                            }
-                            completed_repos.insert(dep.clone());
+                        if status != BuildStatus::Success {
+                            return Err(GovernanceError::BuildError(format!(
+                                "Dependency {dep} failed with status: {status:?}"
+                            )));
                         }
+                        completed_repos.insert(dep.clone());
                     }
                 }
             }
@@ -287,11 +287,11 @@ impl BuildOrchestrator {
                 }
             }
 
-            if let Some(run) = runs.first() {
-                if let Some(id) = run.get("id").and_then(|v| v.as_u64()) {
-                    info!("Found workflow run ID {} for {}", id, repo);
-                    return Ok(id);
-                }
+            if let Some(run) = runs.first()
+                && let Some(id) = run.get("id").and_then(|v| v.as_u64())
+            {
+                info!("Found workflow run ID {} for {}", id, repo);
+                return Ok(id);
             }
         }
 

@@ -142,12 +142,11 @@ fn list_rulesets(detailed: bool) -> Result<(), Box<dyn std::error::Error>> {
         let entry = entry?;
         let path = entry.path();
 
-        if path.extension().and_then(|s| s.to_str()) == Some("json") {
-            if let Ok(content) = fs::read_to_string(&path) {
-                if let Ok(export) = serde_json::from_str::<serde_json::Value>(&content) {
-                    rulesets.push((path, export));
-                }
-            }
+        if path.extension().and_then(|s| s.to_str()) == Some("json")
+            && let Ok(content) = fs::read_to_string(&path)
+            && let Ok(export) = serde_json::from_str::<serde_json::Value>(&content)
+        {
+            rulesets.push((path, export));
         }
     }
 
@@ -466,12 +465,11 @@ fn validate_ruleset_content(ruleset: &serde_json::Value) -> Result<(), Box<dyn s
     }
 
     // Validate version format
-    if let Some(version) = ruleset.get("ruleset_version") {
-        if let Some(major) = version.get("major") {
-            if !major.is_number() {
-                return Err("Invalid version format: major must be a number".into());
-            }
-        }
+    if let Some(version) = ruleset.get("ruleset_version")
+        && let Some(major) = version.get("major")
+        && !major.is_number()
+    {
+        return Err("Invalid version format: major must be a number".into());
     }
 
     println!("  ✅ All required fields present");

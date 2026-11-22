@@ -221,34 +221,33 @@ pub async fn validate_verification_requirements<C: GitHubVerificationClient>(
 ) -> Result<VerificationValidationResult> {
     let config = load_governance_config()?;
 
-    if let Some(repo_config) = config.repos.get(repo) {
-        if let Some(verification) = &repo_config.verification {
-            if verification.required {
-                // Parse repository name to extract owner and repo
-                let (owner, repo_name) = parse_repo_name(repo)?;
+    if let Some(repo_config) = config.repos.get(repo)
+        && let Some(verification) = &repo_config.verification
+        && verification.required
+    {
+        // Parse repository name to extract owner and repo
+        let (owner, repo_name) = parse_repo_name(repo)?;
 
-                // Check if verification workflow exists
-                let workflow_exists = client
-                    .workflow_exists(&owner, &repo_name, &verification.ci_workflow)
-                    .await?;
+        // Check if verification workflow exists
+        let workflow_exists = client
+            .workflow_exists(&owner, &repo_name, &verification.ci_workflow)
+            .await?;
 
-                if !workflow_exists {
-                    return Ok(VerificationValidationResult::MissingWorkflow {
-                        workflow: verification.ci_workflow.clone(),
-                    });
-                }
+        if !workflow_exists {
+            return Ok(VerificationValidationResult::MissingWorkflow {
+                workflow: verification.ci_workflow.clone(),
+            });
+        }
 
-                // Check if all required tools are configured
-                for tool in &verification.tools {
-                    if tool.required {
-                        // In a real implementation, we'd check if the tool is properly configured
-                        // For now, we'll assume they are configured correctly
-                    }
-                }
-
-                return Ok(VerificationValidationResult::Valid);
+        // Check if all required tools are configured
+        for tool in &verification.tools {
+            if tool.required {
+                // In a real implementation, we'd check if the tool is properly configured
+                // For now, we'll assume they are configured correctly
             }
         }
+
+        return Ok(VerificationValidationResult::Valid);
     }
 
     Ok(VerificationValidationResult::NotRequired)

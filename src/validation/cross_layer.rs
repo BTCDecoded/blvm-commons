@@ -21,30 +21,15 @@ impl CrossLayerValidator {
         github_token: Option<&str>,
     ) -> Result<(), GovernanceError> {
         for rule in cross_layer_rules {
-            if let Some(source_repo) = rule.get("source_repo").and_then(|v| v.as_str()) {
-                if source_repo == repo_name {
-                    if let Some(source_pattern) =
-                        rule.get("source_pattern").and_then(|v| v.as_str())
-                    {
-                        if Self::matches_pattern(changed_files, source_pattern) {
-                            if let Some(target_repo) =
-                                rule.get("target_repo").and_then(|v| v.as_str())
-                            {
-                                if let Some(validation_type) =
-                                    rule.get("validation_type").and_then(|v| v.as_str())
-                                {
-                                    return Self::validate_dependency(
-                                        target_repo,
-                                        validation_type,
-                                        rule,
-                                        github_token,
-                                    )
-                                    .await;
-                                }
-                            }
-                        }
-                    }
-                }
+            if let Some(source_repo) = rule.get("source_repo").and_then(|v| v.as_str())
+                && source_repo == repo_name
+                && let Some(source_pattern) = rule.get("source_pattern").and_then(|v| v.as_str())
+                && Self::matches_pattern(changed_files, source_pattern)
+                && let Some(target_repo) = rule.get("target_repo").and_then(|v| v.as_str())
+                && let Some(validation_type) = rule.get("validation_type").and_then(|v| v.as_str())
+            {
+                return Self::validate_dependency(target_repo, validation_type, rule, github_token)
+                    .await;
             }
         }
         Ok(())

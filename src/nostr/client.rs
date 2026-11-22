@@ -159,11 +159,11 @@ impl NostrClient {
                         for event in events {
                             if event.kind == Kind::ZapReceipt {
                                 // Parse zap event
-                                if let Ok(zap) = parse_zap_event(&event) {
-                                    if (tx.send(zap).await).is_err() {
-                                        // Receiver dropped, stop processing
-                                        return;
-                                    }
+                                if let Ok(zap) = parse_zap_event(&event)
+                                    && (tx.send(zap).await).is_err()
+                                {
+                                    // Receiver dropped, stop processing
+                                    return;
                                 }
                             }
                         }

@@ -105,12 +105,12 @@ impl Database {
                         .fetch_one(pool)
                         .await;
 
-                if let Ok(count) = tables_check {
-                    if count < 3 {
-                        return Err(GovernanceError::DatabaseError(format!(
-                            "Migrations may have failed: expected at least 3 tables, found {count}"
-                        )));
-                    }
+                if let Ok(count) = tables_check
+                    && count < 3
+                {
+                    return Err(GovernanceError::DatabaseError(format!(
+                        "Migrations may have failed: expected at least 3 tables, found {count}"
+                    )));
                 }
                 Ok(())
             }
@@ -794,18 +794,19 @@ impl Database {
         }
 
         // Log state transition
-        if let Some(from_status) = current_status {
-            if from_status != new_status {
-                let build_id: i64 = sqlx::query_scalar(
-                    "SELECT id FROM build_runs WHERE release_version = ? AND repo_name = ?",
-                )
-                .bind(release_version)
-                .bind(repo_name)
-                .fetch_one(pool)
-                .await
-                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+        if let Some(from_status) = current_status
+            && from_status != new_status
+        {
+            let build_id: i64 = sqlx::query_scalar(
+                "SELECT id FROM build_runs WHERE release_version = ? AND repo_name = ?",
+            )
+            .bind(release_version)
+            .bind(repo_name)
+            .fetch_one(pool)
+            .await
+            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
-                sqlx::query(
+            sqlx::query(
                             r#"
                             INSERT INTO build_state_transitions (build_run_id, from_status, to_status, reason)
                             VALUES (?, ?, ?, ?)
@@ -818,7 +819,6 @@ impl Database {
                         .execute(pool)
                         .await
                         .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
-            }
         }
         Ok(())
     }

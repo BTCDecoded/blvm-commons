@@ -154,7 +154,7 @@ pub fn generate_merkle_proof(entries: &[AuditLogEntry], entry_index: usize) -> R
     let mut proof_order = Vec::new();
     for level in levels.iter().take(levels.len().saturating_sub(1)) {
         let level_size = level.len();
-        let is_left = idx % 2 == 0;
+        let is_left = idx.is_multiple_of(2);
 
         if is_left && idx + 1 < level_size {
             // We're on the left, add right sibling (current_hash + proof_hash)

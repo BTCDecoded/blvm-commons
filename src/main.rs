@@ -89,13 +89,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     }
 
                     // Log pool stats periodically (every 10 checks = 10 minutes)
-                    if consecutive_failures == 0 {
-                        if let Ok(stats) = current_db.get_pool_stats().await {
-                            debug!(
-                                "Database pool stats: size={}, idle={}, closed={}",
-                                stats.size, stats.idle, stats.is_closed
-                            );
-                        }
+                    if consecutive_failures == 0
+                        && let Ok(stats) = current_db.get_pool_stats().await
+                    {
+                        debug!(
+                            "Database pool stats: size={}, idle={}, closed={}",
+                            stats.size, stats.idle, stats.is_closed
+                        );
                     }
                 }
                 Ok(false) | Err(_) => {
@@ -263,32 +263,33 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .ok_or_else(|| "Database pool not available".to_string())?;
 
     // Start zap tracker if Nostr is enabled and governance tracking enabled
-    if config.nostr.enabled && config.governance.contribution_tracking_enabled {
-        if let Some(ref nostr_client) = nostr_client {
-            // Collect all bot pubkeys for zap tracking
-            let mut bot_pubkeys = Vec::new();
-            if config.nostr.zap_address.is_some() {
-                // Legacy single bot. Pubkey extraction from the nsec is not wired yet.
-                info!("Zap tracking configured for legacy zap address");
-            }
+    if config.nostr.enabled
+        && config.governance.contribution_tracking_enabled
+        && let Some(ref nostr_client) = nostr_client
+    {
+        // Collect all bot pubkeys for zap tracking
+        let mut bot_pubkeys = Vec::new();
+        if config.nostr.zap_address.is_some() {
+            // Legacy single bot. Pubkey extraction from the nsec is not wired yet.
+            info!("Zap tracking configured for legacy zap address");
+        }
 
-            // Add bot pubkeys from multi-bot config
-            for (bot_id, bot_config) in &config.nostr.bots {
-                bot_pubkeys.push(bot_config.npub.clone());
-                info!(
-                    "Zap tracking configured for bot: {} (npub: {})",
-                    bot_id, bot_config.npub
-                );
-            }
+        // Add bot pubkeys from multi-bot config
+        for (bot_id, bot_config) in &config.nostr.bots {
+            bot_pubkeys.push(bot_config.npub.clone());
+            info!(
+                "Zap tracking configured for bot: {} (npub: {})",
+                bot_id, bot_config.npub
+            );
+        }
 
-            if !bot_pubkeys.is_empty() {
-                let zap_tracker =
-                    ZapTracker::new(pool.clone(), Arc::new(nostr_client.clone()), bot_pubkeys);
-                if let Err(e) = zap_tracker.start_tracking().await {
-                    error!("Failed to start zap tracking: {}", e);
-                } else {
-                    info!("Zap tracker started");
-                }
+        if !bot_pubkeys.is_empty() {
+            let zap_tracker =
+                ZapTracker::new(pool.clone(), Arc::new(nostr_client.clone()), bot_pubkeys);
+            if let Err(e) = zap_tracker.start_tracking().await {
+                error!("Failed to start zap tracking: {}", e);
+            } else {
+                info!("Zap tracker started");
             }
         }
     }

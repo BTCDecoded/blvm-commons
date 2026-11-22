@@ -82,20 +82,20 @@ impl CircuitBreaker {
                 // Check if timeout has elapsed - transition to half-open
                 // Acquire locks in consistent order: last_failure_time, then state, then successes
                 let last_failure = *self.last_failure_time.lock().await;
-                if let Some(last_failure_time) = last_failure {
-                    if last_failure_time.elapsed() >= self.config.timeout {
-                        info!(
-                            "Circuit breaker '{}' transitioning to half-open state",
-                            self.name
-                        );
-                        // Release last_failure_time lock before acquiring state lock
-                        let mut state_guard = self.state.lock().await;
-                        // Double-check state hasn't changed
-                        if *state_guard == CircuitState::Open {
-                            *state_guard = CircuitState::HalfOpen;
-                            *self.successes.lock().await = 0;
-                            return false; // Allow request in half-open state
-                        }
+                if let Some(last_failure_time) = last_failure
+                    && last_failure_time.elapsed() >= self.config.timeout
+                {
+                    info!(
+                        "Circuit breaker '{}' transitioning to half-open state",
+                        self.name
+                    );
+                    // Release last_failure_time lock before acquiring state lock
+                    let mut state_guard = self.state.lock().await;
+                    // Double-check state hasn't changed
+                    if *state_guard == CircuitState::Open {
+                        *state_guard = CircuitState::HalfOpen;
+                        *self.successes.lock().await = 0;
+                        return false; // Allow request in half-open state
                     }
                 }
                 true // Reject request in open state
@@ -199,16 +199,16 @@ impl CircuitBreaker {
         let current_state = *self.state.lock().await;
         if current_state == CircuitState::Open {
             let last_failure = *self.last_failure_time.lock().await;
-            if let Some(last_failure_time) = last_failure {
-                if last_failure_time.elapsed() >= self.config.timeout {
-                    // Release locks before re-acquiring to avoid deadlock
-                    let mut state_guard = self.state.lock().await;
-                    // Double-check state hasn't changed
-                    if *state_guard == CircuitState::Open {
-                        *state_guard = CircuitState::HalfOpen;
-                        *self.successes.lock().await = 0;
-                        return CircuitState::HalfOpen;
-                    }
+            if let Some(last_failure_time) = last_failure
+                && last_failure_time.elapsed() >= self.config.timeout
+            {
+                // Release locks before re-acquiring to avoid deadlock
+                let mut state_guard = self.state.lock().await;
+                // Double-check state hasn't changed
+                if *state_guard == CircuitState::Open {
+                    *state_guard = CircuitState::HalfOpen;
+                    *self.successes.lock().await = 0;
+                    return CircuitState::HalfOpen;
                 }
             }
         }

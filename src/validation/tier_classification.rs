@@ -718,14 +718,13 @@ fn extract_changed_files(payload: &Value) -> Vec<String> {
     let mut files = Vec::new();
 
     // Try to get files from pull_request.files (if available)
-    if let Some(pr) = payload.get("pull_request") {
-        if let Some(files_array) = pr.get("files") {
-            if let Some(files_list) = files_array.as_array() {
-                for file in files_list {
-                    if let Some(filename) = file.get("filename").and_then(|f| f.as_str()) {
-                        files.push(filename.to_string());
-                    }
-                }
+    if let Some(pr) = payload.get("pull_request")
+        && let Some(files_array) = pr.get("files")
+        && let Some(files_list) = files_array.as_array()
+    {
+        for file in files_list {
+            if let Some(filename) = file.get("filename").and_then(|f| f.as_str()) {
+                files.push(filename.to_string());
             }
         }
     }
