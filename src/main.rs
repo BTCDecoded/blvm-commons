@@ -1,4 +1,4 @@
-//! blvm-commons server binary — compiles governance modules as a standalone crate root.
+//! blvm-commons server binary. Governance modules live in the library crate.
 
 use axum::{
     Router,
@@ -6,7 +6,6 @@ use axum::{
     response::Json,
     routing::{get, post},
 };
-use chrono::Datelike;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::time::Duration;
@@ -15,33 +14,16 @@ use tower_http::trace::TraceLayer;
 use tracing::{debug, error, info, warn};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-mod audit;
-mod authorization;
-mod backup;
-mod build;
-mod config;
-mod crypto;
-mod database;
-mod enforcement;
-mod error;
-mod github;
-mod governance;
-mod governance_review;
-mod node_registry;
-mod nostr;
+use blvm_commons::audit::AuditLogger;
+use blvm_commons::backup;
+use blvm_commons::config::AppConfig;
+use blvm_commons::database::Database;
+use blvm_commons::governance::ContributionAggregator;
+use blvm_commons::node_registry;
+use blvm_commons::nostr::{NostrClient, StatusPublisher, ZapTracker};
 #[cfg(feature = "opentimestamps")]
-mod ots;
-mod resilience;
-mod validation;
-mod webhooks;
-
-use audit::AuditLogger;
-use config::AppConfig;
-use database::Database;
-use governance::ContributionAggregator;
-use nostr::{NostrClient, StatusPublisher, ZapTracker};
-#[cfg(feature = "opentimestamps")]
-use ots::{OtsClient, RegistryAnchorer};
+use blvm_commons::ots::{OtsClient, RegistryAnchorer};
+use blvm_commons::webhooks;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -204,18 +186,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Initialize OTS client and registry anchorer (only if feature enabled)
     #[cfg(feature = "opentimestamps")]
-    let ots_client = if config.ots.enabled {
-        Some(OtsClient::new(config.ots.aggregator_url.clone()))
-    } else {
-        None
-    };
-    #[cfg(not(feature = "opentimestamps"))]
-    let ots_client: Option<()> = None;
-
-    #[cfg(feature = "opentimestamps")]
-    let registry_anchorer = if let Some(client) = ots_client {
+    let registry_anchorer = if config.ots.enabled {
         Some(RegistryAnchorer::new(
-            client,
+            OtsClient::new(config.ots.aggregator_url.clone()),
             database.clone(),
             config.ots.registry_path.clone(),
             config.ots.proofs_path.clone(),
@@ -223,12 +196,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         None
     };
-    #[cfg(not(feature = "opentimestamps"))]
-    let registry_anchorer: Option<()> = None;
 
     // Start background tasks
+    #[cfg(feature = "opentimestamps")]
     let config_clone = config.clone();
-    let database_clone = database.clone();
     let audit_logger_for_rotation = audit_logger.clone();
 
     // Nostr status publisher task
@@ -296,14 +267,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         if let Some(ref nostr_client) = nostr_client {
             // Collect all bot pubkeys for zap tracking
             let mut bot_pubkeys = Vec::new();
-            if let Some(zap_addr) = &config.nostr.zap_address {
-                // Legacy single bot - extract pubkey if available
-                // For now, we'll need the pubkey from the nsec
-                if let Ok(nsec) = std::fs::read_to_string(&config.nostr.server_nsec_path) {
-                    // Parse nsec to get pubkey (simplified - in production use proper parsing)
-                    // For now, we'll track the configured zap address
-                    info!("Zap tracking configured for legacy zap address");
-                }
+            if config.nostr.zap_address.is_some() {
+                // Legacy single bot. Pubkey extraction from the nsec is not wired yet.
+                info!("Zap tracking configured for legacy zap address");
             }
 
             // Add bot pubkeys from multi-bot config
