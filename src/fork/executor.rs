@@ -237,34 +237,33 @@ impl ForkExecutor {
             let entry = entry?;
             let path = entry.path();
 
-            if path.extension().and_then(|s| s.to_str()) == Some("json") {
-                if let Ok(content) = fs::read_to_string(&path) {
-                    if let Ok(export) = serde_json::from_str::<GovernanceExport>(&content) {
-                        // Construct config from individual fields
-                        let config = serde_json::json!({
-                            "action_tiers": export.action_tiers,
-                            "maintainers": export.maintainers,
-                            "repositories": export.repositories,
-                            "governance_fork": export.governance_fork,
-                        });
-                        let ruleset_id = export.ruleset_id.clone();
-                        let ruleset = Ruleset {
-                            id: ruleset_id.clone(),
-                            name: format!("Ruleset {ruleset_id}"),
-                            version: export.ruleset_version,
-                            hash: self.calculate_config_hash(&config)?,
-                            created_at: export.created_at,
-                            config,
-                            description: Some(format!(
-                                "Exported ruleset from {}",
-                                export.metadata.source_repository
-                            )),
-                        };
+            if path.extension().and_then(|s| s.to_str()) == Some("json")
+                && let Ok(content) = fs::read_to_string(&path)
+                && let Ok(export) = serde_json::from_str::<GovernanceExport>(&content)
+            {
+                // Construct config from individual fields
+                let config = serde_json::json!({
+                    "action_tiers": export.action_tiers,
+                    "maintainers": export.maintainers,
+                    "repositories": export.repositories,
+                    "governance_fork": export.governance_fork,
+                });
+                let ruleset_id = export.ruleset_id.clone();
+                let ruleset = Ruleset {
+                    id: ruleset_id.clone(),
+                    name: format!("Ruleset {ruleset_id}"),
+                    version: export.ruleset_version,
+                    hash: self.calculate_config_hash(&config)?,
+                    created_at: export.created_at,
+                    config,
+                    description: Some(format!(
+                        "Exported ruleset from {}",
+                        export.metadata.source_repository
+                    )),
+                };
 
-                        self.available_rulesets.insert(ruleset_id.clone(), ruleset);
-                        info!("Loaded ruleset: {}", ruleset_id);
-                    }
-                }
+                self.available_rulesets.insert(ruleset_id.clone(), ruleset);
+                info!("Loaded ruleset: {}", ruleset_id);
             }
         }
 

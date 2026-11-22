@@ -365,12 +365,11 @@ impl ConfigCache {
 
         for file in &config_files {
             let path = self.config_path.join(file);
-            if let Ok(metadata) = fs::metadata(&path) {
-                if let Ok(modified) = metadata.modified() {
-                    if modified > self.last_updated {
-                        return true;
-                    }
-                }
+            if let Ok(metadata) = fs::metadata(&path)
+                && let Ok(modified) = metadata.modified()
+                && modified > self.last_updated
+            {
+                return true;
             }
         }
 

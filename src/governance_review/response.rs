@@ -46,10 +46,10 @@ impl ResponseManager {
         .await?
         .flatten();
 
-        if let Some(deadline) = response_deadline {
-            if Utc::now() > deadline {
-                return Err(sqlx::Error::RowNotFound); // Or custom error type for deadline passed
-            }
+        if let Some(deadline) = response_deadline
+            && Utc::now() > deadline
+        {
+            return Err(sqlx::Error::RowNotFound); // Or custom error type for deadline passed
         }
 
         let counter_evidence_json = serde_json::to_string(&counter_evidence)

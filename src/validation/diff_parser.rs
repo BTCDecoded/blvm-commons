@@ -113,15 +113,13 @@ impl DiffParser {
             }
 
             // Hunk body: collect until the next file header
-            if in_hunk {
-                if let Some(ref mut file) = current_file {
-                    if let Some(content) = line.strip_prefix('+') {
-                        file.additions.push(content.to_string());
-                    } else if let Some(content) = line.strip_prefix('-') {
-                        file.deletions.push(content.to_string());
-                    }
-                    // Context lines (' ') and "\ No newline at end of file" are ignored
+            if in_hunk && let Some(ref mut file) = current_file {
+                if let Some(content) = line.strip_prefix('+') {
+                    file.additions.push(content.to_string());
+                } else if let Some(content) = line.strip_prefix('-') {
+                    file.deletions.push(content.to_string());
                 }
+                // Context lines (' ') and "\ No newline at end of file" are ignored
             }
         }
 

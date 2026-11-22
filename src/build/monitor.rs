@@ -186,10 +186,10 @@ impl BuildMonitor {
                 }
             }
 
-            if let Some(run) = runs.first() {
-                if let Some(id) = run.get("id").and_then(|v| v.as_u64()) {
-                    return self.get_workflow_run_status_by_id(repo, id).await;
-                }
+            if let Some(run) = runs.first()
+                && let Some(id) = run.get("id").and_then(|v| v.as_u64())
+            {
+                return self.get_workflow_run_status_by_id(repo, id).await;
             }
 
             // If we still can't find it, return Pending

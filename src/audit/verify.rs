@@ -55,10 +55,10 @@ pub fn verify_entry_in_chain(
     }
 
     // Verify chain link if previous entry exists
-    if let Some(prev) = previous_entry {
-        if entry.previous_log_hash != prev.this_log_hash {
-            return Ok(false);
-        }
+    if let Some(prev) = previous_entry
+        && entry.previous_log_hash != prev.this_log_hash
+    {
+        return Ok(false);
     }
 
     Ok(true)

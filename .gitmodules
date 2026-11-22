@@ -1,0 +1,3 @@
+[submodule "commons-website"]
+	path = commons-website
+	url = https://github.com/BTCDecoded/commons-website.git

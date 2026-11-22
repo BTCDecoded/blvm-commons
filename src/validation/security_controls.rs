@@ -399,11 +399,11 @@ impl SecurityControlValidator {
         let mut violations = Vec::new();
 
         for file in changed_files {
-            if self.is_security_critical_file(file)? {
-                if let Ok(content) = std::fs::read_to_string(file) {
-                    let violations_in_file = self.find_placeholders_in_content(file, &content);
-                    violations.extend(violations_in_file);
-                }
+            if self.is_security_critical_file(file)?
+                && let Ok(content) = std::fs::read_to_string(file)
+            {
+                let violations_in_file = self.find_placeholders_in_content(file, &content);
+                violations.extend(violations_in_file);
             }
         }
 

@@ -1,4 +1,5 @@
 pub mod audit;
+pub mod authorization;
 pub mod backup;
 pub mod build;
 pub mod config;

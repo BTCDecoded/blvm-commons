@@ -557,14 +557,12 @@ impl CrossLayerStatusChecker {
         ];
 
         for pattern in patterns {
-            if let Ok(re) = Regex::new(pattern) {
-                if let Some(captures) = re.captures(name) {
-                    if let Some(count_str) = captures.get(1) {
-                        if let Ok(count) = count_str.as_str().parse::<usize>() {
-                            return Some(count);
-                        }
-                    }
-                }
+            if let Ok(re) = Regex::new(pattern)
+                && let Some(captures) = re.captures(name)
+                && let Some(count_str) = captures.get(1)
+                && let Ok(count) = count_str.as_str().parse::<usize>()
+            {
+                return Some(count);
             }
         }
 

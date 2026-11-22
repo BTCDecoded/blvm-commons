@@ -1,4 +1,4 @@
-//! blvm-commons server binary — compiles governance modules as a standalone crate root.
+//! blvm-commons server binary. Governance modules live in the library crate.
 
 use axum::{
     Router,
@@ -6,7 +6,6 @@ use axum::{
     response::Json,
     routing::{get, post},
 };
-use chrono::Datelike;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::time::Duration;
@@ -15,33 +14,16 @@ use tower_http::trace::TraceLayer;
 use tracing::{debug, error, info, warn};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-mod audit;
-mod authorization;
-mod backup;
-mod build;
-mod config;
-mod crypto;
-mod database;
-mod enforcement;
-mod error;
-mod github;
-mod governance;
-mod governance_review;
-mod node_registry;
-mod nostr;
+use blvm_commons::audit::AuditLogger;
+use blvm_commons::backup;
+use blvm_commons::config::AppConfig;
+use blvm_commons::database::Database;
+use blvm_commons::governance::ContributionAggregator;
+use blvm_commons::node_registry;
+use blvm_commons::nostr::{NostrClient, StatusPublisher, ZapTracker};
 #[cfg(feature = "opentimestamps")]
-mod ots;
-mod resilience;
-mod validation;
-mod webhooks;
-
-use audit::AuditLogger;
-use config::AppConfig;
-use database::Database;
-use governance::ContributionAggregator;
-use nostr::{NostrClient, StatusPublisher, ZapTracker};
-#[cfg(feature = "opentimestamps")]
-use ots::{OtsClient, RegistryAnchorer};
+use blvm_commons::ots::{OtsClient, RegistryAnchorer};
+use blvm_commons::webhooks;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -107,13 +89,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     }
 
                     // Log pool stats periodically (every 10 checks = 10 minutes)
-                    if consecutive_failures == 0 {
-                        if let Ok(stats) = current_db.get_pool_stats().await {
-                            debug!(
-                                "Database pool stats: size={}, idle={}, closed={}",
-                                stats.size, stats.idle, stats.is_closed
-                            );
-                        }
+                    if consecutive_failures == 0
+                        && let Ok(stats) = current_db.get_pool_stats().await
+                    {
+                        debug!(
+                            "Database pool stats: size={}, idle={}, closed={}",
+                            stats.size, stats.idle, stats.is_closed
+                        );
                     }
                 }
                 Ok(false) | Err(_) => {
@@ -204,18 +186,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Initialize OTS client and registry anchorer (only if feature enabled)
     #[cfg(feature = "opentimestamps")]
-    let ots_client = if config.ots.enabled {
-        Some(OtsClient::new(config.ots.aggregator_url.clone()))
-    } else {
-        None
-    };
-    #[cfg(not(feature = "opentimestamps"))]
-    let ots_client: Option<()> = None;
-
-    #[cfg(feature = "opentimestamps")]
-    let registry_anchorer = if let Some(client) = ots_client {
+    let registry_anchorer = if config.ots.enabled {
         Some(RegistryAnchorer::new(
-            client,
+            OtsClient::new(config.ots.aggregator_url.clone()),
             database.clone(),
             config.ots.registry_path.clone(),
             config.ots.proofs_path.clone(),
@@ -223,12 +196,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         None
     };
-    #[cfg(not(feature = "opentimestamps"))]
-    let registry_anchorer: Option<()> = None;
 
     // Start background tasks
+    #[cfg(feature = "opentimestamps")]
     let config_clone = config.clone();
-    let database_clone = database.clone();
     let audit_logger_for_rotation = audit_logger.clone();
 
     // Nostr status publisher task
@@ -292,37 +263,33 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .ok_or_else(|| "Database pool not available".to_string())?;
 
     // Start zap tracker if Nostr is enabled and governance tracking enabled
-    if config.nostr.enabled && config.governance.contribution_tracking_enabled {
-        if let Some(ref nostr_client) = nostr_client {
-            // Collect all bot pubkeys for zap tracking
-            let mut bot_pubkeys = Vec::new();
-            if let Some(zap_addr) = &config.nostr.zap_address {
-                // Legacy single bot - extract pubkey if available
-                // For now, we'll need the pubkey from the nsec
-                if let Ok(nsec) = std::fs::read_to_string(&config.nostr.server_nsec_path) {
-                    // Parse nsec to get pubkey (simplified - in production use proper parsing)
-                    // For now, we'll track the configured zap address
-                    info!("Zap tracking configured for legacy zap address");
-                }
-            }
+    if config.nostr.enabled
+        && config.governance.contribution_tracking_enabled
+        && let Some(ref nostr_client) = nostr_client
+    {
+        // Collect all bot pubkeys for zap tracking
+        let mut bot_pubkeys = Vec::new();
+        if config.nostr.zap_address.is_some() {
+            // Legacy single bot. Pubkey extraction from the nsec is not wired yet.
+            info!("Zap tracking configured for legacy zap address");
+        }
 
-            // Add bot pubkeys from multi-bot config
-            for (bot_id, bot_config) in &config.nostr.bots {
-                bot_pubkeys.push(bot_config.npub.clone());
-                info!(
-                    "Zap tracking configured for bot: {} (npub: {})",
-                    bot_id, bot_config.npub
-                );
-            }
+        // Add bot pubkeys from multi-bot config
+        for (bot_id, bot_config) in &config.nostr.bots {
+            bot_pubkeys.push(bot_config.npub.clone());
+            info!(
+                "Zap tracking configured for bot: {} (npub: {})",
+                bot_id, bot_config.npub
+            );
+        }
 
-            if !bot_pubkeys.is_empty() {
-                let zap_tracker =
-                    ZapTracker::new(pool.clone(), Arc::new(nostr_client.clone()), bot_pubkeys);
-                if let Err(e) = zap_tracker.start_tracking().await {
-                    error!("Failed to start zap tracking: {}", e);
-                } else {
-                    info!("Zap tracker started");
-                }
+        if !bot_pubkeys.is_empty() {
+            let zap_tracker =
+                ZapTracker::new(pool.clone(), Arc::new(nostr_client.clone()), bot_pubkeys);
+            if let Err(e) = zap_tracker.start_tracking().await {
+                error!("Failed to start zap tracking: {}", e);
+            } else {
+                info!("Zap tracker started");
             }
         }
     }
