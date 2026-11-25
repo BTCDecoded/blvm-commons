@@ -22,6 +22,7 @@ pub struct NostrClient {
 impl NostrClient {
     /// Create new Nostr client with server key and relay URLs
     pub async fn new(nsec: String, relay_urls: Vec<String>) -> Result<Self> {
+        crate::install_rustls_crypto_provider();
         let keys = Keys::parse(&nsec).map_err(|e| anyhow!("Invalid nsec key: {}", e))?;
 
         let client = Client::new(keys.clone());

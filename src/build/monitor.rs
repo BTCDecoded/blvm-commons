@@ -256,6 +256,7 @@ mod tests {
     use tempfile::tempdir;
 
     fn create_test_github_client() -> GitHubClient {
+        crate::install_rustls_crypto_provider();
         let temp_dir = tempdir().unwrap();
         let private_key_path = temp_dir.path().join("test_key.pem");
         // Use the actual test RSA key from test_fixtures

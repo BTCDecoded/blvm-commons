@@ -269,6 +269,7 @@ impl CrossLayerValidator {
             if let Some(token) = github_token {
                 let (owner, repo) = Self::parse_repo_name(target_repo)?;
 
+                crate::install_rustls_crypto_provider();
                 let client = match octocrab::OctocrabBuilder::new()
                     .personal_token(token.to_string())
                     .build()
@@ -400,6 +401,7 @@ impl CrossLayerValidator {
             format!("https://api.github.com/repos/{owner}/{repo}/pulls/{pr_number}.diff");
 
         // Fetch diff content using reqwest (already in dependencies)
+        crate::install_rustls_crypto_provider();
         let response = reqwest::Client::new()
             .get(&diff_url)
             .header("Accept", "application/vnd.github.v3.diff")

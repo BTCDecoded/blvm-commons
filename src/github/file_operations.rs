@@ -55,6 +55,7 @@ pub struct GitHubFileOperations {
 impl GitHubFileOperations {
     /// Create a new GitHub file operations client
     pub fn new(token: String) -> Result<Self, GovernanceError> {
+        crate::install_rustls_crypto_provider();
         let client = Octocrab::builder()
             .personal_token(token)
             .build()
@@ -493,6 +494,7 @@ mod tests {
     async fn test_github_file_operations_creation() {
         // This test requires a valid GitHub token
         // In a real test environment, you would use a test token
+        crate::install_rustls_crypto_provider();
         let result = GitHubFileOperations::new("test_token".to_string());
         assert!(result.is_ok());
     }

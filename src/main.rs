@@ -36,6 +36,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with(tracing_subscriber::fmt::layer())
         .init();
 
+    blvm_commons::install_rustls_crypto_provider();
+
     info!("Starting Bitcoin Commons (blvm-commons)");
 
     // Load configuration

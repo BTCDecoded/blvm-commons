@@ -18,6 +18,7 @@ pub struct GitHubClient {
 
 impl GitHubClient {
     pub fn new(app_id: u64, private_key_path: &str) -> Result<Self, GovernanceError> {
+        crate::install_rustls_crypto_provider();
         let key = std::fs::read_to_string(private_key_path).map_err(|e| {
             GovernanceError::ConfigError(format!("Failed to read private key: {e}"))
         })?;
@@ -69,6 +70,7 @@ impl GitHubClient {
             ));
         }
 
+        crate::install_rustls_crypto_provider();
         let client = Octocrab::builder()
             .personal_token(token)
             .build()
