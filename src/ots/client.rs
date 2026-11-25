@@ -19,6 +19,7 @@ pub struct OtsClient {
 impl OtsClient {
     /// Create new OTS client with aggregator URL
     pub fn new(aggregator_url: String) -> Self {
+        crate::install_rustls_crypto_provider();
         let http_client = Client::new();
         let mut calendars = HashMap::new();
 

@@ -19,6 +19,7 @@ pub struct TestnetScenarioRunner {
 
 impl TestnetScenarioRunner {
     pub fn new() -> Self {
+        blvm_commons::install_rustls_crypto_provider();
         Self {
             client: Client::new(),
             base_url: TESTNET_BASE_URL.to_string(),

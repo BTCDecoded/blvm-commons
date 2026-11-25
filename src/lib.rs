@@ -23,3 +23,13 @@ pub mod webhooks;
 pub mod ots;
 
 pub use error::GovernanceError;
+
+/// Install the process-level rustls CryptoProvider (`ring`).
+///
+/// rustls 0.23 panics when both the `ring` and `aws-lc-rs` features are enabled
+/// unless a provider is installed explicitly. This crate's TLS stacks (sqlx,
+/// reqwest, octocrab, iroh) enable `ring`; `aws-lc-rs` arrives via rustls
+/// default features on transitive crates such as blvm-sdk.
+pub fn install_rustls_crypto_provider() {
+    let _ = rustls::crypto::ring::default_provider().install_default();
+}

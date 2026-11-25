@@ -787,6 +787,7 @@ mod tests {
     // Helper function to create a test checker.
     // Uses test_fixtures RSA key when available; falls back to from_token("test") for CI (no API calls in unit tests).
     fn create_test_checker() -> Option<CrossLayerStatusChecker> {
+        crate::install_rustls_crypto_provider();
         let github_client = {
             let temp_dir = tempfile::tempdir().ok()?;
             let key_path = temp_dir.path().join("test_key.pem");
